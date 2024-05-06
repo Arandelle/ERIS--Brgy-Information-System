@@ -29,7 +29,7 @@ const MyCalendar = () => {
   };
 
   return (
-    <div className="container mx-15 p-4">
+    <div className="container mx-3 p-2">
       <div className="grid justify-start grid-cols-4 mx-15 my-15 gap-4">
           <input
           className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
