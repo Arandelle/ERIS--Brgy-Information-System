@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import Header from "./components/Header";
-import List from "./components/List";
 import Sidebar from './components/Sidebar';
 import { Toggle } from './hooks/Toggle';
 import Dashboard from './components/Dashboard';
+import MyCalendar from './components/MyCalendar';
 
 const App = () => {
-  const {isOpen, toggleDropdown } = Toggle ();
-  const username = "Arandelle";
-  const titleName = "Project Sample";
-
+  const { isOpen, toggleDropdown } = Toggle();
   return (
     <div>
       <Header toggleSideBar={toggleDropdown} />
@@ -17,14 +14,10 @@ const App = () => {
         <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
         <div className='flex flex-col flex-1'>
           <Dashboard />
-          <div className="flex-1">
-            <h1 className="text-xl font-bold text-primary">Hello {username}!</h1>
-            <button onClick={toggleDropdown}>Toggle Sidebar</button>
-            <h3>List of Students Age 18 and above</h3>
-            <List />
-          </div>
+          <MyCalendar/>
         </div>
       </div>
+     
     </div>
   );
 };
