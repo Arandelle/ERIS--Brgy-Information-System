@@ -6,6 +6,7 @@ import Dashboard from "./components/Dashboard";
 import MyCalendar from "./components/MyCalendar";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Residents from "./components/Residents";
+import { Data } from "./components/Data";
 
 const App = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -17,7 +18,13 @@ const App = () => {
         <div className="flex">
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
           <Routes >
-            <Route path="/eris-brgy-information-system.vercel.app/dashboard" element={<Dashboard />} /> {/* Render Dashboard when root path is matched */}
+          {Data.map((item, index) => (
+              <Route
+                key={index}
+                path={item.link}
+                element={<Dashboard />} // You can replace this with appropriate component based on the link
+              />
+            ))}
             <Route path="/calendar" element={<MyCalendar />} /> {/* Render MyCalendar when /calendar path is matched */}
             <Route path="/residents/registered" element={<Residents />} />
           </Routes>
