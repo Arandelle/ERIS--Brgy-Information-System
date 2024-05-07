@@ -9,6 +9,7 @@ import Residents from "./components/Residents";
 
 const App = () => {
   const { isOpen, toggleDropdown } = Toggle();
+
   return (
     <div>
       <Header toggleSideBar={toggleDropdown} />
@@ -19,11 +20,6 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} /> {/* Render Dashboard when root path is matched */}
             <Route path="/calendar" element={<MyCalendar />} /> {/* Render MyCalendar when /calendar path is matched */}
             <Route path="/residents/registered" element={<Residents />} />
-            <Route path="/dashboard" element={<Dashboard />} /> {/* Render Dashboard when root path is matched */}
-            <Route path="/calendar" element={<MyCalendar />} /> {/* Render MyCalendar when /calendar path is matched */}
-            <Route path="/residents/registered" element={<Residents />} />
-            <Route path="/dashboard" element={<Dashboard />} /> {/* Render Dashboard when root path is matched */}
-            <Route path="/calendar" element={<MyCalendar />} /> {/* Render MyCalendar when /calendar path is matched */}
           </Routes>
         </div>
       </BrowserRouter>
