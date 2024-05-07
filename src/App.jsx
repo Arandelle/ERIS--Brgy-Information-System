@@ -17,7 +17,7 @@ const App = () => {
         <div className="flex">
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
           <Routes >
-            <Route path="/dashboard" element={<Dashboard />} /> {/* Render Dashboard when root path is matched */}
+            <Route path="/eris-brgy-information-system.vercel.app/dashboard" element={<Dashboard />} /> {/* Render Dashboard when root path is matched */}
             <Route path="/calendar" element={<MyCalendar />} /> {/* Render MyCalendar when /calendar path is matched */}
             <Route path="/residents/registered" element={<Residents />} />
           </Routes>

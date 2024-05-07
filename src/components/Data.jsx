@@ -18,7 +18,7 @@
         {
             title: "Dashboard",
             icon: <DashboardIcon />,
-            link: "/dashboard"
+            link: "/eris-brgy-information-system.vercel.app/dashboard"
         },
         {
             title: "Residents",
