@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/Sidebar/Sidebar";
 import { Toggle } from "./hooks/Toggle";
 import Dashboard from "./components/Dashboard";
 import MyCalendar from "./components/MyCalendar";
