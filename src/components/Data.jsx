@@ -27,12 +27,12 @@ export const Data = [
         items: [{
             title: "Registered",
             icon: <HowToRegIcon />,
-            link: "/registered"
+            link: "/residents/registered"
         },
         {
             title: "Voters",
             icon: <ThumbUpOffAltIcon />,
-            link: "/map"
+            link: "/registered/voters"
         },
     ]
         
