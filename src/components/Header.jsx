@@ -6,7 +6,7 @@ import logo from '../assets/logo.png';
 
 const Header = ({ toggleSideBar }) => {
   return (
-    <div className="bg-dark border-green-400 px-4 lg:px-6 w-screen py-2.5 dark:bg-gray-800 bg-gray-800">
+    <div className="bg-dark border-green-400 px-4 lg:px-6 w-full py-2.5 dark:bg-gray-800 bg-gray-800">
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
           <button
