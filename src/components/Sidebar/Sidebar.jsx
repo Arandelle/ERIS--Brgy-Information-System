@@ -20,10 +20,8 @@ function Sidebar({ isOpen, toggleSideBar }) {
 
   return (
     <div className={`dark:bg-gray-800 bg-gray-300 dark:text-white w-40 md:w-52 h-screen ${isOpen ? 'hidden' : 'block'}`}>
-      <div className="p-4">
-        <h1 className="text-base font-bold text-gray-800 text-nowrap">Admin Panel</h1>
-      </div>
-      <ul>
+        <h1 className="text-base p-4 text-center font-bold text-gray-800 text-nowrap">Admin Panel</h1>
+      <ul >
         {Data.map((val, key) => (
           <li key={key} className={`text-sm px-4 pr-0 py-2 cursor-pointer ${(!val.items || openSubMenu !== val.title) && 'hover:bg-gray-700 hover:text-gray-300'}`} onClick={() => handleMenuItemClick(val)}>
             <div className="flex items-center">
