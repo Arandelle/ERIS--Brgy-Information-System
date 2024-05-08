@@ -2,7 +2,7 @@ import React from "react";
 
 const DashboardCard = ({ title, value }) => {
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 md:p-6 w-full md:w-52 lg:w-64 mb-4 md:mb-0">
+    <div className="bg-white shadow-md rounded-lg p-4 md:p-6 w-full md:w-full lg:w-full mb-4 md:mb-0">
       <h3 className="text-md md:text-lg font-semibold text-gray-800">
         {title}
       </h3>
@@ -19,7 +19,7 @@ const Dashboard = ({ showSidebar }) => {
     : "grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-4 mx-4";
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-screen">
       <div className={dashboardClasses}>
         <DashboardCard title="Population" value="10,000" />
         <DashboardCard title="Emergency" value="5,000" />

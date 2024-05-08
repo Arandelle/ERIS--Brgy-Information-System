@@ -4,7 +4,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import { Toggle } from "./hooks/Toggle";
 import Dashboard from "./components/Dashboard";
 import MyCalendar from "./components/MyCalendar";
-import { BrowserRouter, Routes, Route, Navigate  } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Residents from "./components/Residents";
 
 const App = () => {
@@ -17,9 +17,9 @@ const App = () => {
         <div className="flex">
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
           <Routes basename="/dashboard">
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-            <Route path="/dashboard" element={<Dashboard />} /> {/* Render Dashboard when root path is matched */}
-            <Route path="/calendar" element={<MyCalendar />} /> {/* Render MyCalendar when /calendar path is matched */}
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route path="/dashboard" element={<Dashboard />} />{" "}
+            <Route path="/calendar" element={<MyCalendar />} />{" "}
             <Route path="/residents/registered" element={<Residents />} />
           </Routes>
         </div>

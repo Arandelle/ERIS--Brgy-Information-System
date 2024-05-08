@@ -27,7 +27,7 @@ const Notification = ()=>{
 
           {isOpen && (
             <div
-              className="absolute right-0 mt-2 w-80 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none"
+              className="absolute z-10 right-0 mt-2 w-80 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="options-menu"

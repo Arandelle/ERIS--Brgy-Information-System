@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Data } from './SidebarData';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Data } from "./SidebarData";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { Link } from "react-router-dom";
 
 function Sidebar({ isOpen, toggleSideBar }) {
   const [openSubMenu, setOpenSubMenu] = useState(null);
@@ -19,38 +19,56 @@ function Sidebar({ isOpen, toggleSideBar }) {
   };
 
   return (
-    <div className={`dark:bg-gray-800 bg-gray-300 dark:text-white w-40 md:w-52 h-screen ${isOpen ? 'hidden' : 'block'}`}>
-        <h1 className="text-base p-4 text-center font-bold text-gray-800 text-nowrap">Admin Panel</h1>
-      <ul >
-        {Data.map((val, key) => (
-          <li key={key} className={`text-sm px-4 pr-0 py-2 cursor-pointer ${(!val.items || openSubMenu !== val.title) && 'hover:bg-gray-700 hover:text-gray-300'}`} onClick={() => handleMenuItemClick(val)}>
-            <div className="flex items-center">
-              <div className="mr-2">{val.icon}</div>
-              {val.items ? (
-                <div>{val.title}</div>
-              ) : (
-                <Link to={val.link}>{val.title}</Link>
-              )}
-              {val.items && (
-                <ArrowRightIcon className={`ml-auto transition-transform ${openSubMenu === val.title ? 'rotate-90' : 'rotate-0'}`} />
-              )}
-            </div>
-            {val.items && openSubMenu === val.title && (
-              <ul className="bg-gray-300 m-0 left-0"> {/* Set padding and margin to 0 */}
-                {val.items.map((subVal, subKey) => (
-                  <li key={subKey} className="text-sm px-4 py-2 hover:bg-gray-600 hover:text-gray-300 cursor-pointer" onClick={() => handleSubMenuClick(subVal.link)}>
-                    <div className="flex items-center text-nowrap">
-                      <div className="mr-2" >{subVal.icon}</div>
-                      <div className="mr-3">{subVal.title}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+    <div className={`${isOpen ? "hidden" : "relative"}`}>
+    <ul className="flex flex-col space-y-2 text-sm font-medium bg-white h-screen shadow-sm text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0">
+      <h1 className="text-base pt-4 text-center font-bold text-gray-700 text-nowrap">
+        Admin Panel
+      </h1>
+      {Data.map((val, key) => (
+        <li
+          key={key}
+          className={`${
+            !val.items || openSubMenu !== val.title
+              ? "hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer" : "cursor-pointer"
+          }`}
+          onClick={() => handleMenuItemClick(val)}
+        >
+          <div className="flex items-center px-4 py-3">
+            <div className="mr-2">{val.icon}</div>
+            {val.items ? (
+              <div>{val.title}</div>
+            ) : (
+              <Link to={val.link}>{val.title}</Link>
             )}
-          </li>
-        ))}
-      </ul>
-    </div>
+            {val.items && (
+              <ArrowRightIcon
+                className={`ml-auto transition-transform ${
+                  openSubMenu === val.title ? "rotate-90" : "rotate-0"
+                }`}
+              />
+            )}
+          </div>
+          {val.items && openSubMenu === val.title && (
+            <ul className="bg-gray-300 m-0 left-0">
+              {val.items.map((subVal, subKey) => (
+                <li
+                  key={subKey}
+                  className="text-sm px-4 py-2 hover:bg-gray-400 hover:text-gray-800 cursor-pointer"
+                  onClick={() => handleSubMenuClick(subVal.link)}
+                >
+                  <div className="flex items-center text-nowrap">
+                    <div className="mr-2">{subVal.icon}</div>
+                    <div>{subVal.title}</div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+  
   );
 }
 
