@@ -1,6 +1,6 @@
     import React from 'react'
 
-    export const Data = [
+    export const SidebarData = [
         {
             title: "Dashboard",
             icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" class="w-5 h-5">

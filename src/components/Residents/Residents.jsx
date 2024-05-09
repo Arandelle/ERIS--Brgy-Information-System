@@ -1,61 +1,6 @@
-import React from "react";
-import { Toggle } from "../hooks/Toggle";
-
-const residents = [
-  {
-    id: 1,
-    img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
-    name: "John Doe",
-    email: "user@gmail.com",
-    age: 30,
-    address: "123 Main St",
-    gender: "Male",
-    status: "online",
-  },
-  {
-    id: 2,
-    img: "https://flowbite.com/docs/images/people/profile-picture-4.jpg",
-    name: "Jane Smith",
-    email: "user@gmail.com",
-    age: 25,
-    address: "456 Elm St",
-    gender: "Female",
-    city: "Sometown",
-    status: "offline",
-  },
-  {
-    id: 3,
-    img: "https://flowbite.com/docs/images/people/profile-picture-3.jpg",
-    name: "Alice Johnson",
-    email: "user@gmail.com",
-    age: 40,
-    address: "789 Oak St",
-    gender: "Female",
-    status: "offline",
-  },
-  {
-    id: 1,
-    img: "https://flowbite.com/docs/images/people/profile-picture-2.jpg",
-    name: "John Doe",
-    email: "user@gmail.com",
-    age: 30,
-    address: "123 Main St",
-    gender: "Male",
-    status: "online",
-  },
-  {
-    id: 1,
-    img: "https://flowbite.com/docs/images/people/profile-picture-1.jpg",
-    name: "John Doe",
-    email: "user@gmail.com",
-    age: 30,
-    address: "123 Main St",
-    gender: "Male",
-    status: "online",
-  },
-
-  // Add more resident data as needed
-];
+import React, {useState} from "react";
+import { Toggle } from "../../hooks/Toggle";
+import {Residents} from './ResidentsData';
 
 const ResidentsTable = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -204,9 +149,9 @@ const ResidentsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {residents.map((residents) => (
+            {Residents.map((residents, key) => (
               <tr
-                key={residents.id}
+                key={key}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
               >
                 <td className="w-4 p-4">

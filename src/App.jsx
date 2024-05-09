@@ -5,7 +5,7 @@ import { Toggle } from "./hooks/Toggle";
 import Dashboard from "./components/Dashboard";
 import MyCalendar from "./components/MyCalendar";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Residents from "./components/Residents";
+import Residents from "./components/Residents/Residents";
 
 const App = () => {
   const { isOpen, toggleDropdown } = Toggle();

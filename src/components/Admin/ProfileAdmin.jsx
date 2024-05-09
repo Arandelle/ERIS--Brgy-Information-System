@@ -1,4 +1,5 @@
-import { Toggle } from "../hooks/Toggle";
+import { Toggle } from "../../hooks/Toggle";
+import { AdminData } from "./AdminData";
 
 const Profile = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -24,14 +25,16 @@ const Profile = () => {
           className="absolute z-10 right-0 mt-2 w-56 bg-white rounded-md shadow-lg divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600"
           id="dropdown"
         >
-          <div className="py-3 px-4">
-            <span className="block text-sm font-semibold text-gray-900 dark:text-white">
-              Neil sims
-            </span>
-            <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-              name@flowbite.com
-            </span>
-          </div>
+          {AdminData.map((admin, key) => (
+            <div key={key} className="py-3 px-4">
+              <span className="block text-sm font-semibold text-gray-900 dark:text-white">
+                {admin.name}
+              </span>
+              <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
+                {admin.email}
+              </span>
+            </div>
+          ))}
           <ul
             className="py-1 text-gray-500 dark:text-gray-400"
             aria-labelledby="dropdown"

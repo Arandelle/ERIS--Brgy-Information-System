@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Data } from "./SidebarData";
+import { SidebarData } from "./SidebarData";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { Link } from "react-router-dom";
 
@@ -24,7 +24,7 @@ function Sidebar({ isOpen, toggleSideBar }) {
       <h1 className="text-base pt-4 text-center font-bold text-gray-700 text-nowrap">
         Admin Panel
       </h1>
-      {Data.map((val, key) => (
+      {SidebarData.map((val, key) => (
         <li
           key={key}
           className={`${

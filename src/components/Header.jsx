@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Notification from "./Notification";
 import Menu from './Menu';
-import Profile from './Profile';
+import Profile from './Admin/ProfileAdmin';
 import logo from '../assets/logo.png';
 
 const Header = ({ toggleSideBar }) => {
