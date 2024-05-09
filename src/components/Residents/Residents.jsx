@@ -113,107 +113,109 @@ const ResidentsList = ({residents, label}) => {
             />
           </div>
         </div>
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-all-search"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label htmlFor="checkbox-all-search" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Address
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Age
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Gender
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Status
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {residents.map((residents, key) => (
-              <tr
-                key={key}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-              >
-                <td className="w-4 p-4">
+        <div className="overflow-auto w-full">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="p-4">
                   <div className="flex items-center">
                     <input
-                      id="checkbox-table-search-1"
+                      id="checkbox-all-search"
                       type="checkbox"
                       className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     />
-                    <label
-                      htmlFor={`checkbox-table-search-${residents.id}`}
-                      className="sr-only"
-                    >
+                    <label htmlFor="checkbox-all-search" className="sr-only">
                       checkbox
                     </label>
                   </div>
-                </td>
-                <th
-                  scope="row"
-                  className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  <img
-                    className="w-10 h-10 rounded-full"
-                    src={residents.img}
-                    alt="Jese image"
-                  />
-                  <div className="ps-3">
-                    <div className="text-base font-semibold">
-                      {residents.name}
-                    </div>
-                    <div className="font-normal text-gray-500">
-                      {residents.email}
-                    </div>
-                  </div>
                 </th>
-                <td className="px-6 py-4">{residents.address}</td>
-                <td className="px-6 py-4">{residents.age}</td>
-                <td className="px-6 py-4">{residents.gender}</td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center">
-                    <div
-                      className={`h-2.5 w-2.5 rounded-full bg-green-500 me-2 ${
-                        residents.status === "online"
-                          ? "bg-green-500"
-                          : "bg-red-500"
-                      } me-2`}
-                    />{" "}
-                    {residents.status === "online" ? "Online" : "Offline"}
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    Edit user
-                  </a>
-                </td>
+                <th scope="col" className="px-6 py-3">
+                  Name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Address
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Age
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Gender
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Status
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Action
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {residents.map((residents, key) => (
+                <tr
+                  key={key}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  <td className="w-4 p-4">
+                    <div className="flex items-center">
+                      <input
+                        id="checkbox-table-search-1"
+                        type="checkbox"
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      />
+                      <label
+                        htmlFor={`checkbox-table-search-${residents.id}`}
+                        className="sr-only"
+                      >
+                        checkbox
+                      </label>
+                    </div>
+                  </td>
+                  <th
+                    scope="row"
+                    className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    <img
+                      className="w-10 h-10 rounded-full"
+                      src={residents.img}
+                      alt="Jese image"
+                    />
+                    <div className="ps-3">
+                      <div className="text-base font-semibold">
+                        {residents.name}
+                      </div>
+                      <div className="font-normal text-gray-500">
+                        {residents.email}
+                      </div>
+                    </div>
+                  </th>
+                  <td className="px-6 py-4">{residents.address}</td>
+                  <td className="px-6 py-4">{residents.age}</td>
+                  <td className="px-6 py-4">{residents.gender}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center">
+                      <div
+                        className={`h-2.5 w-2.5 rounded-full bg-green-500 me-2 ${
+                          residents.status === "online"
+                            ? "bg-green-500"
+                            : "bg-red-500"
+                        } me-2`}
+                      />{" "}
+                      {residents.status === "online" ? "Online" : "Offline"}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <a
+                      href="#"
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    >
+                      Edit user
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <nav
           class="flex items-center bg-white flex-column flex-wrap md:flex-row justify-between p-4"
           aria-label="Table navigation"
