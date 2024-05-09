@@ -5,7 +5,8 @@ import { Toggle } from "./hooks/Toggle";
 import Dashboard from "./components/Dashboard";
 import MyCalendar from "./components/MyCalendar";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Residents from "./components/Residents/Residents";
+import ResidentsList from "./components/Residents/Residents";
+import { Pabahay, Lumina, Carissa } from './components/Residents/ResidentsData'; 
 
 const App = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -20,7 +21,9 @@ const App = () => {
             <Route path="/" element={<Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={<Dashboard />} />{" "}
             <Route path="/calendar" element={<MyCalendar />} />{" "}
-            <Route path="/residents/registered" element={<Residents />} />
+            <Route path="/residents/pabahay" element={<ResidentsList residents={Pabahay} label="Pabahay"/>} />
+            <Route path="/residents/carissa" element={<ResidentsList residents={Carissa} label="Carissa" />} />
+            <Route path="/residents/lumina" element={<ResidentsList residents={Lumina} label="Lumina  " />} />
           </Routes>
         </div>
       </BrowserRouter>

@@ -1,8 +1,7 @@
 import React, {useState} from "react";
 import { Toggle } from "../../hooks/Toggle";
-import {Residents} from './ResidentsData';
 
-const ResidentsTable = () => {
+const ResidentsList = ({residents, label}) => {
   const { isOpen, toggleDropdown } = Toggle();
 
   return (
@@ -87,6 +86,7 @@ const ResidentsTable = () => {
           <label htmlFor="table-search" className="sr-only">
             Search
           </label>
+          <label htmlFor="">{label}</label>
           <div className="relative">
             <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg
@@ -149,7 +149,7 @@ const ResidentsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {Residents.map((residents, key) => (
+            {residents.map((residents, key) => (
               <tr
                 key={key}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -293,4 +293,4 @@ const ResidentsTable = () => {
   );
 };
 
-export default ResidentsTable;
+export default ResidentsList;
