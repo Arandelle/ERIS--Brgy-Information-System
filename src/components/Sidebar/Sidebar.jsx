@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { SidebarData } from "./SidebarData";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import { Link } from "react-router-dom";
 
 function Sidebar({ isOpen, toggleSideBar }) {
   const [openSubMenu, setOpenSubMenu] = useState(null);

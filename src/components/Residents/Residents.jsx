@@ -1,8 +1,15 @@
 import React, {useState} from "react";
+import { ActionButton } from "./ActionData";
 import { Toggle } from "../../hooks/Toggle";
 
 const ResidentsList = ({residents, label}) => {
   const { isOpen, toggleDropdown } = Toggle();
+
+  const handleActionMenu = (val) => {
+    if (!val.items) {
+      window.location.pathname = val.link;
+    } 
+  }
 
   return (
     <div className="flex justify-center w-screen p-4 ">
@@ -47,30 +54,17 @@ const ResidentsList = ({residents, label}) => {
                   className="py-1 text-sm text-gray-700 dark:text-gray-200"
                   aria-labelledby="dropdownActionButton"
                 >
-                  <li>
+                  {ActionButton.map((val, key) =>(
+                  <li key={key}
+                >
                     <a
                       href="#"
                       className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
-                      Reward
+                     {val.title}
                     </a>
                   </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Promote
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Activate account
-                    </a>
-                  </li>
+                  ))}
                 </ul>
                 <div className="py-1">
                   <a
