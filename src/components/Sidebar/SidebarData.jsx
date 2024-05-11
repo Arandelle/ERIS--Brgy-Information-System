@@ -95,7 +95,7 @@ export const SidebarData = [
         />
       </svg>
     ),
-    link: "/map",
+    link: "/maps",
   },
   {
     title: "Calendar",

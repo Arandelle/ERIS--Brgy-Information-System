@@ -32,7 +32,7 @@ function Sidebar({ isOpen, toggleSideBar }) {
                 : "cursor-pointer"
             }`}
             onClick={() => handleMenuItemClick(val)}
-          >
+          > 
             <div className="flex items-center px-4 py-3 w-full">
               <div className="mr-2">{val.icon}</div>
               <div className="flex-grow">{val.title}</div>

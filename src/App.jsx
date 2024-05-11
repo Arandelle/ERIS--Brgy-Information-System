@@ -25,7 +25,7 @@ const App = () => {
             <Route path="/residents/pabahay" element={<ResidentsList residents={Pabahay} label="Pabahay"/>} />
             <Route path="/residents/carissa" element={<ResidentsList residents={Carissa} label="Carissa" />} />
             <Route path="/residents/lumina" element={<ResidentsList residents={Lumina} label="Lumina  " />} />
-            <Route path="/map" element={<Map />} />{" "}
+            <Route path="/maps" element={<Map />} />{" "}
           </Routes>
         </div>
       </BrowserRouter>
