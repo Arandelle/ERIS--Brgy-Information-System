@@ -6,9 +6,7 @@ const ResidentsList = ({residents, label}) => {
   const { isOpen, toggleDropdown } = Toggle();
 
   const handleActionMenu = (val) => {
-    if (!val.items) {
       window.location.pathname = val.link;
-    } 
   }
 
   return (
@@ -56,7 +54,8 @@ const ResidentsList = ({residents, label}) => {
                 >
                   {ActionButton.map((val, key) =>(
                   <li key={key}
-                >
+                  onClick={() => handleActionMenu(val)}
+                  >
                     <a
                       href="#"
                       className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
@@ -80,7 +79,7 @@ const ResidentsList = ({residents, label}) => {
           <label htmlFor="table-search" className="sr-only">
             Search
           </label>
-          <label htmlFor="" className="text-lg dark:text-green-500" >{label}</label>
+          <label htmlFor="" className="text-sm lg:text-lg dark:text-green-500" >{label}</label>
           <div className="relative">
             <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg
@@ -189,12 +188,12 @@ const ResidentsList = ({residents, label}) => {
                     <div className="flex items-center">
                       <div
                         className={`h-2.5 w-2.5 rounded-full bg-green-500 me-2 ${
-                          residents.status === "online"
+                          residents.status === "Activated"
                             ? "bg-green-500"
                             : "bg-red-500"
                         } me-2`}
                       />{" "}
-                      {residents.status === "online" ? "Online" : "Offline"}
+                      {residents.status === "Activated" ? "Activated" : "Not Activated"}
                     </div>
                   </td>
                   <td className="px-6 py-4">

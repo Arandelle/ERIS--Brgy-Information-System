@@ -9,7 +9,7 @@ export const Pabahay = [
       age: 30,
       address: "123 Main St",
       gender: "Male",
-      status: "online",
+      status: "Activated"
     },
     {
       id: 2,
@@ -20,7 +20,7 @@ export const Pabahay = [
       address: "456 Elm St",
       gender: "Female",
       city: "Sometown",
-      status: "offline",
+      status: "Not Activated"
     },
     {
       id: 3,
@@ -30,7 +30,7 @@ export const Pabahay = [
       age: 40,
       address: "789 Oak St",
       gender: "Female",
-      status: "offline",
+      status: "Not Activated"
     },
     {
       id: 1,
@@ -40,7 +40,7 @@ export const Pabahay = [
       age: 30,
       address: "123 Main St",
       gender: "Male",
-      status: "online",
+      status: "Activated"
     },
     {
       id: 1,
@@ -50,7 +50,7 @@ export const Pabahay = [
       age: 30,
       address: "123 Main St",
       gender: "Male",
-      status: "online",
+      status: "Activated"
     },
   ];
 export const Carissa = [
@@ -62,7 +62,7 @@ export const Carissa = [
       age: 30,
       address: "123 Main St",
       gender: "Male",
-      status: "online",
+      status: "Activated",
     },
     {
       id: 2,
@@ -73,7 +73,7 @@ export const Carissa = [
       address: "456 Elm St",
       gender: "Female",
       city: "Sometown",
-      status: "offline",
+      status: "Not Activated",
     },
     {
       id: 3,
@@ -83,7 +83,7 @@ export const Carissa = [
       age: 40,
       address: "789 Oak St",
       gender: "Female",
-      status: "offline",
+      status: "Not Activated",
     },
     {
       id: 1,
@@ -93,7 +93,7 @@ export const Carissa = [
       age: 30,
       address: "123 Main St",
       gender: "Male",
-      status: "online",
+      status: "Activated",
     },
   ];
   export const Lumina = [
@@ -105,7 +105,7 @@ export const Carissa = [
       age: 30,
       address: "123 Main St",
       gender: "Male",
-      status: "online",
+      status: "Activated",
     },
     {
       id: 2,
@@ -116,6 +116,6 @@ export const Carissa = [
       address: "456 Elm St",
       gender: "Female",
       city: "Sometown",
-      status: "offline",
+      status: "Not Activated",
     },
   ];

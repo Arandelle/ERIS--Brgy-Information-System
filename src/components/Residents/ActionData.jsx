@@ -3,15 +3,15 @@ import React from "react";
 export const ActionButton = [
 
     {
-        title: "Add User",
+        title: "Add Account",
         link: "residents/Pabahay/Add user"
     },
     {
-        title: "Activate User",
+        title: "Activate Account",
         link: "residents/Pabahay/Activate user"
     },
     {
-        title: "Delete User",
+        title: "Delete Account",
         link: "residents/Pabahay/Delete user"
     }
 ];

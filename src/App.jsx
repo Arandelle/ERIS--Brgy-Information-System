@@ -7,6 +7,7 @@ import MyCalendar from "./components/MyCalendar";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ResidentsList from "./components/Residents/Residents";
 import { Pabahay, Lumina, Carissa } from './components/Residents/ResidentsData'; 
+import Map from "./components/Map";
 
 const App = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="/residents/pabahay" element={<ResidentsList residents={Pabahay} label="Pabahay"/>} />
             <Route path="/residents/carissa" element={<ResidentsList residents={Carissa} label="Carissa" />} />
             <Route path="/residents/lumina" element={<ResidentsList residents={Lumina} label="Lumina  " />} />
+            <Route path="/map" element={<Map />} />{" "}
           </Routes>
         </div>
       </BrowserRouter>
