@@ -68,7 +68,7 @@ const Header = ({ toggleSideBar }) => {
           </button>
           <div className="flex items-center space-x-2">
             <Notification />
-            <Menu />
+            {/* <Menu /> */}
             <Profile />
           </div>
         </div>

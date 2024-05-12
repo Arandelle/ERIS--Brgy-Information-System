@@ -12,9 +12,9 @@ function MyMapComponent() {
   ];
   
   return (
-    <div className='w-full h-screen'>
+    <div className='w-full h-screen z-0'>
         <div style={{ margin: "20px" }}>
-          <MapContainer center={[14.3742, 120.9265]} zoom={10} style={{ height: "500px" }} maxBounds={maxBounds}>
+          <MapContainer center={[14.3742, 120.9265]} zoom={10} style={{ height: "500px",zIndex: 0 }} maxBounds={maxBounds}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {/* No markers or popups in your code */}
           </MapContainer>
