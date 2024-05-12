@@ -18,7 +18,7 @@ function Sidebar({ isOpen, toggleSideBar }) {
   };
 
   return (
-    <div className={`${isOpen ? "hidden" : "relative"}`}>
+    <div className={`${isOpen ? "hidden" : "sm: absolute md:relative z-50 sm: w-4/6 md:w-1/6 uppercase"}`}>
       <ul className="flex flex-col space-y-3 space-x-3 text-sm font-medium bg-white h-screen shadow-sm text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0">
         <h1 className="text-base pt-4 text-center font-bold text-gray-700 text-nowrap">
           Admin Panel
