@@ -55,11 +55,11 @@ function Sidebar({ isOpen, toggleSidebar }) {
               )}
             </div>
             {val.items && openSubMenu === val.title && (
-              <ul className="bg-gray-300 m-0 left-0 text-lg md:text-sm">
+              <ul className="bg-gray-300 m-0 left-0 ">
                 {val.items.map((subVal, subKey) => (
                   <li
                     key={subKey}
-                    className="text-sm pl-6 py-2 hover:bg-gray-400 hover:text-gray-800 cursor-pointer"
+                    className="text-lg md:text-sm pl-6 py-2 hover:bg-gray-400 hover:text-gray-800 cursor-pointer"
                     onClick={() => handleSubMenuClick(subVal.link)}
                   >
                     <div className="flex items-center">
