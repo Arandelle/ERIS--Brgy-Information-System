@@ -1,11 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  
-  darkMode: "selector",
+  darkMode: 'media',
 
   content: [
     "./index.html", "./src/**/*.{js,ts,jsx,tsx}",
-    'node_modules/flowbite-react/lib/esm/**/*.js'
   ],
 
   theme: {
@@ -16,17 +14,17 @@ module.exports = {
       fontSize: {
         xxs: '0.5rem'
       },
-      screens:{
-       
+      screens: {
+        // Define your custom screen sizes here if needed
       }
     },
+    fontFamily: {
+      sans: ["Graphik", "sans-serif"],
+      serif: ["Merriweather", "serif"],
+    },
   },
-  fontFamily: {
-    sans: ["Graphik", "sans-serif"],
-    serif: ["Merriweather", "serif"],
-  },
+  
   plugins: [
-    require('flowbite/plugin'),
-    
+    require('flowbite/plugin'), // Example plugin
   ],
 };
