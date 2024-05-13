@@ -55,7 +55,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
               )}
             </div>
             {val.items && openSubMenu === val.title && (
-              <ul className="bg-gray-300 m-0 left-0">
+              <ul className="bg-gray-300 m-0 left-0 text-lg md:text-sm">
                 {val.items.map((subVal, subKey) => (
                   <li
                     key={subKey}
