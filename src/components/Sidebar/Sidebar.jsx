@@ -18,7 +18,8 @@ function Sidebar({ isOpen, toggleSidebar }) {
   };
 
   return (
-    <div className={`flex fixed inset-0 z-50 ${isOpen ? "md:w-1/6 md:relative" : "hidden  md:relative"}`}>
+    <div className={`flex fixed inset-0 z-50 ${isOpen ? "md:hidden md:w-1/6 md:relative" : "hidden"}
+    ${!isOpen ? "md:flex md:relative" : ""}`}>
     <div className="bg-black bg-opacity-25 w-full md:relative md:w-0"></div> {/* This is the overlay */}
     <div className="absolute md:relative left-0 w-4/5 md:w-60 bg-white h-full shadow-lg ">
       <div className="flex justify-end p-2 dark:bg-gray-700">
