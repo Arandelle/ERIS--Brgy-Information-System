@@ -15,7 +15,7 @@ module.exports = {
         xxs: '0.5rem'
       },
       screens: {
-        // Define your custom screen sizes here if needed
+        xxs: "480px"
       }
     },
     fontFamily: {

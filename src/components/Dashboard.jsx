@@ -3,11 +3,11 @@
 
   const DashboardCard = ({ title, value }) => {
     return (
-      <div className="bg-white shadow-md rounded-lg p-4 md:p-6 w-full md:w-full lg:w-full mb-4 md:mb-0">
-        <h3 className="text-md md:text-lg font-semibold text-gray-800">
+      <div className="bg-white dark:bg-gray-700 shadow-md rounded-lg p-6 md:p-6 w-full mb-4 md:mb-0">
+        <h3 className="text-md md:text-lg xxs:text-center md:text-left font-semibold text-gray-800 dark:text-white">
           {title}
         </h3>
-        <p className="text-xl md:text-2xl font-bold text-gray-900 mt-1 md:mt-2">
+        <p className="text-2xl xxs:text-center md:text-left md:text-2xl font-bold text-gray-900 mt-1 dark:text-white">
           {value}
         </p>
       </div>
@@ -15,9 +15,9 @@
   };
 
   const Dashboard = ({ showSidebar }) => {
-    const dashboardClasses = showSidebar
-      ? "grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-4 mx-4 hidden"
-      : "grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-4 mx-4";
+    const dashboardClasses = !showSidebar
+      ? "grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-4 mx-4"
+      : "hidden";
 
     return (
       <div className="flex flex-col w-screen">
@@ -30,7 +30,7 @@
         <div className="relative w-full mb-2 px-4">
           <a
             href="#"
-            className="block w-full p-6 md:h-52 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+            className="block w-full p-6 md:h-52 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-700"
           >
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
               Noteworthy technology acquisitions 2021
