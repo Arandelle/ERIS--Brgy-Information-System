@@ -42,12 +42,14 @@ const MyCalendar = () => {
           <input
            className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
             type="date"
+            placeholder="mm/dd/yy"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
           <input
            className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
             type="date"
+            placeholder="mm/dd/yy"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
           />

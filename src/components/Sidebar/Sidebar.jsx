@@ -23,7 +23,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
     <div className="bg-black bg-opacity-25 w-full md:relative md:w-0"></div> {/* This is the overlay */}
     <div className="absolute md:relative left-0 w-4/5 md:w-60 bg-white h-full shadow-lg ">
       <div className="flex justify-end p-2 dark:bg-gray-700">
-        <button onClick={toggleSidebar} className="md:hidden text-gray-600 hover:text-gray-800">
+        <button onClick={toggleSidebar} className="md:hidden text-gray-600 hover:text-gray-800  dark:text-white dark:hover:text-gray-800">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
