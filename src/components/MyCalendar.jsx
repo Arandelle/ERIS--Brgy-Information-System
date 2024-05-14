@@ -45,6 +45,7 @@ const MyCalendar = () => {
              className="w-full relative bg-transparent z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
               type="text"
               onFocus={(e) => (e.target.type = 'date')}
+              onBlur={(e) => (e.target.type = 'text')}
               placeholder="Start Date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
@@ -57,6 +58,7 @@ const MyCalendar = () => {
               placeholder="End Date"
               value={endDate}
               onFocus={(e) => (e.target.type = 'date')}
+              onBlur={(e) => (e.target.type = 'text')}
               onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
