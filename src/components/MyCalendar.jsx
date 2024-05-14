@@ -39,20 +39,27 @@ const MyCalendar = () => {
             onChange={(e) => setTitle(e.target.value)}
             
           />
-          <input
-           className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
-            type="date"
-            placeholder="mm/dd/yy"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-          <input
-           className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
-            type="date"
-            placeholder="mm/dd/yy"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
+          <div className="relative inline-block">
+            {/* <label htmlFor="startDate" className="absolute top-50% left-10 translate-y-1/2 text-green-500">Start Date</label> */}
+            <input
+             className="w-full relative bg-transparent z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
+              type="text"
+              onFocus={(e) => (e.target.type = 'date')}
+              placeholder="Start Date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+          <div className="relative inline-block">
+            <input
+             className="date-input w-full relative bg-transparent z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
+              type="text"
+              placeholder="End Date"
+              value={endDate}
+              onFocus={(e) => (e.target.type = 'date')}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
       <button onClick={handleAddEvent}
       className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Add Event</button>
       </div>
