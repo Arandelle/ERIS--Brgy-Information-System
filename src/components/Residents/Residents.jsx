@@ -202,7 +202,7 @@ const ResidentsList = ({residents, label}) => {
           </table>
         </div>
         <nav
-          class="flex items-center bg-white flex-column flex-wrap md:flex-row justify-between p-4"
+          class="flex items-center dark:bg-gray-900 bg-white flex-column flex-wrap md:flex-row justify-between p-4"
           aria-label="Table navigation"
         >
           <span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">

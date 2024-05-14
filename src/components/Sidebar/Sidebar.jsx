@@ -38,7 +38,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
             key={key}
             className={`${
               !val.items || openSubMenu !== val.title
-                ? "hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer"
+                ? "hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer"
                 : "cursor-pointer"
             }`}
             onClick={() => handleMenuItemClick(val)}
@@ -55,11 +55,11 @@ function Sidebar({ isOpen, toggleSidebar }) {
               )}
             </div>
             {val.items && openSubMenu === val.title && (
-              <ul className="bg-gray-300 m-0 left-0 ">
+              <ul className="bg-gray-300 m-0 left-0 dark:bg-gray-500 ">
                 {val.items.map((subVal, subKey) => (
                   <li
                     key={subKey}
-                    className="text-lg md:text-sm pl-6 py-2 hover:bg-gray-400 hover:text-gray-800 cursor-pointer"
+                    className="text-lg md:text-sm pl-6 py-2 dark:hover:bg-gray-100 hover:bg-gray-400 hover:text-gray-800 cursor-pointer"
                     onClick={() => handleSubMenuClick(subVal.link)}
                   >
                     <div className="flex items-center">
