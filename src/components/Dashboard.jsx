@@ -1,5 +1,5 @@
 import React from "react";
-import Map from "./Map";
+import MapContent from "./MapContent"
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
@@ -52,7 +52,7 @@ const Dashboard = ({setAuth}) => {
                 far, in reverse chronological order.
               </p>
             </a>
-            <Map />
+            <MapContent />
             <button className="text-lg text-white bg-gray-800 p-2" onClick={handleLogout}>Logout</button>
           </div>
         </div>
