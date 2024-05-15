@@ -3,6 +3,7 @@ import Map from "./Map";
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
+import { useNavigate } from 'react-router-dom';
 
 const DashboardCard = ({ title, value }) => {
   return (
@@ -17,11 +18,17 @@ const DashboardCard = ({ title, value }) => {
   );
 };
 
-const Dashboard = ({ showSidebar }) => {
+const Dashboard = ({setAuth}) => {
   const { isOpen, toggleDropdown } = Toggle();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setAuth(false);
+    navigate('/');
+};
 
   return (
-    <div className="flex flex-col w-screen">
+    <div className="flex flex-col w-full">
       <Header toggleSideBar={toggleDropdown} />
       <div className="flex">
         <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
@@ -46,6 +53,7 @@ const Dashboard = ({ showSidebar }) => {
               </p>
             </a>
             <Map />
+            <button className="text-lg text-white bg-gray-800 p-2" onClick={handleLogout}>Logout</button>
           </div>
         </div>
       </div>
