@@ -5,11 +5,13 @@ export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (email === "admin@example.com" && password === "password123") {
-      onLogin(true);
+      setAuth(true);
+      navigate('/dashboard');
     } else {
       setError("Invalid email or password");
     }
