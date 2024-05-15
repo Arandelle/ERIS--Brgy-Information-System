@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
-export default function Login({ onLogin }) {
+export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -8,7 +9,7 @@ export default function Login({ onLogin }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (email === "admin@example.com" && password === "password123") {
-      onLogin();
+      onLogin(true);
     } else {
       setError("Invalid email or password");
     }
