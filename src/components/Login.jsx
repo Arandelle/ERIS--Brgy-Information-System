@@ -30,7 +30,7 @@ export default function Login({ setAuth }) {
             <label htmlFor="email" className="dark:text-gray-400">Email</label>
             <input
               id="email"
-              placeholder="m@example.com"
+              placeholder="email@example.com"
               required
               type="email"
               value={email}
