@@ -18,17 +18,16 @@ export default function Login({ setAuth }) {
   };
 
   return (
-    <main className="flex h-screen w-full items-center justify-center bg-gray-100 px-4">
+    <main className="flex h-screen w-full items-center justify-center bg-gray-100 dark:bg-gray-800 px-4">
       <div className="w-full max-w-md">
         <div className="space-y-1">
-          <h1 className="text-2xl">Welcome back</h1>
-          <p>Enter your email and password to access your account.</p>
-          <h2>Email: admin@example.com</h2>
-          <h2>Password: password123  </h2>
+          <h1 className="text-2xl dark:text-gray-300 text-center">Welcome back Admin</h1>
+          <h2 className="dark:text-gray-400">Email: admin@example.com</h2>
+          <h2 className="dark:text-gray-400">Password: password123  </h2><br></br>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email" className="dark:text-gray-400">Email</label>
             <input
               id="email"
               placeholder="m@example.com"
@@ -41,13 +40,14 @@ export default function Login({ setAuth }) {
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label htmlFor="password">Password</label>
-              <a className="text-sm underline" href="#">
+              <label htmlFor="password" className="dark:text-gray-400">Password</label>
+              <a className="text-sm underline dark:text-green-400" href="#">
                 Forgot password?
               </a>
             </div>
             <input
               id="password"
+              placeholder="Your Password"
               required  
               type="password"
               value={password}
@@ -57,7 +57,7 @@ export default function Login({ setAuth }) {
           </div>
           {error && <p className="text-red-500">{error}</p>}
           <div>
-            <button className="w-full bg-blue-500 text-white p-2 rounded" type="submit">
+            <button className="w-full bg-primary text-white text-bold p-2 rounded" type="submit">
               Sign in
             </button>
           </div>
