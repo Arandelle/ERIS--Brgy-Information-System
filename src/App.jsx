@@ -4,7 +4,7 @@ import MyCalendar from "./components/MyCalendar";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ResidentsList from "./components/Residents/Residents";
 import { Pabahay, Lumina, Carissa } from './components/Residents/ResidentsData'; 
-import Map from "./components/Map";
+import Map from "./components/Maps/Map";
 import Login from "./components/Login"
 
 

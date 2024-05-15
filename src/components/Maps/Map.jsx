@@ -1,12 +1,10 @@
-import { MapContainer, TileLayer } from 'react-leaflet';
 import React, {useState} from 'react';
 import 'leaflet/dist/leaflet.css'; // import Leaflet CSS
-import Header from './Header';
-import Sidebar from './Sidebar/Sidebar';
-import { Toggle } from '../hooks/Toggle';
+import Header from '../Header';
+import Sidebar from '../Sidebar/Sidebar';
+import { Toggle } from '../../hooks/Toggle';
 import MapContent from './MapContent';
 // Fix Leaflet marker icon issue
-
 
 function MyMapComponent() {
   const { isOpen, toggleDropdown } = Toggle();

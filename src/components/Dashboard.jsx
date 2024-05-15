@@ -1,5 +1,5 @@
 import React from "react";
-import MapContent from "./MapContent"
+import MapContent from "./Maps/MapContent"
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
