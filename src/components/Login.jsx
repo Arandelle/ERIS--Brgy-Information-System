@@ -23,7 +23,8 @@ export default function Login({ setAuth }) {
         <div className="space-y-1">
           <h1 className="text-2xl">Welcome back</h1>
           <p>Enter your email and password to access your account.</p>
-          <p>Email: admin@example.com Password: password123  </p>
+          <h2>Email: admin@example.com</h2>
+          <h2>Password: password123  </h2>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
