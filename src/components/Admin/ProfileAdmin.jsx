@@ -1,8 +1,14 @@
 import { Toggle } from "../../hooks/Toggle";
 import { AdminData } from "./AdminData";
+import { useNavigate } from 'react-router-dom';
 
-const Profile = () => {
+const Profile = ({setAuth}) => {
   const { isOpen, toggleDropdown } = Toggle();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    setAuth(false);
+    navigate('/');
+};
   return (
     <div className="relative">
       <button
@@ -22,7 +28,7 @@ const Profile = () => {
       </button>
       {isOpen && (
         <div
-          className="absolute z-10 right-0 mt-2 w-56 bg-white rounded-md shadow-lg divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600"
+          className="absolute z-10 right-0 mt-2 w-56 bg-white rounded-md shadow-md shadow-slate-400 divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600"
           id="dropdown"
         >
           {AdminData.map((admin, key) => (
@@ -140,6 +146,7 @@ const Profile = () => {
               <a
                 href="#"
                 className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                onClick={handleLogout}
               >
                 Sign out
               </a>

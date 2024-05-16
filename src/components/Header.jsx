@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import Notification from "./Notification";
-import Menu from './Menu';
+// import Menu from './Menu';
 import Profile from './Admin/ProfileAdmin';
 import logo from '../assets/logo.png';
 
 const Header = ({ toggleSideBar }) => {
+  
+  const [isAuthenticated, setAuth] = useState(false);
+
   return (
     <div className=" border-green-400 px-4 lg:px-6 w-full py-2.5 dark:bg-gray-800 bg-gray-800">
       <div className="flex justify-between items-center">
@@ -69,7 +72,7 @@ const Header = ({ toggleSideBar }) => {
           <div className="flex items-center space-x-2">
             <Notification />
             {/* <Menu /> */}
-            <Profile />
+            <Profile setAuth={setAuth} />
           </div>
         </div>
       </div>

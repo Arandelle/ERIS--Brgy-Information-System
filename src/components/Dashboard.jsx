@@ -20,13 +20,8 @@ const DashboardCard = ({ title, value }) => {
 
 const Dashboard = ({setAuth}) => {
   const { isOpen, toggleDropdown } = Toggle();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    setAuth(false);
-    navigate('/');
-};
-
+  setAuth(false)
+  ``
   return (
     <div className="flex flex-col w-full">
       <Header toggleSideBar={toggleDropdown} />
@@ -53,7 +48,7 @@ const Dashboard = ({setAuth}) => {
               </p>
             </a>
             <MapContent />
-            <button className="text-lg text-white bg-gray-800 p-2" onClick={handleLogout}>Logout</button>
+          
           </div>
         </div>
       </div>
