@@ -7,8 +7,11 @@ const Profile = ({setAuth}) => {
   const navigate = useNavigate();
   const handleLogout = () => {
     setAuth(false);
-    navigate('/');
-};
+    navigate('/'); 
+    };
+    const handleMenuItemClick = (adminVal) => {
+        window.location.pathname = adminVal.link;
+    };
   return (
     <div className="relative">
       <button
@@ -44,10 +47,11 @@ const Profile = ({setAuth}) => {
  
          <ul  className="py-1 text-gray-500 dark:text-gray-400"
               aria-labelledby="dropdown">
-          {AdminSettings.map((adminSettings, key) =>(
+          {AdminSettings.map((adminVal, key) =>(
             <li key={key} href="#"
-            className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white" >
-              {adminSettings.title}
+            className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+            onClick={() => handleMenuItemClick(adminVal)} >
+              {adminVal.title}
             </li>    
           ))}
            </ul>

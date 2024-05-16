@@ -9,7 +9,7 @@ const Header = ({ toggleSideBar }) => {
   const [isAuthenticated, setAuth] = useState(false);
 
   return (
-    <div className=" border-green-400 px-4 lg:px-6 w-full py-2.5 dark:bg-gray-800 bg-gray-800">
+    <div className="sticky top-0 z-50 border-green-400 px-4 lg:px-6 w-full py-2.5 dark:bg-gray-800 bg-gray-800">
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
           <button
@@ -35,7 +35,7 @@ const Header = ({ toggleSideBar }) => {
               />
             </svg>
           </button>
-          <a href="https://flowbite.com" className="flex mr-4">
+          <a href="https://eris-brgy-information-system.vercel.app/dashboard" className="flex mr-4">
             <img
               src={logo}
               className="mr-3 h-10 lg:h-12 p-0"
