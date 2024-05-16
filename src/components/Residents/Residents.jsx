@@ -22,8 +22,10 @@ const ResidentsList = ({residents, label}) => {
     <div className="flex flex-col w-full">
        <Header toggleSideBar={toggleDropdown} /> 
       <div className="flex">
-      <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
-        <div className="w-full">
+      <div className="fixed z-50">
+        <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
+      </div>
+        <div className={`w-full ${isOpen ? 'ml-60 md:ml-0' : 'md:ml-60'} transition-all duration-300 ease-in-out`}>
           <div className="flex justify-center p-4 ">
             <div
               className="relative overflow-x-auto w-full bg-gray-800 shadow-md rounded-lg"

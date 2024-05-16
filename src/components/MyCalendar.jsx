@@ -35,10 +35,11 @@ const MyCalendar = () => {
   return (
     <div className="flex flex-col w-full">
        <Header toggleSideBar={toggleDropdown} />
-
       <div className="flex">
-      <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
-        <div className="w-screen mx-6 my-5 md:mx-8 md:my-6">  
+      <div className="fixed z-50">
+        <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
+      </div>
+        <div className={`w-screen mx-6 my-5 md:mx-8 md:my-6 ${isOpen ? 'ml-80 md:ml-10' : 'md:ml-64  '}`}>  
           <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-15 my-15 gap-4">
               <input
               className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
@@ -49,7 +50,7 @@ const MyCalendar = () => {
         
               />
                 <input
-                 className="w-full relative bg-transparent z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
+                 className="w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
                   type="text"
                   onFocus={(e) => (e.target.type = 'date')}
                   onBlur={(e) => (e.target.type = 'text')}
@@ -58,7 +59,7 @@ const MyCalendar = () => {
                   onChange={(e) => setStartDate(e.target.value)}
                 />
                 <input
-                 className="date-input w-full relative bg-transparent z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
+                 className="date-input w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400"
                   type="text"
                   placeholder="End Date"
                   value={endDate}
