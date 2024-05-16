@@ -21,7 +21,7 @@ const DashboardCard = ({ title, value }) => {
 const Dashboard = ({setAuth}) => {
   const { isOpen, toggleDropdown } = Toggle();
   setAuth(false)
-  ``
+  
   return (
     <div className="flex flex-col w-full">
       <Header toggleSideBar={toggleDropdown} />
