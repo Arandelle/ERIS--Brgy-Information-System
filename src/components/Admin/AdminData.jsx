@@ -1,4 +1,3 @@
-import React from "react";
 
 export const AdminData = [
     {
@@ -6,6 +5,16 @@ export const AdminData = [
         img: 'https://flowbite.com/docs/images/people/profile-picture-5.jpg',
         name: 'Arandelle Paguinto',
         email: 'admin@gmail.com', 
-    }
+    },
+];
 
+export const AdminSettings = [
+    {
+        title: "My Profile",
+        link: "Profile"
+    },
+    {
+        title: "Account Settings",
+        link: "/Settings",
+    },
 ];

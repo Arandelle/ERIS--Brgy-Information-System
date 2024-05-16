@@ -3,7 +3,6 @@ import MapContent from "./Maps/MapContent"
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
-import { useNavigate } from 'react-router-dom';
 
 const DashboardCard = ({ title, value }) => {
   return (
