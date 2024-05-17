@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect} from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
@@ -7,11 +7,22 @@ export default function Login({ setAuth }) {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() =>{
+    if(error) {
+      const timer = setTimeout(()=>{
+        setError('');
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    email === "admin@example.com" && password === "password123"
-      ? (setAuth(true), navigate("/dashboard"))
-      : setError("Invalid email or password");
+
+    email !== "admin@example.com" ? setError("The email you entered is incorrect") :
+    password !== "password123" ? setError("The password you entered is incorrect") :
+     (setAuth(true), navigate("/dashboard", {state: {message: "Login Successful"}}))
   };
 
   return (
