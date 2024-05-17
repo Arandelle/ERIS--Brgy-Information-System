@@ -9,7 +9,7 @@ const Header = ({ toggleSideBar }) => {
   const [isAuthenticated, setAuth] = useState(false);
 
   return (
-    <div className="sticky top-0 z-50 border-green-400 px-4 lg:px-6 w-full py-2.5 dark:bg-gray-800 bg-gray-800">
+    <div className="sticky top-0 z-50 px-4 lg:px-6 w-full py-2.5 border-b border-t border-gray-300 dark:border-gray-600 dark:bg-gray-800 bg-white">
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
           <button
@@ -17,7 +17,7 @@ const Header = ({ toggleSideBar }) => {
             id="toggleSidebar"
             aria-expanded="true"
             aria-controls="sidebar"
-            className="p-2 mr-3 text-green-100 rounded cursor-pointer lg:inline hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
+            className="p-2 mr-3 text-gray-800 rounded cursor-pointer lg:inline hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
           >
             <svg
               className="w-5 h-5"
@@ -59,7 +59,7 @@ const Header = ({ toggleSideBar }) => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 20 20"
-            >
+          >
               <path
                 stroke="currentColor"
                 strokeLinecap="round"
@@ -69,6 +69,7 @@ const Header = ({ toggleSideBar }) => {
               />
             </svg>
           </button>
+         
           <div className="flex items-center space-x-2">
             <Notification />
             {/* <Menu /> */}

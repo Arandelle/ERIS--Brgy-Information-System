@@ -31,7 +31,7 @@ const ResidentsList = ({residents, label}) => {
               className="relative overflow-x-auto w-full bg-gray-800 shadow-md rounded-lg"
               style={{ height: "max-content" }}
             >
-              <div className="flex p-4 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
+              <div className="flex p-4 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-800">
                 <div>
                   <button
                     onClick={toggleAction}
@@ -218,7 +218,7 @@ const ResidentsList = ({residents, label}) => {
                 </table>
               </div>
               <nav
-                class="flex items-center dark:bg-gray-900 bg-white flex-column flex-wrap md:flex-row justify-between p-4"
+                class="flex items-center dark:bg-gray-800 bg-white flex-column flex-wrap md:flex-row justify-between p-4"
                 aria-label="Table navigation"
               >
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">

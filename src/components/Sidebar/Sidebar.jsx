@@ -20,32 +20,32 @@ function Sidebar({ isOpen, toggleSidebar }) {
   return (
     <div className={`flex fixed inset-0 z-50 ${isOpen ? "md:hidden md:w-1/6 md:relative" : "hidden"}
     ${!isOpen ? "md:flex md:relative" : ""}`}>
-    <div className="bg-black bg-opacity-25 w-full md:relative md:w-0"></div> {/* This is the overlay */}
-    <div className="absolute md:relative left-0 w-4/5 md:w-60 bg-white h-full shadow-lg ">
-    <div className="absolute right-2 top-4 justify-end">
-        <button onClick={toggleSidebar} className="md:hidden text-gray-600 hover:text-gray-800  dark:text-white dark:hover:text-gray-800">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      <ul className="flex flex-col space-y-3 space-x-3 text-lg md:text-sm font-medium h-screen text-gray-500 dark:text-white dark:bg-gray-700">
-        <h2 className="text-base text-center font-bold text-gray-700 border-b-2 py-4 text-nowrap dark:bg-gray-7 00 dark:text-white">
-          Admin Panel
-        </h2>
+    <div className="bg-black bg-opacity-25 w-full md:relative md:w-0" ></div> {/* This is the overlay */}
+    <div className="absolute md:relative left-0 w-4/5 md:w-60 shadow-lg overflow-y-auto py-5 px-3 h-screen bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+      <ul className="space-y-2">
+        <div className="text-center">
+          <button type="button" onClick={toggleSidebar} data-drawer-hide="drawer-navigation" aria-controls="drawer-navigation" className="md:hidden text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 end-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" >
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            <span class="sr-only">Close menu</span>
+          </button>
+          <h2 className="text-base text-center font-semi-bold uppercase text-gray-500 border-b border-gray-100 dark:border-gray-600 py-3 text-nowrap  dark:text-gray-400">
+            Admin Panel
+          </h2>
+        </div>
+
         {SidebarData.map((val, key) => (
           <li
             key={key}
             className={`${
               !val.items || openSubMenu !== val.title
-                ? "hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer"
-                : "cursor-pointer"
+                ? "flex items-center p-2 text-base font-normal rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                : "text-gray-900 dark:text-white p-2"
             }`}
             onClick={() => handleMenuItemClick(val)}
           > 
-            <div className="flex items-center px-4 py-3 w-full">
+            <div className="flex items-center px-4 py-1 w-full">
               <div className="mr-2">{val.icon}</div>
-              <div className="flex-grow">{val.title}</div>
+              <div className="flex-grow ml-3">{val.title}</div>
               {val.items && (
                 <ArrowRightIcon
                   className={`transition-transform ${
@@ -55,16 +55,15 @@ function Sidebar({ isOpen, toggleSidebar }) {
               )}
             </div>
             {val.items && openSubMenu === val.title && (
-              <ul className="bg-gray-300 m-0 left-0 dark:bg-gray-500 ">
+              <ul className="py-2 space-y-2">
                 {val.items.map((subVal, subKey) => (
                   <li
                     key={subKey}
-                    className="text-lg md:text-sm pl-6 py-2 dark:hover:bg-gray-100 hover:bg-gray-400 hover:text-gray-800 cursor-pointer"
+                    className="flex items-center p-2 pl-12 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 cursor-pointer"
                     onClick={() => handleSubMenuClick(subVal.link)}
                   >
-                    <div className="flex items-center">
-                      <div className="mr-2">{subVal.icon}</div>
-                      <div>{subVal.title}</div>
+                    <div className="flex items-center w-full">
+                      <div className="flex-grow ml-3">{subVal.title}</div>
                     </div>
                   </li>
                 ))}
@@ -73,6 +72,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
           </li>
         ))}
       </ul>
+      
     </div>
   </div>
 
