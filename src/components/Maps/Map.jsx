@@ -20,7 +20,7 @@ function MyMapComponent() {
         <div className='fixed z-50'>
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
         </div>
-        <div className={`w-screen ${isOpen ? 'ml-60 md:ml-0' : 'md:ml-60'} transition-all duration-300 ease-in-out`}>
+        <div className={`w-screen ${isOpen ? 'ml-0' : 'md:ml-60'} transition-all duration-300 ease-in-out`}>
           <MapContent/></div>
         </div>
     </div>
