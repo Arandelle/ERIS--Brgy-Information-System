@@ -21,6 +21,7 @@
     "flowbite": "^2.3.0",
     "flowbite-datepicker": "^1.2.6",
     "leaflet": "^1.9.4",
+    "leaflet-control-geocoder": "^2.4.0",
     "leaflet-routing-machine": "^3.2.12",
     "mapbox-gl": "^3.3.0",
     "postcss": "^8.4.38",
