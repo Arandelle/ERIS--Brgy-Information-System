@@ -1,6 +1,9 @@
 import { MapContainer, TileLayer, useMap, Marker, Popup,LayerGroup,LayersControl } from "react-leaflet";
 import React, { useState, useEffect } from "react";
 import "leaflet/dist/leaflet.css"; // import Leaflet CSS
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import L from 'leaflet';
+import 'leaflet-routing-machine';
 
 function CustomScrollZoomHandler() {
   const map = useMap();
@@ -42,9 +45,29 @@ const redIcon = new L.Icon({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
   shadowSize: [41, 41]
 });
+function RoutingControl({ start, end }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) return;
+
+    const routingControl = L.Routing.control({
+      waypoints: [
+        L.latLng(start[0], start[1]),
+        L.latLng(end[0], end[1])
+      ],
+      routeWhileDragging: true
+    }).addTo(map);
+  
+    return () => map.removeControl(routingControl);
+  }, [map, start, end]);
+
+  return null;
+}
+
 function MyMapComponents() {
   const [position, setPosition] = useState([14.332867, 120.850672]); // Default position
-  const [otherMarkerPosition, setOtherMarkerPosition] = useState([14.333, 120.850]);
+  const [otherMarkerPosition, setOtherMarkerPosition] = useState([14.334, 120.850]);
   const [personInfo, setPersonInfo] = useState({
     name: "Juan Dela cruz",
     address: "Ph2 Pabahay",
@@ -63,10 +86,11 @@ function MyMapComponents() {
           style={{ height: "600px", zIndex: 0, borderRadius: "8px" }}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <LayerGroup>
           <Marker position={position} icon={customIcon}>
             <Popup>You are here</Popup>
           </Marker>
-          <LayerGroup>
+       
           <Marker position={otherMarkerPosition} icon={redIcon}>
             <Popup>
               <div className="flex items-center w-40">
@@ -84,6 +108,7 @@ function MyMapComponents() {
             {/* Add more markers or layers as needed */}
           </LayerGroup>
           <CustomScrollZoomHandler />
+          <RoutingControl start={position} end={otherMarkerPosition} />
         </MapContainer>
       </div>
     </div>
