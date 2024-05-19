@@ -46,7 +46,27 @@ const Notification = ()=>{
                       </div>
                       <div class="pl-3 w-full">
                           <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
-                          <div class="text-xs font-medium text-primary-700 dark:text-primary">a few moments ago</div>
+                          <div class="text-xs font-medium text-primary dark:text-primary">a few moments ago</div>
+                      </div>
+                  </a>
+                  <a href="#" className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+                    <div className="flex-shrink-0">
+                      <img className="w-11 h-11 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png" alt="Profile " />
+                    </div>
+                    <div className="pl-3 w-full">
+                      <div className="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
+                        Hello world <span className="font-semibold text-gray-900 dark:text-white">Juan Delacruz</span>
+                      </div>
+                      <div className="text-xs font-medium text-primary">1hr ago</div>
+                    </div>
+                  </a>
+                  <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+                      <div class="flex-shrink-0">
+                      <img class="w-11 h-11 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png" alt="Bonnie Green avatar"/>
+                      </div>
+                      <div class="pl-3 w-full">
+                          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
+                          <div class="text-xs font-medium text-primary dark:text-primary">a few moments ago</div>
                       </div>
                   </a>
                   <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
@@ -55,7 +75,7 @@ const Notification = ()=>{
                       </div>
                       <div class="pl-3 w-full">
                           <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
-                          <div class="text-xs font-medium text-primary-700 dark:text-primary">a few moments ago</div>
+                          <div class="text-xs font-medium text-primary dark:text-primary">a few moments ago</div>
                       </div>
                   </a>
                   <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
@@ -64,7 +84,7 @@ const Notification = ()=>{
                       </div>
                       <div class="pl-3 w-full">
                           <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
-                          <div class="text-xs font-medium text-primary-700 dark:text-primary">a few moments ago</div>
+                          <div class="text-xs font-medium text-primary dark:text-primary">a few moments ago</div>
                       </div>
                   </a>
                   <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
@@ -73,16 +93,7 @@ const Notification = ()=>{
                       </div>
                       <div class="pl-3 w-full">
                           <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
-                          <div class="text-xs font-medium text-primary-700 dark:text-primary">a few moments ago</div>
-                      </div>
-                  </a>
-                  <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
-                      <div class="flex-shrink-0">
-                      <img class="w-11 h-11 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png" alt="Bonnie Green avatar"/>
-                      </div>
-                      <div class="pl-3 w-full">
-                          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
-                          <div class="text-xs font-medium text-primary-700 dark:text-primary">a few moments ago</div>
+                          <div class="text-xs font-medium text-primary dark:text-primary">a few moments ago</div>
                       </div>
                   </a>
                   
