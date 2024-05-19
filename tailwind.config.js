@@ -10,6 +10,8 @@ module.exports = {
     extend: {
       colors: {
         primary: "#3490dc",
+        yellow: "#ffcb74",
+        black: "#2f2f2f"
       },
       fontSize: {
         xxs: '0.5rem'

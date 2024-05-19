@@ -30,28 +30,70 @@ const Notification = ()=>{
           </div>
           {isOpen && (
               <div
-                className="absolute z-10 h-screen right-0 mt-3 w-full md:right-2  md:w-80 bg-white dark:bg-gray-700 rounded-md shadow-lg"
+                className="absolute  h-screen right-0 mt-3 w-full md:right-0 md:w-80 bg-white dark:bg-gray-700 rounded-md shadow-
+                overflow-hidden z-50 my-4 max-w-sm text-base list-none divide-y divide-gray-100 shadow-lg dark:divide-gray-600 "
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="options-menu"
               >
                 {/* Notification items go here */}
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 hover:rounded-md"
-                  role="menuitem"
-                >
-                  Notification 1
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600  hover:rounded-md"
-                  role="menuitem"
-                >
-                  Notification 2
-                </a>
-                {/* Add more notification items as needed */}
+                <div class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                      Notifications
+                  </div>
+                <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+                      <div class="flex-shrink-0">
+                      <img class="w-11 h-11 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png" alt="Bonnie Green avatar"/>
+                      </div>
+                      <div class="pl-3 w-full">
+                          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
+                          <div class="text-xs font-medium text-primary-700 dark:text-primary">a few moments ago</div>
+                      </div>
+                  </a>
+                  <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+                      <div class="flex-shrink-0">
+                      <img class="w-11 h-11 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png" alt="Bonnie Green avatar"/>
+                      </div>
+                      <div class="pl-3 w-full">
+                          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
+                          <div class="text-xs font-medium text-primary-700 dark:text-primary">a few moments ago</div>
+                      </div>
+                  </a>
+                  <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+                      <div class="flex-shrink-0">
+                      <img class="w-11 h-11 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png" alt="Bonnie Green avatar"/>
+                      </div>
+                      <div class="pl-3 w-full">
+                          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
+                          <div class="text-xs font-medium text-primary-700 dark:text-primary">a few moments ago</div>
+                      </div>
+                  </a>
+                  <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+                      <div class="flex-shrink-0">
+                      <img class="w-11 h-11 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png" alt="Bonnie Green avatar"/>
+                      </div>
+                      <div class="pl-3 w-full">
+                          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
+                          <div class="text-xs font-medium text-primary-700 dark:text-primary">a few moments ago</div>
+                      </div>
+                  </a>
+                  <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+                      <div class="flex-shrink-0">
+                      <img class="w-11 h-11 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png" alt="Bonnie Green avatar"/>
+                      </div>
+                      <div class="pl-3 w-full">
+                          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">New resident added to Pabahay <span class="font-semibold text-gray-900 dark:text-white">Juan Dela Cruz</span></div>
+                          <div class="text-xs font-medium text-primary-700 dark:text-primary">a few moments ago</div>
+                      </div>
+                  </a>
+                  
+                  <a href="#" class="block py-2 text-base font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
+                      <div class="inline-flex items-center ">
+                      <svg aria-hidden="true" class="mr-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>
+                      View all
+                      </div>
+                  </a>
               </div>
+              
             )}
         </div>
       );

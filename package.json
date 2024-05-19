@@ -19,6 +19,7 @@
     "@mui/material": "^5.15.17",
     "axios": "^1.6.8",
     "flowbite": "^2.3.0",
+    "flowbite-datepicker": "^1.2.6",
     "leaflet": "^1.9.4",
     "mapbox-gl": "^3.3.0",
     "postcss": "^8.4.38",
