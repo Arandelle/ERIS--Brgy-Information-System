@@ -30,7 +30,7 @@ const Notification = ()=>{
           </div>
           {isOpen && (
               <div
-                className="absolute z-10 right-2 mt-2 w-60 md:w-80 bg-white dark:bg-gray-700 rounded-md shadow-lg"
+                className="absolute z-10 h-screen right-0 mt-3 w-full md:right-2  md:w-80 bg-white dark:bg-gray-700 rounded-md shadow-lg"
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="options-menu"
