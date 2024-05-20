@@ -66,7 +66,7 @@ const Profile = () => {
             <li>
               <a
                 href="#"
-                className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                className="block py-2 px-4 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-red-600"
                 onClick={setShowLogout}
               >
                 Sign out
