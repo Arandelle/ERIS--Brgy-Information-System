@@ -1,17 +1,16 @@
 import { Toggle } from "../../hooks/Toggle";
 import { AdminData, AdminSettings } from "./AdminData";
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import Logout from "./Logout";
 
-const Profile = ({setAuth}) => {
+const Profile = () => {
+  const [isAuthenticated, setAuth] = useState(false);
   const { isOpen, toggleDropdown } = Toggle();
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    setAuth(false);
-    navigate('/'); 
-    };
-    const handleMenuItemClick = (adminVal) => {
-        window.location.pathname = adminVal.link;
-    };
+  const [showLogout, setShowLogout] = useState(false);
+
+  const handleMenuItemClick = (adminVal) => {
+    window.location.pathname = adminVal.link;
+  };
   return (
     <div className="relative">
       <button
@@ -44,17 +43,22 @@ const Profile = ({setAuth}) => {
               </span>
             </div>
           ))}
- 
-         <ul  className="py-1 text-gray-500 dark:text-gray-400"
-              aria-labelledby="dropdown">
-          {AdminSettings.map((adminVal, key) =>(
-            <li key={key} href="#"
-            className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
-            onClick={() => handleMenuItemClick(adminVal)} >
-              {adminVal.title}
-            </li>    
-          ))}
-           </ul>
+
+          <ul
+            className="py-1 text-gray-500 dark:text-gray-400"
+            aria-labelledby="dropdown"
+          >
+            {AdminSettings.map((adminVal, key) => (
+              <li
+                key={key}
+                href="#"
+                className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                onClick={() => handleMenuItemClick(adminVal)}
+              >
+                {adminVal.title}
+              </li>
+            ))}
+          </ul>
           <ul
             className="py-1 text-gray-500 dark:text-gray-400"
             aria-labelledby="dropdown"
@@ -63,7 +67,7 @@ const Profile = ({setAuth}) => {
               <a
                 href="#"
                 className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                onClick={handleLogout}
+                onClick={setShowLogout}
               >
                 Sign out
               </a>
@@ -71,6 +75,7 @@ const Profile = ({setAuth}) => {
           </ul>
         </div>
       )}
+      {showLogout && (<Logout toggleLogout={() => setShowLogout(false)} setAuth={setAuth}/> )}  
     </div>
   );
 };

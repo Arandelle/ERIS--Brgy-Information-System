@@ -5,7 +5,6 @@ import Profile from "./Admin/ProfileAdmin";
 import logo from "../assets/logo.png";
 
 const Header = ({ toggleSideBar }) => {
-  const [isAuthenticated, setAuth] = useState(false);
   const [theme, setTheme] = useState("light");
 
   const toggleTheme = () => {
@@ -140,7 +139,7 @@ const Header = ({ toggleSideBar }) => {
   
             <Notification />
             {/* <Menu /> */}
-            <Profile setAuth={setAuth} />
+            <Profile />
       
         </div>
       </div>
