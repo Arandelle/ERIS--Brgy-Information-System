@@ -37,19 +37,19 @@ function MyMapComponents() {
     }
   }, [popupRef]);
 
-  // useEffect(() => {
-  //   // Get the device's current location
-  //   navigator.geolocation.getCurrentPosition(
-  //     (position) => {
-  //       setPosition([position.coords.latitude, position.coords.longitude]);
-  //     },
-  //     (error) => {
-  //       console.error("Error getting location: ", error);
-  //       // Fallback position if geolocation fails
-  //       setPosition([14.332867, 120.850672]);
-  //     }
-  //   );
-  // }, []);
+  useEffect(() => {
+    // Get the device's current location
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setPosition([position.coords.latitude, position.coords.longitude]);
+      },
+      (error) => {
+        console.error("Error getting location: ", error);
+        // Fallback position if geolocation fails
+        setPosition([14.332867, 120.850672]);
+      }
+    );
+  }, []);
 
   if (!position) {
     return <div>Loading...</div>; // Show a loading message until the position is obtained
