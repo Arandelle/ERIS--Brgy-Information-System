@@ -7,12 +7,7 @@ import MapContent from './MapContent';
 // Fix Leaflet marker icon issue
 
 function MyMapComponent() {
-  const { isOpen, toggleDropdown } = Toggle();
-  const maxBounds = [
-    [14.359363, 120.897042], // Southwest coordinates (Tanza, Cavite)
-    [14.387543, 120.935325], // Northeast coordinates (Tanza, Cavite)
-  ];
-  
+  const { isOpen, toggleDropdown } = Toggle();  
   return (
     <div className='w-full h-screen z-0'>
        <Header toggleSideBar={toggleDropdown} /> 
