@@ -11,7 +11,7 @@ import 'leaflet-control-geocoder';
 function MyMapComponents() {
   const [position, setPosition] = useState([14.332867, 120.850672]); // Default start position
   const [otherMarkerPosition, setOtherMarkerPosition] = useState([14.334, 120.850]);
-  const [otherMarkerPosition1, setOtherMarkerPosition1] = useState([14.334, 120.860]);
+  const [otherMarkerPosition1, setOtherMarkerPosition1] = useState([14.3349, 120.851]);
   const [isDragging, setIsDragging] = useState(false);
   
   const [personInfo, setPersonInfo] = useState({
@@ -46,7 +46,7 @@ function MyMapComponents() {
       (error) => {
         console.error("Error getting location: ", error);
         // Fallback position if geolocation fails
-        setPosition([14.332867, 120.860]);
+        setPosition([14.33289, 120.85065]);
       }
     );
   }, []);
@@ -104,7 +104,7 @@ function MyMapComponents() {
             {/* Add more markers or layers as needed */}
           </LayerGroup>
           <CustomScrollZoomHandler />
-          <RoutingControl zoom={15} start={position} end={otherMarkerPosition} />
+          <RoutingControl zoom={16} start={position} end={otherMarkerPosition} />
         </MapContainer>
       </div>
     </div>
