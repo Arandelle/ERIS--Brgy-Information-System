@@ -6,6 +6,7 @@ import ResidentsList from "./components/Residents/Residents";
 import { Pabahay, Lumina, Carissa } from './components/Residents/ResidentsData'; 
 import Map from "./components/Maps/Map";
 import Login from "./components/Login"
+import Reports from "./components/Reports";
 
 
 const App = () => {
@@ -50,6 +51,7 @@ const App = () => {
                 <Route path="/residents/carissa" element={<ResidentsList residents={Carissa} label="Carissa" />} />
                 <Route path="/residents/lumina" element={<ResidentsList residents={Lumina} label="Lumina  " />} />
                 <Route path="/maps" element={<Map />} />{" "}
+                <Route path="/reports" element={<Reports />} />{" "}
               </Routes>
             </div>
         </>
