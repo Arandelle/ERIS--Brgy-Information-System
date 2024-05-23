@@ -30,8 +30,8 @@ const Notification = ()=>{
           </div>
           {isOpen && (
               <div
-                className="absolute  h-screen right-0 mt-3 w-screen md:right-0 md:w-80 bg-white dark:bg-gray-700 rounded-md shadow-
-                overflow-hidden z-50 my-4 text-base list-none divide-y divide-gray-100 shadow-lg dark:divide-gray-600 "
+                className="fixed h-screen right-0 mt-3 w-screen md:w-80 bg-white dark:bg-gray-700 rounded-md shadow-
+                z-10 my-4 text-base list-none shadow-lg dark:divide-gray-600 "
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="options-menu"
@@ -103,8 +103,7 @@ const Notification = ()=>{
                       View all
                       </div>
                   </a>
-              </div>
-              
+              </div>        
             )}
         </div>
       );

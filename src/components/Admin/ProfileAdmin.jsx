@@ -30,7 +30,7 @@ const Profile = () => {
       </button>
       {isOpen && (
         <div
-          className="absolute z-10 right-0 mt-4 w-56 bg-white rounded-md shadow-md divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600"
+          className="fixed z-10 right-0 mt-4 w-56 bg-white rounded-md shadow-md divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600"
           id="dropdown"
         >
           {AdminData.map((admin, key) => (
