@@ -56,11 +56,11 @@ function MyMapComponents() {
   }
 
   return (
-    <div className="w-full h-screen z-0">
+    <div className="w-full h-screen z-0">       
       <div className="m-2 md:m-[15px]">
-        <h1 className="hidden md:block md:absolute top-2 left-20 z-10 font-medium rounded shadow-lg text-gray-900 bg-white py-2 px-4 dark:bg-gray-600 dark:text-green-400">
+      <h1 className="hidden md:block absolute m-2 top-3 left-16 z-10 font-medium rounded shadow-lg text-gray-900 bg-white py-2 px-4 dark:bg-gray-600 dark:text-green-400">
           Ctrl + scroll to zoom in/out
-        </h1>
+        </h1>  
         <MapContainer
           center={position}
           zoom={15}
@@ -71,7 +71,7 @@ function MyMapComponents() {
             <Marker position={position} icon={customIcon}>
               <Popup autoOpen={true} ref={popupRef}>You are here</Popup>
             </Marker>
-
+      
             <Marker position={otherMarkerPosition} icon={redIcon}>
               <Popup autoOpen={true} ref={popupRef}>
                 <div className="flex items-center w-48">

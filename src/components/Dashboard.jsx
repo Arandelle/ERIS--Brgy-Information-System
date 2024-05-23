@@ -66,7 +66,7 @@ const Dashboard = ({setAuth}) => {
             <DashboardCard title="Reports" value="10,000" />
             <DashboardCard title="Certificates" value="5,000" />
           </div>
-          <div className="relative w-full mb-2">
+          <div className="relative w-full">
             <MapContent />
           </div>
         </div>
