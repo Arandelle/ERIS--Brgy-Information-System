@@ -74,15 +74,15 @@ export const SidebarData = [
     items: [
       {
         title: "News",
-        link: "/news",
+        link: "/events/news",
       },
       {
         title: "Announcement",
-        link: "/announcement",
+        link: "/events/announcement",
       },
       {
         title: "Event",
-        link: "/event",
+        link: "/events/event",
       },
     ],
   },
