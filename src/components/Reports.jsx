@@ -1,10 +1,14 @@
 import React from "react";
+import {useState, useEffect} from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
+import Skeleton from './Skeleton';
 
 const Reports = () => {
   const { isOpen, toggleDropdown } = Toggle();
+  const [loadings, setLoading] = useState(true);
+  
   return (
     <div className="flex flex-col w-full">
       <Header toggleSideBar={toggleDropdown} />
@@ -12,6 +16,11 @@ const Reports = () => {
         <div className="fixed z-50">
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
         </div>
+        {loadings ? (
+        <div className="m-0 py-3 px-3 md:ml-60 w-full">
+          <Skeleton loading={loadings} setLoading={setLoading} />
+        </div>
+      ) : (
         <div
           className={`w-screen p-4 dark:bg-gray-800 dark:text-white rounded-md mx-6 my-5 md:mx-8 md:my-5 ${
             isOpen ? "ml-10" : "md:ml-64"
@@ -33,6 +42,7 @@ const Reports = () => {
             </button>
           </div>
         </div>
+          )}
       </div>
     </div>
   );
