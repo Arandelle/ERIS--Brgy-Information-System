@@ -7,6 +7,7 @@ import { Pabahay, Lumina, Carissa } from './components/Residents/ResidentsData';
 import Map from "./components/Maps/Map";
 import Login from "./components/Login"
 import Reports from "./components/Reports";
+import History from "./components/History";
 
 
 const App = () => {
@@ -52,6 +53,7 @@ const App = () => {
                 <Route path="/residents/lumina" element={<ResidentsList residents={Lumina} label="Lumina  " />} />
                 <Route path="/maps" element={<Map />} />{" "}
                 <Route path="/reports" element={<Reports />} />{" "}
+                <Route path="/history" element={<History />} />{" "}
               </Routes>
             </div>
         </>
