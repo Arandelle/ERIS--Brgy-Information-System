@@ -17,7 +17,6 @@ const Reports = () => {
             isOpen ? "ml-10" : "md:ml-64"
           }`}
         >
-            <h1 className="dark:text-white">This is Reports</h1>
           <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-15 my-15 gap-4">
             <input
               className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600"

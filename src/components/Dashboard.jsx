@@ -60,7 +60,7 @@ const Dashboard = ({setAuth}) => {
               <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />  
             </div>
             <div className={`w-full ${isOpen ? 'ml-0' : 'md:ml-60'} transition-all duration-300 ease-in-out`}>
-          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-4 mx-4">
+          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-3 md:w-max-40 lg:grid-cols-4 my-3 mx-3">
             <DashboardCard title="Population" value="10,000" />
             <DashboardCard title="Emergency" value="5,000" />
             <DashboardCard title="Reports" value="10,000" />
