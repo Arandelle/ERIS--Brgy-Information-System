@@ -2,16 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+body{
   @apply bg-gray-200;
   @apply dark:bg-gray-900;
   margin: 0;
   padding: 0;
+  caret-color: transparent;
 }
 input::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
-
-.full-screen {
-  height: 100vh;
+input, textarea {
+  caret-color: auto;
 }
