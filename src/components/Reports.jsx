@@ -18,7 +18,7 @@ const Reports = () => {
         </div>
         {loadings ? (
         <div className="m-0 py-3 px-3 md:ml-60 w-full">
-          <Skeleton loading={loadings} setLoading={setLoading} />
+          <Skeleton setLoading={setLoading} />
         </div>
       ) : (
         <div

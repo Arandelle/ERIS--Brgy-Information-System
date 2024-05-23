@@ -4,6 +4,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
 import { useLocation } from 'react-router-dom';
+import Skeleton from "./Skeleton";
 
 const DashboardCard = ({ title, value }) => {
   return (
@@ -23,6 +24,7 @@ const Dashboard = ({setAuth}) => {
   setAuth(false)
   const location = useLocation();
   const [message, setMessage] = useState(location.state?.message);
+  const [loading, setLoading] = useState(true);
 
     useEffect (() =>{
       if(message){
@@ -66,9 +68,11 @@ const Dashboard = ({setAuth}) => {
             <DashboardCard title="Reports" value="10,000" />
             <DashboardCard title="Certificates" value="5,000" />
           </div>
-          <div className="relative w-full">
+          {loading ? (<Skeleton setLoading={setLoading} />)  : 
+          (<div className="relative w-full">
             <MapContent />
           </div>
+          )}      
         </div>
       </div>
     </div>

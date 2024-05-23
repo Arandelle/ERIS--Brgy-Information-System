@@ -7,12 +7,13 @@ import { Pabahay, Lumina, Carissa } from './components/Residents/ResidentsData';
 import Map from "./components/Maps/Map";
 import Login from "./components/Login"
 import Reports from "./components/Reports";
-import History from "./components/History"
+import History from "./components/History";
 
 const App = () => {
 
   const [isAuthenticated, setAuth] = useState(false);
   const [theme, setTheme] = useState("light");
+
   useEffect(() => {
     // Check system preference for dark mode
     const systemPrefersDark = window.matchMedia(

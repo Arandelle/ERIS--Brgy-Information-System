@@ -2,13 +2,14 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-const Skeleton = ({loading, setLoading}) => {
+const Skeleton = ({setLoading}) => {
 
     useEffect(() => {
       // Simulate data fetching
       setTimeout(() => {
         setLoading(false);
       }, 2000);
+
     }, []);
 
   return (

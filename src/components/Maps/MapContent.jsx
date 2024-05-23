@@ -13,7 +13,7 @@ function MyMapComponents() {
   const [otherMarkerPosition, setOtherMarkerPosition] = useState([14.334, 120.850]);
   const [otherMarkerPosition1, setOtherMarkerPosition1] = useState([14.3349, 120.851]);
   const [isDragging, setIsDragging] = useState(false);
-  
+
   const [personInfo, setPersonInfo] = useState({
     name: "Juan Dela cruz",
     address: "Block 16, Lot09 Sec24, Ph2 Pabahay 2000",
@@ -56,8 +56,8 @@ function MyMapComponents() {
   }
 
   return (
-    <div className="w-full h-screen z-0">       
-      <div className="m-2 md:m-[15px]">
+    <div className="w-full h-screen z-0">
+    <div className="m-2 md:m-[15px]">
       <h1 className="hidden md:block absolute m-2 top-3 left-16 z-10 font-medium rounded shadow-lg text-gray-900 bg-white py-2 px-4 dark:bg-gray-600 dark:text-green-400">
           Ctrl + scroll to zoom in/out
         </h1>  
@@ -106,7 +106,7 @@ function MyMapComponents() {
           <CustomScrollZoomHandler />
           <RoutingControl zoom={16} start={position} end={otherMarkerPosition} />
         </MapContainer>
-      </div>
+      </div>    
     </div>
   );
 }
