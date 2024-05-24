@@ -3,10 +3,7 @@
 @tailwind utilities;
 
 body{
-  @apply bg-gray-200;
-  @apply dark:bg-gray-900;
-  margin: 0;
-  padding: 0;
+  @apply bg-gray-200 dark:bg-gray-900 m-0 p-0;
   caret-color: transparent;
 }
 input::-webkit-calendar-picker-indicator {
@@ -14,4 +11,17 @@ input::-webkit-calendar-picker-indicator {
 }
 input, textarea {
   caret-color: auto;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply bg-white dark:bg-gray-800;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-200 dark:bg-gray-800;
 }
