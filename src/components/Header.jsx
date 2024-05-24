@@ -7,6 +7,7 @@ import { PopoverHover } from "./Popover";
 
 const Header = ({ toggleSideBar }) => {
   const [theme, setTheme] = useState("light");
+
   useEffect(() => {
     // Check system preference for dark mode
     const systemPrefersDark = window.matchMedia(
@@ -136,7 +137,7 @@ const Header = ({ toggleSideBar }) => {
             </form>         
           </div>
           {/*This is the light/dark button theme*/ }
-          <PopoverHover content={`Toggle ${theme === "light" ? "DARK" : "LIGHT" } mode`}>
+          <PopoverHover content={(<span> Toggle {theme === "light" ?  <span className="text-primary">DARK</span> : <span className="text-yellow-300">LIGHT</span> } mode</span>)}>
           <label className="relatice inline-flex items-center cursor-pointer">
           <input
             onClick={toggleTheme}
