@@ -1,14 +1,16 @@
 import { Toggle } from "../hooks/Toggle";
 import { useEffect, useRef } from 'react';
 import '../index.css'
+import { PopoverHover } from "./Popover";
 
 const Notification = ()=>{
   const dropdownRef = useRef(null);
     const {isOpen, toggleDropdown} = Toggle();
 
-    return (
-        <div>
-          <div className="relative">
+    return (    
+        <div>      
+          <div className="relative z-50">
+          <PopoverHover content={`${isOpen ? "Close" : "Open"} Notification`}>
             <button
               onClick={toggleDropdown}
               type="button"
@@ -26,7 +28,7 @@ const Notification = ()=>{
                 <path d="M12.133 10.632v-1.8A5.406 5.406 0 0 0 7.979 3.57.946.946 0 0 0 8 3.464V1.1a1 1 0 0 0-2 0v2.364a.946.946 0 0 0 .021.106 5.406 5.406 0 0 0-4.154 5.262v1.8C1.867 13.018 0 13.614 0 14.807 0 15.4 0 16 .538 16h12.924C14 16 14 15.4 14 14.807c0-1.193-1.867-1.789-1.867-4.175ZM3.823 17a3.453 3.453 0 0 0 6.354 0H3.823Z" />
               </svg>
             </button>
-          
+            </PopoverHover>        
           </div>
           {isOpen && (
               <div
@@ -104,8 +106,9 @@ const Notification = ()=>{
                       </div>
                   </a>
               </div>        
-            )}
+            )}      
         </div>
+       
       );
 }
 export default Notification;

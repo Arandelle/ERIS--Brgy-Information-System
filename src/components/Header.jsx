@@ -136,7 +136,7 @@ const Header = ({ toggleSideBar }) => {
             </form>         
           </div>
           {/*This is the light/dark button theme*/ }
-          <PopoverHover content={`Toggle ${theme === "light" ? "dark" : "light" } mode`}>
+          <PopoverHover content={`Toggle ${theme === "light" ? "DARK" : "LIGHT" } mode`}>
           <label className="relatice inline-flex items-center cursor-pointer">
           <input
             onClick={toggleTheme}
@@ -158,13 +158,9 @@ const Header = ({ toggleSideBar }) => {
           </span>
           </label>
           </PopoverHover>
-          <PopoverHover content={`Show Notification`}>
             <Notification />
-          </PopoverHover>
             {/* <Menu /> */}
-          <PopoverHover content={`Show Profile`}>
             <Profile />
-          </PopoverHover>
         </div>
       </div>
     </div>

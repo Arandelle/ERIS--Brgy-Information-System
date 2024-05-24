@@ -2,6 +2,7 @@ import { Toggle } from "../../hooks/Toggle";
 import { AdminData, AdminSettings } from "./AdminData";
 import { useState } from "react";
 import Logout from "./Logout";
+import { PopoverHover } from "../Popover";
 
 const Profile = () => {
   const [isAuthenticated, setAuth] = useState(false);
@@ -14,22 +15,24 @@ const Profile = () => {
   };
   return (
     <div className="relative">
-      <button
-        type="button"
-        onClick={toggleDropdown}
-        onBlur={setShow}
-        className="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-        id="user-menu-button"
-        aria-expanded="false"
-        data-dropdown-toggle="dropdown"
-      >
-        <span className="sr-only">Open user menu</span>
-        <img
-          className="w-8 h-8 rounded-full"
-          src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-          alt="user photo"
-        />
-      </button>
+        <button
+          type="button"
+          onClick={toggleDropdown}
+          onBlur={setShow}
+          className="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+          id="user-menu-button"
+          aria-expanded="false"
+          data-dropdown-toggle="dropdown"
+        >
+          <span className="sr-only">Open user menu</span>
+            <PopoverHover content={`${isOpen ? "Close" : "Open"} Profile`}>
+              <img
+                className="w-8 h-8 rounded-full"
+                src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                alt="user photo"
+              />
+            </PopoverHover>
+        </button>
       {isOpen && (
         <div
           className="fixed z-10 right-0 mt-4 w-56 bg-white rounded-md shadow-md divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600"

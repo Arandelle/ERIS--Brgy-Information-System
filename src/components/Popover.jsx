@@ -29,7 +29,7 @@ export const PopoverHover = ({children, content }) => {
     const hidePopover = () => setVisible(false);
 
   return (
-    <div className='relative inline-flex items-center cursor-pointer' onMouseEnter={showPopover} onMouseLeave={hidePopover}>   
+    <div className='relative inline-flex z-50 items-center cursor-pointer' onMouseEnter={showPopover} onMouseLeave={hidePopover}>   
       {children}
       {visible && (
      <div className='fixed mt-20 transform -translate-x-1/2  w-54 bg-white border border-gray-200 rounded-lg shadow-lg z-10 transition-opacity duration-300 opacity-100 dark:bg-gray-800 dark:border-gray-600'>
