@@ -3,6 +3,7 @@ import Notification from "./Notification";
 // import Menu from './Menu';
 import Profile from "./Admin/ProfileAdmin";
 import logo from "../assets/logo.png";
+import { PopoverHover } from "./Popover";
 
 const Header = ({ toggleSideBar }) => {
   const [theme, setTheme] = useState("light");
@@ -134,7 +135,9 @@ const Header = ({ toggleSideBar }) => {
               </div>
             </form>         
           </div>
-          <label className="inline-flex items-center cursor-pointer">
+          {/*This is the light/dark button theme*/ }
+          <PopoverHover content={`Toggle ${theme === "light" ? "dark" : "light" } mode`}>
+          <label className="relatice inline-flex items-center cursor-pointer">
           <input
             onClick={toggleTheme}
             type="checkbox"
@@ -153,12 +156,15 @@ const Header = ({ toggleSideBar }) => {
              </svg>
             )}
           </span>
-        </label>
-  
+          </label>
+          </PopoverHover>
+          <PopoverHover content={`Show Notification`}>
             <Notification />
+          </PopoverHover>
             {/* <Menu /> */}
+          <PopoverHover content={`Show Profile`}>
             <Profile />
-      
+          </PopoverHover>
         </div>
       </div>
     </div>

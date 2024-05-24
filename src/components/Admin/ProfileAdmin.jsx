@@ -6,6 +6,7 @@ import Logout from "./Logout";
 const Profile = () => {
   const [isAuthenticated, setAuth] = useState(false);
   const { isOpen, toggleDropdown } = Toggle();
+  const setShow = () => toggleDropdown(!isOpen);
   const [showLogout, setShowLogout] = useState(false);
 
   const handleMenuItemClick = (adminVal) => {
@@ -16,6 +17,7 @@ const Profile = () => {
       <button
         type="button"
         onClick={toggleDropdown}
+        onBlur={setShow}
         className="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
         id="user-menu-button"
         aria-expanded="false"
