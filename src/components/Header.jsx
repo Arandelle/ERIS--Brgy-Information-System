@@ -103,6 +103,7 @@ const Header = ({ toggleSideBar }) => {
             <span class="sr-only">Search</span>
           </button>
           <div class="relative mr-3 hidden md:block">
+          <PopoverHover content={`Search an item`}  >
             <form action="#" method="GET" class="hidden lg:block lg:pl-2">
               <label for="topbar-search" class="sr-only">
                 Search
@@ -134,7 +135,8 @@ const Header = ({ toggleSideBar }) => {
                   placeholder="Search"
                 />
               </div>
-            </form>         
+            </form>    
+            </PopoverHover>     
           </div>
           {/*This is the light/dark button theme*/ }
           <PopoverHover content={(<span> Toggle {theme === "light" ?  <span className="text-primary">DARK</span> : <span className="text-yellow-300">LIGHT</span> } mode</span>)}>

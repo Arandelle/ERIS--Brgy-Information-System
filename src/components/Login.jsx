@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Luncher from "./Luncher";
+import Launcher from "./Launcher";
 
 export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
@@ -32,7 +32,7 @@ export default function Login({ setAuth }) {
 
   return (
     <>
-      {loading ? (<Luncher setLoading={setLoading}/>) : (
+      {loading ? (<Launcher setLoading={setLoading}/>) : (
        <main className="flex h-screen w-full items-center justify-center bg-gray-100 dark:bg-gray-800 px-4">
        <div className="w-full max-w-md">
          <div className="space-y-1 mb-3">

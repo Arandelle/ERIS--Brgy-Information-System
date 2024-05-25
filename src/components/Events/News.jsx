@@ -17,13 +17,17 @@ const News = () => {
             <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown}/>
           </div>
           <div className={`w-full ${isOpen ? "ml-0" : "md:ml-60"}`}>
-            <h1 className='dark:text-white mx-3 my-3'>This is news</h1>
+          <div className='m-3'>
             {loading ? (<Skeleton loading={loading} setLoading={setLoading}/>) :
-            (
+              (
+              <div>
+                <h1 className='dark:text-white'>This is news</h1>
                 <div className='fixed inset-0 flex items-center justify-center'>
                   <img src={Image} alt="" />
                 </div>
-            )}
+              </div>
+              )}
+          </div>
           </div>
       </div>      
     </div>
