@@ -53,7 +53,7 @@ const News = () => {
                    </div>
                   <div>
                     <textarea
-                      className="w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 dark:placeholder:text-gray-50 dark:bg-gray-600"
+                      className="w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600"
                       value={content}
                       placeholder="Write your news"
                       onChange={(e) => setContent(e.target.value)}
