@@ -1,6 +1,9 @@
 import React from 'react';
 
+export const HeaderData = ["Name", "Address", "Age", "Gender", "Status", "Action"];
+
 const ActionButton = ({ baseLink, handleActionMenu }) => {
+
   const actions = [
     { title: "Add Account", link: `${baseLink}/add` },
     { title: "Activate Account", link: `${baseLink}/activate` },

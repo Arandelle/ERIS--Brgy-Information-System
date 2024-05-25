@@ -1,6 +1,5 @@
 import React, {useState} from "react";
-import { HeaderData } from "./ActionData";
-import ActionButton from "./ActionButton";
+import ActionButton , { HeaderData } from "./ActionButton";
 import { Toggle } from "../../hooks/Toggle";
 import Header from "../Header";
 import Sidebar from "../Sidebar/Sidebar";

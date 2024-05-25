@@ -41,7 +41,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
             className={`${
               !val.items || openSubMenu !== val.title
                 ? "flex items-center p-2 text-base font-normal rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
-                : "text-gray-900 dark:text-white p-2"
+                : "text-gray-900 dark:text-white p-2 cursor-pointer"
             }`}
             onClick={() => handleMenuItemClick(val)}
           > 

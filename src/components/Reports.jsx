@@ -16,17 +16,15 @@ const Reports = () => {
         <div className="fixed z-50">
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
         </div>
-        {loadings ? (
-        <div className="m-0 py-3 px-3 md:ml-60 w-full">
-          <Skeleton setLoading={setLoading} />
-        </div>
-      ) : (
         <div
-          className={`w-screen p-4 dark:bg-gray-800 dark:text-white rounded-md mx-6 my-5 md:mx-8 md:my-5 ${
-            isOpen ? "ml-10" : "md:ml-64"
+          className={`w-full transition-all duration-300 ease-in-out ${
+            isOpen ? "ml-0" : "md:ml-60"
           }`}
         >
-          <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-15 my-15 gap-4">
+          <div className="m-3">
+            {loadings ? (<Skeleton setLoading={setLoading}/> ): (
+              <div>
+               <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-15 my-15 gap-4">
             <input
               className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600"
               type="date"
@@ -41,8 +39,10 @@ const Reports = () => {
               Search
             </button>
           </div>
+            </div>
+            )}
+          </div>
         </div>
-          )}
       </div>
     </div>
   );
