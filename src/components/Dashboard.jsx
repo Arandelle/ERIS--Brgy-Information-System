@@ -4,20 +4,23 @@ import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
 import { useLocation } from "react-router-dom";
-import Skeleton from "./Skeleton";
+import Skeleton, {Spinner} from "./Skeleton";
 
 const DashboardCard = ({ title, value }) => {
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 md:p-6 w-full mb-3 md:mb-0">
-      <h3 className="text-md md:text-lg xxs:text-center md:text-left font-semibold text-gray-800 dark:text-white">
-        {title}
-      </h3>
-      <p className="text-2xl xxs:text-center md:text-left md:text-2xl font-bold text-gray-900 dark:text-white">
-        {value}
-      </p>
+    <div className="relative">
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 md:p-6 w-full mb-3 md:mb-0">
+        <h3 className="text-md md:text-lg xxs:text-center md:text-left font-semibold text-gray-800 dark:text-white">
+          {title}
+        </h3>
+        <p className="text-2xl xxs:text-center md:text-left md:text-2xl font-bold text-gray-900 dark:text-white">
+          {value}
+        </p>
+      </div>
     </div>
   );
 };
+
 
 const Dashboard = ({ setAuth }) => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -25,7 +28,7 @@ const Dashboard = ({ setAuth }) => {
   const location = useLocation();
   const [message, setMessage] = useState(location.state?.message);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {
@@ -67,12 +70,10 @@ const Dashboard = ({ setAuth }) => {
           } transition-all duration-300 ease-in-out`}
         >
           <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-3 mx-3">
-            <DashboardCard title="Total Residents" value="10,000" />
-            <DashboardCard title="Today's Registered" value="5,000" />
-            <DashboardCard title="Events" value="10" />
-            <DashboardCard title="Emergency" value="5" />
-            <div className="App">
-    </div>
+            <DashboardCard title="Total Residents" value={loading ? <Spinner setLoading={setLoading} /> : "1000"}/>
+            <DashboardCard title="Today's Registered" value={loading ? <Spinner setLoading={setLoading}/> : "50"} />
+            <DashboardCard title="Events" value={loading ? <Spinner setLoading={setLoading}/> : "100"} />
+            <DashboardCard title="Emergency" value={loading ? <Spinner setLoading={setLoading}/> : "50"} />
           </div>
           {loading ? (
             <div className="m-3">
