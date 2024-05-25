@@ -96,7 +96,7 @@ export const Carissa = [
       status: "Activated",
     },
   ];
-  export const Lumina = [
+export const Lumina = [
     {
       id: 1,
       img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",

@@ -25,3 +25,37 @@ input, textarea {
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-200 dark:bg-gray-800;
 }
+/* Custom styles for react-big-calendar buttons */
+.rbc-btn-group button {
+  background-color: #4caf50; /* Default background color */
+  color: white; /* Default text color */
+  border: none;
+}
+
+.rbc-btn-group button:hover {
+  background-color: #45a049; /* Hover background color */
+}
+
+.rbc-btn-group button.rbc-today {
+  background-color: #ff5722; /* Background color for "Today" button */
+}
+
+.rbc-btn-group button.rbc-prev, .rbc-btn-group button.rbc-next {
+  background-color: #2196f3; /* Background color for "Back" and "Next" buttons */
+}
+
+.rbc-btn-group button.rbc-day {
+  background-color: #9c27b0; /* Background color for "Day" button */
+}
+
+.rbc-btn-group button.rbc-week {
+  background-color: #ff9800; /* Background color for "Week" button */
+}
+
+.rbc-btn-group button.rbc-month {
+  background-color: #3f51b5; /* Background color for "Month" button */
+}
+
+.rbc-btn-group button.rbc-agenda {
+  background-color: #009688; /* Background color for "Agenda" button */
+}

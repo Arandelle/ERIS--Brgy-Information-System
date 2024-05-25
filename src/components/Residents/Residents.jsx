@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import { ActionButton } from "./ActionData";
+import { HeaderData } from "./ActionData";
+import ActionButton from "./ActionButton";
 import { Toggle } from "../../hooks/Toggle";
 import Header from "../Header";
 import Sidebar from "../Sidebar/Sidebar";
@@ -14,9 +15,12 @@ const ResidentsList = ({residents, label}) => {
 };
   const navigate = useNavigate();
 
-  const handleActionMenu = (val) => {
-      window.location.pathname = val.link;
-  }
+  const handleActionMenu = (link) => {
+    setActionOpen(false);
+    navigate(link); // Use navigate for React Router navigation
+  };
+
+  const baseLink = `/residents/${label.toLowerCase()}`;
 
   return (
     <div className="flex flex-col w-full">
@@ -60,28 +64,9 @@ const ResidentsList = ({residents, label}) => {
                   </button>
                   {/* Dropdown menu */}
                   {isActionOpen && (
-                    <div
-                      id="dropdownAction"
-                      className="z-10 absolute  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
-                    >
-                      <ul
-                        className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                        aria-labelledby="dropdownActionButton"
-                      >
-                        {ActionButton.map((val, key) =>(
-                        <li key={key}
-                        onClick={() => handleActionMenu(val)}
-                        >
-                          <a
-                            href="#"
-                            className={`block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ${val.title === "Delete Account" ? " border-t-2   border-grey-200 boarder-solid text-red-500" : ""}`}
-                          >
-                           {val.title}
-                          </a>
-                        </li>
-                        ))}
-                      </ul>
-                    </div>
+                   <div id="dropdownAction" className="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                   <ActionButton baseLink={baseLink} handleActionMenu={handleActionMenu} />
+                 </div>
                   )}
                 </div>
                 <label htmlFor="table-search" className="sr-only">
@@ -130,24 +115,12 @@ const ResidentsList = ({residents, label}) => {
                           </label>
                         </div>
                       </th>
-                      <th scope="col" className="px-6 py-3">
-                        Name
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Address
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Age
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Gender
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Status
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Action
-                      </th>
+                      {HeaderData.map((header) => (
+                         <th scope="col" className="px-6 py-3">
+                         {header}
+                       </th>
+                      ))}
+                     
                     </tr>
                   </thead>
                   <tbody>

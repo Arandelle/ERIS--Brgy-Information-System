@@ -9,7 +9,7 @@ import Skeleton, {Spinner} from "./Skeleton";
 const DashboardCard = ({ title, value }) => {
   return (
     <div className="relative">
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 md:p-6 w-full mb-3 md:mb-0">
+      <div className="flex flex-row justify-between md:flex-col bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 md:p-6 w-full mb-3 md:mb-0">
         <h3 className="text-md md:text-lg xxs:text-center md:text-left font-semibold text-gray-800 dark:text-white">
           {title}
         </h3>
@@ -44,7 +44,7 @@ const Dashboard = ({ setAuth }) => {
       {message && (
         <div className="flex justify-center items-center">
           <div
-            className="flex absolute z-50 justify-center items-center p-2 mb-4 mt-4 text-sm text-green-500 rounded-lg bg-green-200 dark:bg-gray-600 dark:text-green-400"
+            className="flex absolute z-50 justify-center items-center p-2 mb-4 mt-4 text-sm text-blue-500 rounded-lg bg-blue-200 dark:bg-gray-600 dark:text-green-500"
             role="alert"
           >
             <svg
