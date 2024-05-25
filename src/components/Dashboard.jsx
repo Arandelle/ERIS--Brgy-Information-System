@@ -67,15 +67,17 @@ const Dashboard = ({ setAuth }) => {
           } transition-all duration-300 ease-in-out`}
         >
           <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-3 mx-3">
-            <DashboardCard title="Population" value="10,000" />
-            <DashboardCard title="Emergency" value="5,000" />
-            <DashboardCard title="Reports" value="10,000" />
-            <DashboardCard title="Certificates" value="5,000" />
+            <DashboardCard title="Total Residents" value="10,000" />
+            <DashboardCard title="Today's Registered" value="5,000" />
+            <DashboardCard title="Events" value="10" />
+            <DashboardCard title="Emergency" value="5" />
             <div className="App">
     </div>
           </div>
           {loading ? (
-            <Skeleton setLoading={setLoading} />
+            <div className="m-3">
+              <Skeleton setLoading={setLoading} />
+            </div>
           ) : (
             <div className="relative w-full">
               <MapContent />

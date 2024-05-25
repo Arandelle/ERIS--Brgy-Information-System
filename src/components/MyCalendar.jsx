@@ -92,11 +92,11 @@ const MyCalendar = () => {
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
         </div>
         <div
-          className={`w-screen p-4 dark:bg-gray-800 dark:text-white rounded-md mx-6 my-5 md:mx-8 md:my-5 ${
-            isOpen ? "ml-10" : "md:ml-64"
+          className={`w-screen p-4 dark:bg-gray-800 dark:text-white ${
+            isOpen ? "ml-0" : "md:ml-60"
           }`}
         >
-          <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-15 my-15 gap-4">
+          <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <input
               className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600"
               type="text"
@@ -105,7 +105,7 @@ const MyCalendar = () => {
               onChange={(e) => setTitle(e.target.value)}
             />
             <input
-              className="w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:bg-gray-600"
+              className="w-full relative z-10 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:bg-gray-600"
               type="text"
               onFocus={(e) => (e.target.type = "date")}
               onBlur={(e) => (e.target.type = "text")}
@@ -161,7 +161,9 @@ const MyCalendar = () => {
               height: 600,
               marginTop: 15,
               marginBottom: 15,
+              paddingTop: 10,
             }}
+            className="dark:bg-gray-800"
             components={{
               agenda: {
                 event: CustomAgendaEvent,
