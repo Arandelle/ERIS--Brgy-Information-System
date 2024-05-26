@@ -23,10 +23,11 @@ const News = () => {
   const [title, setTitle] = useState("");
   const [description, setContent] = useState("");
   const [location, setPlace] = useState("");
-  const [time, setTime] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
   const handleAddNews = () => {
-    if (!title || !description || !location || !time) {
+    if (!title || !description || !location || !startTime || !endTime) {
         alert("Please complete the form");
         return;
     }
@@ -34,7 +35,8 @@ const News = () => {
     const addedNews = {
         id: Date.now(), // Generate a unique ID for the new activity
         title,
-        time,
+        startTime,
+        endTime,
         location,
         description
     };
@@ -46,12 +48,11 @@ const News = () => {
     localStorage.setItem('news', JSON.stringify(updatedNews));
 
     setTitle("");
-    setTime("");
+    setStartTime("");
+    setEndTime("");
     setPlace("");
     setContent("");
 }
-
-
 
   return (
     <div className='w-full flex-col flex'>
@@ -75,10 +76,21 @@ const News = () => {
                   />
                    <input
                     className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600"
-                    type="time"
-                    value={time}
-                    placeholder="Time"
-                    onChange={(e) => setTime(e.target.value)}
+                    type="text"
+                    onFocus={(e) =>(e.target.type = "time")}
+                    onBlur={(e)=>(e.target.type = "text")}
+                    value={startTime}
+                    placeholder="Start"
+                    onChange={(e) => setStartTime(e.target.value)}
+                  />
+                  <input
+                    className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600"
+                    type="text"
+                    onFocus={(e) =>(e.target.type = "time")}
+                    onBlur={(e)=>(e.target.type = "text")}
+                    value={endTime}
+                    placeholder="End"
+                    onChange={(e) => setEndTime(e.target.value)}
                   />
                    <input
                     className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600"
