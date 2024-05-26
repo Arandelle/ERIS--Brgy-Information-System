@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SidebarData } from "./SidebarData";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import ArrowRightIcon from "@mui/icons-material/ArrowDropDown";
 
 function Sidebar({ isOpen, toggleSidebar }) {
   const [openSubMenu, setOpenSubMenu] = useState(null);
@@ -51,7 +51,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
               {val.items && (
                 <ArrowRightIcon
                   className={`transition-transform ${
-                    openSubMenu === val.title ? "rotate-90" : "rotate-0"
+                    openSubMenu === val.title ? "rotate-180" : "rotate-0"
                   }`}
                 />
               )}

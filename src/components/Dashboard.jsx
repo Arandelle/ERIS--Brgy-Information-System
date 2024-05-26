@@ -22,14 +22,18 @@ const DashboardCard = ({ title, value }) => {
   );
 };
 
-
 const Dashboard = ({ setAuth }) => {
   const { isOpen, toggleDropdown } = Toggle();
   setAuth(false);
   const location = useLocation();
   const [message, setMessage] = useState(location.state?.message);
   const [loading, setLoading] = useState(true);
-  const [news, setNews] =useState([]); 
+  
+  const [news, setNews] = useState(() => {
+    // Retrieve news data from localStorage, or an empty array if it doesn't exist
+    const storedNews = localStorage.getItem('news');
+    return storedNews ? JSON.parse(storedNews) : [];
+  });
   
   useEffect(() => {
     if (message) {
@@ -82,14 +86,14 @@ const Dashboard = ({ setAuth }) => {
               <Skeleton setLoading={setLoading} />
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-4 w-full ">
-              <div className="col-span-3">
-                <MapContent />
+              <div className="grid grid-cols-1 lg:grid-cols-4 w-full ">
+                <div className="col-span-3">
+                  <MapContent />
+                </div>
+                <div className="mr-3 ml-2">
+                  <NewsList news={news} />
+                </div>
               </div>
-              <div className="mr-3 ml-2">
-                <NewsList news={news} />
-              </div>
-            </div>
           )}
         </div>
       </div>

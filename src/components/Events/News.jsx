@@ -10,25 +10,48 @@ const News = () => {
   const {isOpen, toggleDropdown}= Toggle();
   const [loading, setLoading] = useState(true);
 
-  const [news, setNews] = useState([]);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [news, setNews] = useState(() => {
+    // Get the news data from localStorage, or an empty array if it doesn't exist
+    const storedNews = localStorage.getItem('news');
+    return storedNews ? JSON.parse(storedNews) : [];
+  });
+  useEffect(() => {
+    // Save the news data to localStorage whenever it changes
+    localStorage.setItem('news', JSON.stringify(news));
+  }, [news]);
 
-  const handleAddNews = () =>{
-    if(!title || !content){
-      alert("Please complete the form");
-      return
+  const [title, setTitle] = useState("");
+  const [description, setContent] = useState("");
+  const [location, setPlace] = useState("");
+  const [time, setTime] = useState("");
+
+  const handleAddNews = () => {
+    if (!title || !description || !location || !time) {
+        alert("Please complete the form");
+        return;
     }
 
     const addedNews = {
-      title,
-      content
+        id: Date.now(), // Generate a unique ID for the new activity
+        title,
+        time,
+        location,
+        description
     };
 
-    setNews((prevEvents) => [...prevEvents, addedNews]);
+    const updatedNews = [...news, addedNews];
+    setNews(updatedNews);
+
+    // Update localStorage with the updated news data
+    localStorage.setItem('news', JSON.stringify(updatedNews));
+
     setTitle("");
+    setTime("");
+    setPlace("");
     setContent("");
-  }
+}
+
+
 
   return (
     <div className='w-full flex-col flex'>
@@ -50,12 +73,26 @@ const News = () => {
                     placeholder="Event Title"
                     onChange={(e) => setTitle(e.target.value)}
                   />
+                   <input
+                    className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600"
+                    type="time"
+                    value={time}
+                    placeholder="Time"
+                    onChange={(e) => setTime(e.target.value)}
+                  />
+                   <input
+                    className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600"
+                    type="text"
+                    value={location}
+                    placeholder="Place"
+                    onChange={(e) => setPlace(e.target.value)}
+                  />
                    </div>
                   <div>
                     <textarea
                       className="w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600"
-                      value={content}
-                      placeholder="Write your news"
+                      value={description}
+                      placeholder="Description"
                       onChange={(e) => setContent(e.target.value)}
                     />
                     <button className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
