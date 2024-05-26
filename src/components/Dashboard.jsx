@@ -81,20 +81,21 @@ const Dashboard = ({ setAuth }) => {
             <DashboardCard title="Events" value={loading ? <Spinner setLoading={setLoading}/> : "100"} />
             <DashboardCard title="Emergency" value={loading ? <Spinner setLoading={setLoading}/> : "50"} />
           </div>
-          {loading ? (
-            <div className="m-3">
-              <Skeleton setLoading={setLoading} />
-            </div>
-          ) : (
               <div className="grid grid-cols-1 lg:grid-cols-4 w-full ">
-                <div className="col-span-3">
-                  <MapContent />
+                {loading ? (
+                <div className="col-span-3 mx-3">
+                  <Skeleton setLoading={setLoading} />
                 </div>
-                <div className="mr-3 ml-2">
-                  <NewsList news={news} />
-                </div>
+                ) : (
+                   <div className="col-span-3">
+                   <MapContent />
+                 </div>
+                )}
+                  <div className="mr-3 ml-2">
+                    <NewsList news={news} />
+                  </div>
               </div>
-          )}
+         
         </div>
       </div>
     </div>

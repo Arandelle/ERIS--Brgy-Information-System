@@ -38,7 +38,8 @@ const News = () => {
         startTime,
         endTime,
         location,
-        description
+        description,
+        timestamp: new Date().toISOString() // Add a timestamp
     };
 
     const updatedNews = [...news, addedNews];

@@ -52,6 +52,7 @@ const Skeleton = ({ setLoading }) => {
 };
 
 export const Spinner = () => {
+
   return (
     <div>
       <svg
