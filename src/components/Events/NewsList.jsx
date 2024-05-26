@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spinner } from "../Skeleton";
 
 const NewsList = ({news: initialNews}) => {
@@ -18,12 +18,30 @@ const NewsList = ({news: initialNews}) => {
   };  
   
  const [loading, setLoading] = useState(true);
+ const [containerSize, setContainerSize] = useState('large');
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      const newContainerSize = entries[0].contentRect.width < 500 ? 'small' : 'large';
+      setContainerSize(newContainerSize);
+    });
+
+    resizeObserver.observe(containerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
 
  useEffect(()=>{
     setTimeout(()=>{
       setLoading(false);
     },2000)
  },[])
+
+
 
   const defaultNews = [
     {
@@ -52,8 +70,8 @@ const NewsList = ({news: initialNews}) => {
   };
  
   return (
-    <div className="bg-gray-50 dark:bg-gray-800 dark:text-gray-400 h-full rounded">
-      <div className="block py-2 px-4 text-base font-medium text-center">
+    <div className="bg-gray-50 dark:bg-gray-800 dark:text-gray-400 h-full rounded"  ref={containerRef}>
+      <div className="block py-2 px-4 text-base font-medium text-center font-semibold">
         Today's Activities
       </div>
         <div className="scrollable-container p-4 text-gray-700 overflow-y-auto max-h-screen">
@@ -63,8 +81,8 @@ const NewsList = ({news: initialNews}) => {
                <Spinner setLoading={setLoading}/>
              </div>) :  (        
             <div>
-              <div className="flex justify-between">
-                <h3 className="text-xl font-semibold mb-2 dark:text-green-500">{activity.title}</h3>
+              <div className={`flex justify-between ${containerSize === 'small' ? 'flex-col' : ''}`}>
+                <h3 className={`text-xl font-semibold mb-2 dark:text-green-500 ${containerSize === 'small' ? 'mb-0 text-md text-center' : ''}`}>{activity.title}</h3>
                 <span className="text-primary text-sm text-nowrap"> Posted {getTimeDifference(activity.timestamp)}</span>
               </div>
               <p className="text-gray-700 dark:text-gray-200">{activity.description}</p>

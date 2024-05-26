@@ -3,19 +3,27 @@ import { useState, useEffect } from 'react'
 import Header from '../Header'
 import Sidebar from '../Sidebar/Sidebar'
 import { Toggle } from '../../hooks/Toggle'
-import Skeleton from '../Skeleton'
 import NewsList from './NewsList'
 
 const News = () => {
   const {isOpen, toggleDropdown}= Toggle();
-  const [loading, setLoading] = useState(true);
   const [notAllowed, setNotAllowed] = useState(true);
+  const [message, setMessage] = useState("");
 
   useEffect(()=>{
       setTimeout(()=>{
         setNotAllowed(false);
       }, 2000)
   }, [])
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   const [news, setNews] = useState(() => {
     // Get the news data from localStorage, or an empty array if it doesn't exist
@@ -60,6 +68,7 @@ const News = () => {
     setEndTime("");
     setPlace("");
     setContent("");
+    setMessage("News item added successfully!");
 }
 
   return (
@@ -122,8 +131,13 @@ const News = () => {
                       Submit
                     </button>
                   </div>
+                  {message && (
+                <div className="mt-4 p-2 bg-green-500 text-white rounded-md">
+                  {message}
+                </div>
+              )}
                   <div>
-                    <NewsList news={news}/>
+                          <NewsList news={news}/>
                 </div>
                 </div>
           </div>
