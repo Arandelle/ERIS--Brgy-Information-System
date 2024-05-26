@@ -65,7 +65,7 @@ const NewsList = ({news: initialNews}) => {
             <div>
               <div className="flex justify-between">
                 <h3 className="text-xl font-semibold mb-2 dark:text-green-500">{activity.title}</h3>
-                <span>{getTimeDifference(activity.timestamp)}</span>
+                <span className="text-primary text-sm text-nowrap"> Posted {getTimeDifference(activity.timestamp)}</span>
               </div>
               <p className="text-gray-700 dark:text-gray-200">{activity.description}</p>
               <div className="flex justify-between mt-2 text-gray-500 dark:text-gray-400">
