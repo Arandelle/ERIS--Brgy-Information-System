@@ -99,14 +99,14 @@ const MyCalendar = () => {
         >
           <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <input
-              className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-white dark:bg-gray-200"
+              className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-gray-800 dark:bg-gray-200"
               type="text"
               placeholder="Event Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <input
-              className="w-full relative z-10 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:bg-gray-200"
+              className="w-full relative z-10 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:bg-gray-200 dark:text-gray-800"
               type="text"
               onFocus={(e) => (e.target.type = "date")}
               onBlur={(e) => (e.target.type = "text")}
@@ -115,7 +115,7 @@ const MyCalendar = () => {
               onChange={(e) => setStartDate(e.target.value)}
             />
             <input
-              className="date-input w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:bg-gray-200"
+              className="date-input w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:bg-gray-200 dark:text-gray-800"
               type="text"
               placeholder="End Date"
               value={endDate}
@@ -124,14 +124,14 @@ const MyCalendar = () => {
               onChange={(e) => setEndDate(e.target.value)}
             />
             <input
-              className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-white dark:bg-gray-200"
+              className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-gray-800 dark:bg-gray-200"
               type="text"
               placeholder="Organizer"
               value={organizer}
               onChange={(e) => setOrganizer(e.target.value)}
             />
             <input
-              className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-white dark:bg-gray-200"
+              className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-gray-800 dark:bg-gray-200"
               type="text"
               placeholder="Details"
               value={details}
