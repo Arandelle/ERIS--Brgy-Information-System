@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from 'moment';
+import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Toggle } from "../hooks/Toggle";
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
+import { Spinner } from "./Skeleton";
 
 const MyCalendar = () => {
-  
   const { isOpen, toggleDropdown } = Toggle();
   const localizer = momentLocalizer(moment);
   const [events, setEvents] = useState([]);
@@ -17,6 +17,14 @@ const MyCalendar = () => {
   const [organizer, setOrganizer] = useState("");
   const [details, setDetails] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate data fetching
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
 
   const handleAddEvent = () => {
     if (!title || !startDate || !endDate || !organizer || !details) {
@@ -42,8 +50,8 @@ const MyCalendar = () => {
   const handleSelectEvent = (event) => {
     setSelectedEvent(event);
     setTitle(event.title);
-    setStartDate(event.start.toISOString().split('T')[0]);
-    setEndDate(event.end.toISOString().split('T')[0]);
+    setStartDate(event.start.toISOString().split("T")[0]);
+    setEndDate(event.end.toISOString().split("T")[0]);
     setOrganizer(event.organizer);
     setDetails(event.details);
   };
@@ -56,8 +64,8 @@ const MyCalendar = () => {
     const updatedEvent = {
       ...selectedEvent,
       title,
-      start: new Date(startDate),
-      end: new Date(endDate),
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
       organizer,
       details,
     };
@@ -153,24 +161,60 @@ const MyCalendar = () => {
               </button>
             )}
           </div>
-          <Calendar
-            localizer={localizer}
-            events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{
-              height: 600,
-              marginTop: 15,
-              marginBottom: 15,
-              paddingTop: 10,
-            }}
-            components={{
-              agenda: {
-                event: CustomAgendaEvent,
-              },
-            }}
-            onSelectEvent={handleSelectEvent}
-          />
+          <div className="grid grid-cols-4">
+            <div className="col-span-3">
+              <Calendar
+                localizer={localizer}
+                events={events}
+                startAccessor="start"
+                endAccessor="end"
+                style={{
+                  height: 600,
+                  marginTop: 15,
+                  marginBottom: 15,
+                  paddingTop: 10,
+                }}
+                components={{
+                  agenda: {
+                    event: CustomAgendaEvent,
+                  },
+                }}
+                onSelectEvent={handleSelectEvent}
+              />
+            </div>
+            <div className="mr-3 ml-2">
+              <div
+                className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 h-full rounded"
+              >
+                <div className="block py-2 px-4 text-base text-center font-semibold">
+                  Upcoming Events
+                </div>
+                <div className="scrollable-container p-4 text-gray-700 overflow-y-auto max-h-screen">
+                  {events.map((activity, key) => (
+                    <div key={key} className="mb-4 border-b pb-4 ">
+                      {loading ? (
+                        <div className="flex items-center justify-center py-3">
+                          <Spinner setLoading={setLoading} />
+                        </div>
+                      ) : (
+                        <div>
+                            <h3 className={`text-xl font-semibold mb-2 dark:text-green-500`}>                       
+                              Title: {activity.title}</h3>
+                          <p className="text-gray-700 dark:text-gray-200">
+                            Date: {activity.start.toISOString().split("T")[0]} - {activity.end.toISOString().split("T")[0]}
+                          </p>
+                            <p  className="text-gray-700 dark:text-gray-200">
+                              Organizer: {activity.organizer}
+                            </p>
+                            <p  className="text-gray-700 dark:text-gray-200">Details: {activity.details}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
