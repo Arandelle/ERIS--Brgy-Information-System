@@ -29,3 +29,15 @@ input, textarea {
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: #888 #f1f1f1; /* Firefox */
 }
+
+.rbc-toolbar .rbc-btn-group button {
+  @apply text-gray-900 dark:bg-gray-200 mx-[2px];
+}
+
+.rbc-toolbar .rbc-btn-group button:hover {
+ @apply bg-gray-500 text-gray-100 dark:bg-gray-800 dark:text-gray-200
+}
+
+.rbc-toolbar .rbc-toolbar-label {
+  @apply text-xl font-thin text-gray-800 dark:text-white;
+}
