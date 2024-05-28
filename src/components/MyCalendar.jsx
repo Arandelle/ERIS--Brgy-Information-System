@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -10,14 +10,23 @@ import { Spinner } from "./Skeleton";
 const MyCalendar = () => {
   const { isOpen, toggleDropdown } = Toggle();
   const localizer = momentLocalizer(moment);
-  const [events, setEvents] = useState([]);
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [organizer, setOrganizer] = useState("");
   const [details, setDetails] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  
+  const [events, setEvents] = useState(() => {
+    const storedEvents = localStorage.getItem('events');
+    return storedEvents ? JSON.parse(storedEvents, (key, value) => {
+      if (key === "start" || key === "end") {
+        return new Date(value);
+      }
+      return value;
+    }) : [];
+  });
 
   useEffect(() => {
     // Simulate data fetching
@@ -25,6 +34,10 @@ const MyCalendar = () => {
       setLoading(false);
     }, 2000);
   }, []);
+
+  useEffect(()=>{
+    localStorage.setItem('events', JSON.stringify(events));
+  },[events])
 
   const handleAddEvent = () => {
     if (!title || !startDate || !endDate || !organizer || !details) {
@@ -64,8 +77,8 @@ const MyCalendar = () => {
     const updatedEvent = {
       ...selectedEvent,
       title,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
+      start: new Date(startDate),
+      end: new Date(endDate),
       organizer,
       details,
     };
@@ -182,35 +195,42 @@ const MyCalendar = () => {
                 onSelectEvent={handleSelectEvent}
               />
             </div>
-            <div className="mr-3 ml-2">
+            <div className="mr-3 ml-2"  onSelectEvent={handleSelectEvent}>
               <div
-                className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 h-full rounded"
+                className="bg-gray-200 shadow-md dark:bg-gray-800 dark:text-gray-400 h-full"
               >
-                <div className="block py-2 px-4 text-base text-center font-semibold">
+                <div className="block py-2 px-4 text-base text-center font-semibold border border-y-2 border-y-green-500">
                   Upcoming Events
                 </div>
                 <div className="scrollable-container p-4 text-gray-700 overflow-y-auto max-h-screen">
-                  {events.map((activity, key) => (
-                    <div key={key} className="mb-4 border-b pb-4 ">
-                      {loading ? (
-                        <div className="flex items-center justify-center py-3">
-                          <Spinner setLoading={setLoading} />
-                        </div>
-                      ) : (
+                  {loading ? (
+                    <div className="flex items-center justify-center py-3">
+                      <Spinner setLoading={setLoading} />
+                    </div>
+                  ) : events.length === 0 ? (
+                    <div className="text-center text-gray-500 dark:text-gray-400">
+                      No events yet
+                    </div>
+                  ) : (
+                    events.map((activity, key) => (
+                      <div key={key} className="mb-4 border-b pb-4">
                         <div>
-                            <h3 className={`text-xl font-semibold mb-2 dark:text-green-500`}>                       
-                              Title: {activity.title}</h3>
+                          <h3 className="text-xl font-semibold mb-2 dark:text-green-500">
+                            Title: {activity.title}
+                          </h3>
                           <p className="text-gray-700 dark:text-gray-200">
                             Date: {activity.start.toISOString().split("T")[0]} - {activity.end.toISOString().split("T")[0]}
                           </p>
-                            <p  className="text-gray-700 dark:text-gray-200">
-                              Organizer: {activity.organizer}
-                            </p>
-                            <p  className="text-gray-700 dark:text-gray-200">Details: {activity.details}</p>
+                          <p className="text-gray-700 dark:text-gray-200">
+                            Organizer: {activity.organizer}
+                          </p>
+                          <p className="text-gray-700 dark:text-gray-200">
+                            Details: {activity.details}
+                          </p>
                         </div>
-                      )}
-                    </div>
-                  ))}
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>

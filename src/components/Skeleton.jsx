@@ -3,6 +3,7 @@ import React from "react";
 import { useEffect } from "react";
 
 const Skeleton = ({ setLoading }) => {
+
   useEffect(() => {
     // Simulate data fetching
     setTimeout(() => {
@@ -51,7 +52,12 @@ const Skeleton = ({ setLoading }) => {
   );
 };
 
-export const Spinner = () => {
+export const Spinner = ({setLoading}) => {
+  useEffect(()=>{
+    setTimeout(()=>{
+      setLoading(false);
+    },2000)
+  },[])
   return (
     <div>
       <svg

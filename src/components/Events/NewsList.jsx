@@ -1,25 +1,34 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Spinner } from "../Skeleton";
+import { getTimeDifference } from "../../helper/TimeDiff";
+
+export const defaultNews = [
+  {
+    id: 1,
+    title: "Community Cleanup Drive",
+    description:
+      "Join us in cleaning up our barangay! Bring gloves and garbage bags.",
+    startTime: "9:00",
+    endTime: "12:00",
+    location: "Barangay Hall",
+  },
+  {
+    id: 2,
+    title: "Free Medical Checkup",
+    description:
+      "Free medical checkup for all residents. Services include basic checkup and consultations.",
+    startTime: "14:00",
+    endTime: "18:00",
+    location: "Barangay Health Center",
+  },
+  // Add more activities as needed
+];
 
 const NewsList = ({news: initialNews}) => {
-
-  const getTimeDifference = (timestamp) => {
-    const now = new Date();
-    const addedTime = new Date(timestamp);
-    const diff = Math.floor((now - addedTime) / 1000); // Difference in seconds
   
-    if (diff < 60) return `${diff} seconds ago`;
-    const diffInMinutes = Math.floor(diff / 60);
-    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours} hours ago`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays} days ago`;
-  };  
-  
- const [loading, setLoading] = useState(true);
- const [containerSize, setContainerSize] = useState('large');
-  const containerRef = useRef(null);
+const [loading, setLoading] = useState(true);
+const [containerSize, setContainerSize] = useState('large');
+const containerRef = useRef(null);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
@@ -41,34 +50,22 @@ const NewsList = ({news: initialNews}) => {
     },2000)
  },[])
 
-
-
-  const defaultNews = [
-    {
-      id: 1,
-      title: "Community Cleanup Drive",
-      description:
-        "Join us in cleaning up our barangay! Bring gloves and garbage bags.",
-      startTime: "9:00",
-      endTime: "12:00",
-      location: "Barangay Hall",
-    },
-    {
-      id: 2,
-      title: "Free Medical Checkup",
-      description:
-        "Free medical checkup for all residents. Services include basic checkup and consultations.",
-      startTime: "14:00",
-      endTime: "18:00",
-      location: "Barangay Health Center",
-    },
-    // Add more activities as needed
-  ];
   const [news, setNews] = useState(initialNews || []);
   const addActivity = (newActivity) => {
     setNews([...news, newActivity]);
   };
- 
+  const handleDelete = (id) => {
+    const storedNews = localStorage.getItem("news");
+    if (storedNews) {
+      const newsArray = JSON.parse(storedNews);
+      const updatedNewsArray = newsArray.filter((newsItem) => newsItem.id !== id);
+      localStorage.setItem("news", JSON.stringify(updatedNewsArray));
+      setNews(updatedNewsArray);
+      setMessage("News item deleted successfully!");
+    } else {
+      setMessage("No news items found to delete.");
+    }
+  };
   return (
     <div className="bg-gray-50 dark:bg-gray-800 dark:text-gray-400 h-full rounded"  ref={containerRef}>
       <div className="block py-2 px-4 text-base text-center font-semibold">
@@ -90,6 +87,7 @@ const NewsList = ({news: initialNews}) => {
                 <span>{activity.startTime} - {activity.endTime}</span>
                 <span>{activity.location}</span>
               </div>
+              <button onClick={() => handleDelete(activity.id)}>Delete</button>
             </div>
             )}
           </div>
