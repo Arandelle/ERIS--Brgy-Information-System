@@ -73,11 +73,12 @@ const News = () => {
     setMessage("News item added successfully!");
   };
   const handleDelete = (id) => {
-    const storedNews = localStorage.getItem("news");
+    const storedNews = localStorage.getItem("news"); {/*get the array data from local storage*/}
     if (storedNews) {
-      const newsArray = JSON.parse(storedNews);
-      const updatedNewsArray = newsArray.filter((newsItem) => newsItem.id !== id);
-      localStorage.setItem("news", JSON.stringify(updatedNewsArray));
+      const newsArray = JSON.parse(storedNews); {/**Parse the JSON string into an array: */}
+      const updatedNewsArray = newsArray.filter((newsItem) => newsItem.id !== id); {/* filter for specific item */}
+      {/*Save the updated array back tolocalStorage */}
+      localStorage.setItem("news", JSON.stringify(updatedNewsArray)); 
       setNews(updatedNewsArray);
       setMessage("News item deleted successfully!");
     } else {
