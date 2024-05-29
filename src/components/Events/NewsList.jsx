@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Spinner } from "../Skeleton";
 import { getTimeDifference } from "../../helper/TimeDiff";
+import ContainerResizer from "../../helper/ContainerResizer";
 
 export const defaultNews = [
   {
@@ -27,22 +28,7 @@ export const defaultNews = [
 const NewsList = ({news}) => {
   
 const [loading, setLoading] = useState(true);
-const [containerSize, setContainerSize] = useState('large');
-const containerRef = useRef(null);
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
-      const newContainerSize = entries[0].contentRect.width < 500 ? 'small' : 'large';
-      setContainerSize(newContainerSize);
-    });
-
-    resizeObserver.observe(containerRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
+const {containerSize, containerRef }= ContainerResizer();
 
  useEffect(()=>{
     setTimeout(()=>{

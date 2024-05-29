@@ -6,7 +6,7 @@ import { Toggle } from "../../hooks/Toggle";
 import { Spinner } from "../Skeleton";
 import { getTimeDifference } from "../../helper/TimeDiff";
 import { defaultNews } from "./NewsList";
-import Logout from "../Admin/Logout";
+import QuestionModal from "../Admin/QuestionModal";
 
 const News = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -21,7 +21,7 @@ const News = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newsToDeleteId, setNewsToDeleteId] = useState(null);
 
-  const toggleDelete = (id) => {
+  const toggleDeleteModal = (id) => {
     setNewsToDeleteId(id);
     setShowDeleteModal(!showDeleteModal);
   };
@@ -159,10 +159,6 @@ const News = () => {
                   Submit
                 </button>
               </div>
-              {showDeleteModal && ( <Logout toggleModal={toggleDelete} question={"Delete this Item"} yesText={"Delete"}
-                onConfirm={() => handleDelete(newsToDeleteId)} />
-              )}
-
               {message && (
                 <div className="mt-4 p-2 bg-green-500 text-white rounded-md">
                   {message}
@@ -198,13 +194,16 @@ const News = () => {
                             </span>
                             <span>{activity.location}</span>
                           </div>
-                          <button onClick={() => toggleDelete(activity.id)}>Delete</button>
+                          <button className="text-red-500" onClick={() => toggleDeleteModal(activity.id)}>Delete</button>
                         </div>
                       )}
                     </div>
                   ))}
                 </div>
               </div>
+              {showDeleteModal && ( <QuestionModal toggleModal={toggleDeleteModal} question={"Delete this Item"} yesText={"Delete"}
+                onConfirm={() => handleDelete(newsToDeleteId)} />
+              )}
             </div>
           </div>
         </div>

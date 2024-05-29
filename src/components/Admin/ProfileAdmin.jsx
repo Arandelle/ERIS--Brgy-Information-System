@@ -1,7 +1,7 @@
 import { Toggle } from "../../hooks/Toggle";
 import { AdminData, AdminSettings } from "./AdminData";
 import { useState } from "react";
-import Logout from "./Logout";
+import Logout from "./QuestionModal";
 import { PopoverHover } from "../Popover";
 import { useNavigate } from "react-router-dom";
 
