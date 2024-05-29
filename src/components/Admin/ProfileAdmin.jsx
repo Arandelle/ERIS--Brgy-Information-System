@@ -3,11 +3,18 @@ import { AdminData, AdminSettings } from "./AdminData";
 import { useState } from "react";
 import Logout from "./Logout";
 import { PopoverHover } from "../Popover";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [isAuthenticated, setAuth] = useState(false);
   const { isOpen, toggleDropdown } = Toggle();
   const [showLogout, setShowLogout] = useState(false);
+
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    setAuth(false);
+    navigate("/");
+  };
 
   const handleMenuItemClick = (adminVal) => {
     window.location.pathname = adminVal.link;
@@ -78,7 +85,7 @@ const Profile = () => {
           </ul>
         </div>
       )}
-      {showLogout && (<Logout toggleLogout={() => setShowLogout(false)} setAuth={setAuth}/> )}  
+      {showLogout && (<Logout toggleModal={() => setShowLogout(false)} question="Logout" yesText="Logout" onConfirm={handleLogout}/> )}  
     </div>
   );
 };

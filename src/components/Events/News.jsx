@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar/Sidebar";
 import { Toggle } from "../../hooks/Toggle";
@@ -7,6 +6,7 @@ import { Toggle } from "../../hooks/Toggle";
 import { Spinner } from "../Skeleton";
 import { getTimeDifference } from "../../helper/TimeDiff";
 import { defaultNews } from "./NewsList";
+import Logout from "../Admin/Logout";
 
 const News = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -18,6 +18,13 @@ const News = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [newsToDeleteId, setNewsToDeleteId] = useState(null);
+
+  const toggleDelete = (id) => {
+    setNewsToDeleteId(id);
+    setShowDeleteModal(!showDeleteModal);
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -45,7 +52,6 @@ const News = () => {
     localStorage.setItem("news", JSON.stringify(news));
   }, [news]);
 
-
   const handleAddNews = () => {
     if (!title || !description || !location || !startTime || !endTime) {
       alert("Please complete the form");
@@ -72,6 +78,7 @@ const News = () => {
     setContent("");
     setMessage("News item added successfully!");
   };
+
   const handleDelete = (id) => {
     const storedNews = localStorage.getItem("news"); {/*get the array data from local storage*/}
     if (storedNews) {
@@ -80,7 +87,9 @@ const News = () => {
       {/*Save the updated array back tolocalStorage */}
       localStorage.setItem("news", JSON.stringify(updatedNewsArray)); 
       setNews(updatedNewsArray);
-      setMessage("News item deleted successfully!");
+      setMessage("Item Deleted");
+      setNewsToDeleteId(null); // Reset the state
+      setToggleDelete(false); // Close the modal
     } else {
       setMessage("No news items found to delete.");
     }
@@ -150,6 +159,10 @@ const News = () => {
                   Submit
                 </button>
               </div>
+              {showDeleteModal && ( <Logout toggleModal={toggleDelete} question={"Delete this Item"} yesText={"Delete"}
+                onConfirm={() => handleDelete(newsToDeleteId)} />
+              )}
+
               {message && (
                 <div className="mt-4 p-2 bg-green-500 text-white rounded-md">
                   {message}
@@ -185,7 +198,7 @@ const News = () => {
                             </span>
                             <span>{activity.location}</span>
                           </div>
-                          <button onClick={() => handleDelete(activity.id)}>Delete</button>
+                          <button onClick={() => toggleDelete(activity.id)}>Delete</button>
                         </div>
                       )}
                     </div>
@@ -196,7 +209,7 @@ const News = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div>  
   );
 };
 

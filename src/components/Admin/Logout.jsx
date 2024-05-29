@@ -1,13 +1,6 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
-const Logout = ({ toggleLogout, setAuth }) => {
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    setAuth(false);
-    navigate("/");
-  };
-
+const Logout = ({ toggleModal, question, yesText,onConfirm, onCancel }) => {
   return (
     <div
       id="popup-modal"
@@ -18,7 +11,7 @@ const Logout = ({ toggleLogout, setAuth }) => {
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <button
             type="button"
-            onClick={toggleLogout}
+            onClick={toggleModal}
             className="absolute top-1 right-1 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-7 h-7 md:w-8 md:h-8 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white"
             data-modal-hide="popup-modal"
           >
@@ -56,20 +49,20 @@ const Logout = ({ toggleLogout, setAuth }) => {
               />
             </svg>
             <h3 className="mb-3 text-sm md:mb-5 md:text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to Logout?
+              Are you sure you want to {question} ?
             </h3>
             <button
               data-modal-hide="popup-modal"
               type="button"
-              onClick={handleLogout}
+              onClick={onConfirm}
               className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-4 py-2 md:px-5 md:py-2.5 text-center"
             >
-              Logout
+              {yesText}
             </button>
             <button
               data-modal-hide="popup-modal"
               type="button"
-              onClick={toggleLogout}
+              onClick={toggleModal}
               className="px-4 py-2 md:py-2.5 md:px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             >
               Cancel

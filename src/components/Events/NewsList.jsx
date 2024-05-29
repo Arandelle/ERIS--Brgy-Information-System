@@ -24,7 +24,7 @@ export const defaultNews = [
   // Add more activities as needed
 ];
 
-const NewsList = ({news: initialNews}) => {
+const NewsList = ({news}) => {
   
 const [loading, setLoading] = useState(true);
 const [containerSize, setContainerSize] = useState('large');
@@ -50,10 +50,6 @@ const containerRef = useRef(null);
     },2000)
  },[])
 
-  const [news, setNews] = useState(initialNews || []);
-  const addActivity = (newActivity) => {
-    setNews([...news, newActivity]);
-  };
   const handleDelete = (id) => {
     const storedNews = localStorage.getItem("news");
     if (storedNews) {
