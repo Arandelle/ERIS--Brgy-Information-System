@@ -6,6 +6,7 @@ import { Toggle } from "../hooks/Toggle";
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Spinner } from "./Skeleton";
+import calendarImage from "../assets/calendar.svg"
 
 const MyCalendar = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -208,9 +209,10 @@ const MyCalendar = () => {
                       <Spinner setLoading={setLoading} />
                     </div>
                   ) : events.length === 0 ? (
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                      No events yet
-                    </div>
+                    <div className="text-center flex flex-col justify-center items-center text-gray-500 dark:text-gray-400">
+                    <img src={calendarImage} alt="Empty Image"  className="h-[200px] w-[200px]" />
+                    No events yet
+                   </div>
                   ) : (
                     events.map((activity, key) => (
                       <div key={key} className="mb-4 border-b pb-4">
