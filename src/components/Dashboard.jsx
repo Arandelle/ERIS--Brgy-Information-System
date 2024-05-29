@@ -6,17 +6,23 @@ import { Toggle } from "../hooks/Toggle";
 import { useLocation } from "react-router-dom";
 import Skeleton, {Spinner} from "./Skeleton";
 import NewsList from "./Events/NewsList";
+import population from "../assets/population.svg"
+import registered from "../assets/registered.svg"
+import events from "../assets/events.svg"
+import emergency from "../assets/emergency.svg"
 
-const DashboardCard = ({ title, value }) => {
+const DashboardCard = ({ title, value, img }) => {
   return (
     <div className="relative">
       <div className="flex flex-row justify-between md:flex-col bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 md:p-6 w-full mb-3 md:mb-0">
-        <h3 className="text-md xxs:text-center md:text-left font-semibold text-gray-800 dark:text-white">
+        <h3 className="text-md xxs:text-center md:text-left md:text-lg font-bold text-gray-800 dark:text-white">
           {title}
         </h3>
-        <p className="text-2xl xxs:text-center md:text-left md:text-2xl font-bold text-gray-900 dark:text-green-400">
-          {value}
+        <p className="text-2xl xxs:text-center md:text-left md:text-2xl flex flex-row justify-around items-center font-bold text-gray-900 dark:text-green-400">
+          <p className="text-gray-600">{value}</p>
+          <img src={img} alt="Empty Image"  className="hidden md:block h-20 w-28" />
         </p>
+       
       </div>
     </div>
   );
@@ -76,10 +82,10 @@ const Dashboard = ({ setAuth }) => {
           } transition-all duration-300 ease-in-out`}
         >
           <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-3 mx-3 text-nowrap">
-            <DashboardCard title="Total Residents" value={loading ? <Spinner setLoading={setLoading} /> : "1000"}/>
-            <DashboardCard title="Today's Registered" value={loading ? <Spinner setLoading={setLoading}/> : "50"} />
-            <DashboardCard title="Events" value={loading ? <Spinner setLoading={setLoading}/> : "100"} />
-            <DashboardCard title="Emergency" value={loading ? <Spinner setLoading={setLoading}/> : "50"} />
+            <DashboardCard title="Total Residents" value={loading ? <Spinner setLoading={setLoading} /> : "1000"} img={population}/>
+            <DashboardCard title="Today's Registered" value={loading ? <Spinner setLoading={setLoading}/> : "50"} img={registered} />
+            <DashboardCard title="Events" value={loading ? <Spinner setLoading={setLoading}/> : "10"} img={events} />
+            <DashboardCard title="Emergency" value={loading ? <Spinner setLoading={setLoading}/> : "5"} img={emergency}/>
           </div>
               <div className="grid grid-cols-1 lg:grid-cols-4 w-full ">
                 {loading ? (
