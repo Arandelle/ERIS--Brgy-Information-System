@@ -33,33 +33,21 @@ const NewsList = ({ news, setNews, setMessage }) => {
   }, [setNews]);
 
   const handleDelete = (id) => {
-    const storedNews = localStorage.getItem("news");
-    {
-      /*get the array data from local storage*/
-    }
+    const storedNews = localStorage.getItem("news"); {/*get the array data from local storage*/}
     if (storedNews) {
-      const newsArray = JSON.parse(storedNews);
-      {
-        /**Parse the JSON string into an array: */
-      }
-      const updatedNewsArray = newsArray.filter(
-        (newsItem) => newsItem.id !== id
-      );
-      {
-        /* filter for specific item */
-      }
-      {
-        /*Save the updated array back tolocalStorage */
-      }
-      localStorage.setItem("news", JSON.stringify(updatedNewsArray));
+      const newsArray = JSON.parse(storedNews); {/**Parse the JSON string into an array: */}
+      const updatedNewsArray = newsArray.filter((newsItem) => newsItem.id !== id); {/* filter for specific item */}
+      {/*Save the updated array back tolocalStorage */}
+      localStorage.setItem("news", JSON.stringify(updatedNewsArray)); 
       setNews(updatedNewsArray);
       setMessage("Item Deleted");
       setNewsToDeleteId(null); // Reset the state
-      setToggleDelete(false); // Close the modal
+      setShowDeleteModal(false); // Close the modal
     } else {
       setMessage("No news items found to delete.");
     }
-  };
+  };  
+
   return (
     <div
       className="bg-gray-50 dark:bg-gray-800 dark:text-gray-400 h-full rounded"

@@ -136,9 +136,7 @@ const News = () => {
                   {message}
                 </div>
               )}
-              <div>
-                <NewsList news={news} setNews={setNews}/>
-              </div>
+                <NewsList news={news} setNews={setNews} setMessage={setMessage}/>
             </div>
           </div>
         </div>

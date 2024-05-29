@@ -1,6 +1,6 @@
 import React from "react";
 
-const Logout = ({ toggleModal, question, yesText,onConfirm, onCancel }) => {
+const Logout = ({ toggleModal, question, yesText,onConfirm }) => {
   return (
     <div
       id="popup-modal"
