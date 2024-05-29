@@ -85,7 +85,7 @@ const Profile = () => {
           </ul>
         </div>
       )}
-      {showLogout && (<Logout toggleModal={() => setShowLogout(false)} question="Logout" yesText="Logout" onConfirm={handleLogout}/> )}  
+      {showLogout && (<Logout toggleModal={() => setShowLogout(false)} question="Are you do you want to Logout?" yesText="Logout" onConfirm={handleLogout}/> )}  
     </div>
   );
 };

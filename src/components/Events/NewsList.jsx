@@ -101,7 +101,10 @@ const NewsList = ({ news, setNews, setMessage }) => {
       {showDeleteModal && (
         <QuestionModal
           toggleModal={toggleDeleteModal}
-          question={"Delete this Item"}
+          question={ <span>Do you want to delete 
+            <span className="text-primary text-bold"> {news.find(item => item.id === newsToDeleteId) ?.title}
+              </span>  ? </span>}
+              
           yesText={"Delete"}
           onConfirm={() => handleDelete(newsToDeleteId)}
         />

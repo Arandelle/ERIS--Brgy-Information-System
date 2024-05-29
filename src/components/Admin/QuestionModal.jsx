@@ -48,8 +48,8 @@ const Logout = ({ toggleModal, question, yesText,onConfirm }) => {
                 d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
               />
             </svg>
-            <h3 className="mb-3 text-sm md:mb-5 md:text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to {question} ?
+            <h3 className="mb-3 text-sm md:mb-5 md:text-lg font-normal text-gray-600 dark:text-gray-400">
+              {question}
             </h3>
             <button
               data-modal-hide="popup-modal"
