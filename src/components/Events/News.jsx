@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar/Sidebar";
 import { Toggle } from "../../hooks/Toggle";
-// import NewsList from "./NewsList";
-import { Spinner } from "../Skeleton";
-import { getTimeDifference } from "../../helper/TimeDiff";
-import { defaultNews } from "./NewsList";
-import QuestionModal from "../Admin/QuestionModal";
+import NewsList from "./NewsList";
 
 const News = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -17,14 +13,6 @@ const News = () => {
   const [location, setPlace] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [newsToDeleteId, setNewsToDeleteId] = useState(null);
-
-  const toggleDeleteModal = (id) => {
-    setNewsToDeleteId(id);
-    setShowDeleteModal(!showDeleteModal);
-  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -77,22 +65,6 @@ const News = () => {
     setPlace("");
     setContent("");
     setMessage("News item added successfully!");
-  };
-
-  const handleDelete = (id) => {
-    const storedNews = localStorage.getItem("news"); {/*get the array data from local storage*/}
-    if (storedNews) {
-      const newsArray = JSON.parse(storedNews); {/**Parse the JSON string into an array: */}
-      const updatedNewsArray = newsArray.filter((newsItem) => newsItem.id !== id); {/* filter for specific item */}
-      {/*Save the updated array back tolocalStorage */}
-      localStorage.setItem("news", JSON.stringify(updatedNewsArray)); 
-      setNews(updatedNewsArray);
-      setMessage("Item Deleted");
-      setNewsToDeleteId(null); // Reset the state
-      setToggleDelete(false); // Close the modal
-    } else {
-      setMessage("No news items found to delete.");
-    }
   };
 
   return (
@@ -165,45 +137,8 @@ const News = () => {
                 </div>
               )}
               <div>
-                <div className="scrollable-container p-4 text-gray-700 overflow-y-auto max-h-screen">
-                  {[...defaultNews, ...news].map((activity) => (
-                    <div key={activity.id} className="mb-4 border-b pb-4 ">
-                      {loading ? (
-                        <div className="flex items-center justify-center py-3">
-                          <Spinner setLoading={setLoading} />
-                        </div>
-                      ) : (
-                        <div>
-                          <div className={`flex justify-between`}>
-                            <h3
-                              className={`text-xl font-semibold mb-2 dark:text-green-500`}
-                            >
-                              {activity.title}
-                            </h3>
-                            <span className="text-primary text-sm text-nowrap">
-                              {" "}
-                              Posted {getTimeDifference(activity.timestamp)}
-                            </span>
-                          </div>
-                          <p className="text-gray-700 dark:text-gray-200">
-                            {activity.description}
-                          </p>
-                          <div className="flex justify-between mt-2 text-gray-500 dark:text-gray-400">
-                            <span>
-                              {activity.startTime} - {activity.endTime}
-                            </span>
-                            <span>{activity.location}</span>
-                          </div>
-                          <button className="text-red-500" onClick={() => toggleDeleteModal(activity.id)}>Delete</button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                <NewsList news={news} setNews={setNews}/>
               </div>
-              {showDeleteModal && ( <QuestionModal toggleModal={toggleDeleteModal} question={"Delete this Item"} yesText={"Delete"}
-                onConfirm={() => handleDelete(newsToDeleteId)} />
-              )}
             </div>
           </div>
         </div>

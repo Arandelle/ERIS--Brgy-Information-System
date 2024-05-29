@@ -92,7 +92,7 @@ const Dashboard = ({ setAuth }) => {
                  </div>
                 )}
                   <div className="mr-3 ml-2">
-                    <NewsList news={news} />
+                  <NewsList news={news} setNews={setNews} setMessage={setMessage} />
                   </div>
               </div>
          
