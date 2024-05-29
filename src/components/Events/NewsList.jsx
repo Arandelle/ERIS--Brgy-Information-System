@@ -70,8 +70,8 @@ const NewsList = ({ news, setNews, setMessage }) => {
           news.map((activity) => (
             <div key={activity.id} className="mb-4 border-b pb-4 ">
               <div>
-                <div className="flex justify-between">
-                  <h3 className="text-xl font-semibold mb-2 dark:text-green-500">
+              <div className={`flex justify-between ${containerSize === 'small' ? 'flex-col' : ''}`}>
+                  <h3 className={`text-xl font-semibold mb-2 dark:text-green-500 ${containerSize === 'small' ? 'mb-0 text-md' : ''}`}>
                     {activity.title}
                   </h3>
                   <span className="text-primary text-sm text-nowrap">
@@ -104,7 +104,7 @@ const NewsList = ({ news, setNews, setMessage }) => {
           question={ <span>Do you want to delete 
             <span className="text-primary text-bold"> {news.find(item => item.id === newsToDeleteId) ?.title}
               </span>  ? </span>}
-              
+
           yesText={"Delete"}
           onConfirm={() => handleDelete(newsToDeleteId)}
         />

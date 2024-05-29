@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -7,6 +7,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Spinner } from "./Skeleton";
 import calendarImage from "../assets/calendar.svg"
+import ContainerResizer from "../helper/ContainerResizer";
 
 const MyCalendar = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -18,6 +19,7 @@ const MyCalendar = () => {
   const [details, setDetails] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { containerSize, containerRef } = ContainerResizer();
   
   const [events, setEvents] = useState(() => {
     const storedEvents = localStorage.getItem('events');
@@ -175,7 +177,7 @@ const MyCalendar = () => {
               </button>
             )}
           </div>
-          <div className="grid grid-cols-4">
+          <div className="grid grid-cols-1 md:grid-cols-4">
             <div className="col-span-3">
               <Calendar
                 localizer={localizer}
@@ -199,6 +201,7 @@ const MyCalendar = () => {
             <div className="mr-3 ml-2"  onSelectEvent={handleSelectEvent}>
               <div
                 className="bg-gray-200 shadow-md dark:bg-gray-800 dark:text-gray-400 h-full"
+                ref={containerRef}
               >
                 <div className="block py-2 px-4 text-base text-center font-semibold border border-y-2 border-y-green-500">
                   Upcoming Events
