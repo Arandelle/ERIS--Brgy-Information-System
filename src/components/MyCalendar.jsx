@@ -8,6 +8,8 @@ import Sidebar from "./Sidebar/Sidebar";
 import { Spinner } from "./Skeleton";
 import calendarImage from "../assets/calendar.svg"
 import ContainerResizer from "../helper/ContainerResizer";
+import InputReusable from "./ReusableComponents/InputReusable";
+import BtnReusable from "./ReusableComponents/BtnReusable";
 
 const MyCalendar = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -122,15 +124,13 @@ const MyCalendar = () => {
           }`}
         >
           <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <input
-              className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-gray-800 dark:bg-gray-200"
+            <InputReusable
               type="text"
               placeholder="Event Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-            <input
-              className="w-full relative z-10 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:bg-gray-200 dark:text-gray-800"
+            <InputReusable
               type="text"
               onFocus={(e) => (e.target.type = "date")}
               onBlur={(e) => (e.target.type = "text")}
@@ -138,8 +138,7 @@ const MyCalendar = () => {
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
-            <input
-              className="date-input w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:bg-gray-200 dark:text-gray-800"
+            <InputReusable
               type="text"
               placeholder="End Date"
               value={endDate}
@@ -147,34 +146,21 @@ const MyCalendar = () => {
               onBlur={(e) => (e.target.type = "text")}
               onChange={(e) => setEndDate(e.target.value)}
             />
-            <input
-              className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-gray-800 dark:bg-gray-200"
+            <InputReusable
               type="text"
               placeholder="Organizer"
               value={organizer}
               onChange={(e) => setOrganizer(e.target.value)}
             />
-            <input
-              className="w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-gray-800 dark:bg-gray-200"
+            <InputReusable
               type="text"
               placeholder="Details"
               value={details}
               onChange={(e) => setDetails(e.target.value)}
             />
             {selectedEvent ? (
-              <button
-                onClick={handleUpdateEvent}
-                className="px-4 py-2 bg-green-500 text-white rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:bg-green-600"
-              >
-                Update Event
-              </button>
-            ) : (
-              <button
-                onClick={handleAddEvent}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-              >
-                Add Event
-              </button>
+              <BtnReusable onClick={handleUpdateEvent} value="Update Event" variant="edit" />
+            ) : ( <BtnReusable onClick={handleAddEvent} value="Add Event" variant="add" />
             )}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4">

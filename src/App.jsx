@@ -55,8 +55,8 @@ const App = () => {
                 <Route path="/residents/carissa" element={<ResidentsList residents={Carissa} label="Carissa" />} />
                 <Route path="/residents/lumina" element={<ResidentsList residents={Lumina} label="Lumina  " />} />
                 <Route path="/maps" element={<Map />} />{" "}
-                <Route path="/events/news" element={<News />} />{" "}
                 <Route path="/events/announcement" element={<Announcement />} />{" "}
+                <Route path="/events/news" element={<News />} />{" "}
                 <Route path="/events/event" element={<Events />} />{" "}
                 <Route path="/reports" element={<Reports />} />{" "}
                 <Route path="/history" element={<History />} />{" "}

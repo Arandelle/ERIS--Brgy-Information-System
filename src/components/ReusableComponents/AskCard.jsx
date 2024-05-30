@@ -1,6 +1,6 @@
 import React from "react";
 
-const Logout = ({ toggleModal, question, yesText,onConfirm }) => {
+const AskCard = ({ toggleModal, question, yesText,onConfirm }) => {
   return (
     <div
       id="popup-modal"
@@ -74,4 +74,4 @@ const Logout = ({ toggleModal, question, yesText,onConfirm }) => {
   );
 };
 
-export default Logout;
+export default AskCard;
