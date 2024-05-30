@@ -6,7 +6,7 @@ import QuestionModal from "../ReusableComponents/AskCard";
 import EmptyImage from "../../assets/emptyImage.svg"
 import Question from "../../assets/question.svg"
 
-const NewsList = ({ news, setNews, setMessage }) => {
+const NewsList = ({ news, setNews, setMessage, }) => {
   const [loading, setLoading] = useState(true);
   const { containerSize, containerRef } = ContainerResizer();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
