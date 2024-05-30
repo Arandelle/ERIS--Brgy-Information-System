@@ -17,4 +17,8 @@ export const AdminSettings = [
         title: "Account Settings",
         link: "/Settings",
     },
+    {
+        title: "Archives",
+        link: "/archives",
+    },
 ];

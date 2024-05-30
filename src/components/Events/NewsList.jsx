@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { Spinner } from "../Skeleton";
 import { getTimeDifference } from "../../helper/TimeDiff";
 import ContainerResizer from "../../helper/ContainerResizer";
-import QuestionModal from "../Admin/QuestionModal";
+import QuestionModal from "../ReusableComponents/QuestionModal";
 import EmptyImage from "../../assets/emptyImage.svg"
+import Question from "../../assets/question.svg"
 
 const NewsList = ({ news, setNews, setMessage }) => {
   const [loading, setLoading] = useState(true);
@@ -63,7 +64,7 @@ const NewsList = ({ news, setNews, setMessage }) => {
           </div>
         ) : news.length === 0 ? (
           <div className="text-center flex flex-col justify-center items-center text-gray-500 dark:text-gray-400">
-           <img src={EmptyImage} alt="Empty Image"  className="h-[200px] w-[200px]" />
+           <img src={Question} alt="Empty Image"  className="h-[200px] w-[200px]" />
            No news yet
           </div>
         ) : (
