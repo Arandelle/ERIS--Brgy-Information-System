@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 
-const InputReusable = ({ type, placeholder, value, onChange, onFocus,onBlur }) => {
+const InputReusable = ({ type, placeholder, value, onChange, onFocus,onBlur, notAllowed }) => {
 
   return (
-      <input className='w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-gray-800 dark:bg-gray-200'
+    <input className={`w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-600 dark:text-gray-800 dark:bg-gray-200 ${notAllowed ? "cursor-wait" : "cursor-auto"}`}
       type={type}
       placeholder={placeholder}
       value={value}
@@ -13,4 +13,4 @@ const InputReusable = ({ type, placeholder, value, onChange, onFocus,onBlur }) =
   )
 }
 
-export default InputReusable
+export default InputReusable;

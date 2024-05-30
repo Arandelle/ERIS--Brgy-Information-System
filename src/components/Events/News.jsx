@@ -3,23 +3,24 @@ import Header from "../Header";
 import Sidebar from "../Sidebar/Sidebar";
 import { Toggle } from "../../hooks/Toggle";
 import NewsList from "./NewsList";
+import InputReusable from "../ReusableComponents/InputReusable";
 
 const News = () => {
   const { isOpen, toggleDropdown } = Toggle();
-  const [notAllowed, setNotAllowed] = useState(true);
   const [message, setMessage] = useState("");
   const [title, setTitle] = useState("");
   const [description, setContent] = useState("");
   const [location, setPlace] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [notAllowed, setNotAllowed] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setNotAllowed(false);
     }, 2000);
   }, []);
-
+  
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {
@@ -97,41 +98,37 @@ const News = () => {
           <div className="m-3">
             <div className="flex flex-col gap-4">
               <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-15 my-15 gap-4">
-                <input
-                  className={`w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600
-                    ${notAllowed ? "cursor-wait" : "cursor-auto"}`}
+                <InputReusable
                   type="text"
                   value={title}
                   placeholder="Event Title"
                   onChange={(e) => setTitle(e.target.value)}
+                  notAllowed={notAllowed}
                 />
-                <input
-                  className={`w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600
-                    ${notAllowed ? "cursor-wait" : "cursor-auto"}`}
+                <InputReusable
                   type="text"
                   onFocus={(e) => (e.target.type = "time")}
                   onBlur={(e) => (e.target.type = "text")}
                   value={startTime}
                   placeholder="Start"
                   onChange={(e) => setStartTime(e.target.value)}
+                  notAllowed={notAllowed}
                 />
-                <input
-                  className={`w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600
-                    ${notAllowed ? "cursor-wait" : "cursor-auto"}`}
+                <InputReusable
                   type="text"
                   onFocus={(e) => (e.target.type = "time")}
                   onBlur={(e) => (e.target.type = "text")}
                   value={endTime}
                   placeholder="End"
                   onChange={(e) => setEndTime(e.target.value)}
+                  notAllowed={notAllowed}
                 />
-                <input
-                  className={`w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-50 dark:text-white dark:bg-gray-600
-                    ${notAllowed ? "cursor-wait" : "cursor-auto"}`}
+                <InputReusable
                   type="text"
                   value={location}
                   placeholder="Place"
                   onChange={(e) => setPlace(e.target.value)}
+                  notAllowed={notAllowed}
                 />
               </div>
               <div>

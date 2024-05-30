@@ -8,7 +8,7 @@ const BtnReusable = ({onClick,value, variant}) => {
   return (
     <button
     onClick={onClick}
-    className={`px-4 py-2 text-white rounded-md shadow-sm focus:outline-none ${ variantClasses[variant] || ""}`}
+    className={`px-4 text-white rounded-md shadow-sm focus:outline-none ${ variantClasses[variant] || ""}`}
   >
     {value}
   </button>
