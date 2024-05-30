@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Spinner } from "../Skeleton";
+import { Spinner } from "../ReusableComponents/Skeleton";
 import { getTimeDifference } from "../../helper/TimeDiff";
 import ContainerResizer from "../../helper/ContainerResizer";
 import QuestionModal from "../ReusableComponents/AskCard";

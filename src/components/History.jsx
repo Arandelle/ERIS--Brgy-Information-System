@@ -3,7 +3,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
 import Image from "../assets/logo.png"
-import Skeleton from "./Skeleton";
+import Skeleton from "./ReusableComponents/Skeleton";
 
 function History() {
   const { isOpen, toggleDropdown } = Toggle();

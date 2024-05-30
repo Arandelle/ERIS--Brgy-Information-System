@@ -5,7 +5,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Toggle } from "../hooks/Toggle";
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
-import { Spinner } from "./Skeleton";
+import { Spinner } from "./ReusableComponents/Skeleton";
 import calendarImage from "../assets/calendar.svg"
 import ContainerResizer from "../helper/ContainerResizer";
 import InputReusable from "./ReusableComponents/InputReusable";

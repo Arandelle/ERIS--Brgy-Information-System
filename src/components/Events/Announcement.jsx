@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Header from '../Header'
 import Sidebar from '../Sidebar/Sidebar'
 import { Toggle } from '../../hooks/Toggle'
-import Skeleton from '../Skeleton'
+import Skeleton from '../ReusableComponents/Skeleton'
 import Image from '../../assets/logo.png'
 
 const Announcement = () => {
