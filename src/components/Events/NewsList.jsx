@@ -55,7 +55,7 @@ const NewsList = ({ news, setNews, setMessage }) => {
         ) : news.length === 0 ? (
           <div className="text-center flex flex-col justify-center items-center text-gray-500 dark:text-gray-400">
            <img src={Question} alt="Empty Image"  className="h-[200px] w-[200px]" />
-           No news yet
+           No Activities yet
           </div>
         ) : (
           news.map((activity) => (

@@ -20,10 +20,10 @@ const DashboardCard = ({ title, value, img }) => {
         </div>
         <div className="flex flex-col md:flex-row md:items-center justify-end text-end">
           <div className="flex justify-between w-full md:flex-col md:w-auto">
-            <p className=" text-xs font-thin uppercase dark:text-white">
+            <p className=" text-xs text-ellipsis font-bold uppercase text-gray-500 dark:text-gray-400">
               {title}
             </p>
-            <p className=" text-2xl font-bold dark:text-green-500">{value}</p>
+            <p className=" text-2xl font-bold text-purple-500 dark:text-purple-400">{value}</p>
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@ const Dashboard = ({ setAuth }) => {
             isOpen ? "ml-0" : "md:ml-60"
           } transition-all duration-300 ease-in-out`}
         >
-          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-3 mx-3 text-nowrap">
+          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-3 mx-3 text-wrap">
             <DashboardCard
               title="Total Residents"
               value={loading ? <Spinner setLoading={setLoading} /> : "1000"}
