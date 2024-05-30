@@ -23,16 +23,6 @@ const NewsList = ({ news, setNews, setMessage }) => {
     }, 2000);
   }, []);
 
-  useEffect(() => {
-    const storedNews = localStorage.getItem("news");
-    if (!storedNews) {
-      localStorage.setItem("news", JSON.stringify(defaultNews));
-      setNews(defaultNews);
-    } else {
-      setNews(JSON.parse(storedNews));
-    }
-  }, [setNews]);
-
   const handleDelete = (id) => {
     const storedNews = localStorage.getItem("news"); {/*get the array data from local storage*/}
     if (storedNews) {
