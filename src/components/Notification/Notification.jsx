@@ -1,6 +1,5 @@
 import { Toggle } from "../../hooks/Toggle";
 import { useEffect, useRef } from 'react';
-import '../index.css'
 import { PopoverHover } from "../ReusableComponents/Popover";
 import { NotificationData } from "./NotificationData";
 

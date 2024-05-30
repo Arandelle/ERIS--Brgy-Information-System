@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./index.css"
 import Dashboard from "./components/Dashboard";
 import MyCalendar from "./components/MyCalendar";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
