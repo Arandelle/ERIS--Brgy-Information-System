@@ -72,7 +72,7 @@ const Header = ({ toggleSideBar }) => {
               className="mr-3 h-10 lg:h-12 p-0"
               alt="FlowBite Logo"
             />
-            <span className="self-center text-lg lg:text-2xl font-semibold text-gray-800 dark:text-white">
+            <span className="self-center text-lg lg:text-2xl font-semibold text-gray-800 dark:text-gray-200">
               Bagtas
             </span>
           </a>

@@ -189,7 +189,7 @@ const MyCalendar = () => {
                 className="bg-gray-200 shadow-md dark:bg-gray-800 dark:text-gray-400 h-full"
                 ref={containerRef}
               >
-                <div className="block py-2 px-4 text-base text-center font-semibold border border-y-2 border-y-green-500">
+                <div className="block py-2 px-4 text-base text-center font-semibold border-[3px] border-gray-400">
                   Upcoming Events
                 </div>
                 <div className="scrollable-container p-4 text-gray-700 overflow-y-auto max-h-screen">
