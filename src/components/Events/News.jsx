@@ -95,7 +95,7 @@ const News = () => {
                   onFocus={(e) => (e.target.type = "time")}
                   onBlur={(e) => (e.target.type = "text")}
                   value={startTime}
-                  placeholder="Start"
+                  placeholder="Start Time"
                   onChange={(e) => setStartTime(e.target.value)}
                   notAllowed={notAllowed}
                 />
@@ -104,7 +104,7 @@ const News = () => {
                   onFocus={(e) => (e.target.type = "time")}
                   onBlur={(e) => (e.target.type = "text")}
                   value={endTime}
-                  placeholder="End"
+                  placeholder="End Time"
                   onChange={(e) => setEndTime(e.target.value)}
                   notAllowed={notAllowed}
                 />

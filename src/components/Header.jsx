@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Notification from "./Notification";
+import Notification from "./Notification/Notification";
 // import Menu from './Menu';
 import Profile from "./Admin/ProfileAdmin";
 import logo from "../assets/logo.png";
-import { PopoverHover } from "./Popover";
+import { PopoverHover } from "./ReusableComponents/Popover";
 
 const Header = ({ toggleSideBar }) => {
   const [theme, setTheme] = useState("light");
