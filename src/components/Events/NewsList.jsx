@@ -41,7 +41,7 @@ const NewsList = ({ news, setNews, setMessage, }) => {
 
   return (
     <div
-      className="bg-gray-50 dark:bg-gray-800 dark:text-gray-400 h-full rounded"
+      className="bg-gray-50 dark:bg-gray-800 dark:text-gray-400 h-full rounded-lg"
       ref={containerRef}
     >
       <div className="block py-2 px-4 text-base text-center font-semibold">

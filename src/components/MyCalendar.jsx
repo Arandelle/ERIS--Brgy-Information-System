@@ -10,6 +10,7 @@ import calendarImage from "../assets/calendar.svg"
 import ContainerResizer from "../helper/ContainerResizer";
 import InputReusable from "./ReusableComponents/InputReusable";
 import BtnReusable from "./ReusableComponents/BtnReusable";
+import { useNavigate } from 'react-router-dom';
 
 const MyCalendar = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -32,6 +33,10 @@ const MyCalendar = () => {
       return value;
     }) : [];
   });
+  const navigate = useNavigate();
+  const handleSubMenuClick = (link) => {
+    navigate(link);
+  };
 
   useEffect(() => {
     // Simulate data fetching
@@ -159,8 +164,8 @@ const MyCalendar = () => {
               onChange={(e) => setDetails(e.target.value)}
             />
             {selectedEvent ? (
-              <BtnReusable onClick={handleUpdateEvent} value="Update Event" variant="edit" />
-            ) : ( <BtnReusable onClick={handleAddEvent} value="Add Event" variant="add" />
+              <BtnReusable onClick={handleUpdateEvent} value="Update Event" type={"edit"} />
+            ) : ( <BtnReusable onClick={handleAddEvent} value="Add Event" type={"add"} />
             )}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4">
@@ -223,6 +228,7 @@ const MyCalendar = () => {
                     ))
                   )}
                 </div>
+                <BtnReusable value="Show More" onClick={() => handleSubMenuClick("/events/announcement")} />
               </div>
             </div>
           </div>
