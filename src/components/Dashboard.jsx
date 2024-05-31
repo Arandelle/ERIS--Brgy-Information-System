@@ -11,6 +11,7 @@ import registered from "../assets/registered.svg";
 import events from "../assets/events.svg";
 import emergency from "../assets/emergency.svg";
 import MsgReusable from "./ReusableComponents/MsgReusable";
+import Activities from "./Events/Activities";
 
 const DashboardCard = ({ title, value, img }) => {
   return (
@@ -101,7 +102,7 @@ const Dashboard = ({ setAuth }) => {
               </div>
             )}
             <div className="mr-3 ml-2">
-              <NewsList news={news} setNews={setNews} setMessage={setMessage} />
+              <Activities news={news} setNews={setNews} setMessage={setMessage} />
             </div>
           </div>
         </div>
