@@ -5,13 +5,12 @@ import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
 import { useLocation } from "react-router-dom";
 import Skeleton, { Spinner } from "./ReusableComponents/Skeleton";
-import NewsList from "./Events/ActivitiesList";
+import ActivitiesList from "./Events/ActivitiesList";
 import population from "../assets/population.svg";
 import registered from "../assets/registered.svg";
 import events from "../assets/events.svg";
 import emergency from "../assets/emergency.svg";
 import MsgReusable from "./ReusableComponents/MsgReusable";
-import Activities from "./Events/Activities";
 
 const DashboardCard = ({ title, value, img }) => {
   return (
@@ -102,7 +101,7 @@ const Dashboard = ({ setAuth }) => {
               </div>
             )}
             <div className="mr-3 ml-2">
-              <Activities news={news} setNews={setNews} setMessage={setMessage} />
+              <ActivitiesList news={news} setNews={setNews} setMessage={setMessage} />
             </div>
           </div>
         </div>
