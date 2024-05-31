@@ -58,6 +58,7 @@ export const Spinner = ({setLoading}) => {
       setLoading(false);
     },2000)
   },[])
+  
   return (
     <div>
       <svg

@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
 import { useLocation } from "react-router-dom";
 import Skeleton, { Spinner } from "./ReusableComponents/Skeleton";
-import NewsList from "./Events/NewsList";
+import NewsList from "./Events/ActivitiesList";
 import population from "../assets/population.svg";
 import registered from "../assets/registered.svg";
 import events from "../assets/events.svg";

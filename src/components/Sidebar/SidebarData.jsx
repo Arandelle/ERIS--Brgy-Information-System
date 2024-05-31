@@ -73,16 +73,20 @@ export const SidebarData = [
     link: "/events",
     items: [
       {
+        title: "Activities",
+        link: "/events/activity",
+      },
+      {
         title: "Announcement",
         link: "/events/announcement",
       },
       {
-        title: "News",
-        link: "/events/news",
-      },
-      {
         title: "Event",
         link: "/events/event",
+      },
+      {
+        title: "News",
+        link: "/events/news",
       },
     ],
   },

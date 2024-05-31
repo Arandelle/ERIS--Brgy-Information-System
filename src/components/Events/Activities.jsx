@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar/Sidebar";
 import { Toggle } from "../../hooks/Toggle";
-import NewsList from "./NewsList";
+import ActivitiesList from "./ActivitiesList";
 import InputReusable from "../ReusableComponents/InputReusable";
 import MsgReusable from "../ReusableComponents/MsgReusable";
 
-const News = () => {
+const Activities = () => {
   const { isOpen, toggleDropdown } = Toggle();
   const [message, setMessage] = useState("");
   const [title, setTitle] = useState("");
@@ -132,7 +132,7 @@ const News = () => {
                   Submit
                 </button>
               </div>
-                <NewsList news={news} setNews={setNews} setMessage={setMessage}/>
+                <ActivitiesList news={news} setNews={setNews} setMessage={setMessage}/>
             </div>
           </div>
         </div>
@@ -141,4 +141,4 @@ const News = () => {
   );
 };
 
-export default News;
+export default Activities;

@@ -6,7 +6,7 @@ import QuestionModal from "../ReusableComponents/AskCard";
 import EmptyImage from "../../assets/emptyImage.svg"
 import Question from "../../assets/question.svg"
 
-const NewsList = ({ news, setNews, setMessage, }) => {
+const ActivitiesList = ({ news, setNews, setMessage, }) => {
   const [loading, setLoading] = useState(true);
   const { containerSize, containerRef } = ContainerResizer();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -47,7 +47,7 @@ const NewsList = ({ news, setNews, setMessage, }) => {
       <div className="block py-2 px-4 text-base text-center font-semibold">
         Today's Activities
       </div>
-      <div className="scrollable-container p-4 text-gray-700 overflow-y-auto max-h-screen">
+      <div className="scrollable-container p-4 text-gray-700 overflow-y-auto">
       {loading ? (
           <div className="flex items-center justify-center py-3">
             <Spinner setLoading={setLoading} />
@@ -104,4 +104,4 @@ const NewsList = ({ news, setNews, setMessage, }) => {
   );
 };
 
-export default NewsList;
+export default ActivitiesList;

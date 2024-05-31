@@ -21,7 +21,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
     <div className={`flex fixed inset-0 z-50 ${isOpen ? "md:hidden md:w-1/6 md:relative" : "hidden"}
     ${!isOpen ? "md:flex md:relative" : ""}`}>
     <div className="bg-black bg-opacity-25 w-full md:relative md:w-0" ></div> {/* This is the overlay */}
-    <div className="scrollable-container absolute md:relative w-4/5 md:w-60 shadow-lg overflow-y-auto px-3 h-screen bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div className="absolute md:relative w-4/5 md:w-60 shadow-lg px-3 h-screen bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <ul className=" space-y-2">
         <div className="text-center space-y-2">
           <button type="button" 

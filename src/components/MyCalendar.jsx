@@ -20,7 +20,7 @@ const MyCalendar = () => {
   const [organizer, setOrganizer] = useState("");
   const [details, setDetails] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { containerSize, containerRef } = ContainerResizer();
   
   const [events, setEvents] = useState(() => {
@@ -38,9 +38,7 @@ const MyCalendar = () => {
   // const handleNavigation = (link) => {
   //   navigate(link);
   // };
-
   useEffect(() => {
-    // Simulate data fetching
     setTimeout(() => {
       setLoading(false);
     }, 2000);
@@ -198,7 +196,7 @@ const MyCalendar = () => {
                 <div className="block py-2 px-4 text-base text-center font-semibold border-[3px] border-gray-400">
                   Upcoming Events
                 </div>
-                <div className="scrollable-container p-4 text-gray-700 overflow-y-auto max-h-screen">
+                <div className="scrollable-container p-4 text-gray-700 overflow-y-auto">
                   {loading ? (
                     <div className="flex items-center justify-center py-3">
                       <Spinner setLoading={setLoading} />
@@ -210,7 +208,7 @@ const MyCalendar = () => {
                    </div>
                   ) : (
                     events.map((activity, key) => (
-                      <div key={key} className="mb-4 border-b pb-4">
+                      <div key={key} className="mb-4 border-b pb-4 border-b-gray-500 dark:border-b-gray-200">
                         <div>
                           <h3 className="text-xl font-semibold mb-2 dark:text-green-500">
                             Title: {activity.title}
@@ -229,7 +227,9 @@ const MyCalendar = () => {
                     ))
                   )}
                 </div>
-                <BtnReusable value="Show More" link={"/events/announcement"} />
+                <div className="flex justify-end">
+                  <BtnReusable value="See more..." link={"/events/event"} />
+                </div>
               </div>
             </div>
           </div>
