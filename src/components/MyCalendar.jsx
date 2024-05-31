@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import moment from "moment";
+import { Calendar, momentLocalizer } from "react-big-calendar";
 import { Toggle } from "../hooks/Toggle";
+import { Spinner } from "./ReusableComponents/Skeleton";
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
-import { Spinner } from "./ReusableComponents/Skeleton";
 import calendarImage from "../assets/calendar.svg"
 import ContainerResizer from "../helper/ContainerResizer";
 import InputReusable from "./ReusableComponents/InputReusable";
 import BtnReusable from "./ReusableComponents/BtnReusable";
-import { useNavigate } from 'react-router-dom';
 
 const MyCalendar = () => {
   const { isOpen, toggleDropdown } = Toggle();
@@ -33,10 +32,12 @@ const MyCalendar = () => {
       return value;
     }) : [];
   });
-  const navigate = useNavigate();
-  const handleSubMenuClick = (link) => {
-    navigate(link);
-  };
+
+  // handle navigation for the components
+  // const navigate = useNavigate();
+  // const handleNavigation = (link) => {
+  //   navigate(link);
+  // };
 
   useEffect(() => {
     // Simulate data fetching
@@ -228,7 +229,7 @@ const MyCalendar = () => {
                     ))
                   )}
                 </div>
-                <BtnReusable value="Show More" onClick={() => handleSubMenuClick("/events/announcement")} />
+                <BtnReusable value="Show More" link={"/events/announcement"} />
               </div>
             </div>
           </div>
