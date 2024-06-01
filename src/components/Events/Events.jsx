@@ -10,6 +10,7 @@ const Events = () => {
     return (
         <HeaderSidebar child={
                   <Maintenance title={"Events"}/>}
+            value={<h1>try nga</h1>}
                 />
     )
 }
