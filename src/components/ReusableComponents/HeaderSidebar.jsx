@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import Header from '../Header'
 import Sidebar from '../Sidebar/Sidebar'
 import { Toggle } from '../../hooks/Toggle'
-import Skeleton from '../ReusableComponents/Skeleton'
+import Skeleton from './Skeleton'
 
 const HeadSide = ({child}) => {
     const {isOpen, toggleDropdown}= Toggle();

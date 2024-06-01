@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import HeadSide from '../ReusableComponents/HeadSide';
+import HeadSide from '../ReusableComponents/HeaderSidebar';
 import Maintenance from '../ReusableComponents/Maintenance'
 
 const Events = () => {
