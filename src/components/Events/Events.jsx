@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import HeaderSidebar from '../ReusableComponents/HeaderAndSidebar'
+import HeaderSidebar from '../ReusableComponents/HeaderSidebar'
 import { Toggle } from '../../hooks/Toggle'
 import Skeleton from '../ReusableComponents/Skeleton'
 import Maintenance from '../ReusableComponents/Maintenance'
