@@ -10,11 +10,9 @@ const Events = () => {
 
     return (
         <HeaderSidebar child={
-            loading ? (
-                <Skeleton loading={loading} setLoading={setLoading} />
-            ) : (
-                <Maintenance title={"Events nga ba"} />
-            )
+                <Maintenance title={"Events nga ba"} 
+                    toggleDropdown={toggleDropdown}
+                    setLoading={setLoading}/>
         } />
     );
 };
