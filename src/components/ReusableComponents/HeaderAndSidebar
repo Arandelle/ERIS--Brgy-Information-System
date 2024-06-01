@@ -5,7 +5,7 @@ import { Toggle } from '../../hooks/Toggle'
 import Skeleton from '../ReusableComponents/Skeleton'
 import Maintenance from '../ReusableComponents/Maintenance'
 
-const SidebarHeader = ({child}) => {
+const SidebarHeader = ({child, value}) => {
     const {isOpen, toggleDropdown}= Toggle();
     const [loading, setLoading] = useState(true);
     return (
@@ -20,6 +20,7 @@ const SidebarHeader = ({child}) => {
               {loading ? (<Skeleton loading={loading} setLoading={setLoading}/>) :
                 (   
                  {child}
+                  {value}
                 )}
             </div>
             </div>
