@@ -1,11 +1,12 @@
-import React, {useState} from 'react'
+import React from 'react'
+import { useState, useEffect } from 'react'
 import Header from '../Header'
 import Sidebar from '../Sidebar/Sidebar'
 import { Toggle } from '../../hooks/Toggle'
 import Skeleton from '../ReusableComponents/Skeleton'
 import Maintenance from '../ReusableComponents/Maintenance'
 
-const Events = () => {
+const Request = () => {
     const {isOpen, toggleDropdown}= Toggle();
     const [loading, setLoading] = useState(true);
     return (
@@ -19,7 +20,7 @@ const Events = () => {
             <div className='m-3'>
               {loading ? (<Skeleton loading={loading} setLoading={setLoading}/>) :
                 (
-                  <Maintenance title={"Events"}/>
+                <Maintenance title={"Request"}/>
                 )}
             </div>
             </div>
@@ -28,4 +29,4 @@ const Events = () => {
     )
 }
 
-export default Events
+export default Request

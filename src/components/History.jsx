@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar/Sidebar";
 import { Toggle } from "../hooks/Toggle";
-import Image from "../assets/logo.png"
+import Maintenance from "./ReusableComponents/Maintenance";
 import Skeleton from "./ReusableComponents/Skeleton";
 
 function History() {
@@ -23,12 +23,7 @@ function History() {
         >
           <div className="m-3">
             {loading ? (<Skeleton setLoading={setLoading}/> ): (
-              <div>
-              <h1 className="dark:text-white">This is History</h1>
-              <div className="fixed inset-0 flex justify-center items-center">
-                <img src={Image} alt="" />
-              </div>
-            </div>
+             <Maintenance title={"History"}/>
             )}
           </div>
         </div>

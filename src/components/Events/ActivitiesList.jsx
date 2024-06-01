@@ -3,7 +3,7 @@ import { Spinner } from "../ReusableComponents/Skeleton";
 import { getTimeDifference } from "../../helper/TimeDiff";
 import ContainerResizer from "../../helper/ContainerResizer";
 import QuestionModal from "../ReusableComponents/AskCard";
-import EmptyImage from "../../assets/emptyImage.svg"
+import BtnReusable from "../ReusableComponents/BtnReusable";
 import Question from "../../assets/question.svg"
 
 const ActivitiesList = ({ news, setNews, setMessage, }) => {
@@ -78,12 +78,11 @@ const ActivitiesList = ({ news, setNews, setMessage, }) => {
                   </span>
                   <span>{activity.location}</span>
                 </div>
-                <button
-                  className="text-red-500"
+                <BtnReusable
+                  value={"Delete"}
+                  type="delete"
                   onClick={() => toggleDeleteModal(activity.id)}
-                >
-                  Delete
-                </button>
+                />
               </div>
             </div>
           ))

@@ -4,7 +4,7 @@ import Header from '../Header'
 import Sidebar from '../Sidebar/Sidebar'
 import { Toggle } from '../../hooks/Toggle'
 import Skeleton from '../ReusableComponents/Skeleton'
-import Image from '../../assets/logo.png'
+import Maintenance from '../ReusableComponents/Maintenance'
 
 const Announcement = () => {
     const {isOpen, toggleDropdown}= Toggle();
@@ -20,12 +20,7 @@ const Announcement = () => {
             <div className='m-3'>
               {loading ? (<Skeleton loading={loading} setLoading={setLoading}/>) :
                 (
-                <div>
-                  <h1 className='dark:text-white'>This is announcement</h1>
-                      <div className='fixed inset-0 flex items-center justify-center'>
-                        <img src={Image} alt="" />
-                      </div>
-                </div>
+                <Maintenance title={"Announcement"}/>
                 )}
             </div>
             </div>

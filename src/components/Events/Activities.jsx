@@ -5,7 +5,7 @@ import { Toggle } from "../../hooks/Toggle";
 import ActivitiesList from "./ActivitiesList";
 import InputReusable from "../ReusableComponents/InputReusable";
 import MsgReusable from "../ReusableComponents/MsgReusable";
-
+import BtnReusable from "../ReusableComponents/BtnReusable";
 const Activities = () => {
   const { isOpen, toggleDropdown } = Toggle();
   const [message, setMessage] = useState("");
@@ -125,12 +125,11 @@ const Activities = () => {
                   placeholder="Description"
                   onChange={(e) => setContent(e.target.value)}
                 />
-                <button
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                  onClick={handleAddNews}
-                >
-                  Submit
-                </button>
+                <BtnReusable
+                value={"Submit"}
+                type={"add"}
+                onClick={handleAddNews}
+                />
               </div>
                 <ActivitiesList news={news} setNews={setNews} setMessage={setMessage}/>
             </div>

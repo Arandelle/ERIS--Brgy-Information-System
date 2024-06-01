@@ -19,7 +19,7 @@ const Events = () => {
             <div className='m-3'>
               {loading ? (<Skeleton loading={loading} setLoading={setLoading}/>) :
                 (
-                  <Maintenance title={"Events"}/>
+                <Maintenance title={"News"} />
                 )}
             </div>
             </div>
