@@ -4,7 +4,7 @@ import Sidebar from '../Sidebar/Sidebar';
 import { Toggle } from '../../hooks/Toggle';
 import Skeleton from '../ReusableComponents/Skeleton';
 
-const SidebarHeader = ({ child }) => {
+const SidebarHeader = ({ child,  toggleDropdown, setLoading}) => {
     const { isOpen, toggleDropdown } = Toggle();
     const [loading, setLoading] = useState(true);
 
