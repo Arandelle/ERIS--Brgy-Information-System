@@ -19,7 +19,7 @@ const SidebarHeader = ({child}) => {
             <div className='m-3'>
               {loading ? (<Skeleton loading={loading} setLoading={setLoading}/>) :
                 (   
-                 {child}
+                 child
                 )}
             </div>
             </div>
