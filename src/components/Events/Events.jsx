@@ -9,8 +9,7 @@ const Events = () => {
     const [loading, setLoading] = useState(true);
     return (
         <HeaderSidebar child={
-                  <Maintenance title={"Events"}/>}
-            value={<h1>try nga</h1>}
+                  <Maintenance title={"Events nga ba"}/>}
                 />
     )
 }
