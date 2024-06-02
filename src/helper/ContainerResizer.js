@@ -1,23 +1,29 @@
-import { useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
-const ContainerResizer = (initialSize = 'large') => {
-    const [containerSize, setContainerSize] = useState(initialSize);
-    const containerRef = useRef(null);
-    
-      useEffect(() => {
-        const resizeObserver = new ResizeObserver(entries => {
-          const newContainerSize = entries[0].contentRect.width < 500 ? 'small' : 'large';
-          setContainerSize(newContainerSize);
-        });
-    
-        resizeObserver.observe(containerRef.current);
-    
-        return () => {
-          resizeObserver.disconnect();
-        };
-      }, []);
+const ContainerResizer = () => {
+  const [containerSize, setContainerSize] = useState(null);
+  const containerRef = useRef(null);
 
-  return {containerSize, containerRef};
-}
+  useEffect(() => {
+    const handleResize = () => {
+      if (containerRef.current) {
+        setContainerSize(containerRef.current.getBoundingClientRect());
+      }
+    };
 
-export default ContainerResizer
+    const observer = new ResizeObserver(handleResize);
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, [containerRef]);
+
+  return { containerSize, containerRef };
+};
+
+export default ContainerResizer;

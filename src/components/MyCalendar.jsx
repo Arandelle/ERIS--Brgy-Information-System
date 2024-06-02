@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import { Toggle } from "../hooks/Toggle";
 import { Spinner } from "./ReusableComponents/Skeleton";
-import Header from "./Header";
-import Sidebar from "./Sidebar/Sidebar";
-import calendarImage from "../assets/calendar.svg"
+import calendarImage from "../assets/calendar.svg";
 import ContainerResizer from "../helper/ContainerResizer";
 import InputReusable from "./ReusableComponents/InputReusable";
 import BtnReusable from "./ReusableComponents/BtnReusable";
+import HeadSide from "./ReusableComponents/HeaderSidebar";
 
 const MyCalendar = () => {
-  const { isOpen, toggleDropdown } = Toggle();
   const localizer = momentLocalizer(moment);
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -22,31 +20,28 @@ const MyCalendar = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const { containerSize, containerRef } = ContainerResizer();
-  
+
   const [events, setEvents] = useState(() => {
-    const storedEvents = localStorage.getItem('events');
-    return storedEvents ? JSON.parse(storedEvents, (key, value) => {
-      if (key === "start" || key === "end") {
-        return new Date(value);
-      }
-      return value;
-    }) : [];
+    const storedEvents = localStorage.getItem("events");
+    return storedEvents
+      ? JSON.parse(storedEvents, (key, value) => {
+          if (key === "start" || key === "end") {
+            return new Date(value);
+          }
+          return value;
+        })
+      : [];
   });
 
-  // handle navigation for the components
-  // const navigate = useNavigate();
-  // const handleNavigation = (link) => {
-  //   navigate(link);
-  // };
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   }, []);
 
-  useEffect(()=>{
-    localStorage.setItem('events', JSON.stringify(events));
-  },[events])
+  useEffect(() => {
+    localStorage.setItem("events", JSON.stringify(events));
+  }, [events]);
 
   const handleAddEvent = () => {
     if (!title || !startDate || !endDate || !organizer || !details) {
@@ -116,17 +111,9 @@ const MyCalendar = () => {
   );
 
   return (
-    <div className="flex flex-col w-full">
-      <Header toggleSideBar={toggleDropdown} />
-      <div className="flex">
-        <div className="fixed z-50">
-          <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
-        </div>
-        <div
-          className={`w-screen p-4 dark:bg-gray-800 dark:text-white ${
-            isOpen ? "ml-0" : "md:ml-60"
-          }`}
-        >
+    <HeadSide
+      child={
+        <div className="m-3">
           <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <InputReusable
               type="text"
@@ -163,8 +150,17 @@ const MyCalendar = () => {
               onChange={(e) => setDetails(e.target.value)}
             />
             {selectedEvent ? (
-              <BtnReusable onClick={handleUpdateEvent} value="Update Event" type={"edit"} />
-            ) : ( <BtnReusable onClick={handleAddEvent} value="Add Event" type={"add"} />
+              <BtnReusable
+                onClick={handleUpdateEvent}
+                value="Update Event"
+                type={"edit"}
+              />
+            ) : (
+              <BtnReusable
+                onClick={handleAddEvent}
+                value="Add Event"
+                type={"add"}
+              />
             )}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4">
@@ -188,7 +184,7 @@ const MyCalendar = () => {
                 onSelectEvent={handleSelectEvent}
               />
             </div>
-            <div className="mr-3 ml-2"  onSelectEvent={handleSelectEvent}>
+            <div className="mr-3 ml-2" onSelectEvent={handleSelectEvent}>
               <div
                 className="bg-gray-200 shadow-md dark:bg-gray-800 dark:text-gray-400 h-full"
                 ref={containerRef}
@@ -203,18 +199,26 @@ const MyCalendar = () => {
                     </div>
                   ) : events.length === 0 ? (
                     <div className="text-center flex flex-col justify-center items-center text-gray-500 dark:text-gray-400">
-                    <img src={calendarImage} alt="Empty Image"  className="h-[200px] w-[200px]" />
-                    No events yet
-                   </div>
+                      <img
+                        src={calendarImage}
+                        alt="Empty Image"
+                        className="h-[200px] w-[200px]"
+                      />
+                      No events yet
+                    </div>
                   ) : (
                     events.map((activity, key) => (
-                      <div key={key} className="mb-4 border-b pb-4 border-b-gray-500 dark:border-b-gray-200">
+                      <div
+                        key={key}
+                        className="mb-4 border-b pb-4 border-b-gray-500 dark:border-b-gray-200"
+                      >
                         <div>
                           <h3 className="text-xl font-semibold mb-2 dark:text-green-500">
                             Title: {activity.title}
                           </h3>
                           <p className="text-gray-700 dark:text-gray-200">
-                            Date: {activity.start.toISOString().split("T")[0]} - {activity.end.toISOString().split("T")[0]}
+                            Date: {activity.start.toISOString().split("T")[0]} -{" "}
+                            {activity.end.toISOString().split("T")[0]}
                           </p>
                           <p className="text-gray-700 dark:text-gray-200">
                             Organizer: {activity.organizer}
@@ -234,8 +238,8 @@ const MyCalendar = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      }
+    />
   );
 };
 
