@@ -32,7 +32,7 @@ export default function Login({ setAuth }) {
       : password !== "password123"
       ? setError("The password you entered is incorrect")
       : (setAuth(true),
-        navigate("/dashboard", { state: { message: "Login Successful" } }));
+        navigate("/dashboard", { state: { message: "Login successfully" } }));
   };
 
   return (

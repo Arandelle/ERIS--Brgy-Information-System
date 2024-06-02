@@ -4,7 +4,9 @@ import HeadSide from '../ReusableComponents/HeaderSidebar'
 
 const Events = () => {
     return (
-      <HeadSide child={ <Maintenance title={"Events"}/>}
+      <HeadSide child={  
+      <div className="m-3"> <Maintenance title={"Events Section"}/>
+      </div>}
       />   
     )
 }

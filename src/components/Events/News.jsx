@@ -4,7 +4,9 @@ import Maintenance from '../ReusableComponents/Maintenance'
 
 const Events = () => {
     return (
-      <HeadSide child={<Maintenance title={"News Section"}/>}/>
+      <HeadSide child={
+        <div className="m-3"><Maintenance title={"News Section"}/>
+        </div>}/>
     )
 }
 export default Events

@@ -8,7 +8,7 @@ const Maintenance = ({ title }) => {
         <h1 className="dark:text-white">This is {title}</h1>
         <div className="fixed flex-col inset-0 flex items-center justify-center">
           <img src={Image} alt="Nothing here" className="h-[200px] w-[200px]" />
-          <h3>Sorry the {title} section is under maintenance</h3>
+          <h3 className="dark:text-white">Sorry the {title} section is under maintenance</h3>
         </div>
       </div>
     </div>

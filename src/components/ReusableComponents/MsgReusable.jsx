@@ -4,7 +4,7 @@ const MsgReusable = ({message, type}) => {
 
     const getMessageColor = () => {
         switch (type) {
-            case 'success': return 'text-green-600 dark:text-green-500';
+            case 'success': return 'text-blue-600 dark:text-blue-500';
             case 'delete' : return 'text-red-600 dark:text-red-500';
             default: return 'text-blue-600 dark:text-blue-500';
         }
