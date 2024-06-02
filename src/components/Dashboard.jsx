@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import MapContent from "./Maps/MapContent";
-import Header from "./Header";
-import Sidebar from "./Sidebar/Sidebar";
-import { Toggle } from "../hooks/Toggle";
 import { useLocation } from "react-router-dom";
 import Skeleton, { Spinner } from "./ReusableComponents/Skeleton";
 import ActivitiesList from "./Events/ActivitiesList";
@@ -10,7 +7,7 @@ import population from "../assets/population.svg";
 import registered from "../assets/registered.svg";
 import events from "../assets/events.svg";
 import emergency from "../assets/emergency.svg";
-import MsgReusable from "./ReusableComponents/MsgReusable";
+import HeadSide from "./ReusableComponents/HeaderSidebar";
 
 const DashboardCard = ({ title, value, img }) => {
   return (
@@ -33,7 +30,7 @@ const DashboardCard = ({ title, value, img }) => {
 };
 
 const Dashboard = ({ setAuth }) => {
-  const { isOpen, toggleDropdown } = Toggle();
+
   setAuth(false);
   const location = useLocation();
   const [message, setMessage] = useState(location.state?.message);
@@ -55,58 +52,44 @@ const Dashboard = ({ setAuth }) => {
   }, [message]);
 
   return (
-    <div className="flex flex-col w-full">
-      <Header toggleSideBar={toggleDropdown} />
-      {message && ( <MsgReusable message={message}/>
-      )}
-      <div className="flex w-full">
-        <div className="fixed z-50">
-          <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
-        </div>
-        <div
-          className={`w-full ${
-            isOpen ? "ml-0" : "md:ml-60"
-          } transition-all duration-300 ease-in-out`}
-        >
-          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-3 mx-3 text-wrap">
-            <DashboardCard
-              title="Total Residents"
-              value={loading ? <Spinner setLoading={setLoading} /> : "1000"}
-              img={population}
-            />
-            <DashboardCard
-              title="Today's Registered"
-              value={loading ? <Spinner setLoading={setLoading} /> : "50"}
-              img={registered}
-            />
-            <DashboardCard
-              title="Events"
-              value={loading ? <Spinner setLoading={setLoading} /> : "10"}
-              img={events}
-            />
-            <DashboardCard
-              title="Emergency"
-              value={loading ? <Spinner setLoading={setLoading} /> : "5"}
-              img={emergency}
-            />
+    <HeadSide message={message} child={ <div>
+      <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-3 mx-3 text-wrap">
+      <DashboardCard
+        title="Total Residents"
+        value={loading ? <Spinner setLoading={setLoading} /> : "1000"}
+        img={population}
+      />
+      <DashboardCard
+        title="Today's Registered"
+        value={loading ? <Spinner setLoading={setLoading} /> : "50"}
+        img={registered}
+      />
+      <DashboardCard
+        title="Events"
+        value={loading ? <Spinner setLoading={setLoading} /> : "10"}
+        img={events}
+      />
+      <DashboardCard
+        title="Emergency"
+        value={loading ? <Spinner setLoading={setLoading} /> : "5"}
+        img={emergency}
+      />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-4 w-full ">
-            {loading ? (
-              <div className="col-span-3 mx-3">
-                <Skeleton setLoading={setLoading} />
-              </div>
-            ) : (
-              <div className="col-span-3">
-                <MapContent />
-              </div>
-            )}
-            <div className="mr-3 ml-2">
-              <ActivitiesList news={news} setNews={setNews} setMessage={setMessage} />
-            </div>
-          </div>
+      {loading ? (
+        <div className="col-span-3 mx-3">
+          <Skeleton setLoading={setLoading} />
         </div>
+      ) : (
+        <div className="col-span-3">
+          <MapContent />
+        </div>
+      )}
+      <div className="mr-3 ml-2">
+        <ActivitiesList news={news} setNews={setNews} setMessage={setMessage} />
       </div>
-    </div>
+          </div>
+    </div>} />  
   );
 };
 
