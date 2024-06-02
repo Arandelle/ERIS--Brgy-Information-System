@@ -40,7 +40,7 @@ const Header = ({ toggleSideBar }) => {
     <div className="sticky top-0 z-50 px-4 lg:px-6 w-full py-2.5 border-b border-t border-gray-300 dark:border-gray-600 dark:bg-gray-800 bg-white">
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
-          <button
+          <PopoverHover content={"Close Sidebar"} children={<button
             onClick={toggleSideBar}
             id="toggleSidebar"
             aria-expanded="true"
@@ -62,7 +62,8 @@ const Header = ({ toggleSideBar }) => {
                 d="M1 1h14M1 6h14M1 11h7"
               />
             </svg>
-          </button>
+          </button>}/>
+          
           <a
             href="https://eris-brgy-information-system.vercel.app/dashboard"
             className="flex mr-4"
