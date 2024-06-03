@@ -15,6 +15,9 @@ import Events from "./components/Events/Events";
 import News from "./components/Events/News";
 import Request from "./components/Services/Request";
 import AddServices from "./components/Services/AddServices";
+import MyProfile from "./components/Admin/MyProfile";
+import Setting from "./components/Admin/Setting";
+import Archives from "./components/Admin/Archives";
 
 const App = () => {
 
@@ -46,6 +49,9 @@ const App = () => {
                 <Route path="/services/addService" element={<AddServices />} />{" "}
                 <Route path="/reports" element={<Reports />} />{" "}
                 <Route path="/history" element={<History />} />{" "}
+                <Route path="/myProfile" element={<MyProfile />} />{" "}
+                <Route path="/settings" element={<Setting />} />{" "}
+                <Route path="/archives" element={<Archives />} />{" "}
               </Routes>
             </div>
         </>

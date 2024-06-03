@@ -19,26 +19,26 @@ const Profile = () => {
   const handleMenuItemClick = (adminVal) => {
     window.location.pathname = adminVal.link;
   };
-  
+
   return (
     <div className="relative">
-        <button
-          type="button"
-          onClick={toggleDropdown}
-          className="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-          id="user-menu-button"
-          aria-expanded="false"
-          data-dropdown-toggle="dropdown"
-        >
-          <span className="sr-only">Open user menu</span>
-            <PopoverHover content={`${isOpen ? "Close" : "Open"} Profile`}>
-              <img
-                className="w-8 h-8 rounded-full"
-                src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                alt="user photo"
-              />
-            </PopoverHover>
-        </button>
+      <button
+        type="button"
+        onClick={toggleDropdown}
+        className="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+        id="user-menu-button"
+        aria-expanded="false"
+        data-dropdown-toggle="dropdown"
+      >
+        <span className="sr-only">Open user menu</span>
+        <PopoverHover content={`${isOpen ? "Close" : "Open"} Profile`}>
+          <img
+            className="w-8 h-8 rounded-full"
+            src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+            alt="user photo"
+          />
+        </PopoverHover>
+      </button>
       {isOpen && (
         <div
           className="fixed z-10 right-0 mt-4 w-56 bg-white rounded-md shadow-md divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600"
@@ -63,7 +63,7 @@ const Profile = () => {
               <li
                 key={key}
                 href="#"
-                className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white cursor-pointer"
                 onClick={() => handleMenuItemClick(adminVal)}
               >
                 {adminVal.title}
@@ -86,7 +86,14 @@ const Profile = () => {
           </ul>
         </div>
       )}
-      {showLogout && (<Logout toggleModal={() => setShowLogout(false)} question="Are you do you want to Logout?" yesText="Logout" onConfirm={handleLogout}/> )}  
+      {showLogout && (
+        <Logout
+          toggleModal={() => setShowLogout(false)}
+          question="Are you do you want to Logout?"
+          yesText="Logout"
+          onConfirm={handleLogout}
+        />
+      )}
     </div>
   );
 };

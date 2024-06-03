@@ -57,11 +57,11 @@ export const AllData = [
   },
   {
     title: "My Profile",
-    link: "Profile"
+    link: "/myProfile"
 },
 {
     title: "Account Settings",
-    link: "/Settings",
+    link: "/settings",
 },
 {
     title: "Archives",
