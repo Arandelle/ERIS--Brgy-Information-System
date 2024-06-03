@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./index.css"
 import Dashboard from "./components/Dashboard";
 import MyCalendar from "./components/MyCalendar";
@@ -19,27 +19,6 @@ import AddServices from "./components/Services/AddServices";
 const App = () => {
 
   const [isAuthenticated, setAuth] = useState(false);
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    // Check system preference for dark mode
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    // Load theme from localStorage
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.classList.add(savedTheme);
-    } else if (systemPrefersDark) {
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
-    } else {
-      setTheme("light");
-      document.documentElement.classList.add("light");
-    }
-  }, []);
 
   return (
     <Router>
