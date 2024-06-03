@@ -12,12 +12,15 @@ const Header = ({ toggleSideBar }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResults] = useState([]);
   const [noData, setNoData] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [inputValue, setInputValue] = useState("");
 
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
+    setInputValue(query);
 
     const result = AllData.filter((item) =>
       item.title.toLowerCase().includes(query)
@@ -33,6 +36,26 @@ const Header = ({ toggleSideBar }) => {
 
   const handleNavigate = (link) => {
     navigate(link);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "ArrowDown") {
+      setFocusedIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % searchResult.length;
+        setInputValue(searchResult[nextIndex].title);
+        return nextIndex;
+      });
+    } else if (e.key === "ArrowUp") {
+      setFocusedIndex((prevIndex) => {
+        const nextIndex = (prevIndex + searchResult.length - 1) % searchResult.length;
+        setInputValue(searchResult[nextIndex].title);
+        return nextIndex;
+      });
+    } else if (e.key === "Enter") {
+      if (focusedIndex >= 0 && focusedIndex < searchResult.length) {
+        handleNavigate(searchResult[focusedIndex].link);
+      }
+    }
   };
 
   return (
@@ -130,11 +153,13 @@ const Header = ({ toggleSideBar }) => {
                 <input
                   type="text"
                   name="email"
-                  value={searchQuery}
+                  value={inputValue}
                   onChange={handleSearch}
                   id="topbar-search"
                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-9 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   placeholder="Search"
+                  autocomplete="off"
+                  onKeyDown={handleKeyDown}
                 />
               </div>
             </form>
@@ -150,7 +175,7 @@ const Header = ({ toggleSideBar }) => {
                     key={index}
                     onClick={() => handleNavigate(item.link)}
                   >
-                    <p className="hover:bg-primary hover:text-white p-2 rounded-lg">
+                    <p  className={`px-2 py-1 hover:bg-primary rounded-md hover:text-white cursor-pointer ${focusedIndex === index ? "bg-primary text-white" : ""}`}>
                       {item.title}
                     </p>
                   </div>
