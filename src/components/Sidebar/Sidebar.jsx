@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { SidebarData } from "./SidebarData";
 import ArrowRightIcon from "@mui/icons-material/ArrowDropDown";
+import SearchInput from "./SearchInput";
 
 function Sidebar({ isOpen, toggleSidebar }) {
   const [openSubMenu, setOpenSubMenu] = useState(null);
@@ -33,6 +34,9 @@ function Sidebar({ isOpen, toggleSidebar }) {
           <h2 className="text-base text-center font-semi-bold uppercase text-gray-500 border-b border-gray-100 dark:border-gray-600 py-3 text-nowrap  dark:text-gray-400">
             Admin Panel
           </h2>
+          <div className={`relative ${isOpen ? "block" : "hidden"}`}>
+            <SearchInput isOpen={isOpen} className={`relative ${isOpen ? "block" : "hidden"}`}/>
+          </div>
         </div>
 
         {SidebarData.map((val, key) => (

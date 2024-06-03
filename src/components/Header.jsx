@@ -1,62 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Notification from "./Notification/Notification";
 import CustomeTheme from "./ReusableComponents/CustomeTheme";
 import Profile from "./Admin/ProfileAdmin";
 import logo from "../assets/logo.png";
 import { PopoverHover } from "./ReusableComponents/Popover";
-import { useNavigate } from "react-router-dom";
-import { AllData } from "./Admin/AllData";
+import SearchInput from "./Sidebar/SearchInput";
 
 const Header = ({ toggleSideBar }) => {
+
   const [theme, toggleTheme] = CustomeTheme();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResults] = useState([]);
-  const [noData, setNoData] = useState(false);
-  const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [inputValue, setInputValue] = useState("");
-
-  const navigate = useNavigate();
-
-  const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    setSearchQuery(query);
-    setInputValue(query);
-
-    const result = AllData.filter((item) =>
-      item.title.toLowerCase().includes(query)
-    );
-    setSearchResults(result);
-
-    if (result.length === 0) {
-      setNoData(true);
-    } else {
-      setNoData(false);
-    }
-  };
-
-  const handleNavigate = (link) => {
-    navigate(link);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "ArrowDown") {
-      setFocusedIndex((prevIndex) => {
-        const nextIndex = (prevIndex + 1) % searchResult.length;
-        setInputValue(searchResult[nextIndex].title);
-        return nextIndex;
-      });
-    } else if (e.key === "ArrowUp") {
-      setFocusedIndex((prevIndex) => {
-        const nextIndex = (prevIndex + searchResult.length - 1) % searchResult.length;
-        setInputValue(searchResult[nextIndex].title);
-        return nextIndex;
-      });
-    } else if (e.key === "Enter") {
-      if (focusedIndex >= 0 && focusedIndex < searchResult.length) {
-        handleNavigate(searchResult[focusedIndex].link);
-      }
-    }
-  };
 
   return (
     <div className="sticky top-0 z-50 px-4 lg:px-6 w-full py-2.5 border-b border-t border-gray-300 dark:border-gray-600 dark:bg-gray-800 bg-white">
@@ -101,13 +53,15 @@ const Header = ({ toggleSideBar }) => {
             </span>
           </a>
         </div>
-        <div className="flex items-center lg:order-2">
-          <button
+        <div className="flex items-center ">
+
+        <button
             type="button"
             data-collapse-toggle="navbar-search"
             aria-controls="navbar-search"
             aria-expanded="false"
-            class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 me-1"
+            onClick={toggleSideBar}
+            class="md:hidden ml-0 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5"
           >
             <svg
               class="w-5 h-5"
@@ -125,66 +79,10 @@ const Header = ({ toggleSideBar }) => {
               />
             </svg>
             <span class="sr-only">Search</span>
-          </button>
-          <div class="relative mr-3 hidden md:block">
-            <form action="#" method="GET" class="hidden lg:block lg:pl-2">
-              <label for="topbar-search" class="sr-only">
-                Search
-              </label>
-              <div class="relative mt-1 lg:w-96">
-                <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                  <svg
-                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    {" "}
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />{" "}
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  name="email"
-                  value={inputValue}
-                  onChange={handleSearch}
-                  id="topbar-search"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-9 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Search"
-                  autocomplete="off"
-                  onKeyDown={handleKeyDown}
-                />
-              </div>
-            </form>
+        </button>
 
-            {searchQuery && (
-              <div class="absolute z-50 bg-white w-full shadow-lg rounded-md left-1/2 transform -translate-x-1/2 top-full mt-1 flex flex-col">
-                {noData && (
-                  <p className="px-2 py-1 text-gray-500">No data found</p>
-                )}
-                {searchResult.map((item, index) => (
-                  <div
-                    className="px-2 py-1 cursor-pointer"
-                    key={index}
-                    onClick={() => handleNavigate(item.link)}
-                  >
-                    <p  className={`px-2 py-1 hover:bg-primary rounded-md hover:text-white cursor-pointer ${focusedIndex === index ? "bg-primary text-white" : ""}`}>
-                      {item.title}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/*This is the light/dark button theme*/}
+          <SearchInput toggleSidebar={toggleSideBar}/>
+          
           <PopoverHover
             content={
               <span>
@@ -198,54 +96,51 @@ const Header = ({ toggleSideBar }) => {
                 mode
               </span>
             }
-          >
-            <label className="relatice inline-flex items-center cursor-pointer">
-              <input
-                onClick={toggleTheme}
-                type="checkbox"
-                checked={theme === "dark"}
-                className="sr-only peer"
-              />
-              {/* <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div> */}
-              <span className="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-400 dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
-                {theme === "light" ? (
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M11.675 2.015a.998.998 0 0 0-.403.011C6.09 2.4 2 6.722 2 12c0 5.523 4.477 10 10 10 4.356 0 8.058-2.784 9.43-6.667a1 1 0 0 0-1.02-1.33c-.08.006-.105.005-.127.005h-.001l-.028-.002A5.227 5.227 0 0 0 20 14a8 8 0 0 1-8-8c0-.952.121-1.752.404-2.558a.996.996 0 0 0 .096-.428V3a1 1 0 0 0-.825-.985Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M13 3a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0V3ZM6.343 4.929A1 1 0 0 0 4.93 6.343l1.414 1.414a1 1 0 0 0 1.414-1.414L6.343 4.929Zm12.728 1.414a1 1 0 0 0-1.414-1.414l-1.414 1.414a1 1 0 0 0 1.414 1.414l1.414-1.414ZM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm-9 4a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2H3Zm16 0a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2h-2ZM7.757 17.657a1 1 0 1 0-1.414-1.414l-1.414 1.414a1 1 0 1 0 1.414 1.414l1.414-1.414Zm9.9-1.414a1 1 0 0 0-1.414 1.414l1.414 1.414a1 1 0 0 0 1.414-1.414l-1.414-1.414ZM13 19a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                )}
-              </span>
-            </label>
-          </PopoverHover>
+          children={<label className="relatice inline-flex items-center cursor-pointer">
+          <input
+            onClick={toggleTheme}
+            type="checkbox"
+            checked={theme === "dark"}
+            className="sr-only peer"
+          />
+          {/* <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div> */}
+          <span className="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-400 dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
+            {theme === "light" ? (
+              <svg
+                className="w-5 h-5"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M11.675 2.015a.998.998 0 0 0-.403.011C6.09 2.4 2 6.722 2 12c0 5.523 4.477 10 10 10 4.356 0 8.058-2.784 9.43-6.667a1 1 0 0 0-1.02-1.33c-.08.006-.105.005-.127.005h-.001l-.028-.002A5.227 5.227 0 0 0 20 14a8 8 0 0 1-8-8c0-.952.121-1.752.404-2.558a.996.996 0 0 0 .096-.428V3a1 1 0 0 0-.825-.985Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="w-5 h-5"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M13 3a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0V3ZM6.343 4.929A1 1 0 0 0 4.93 6.343l1.414 1.414a1 1 0 0 0 1.414-1.414L6.343 4.929Zm12.728 1.414a1 1 0 0 0-1.414-1.414l-1.414 1.414a1 1 0 0 0 1.414 1.414l1.414-1.414ZM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm-9 4a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2H3Zm16 0a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2h-2ZM7.757 17.657a1 1 0 1 0-1.414-1.414l-1.414 1.414a1 1 0 1 0 1.414 1.414l1.414-1.414Zm9.9-1.414a1 1 0 0 0-1.414 1.414l1.414 1.414a1 1 0 0 0 1.414-1.414l-1.414-1.414ZM13 19a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            )}
+          </span>
+        </label>} />
           <Notification />
-          {/* <Menu /> */}
           <Profile />
         </div>
       </div>

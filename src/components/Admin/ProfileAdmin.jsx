@@ -4,7 +4,6 @@ import { useState } from "react";
 import Logout from "../ReusableComponents/AskCard";
 import { PopoverHover } from "../ReusableComponents/Popover";
 import { useNavigate } from "react-router-dom";
-import BtnReusable from "../ReusableComponents/BtnReusable";
 
 const Profile = () => {
   const [isAuthenticated, setAuth] = useState(false);
@@ -76,10 +75,13 @@ const Profile = () => {
             aria-labelledby="dropdown"
           >
             <li>
-              <BtnReusable
-             value={"Signout"}
-             type={"logout"}
-             onClick={() => setShowLogout(true)} />
+              <a
+                href="#"
+                className="block py-2 px-4 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-red-600"
+                onClick={setShowLogout}
+              >
+                Sign out
+              </a>
             </li>
           </ul>
         </div>
