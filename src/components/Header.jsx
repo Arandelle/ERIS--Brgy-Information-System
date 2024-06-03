@@ -12,8 +12,9 @@ const Header = ({ toggleSideBar }) => {
 
   return (
     <div className="sticky top-0 z-50 px-4 lg:px-6 w-full py-2.5 border-b border-t border-gray-300 dark:border-gray-600 dark:bg-gray-800 bg-white">
+
       <div className="flex justify-between items-center">
-        <div className="flex justify-start items-center">
+        <div className="flex justify-start">
           <PopoverHover content={"Toggle Sidebar"} className={"mt-5 ml-24"}>
             <button
               onClick={toggleSideBar}
@@ -53,36 +54,33 @@ const Header = ({ toggleSideBar }) => {
             </span>
           </a>
         </div>
-        <div className="flex items-center ">
-
-        <button
-            type="button"
-            data-collapse-toggle="navbar-search"
-            aria-controls="navbar-search"
-            aria-expanded="false"
-            onClick={toggleSideBar}
-            class="md:hidden ml-0 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5"
-          >
-            <svg
-              class="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
+        <div className="items-center inline-flex">
+          <button
+              type="button"
+              data-collapse-toggle="navbar-search"
+              aria-controls="navbar-search"
+              aria-expanded="false"
+              onClick={toggleSideBar}
+              class="md:hidden ml-0 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2"
             >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-            <span class="sr-only">Search</span>
-        </button>
-
-          <SearchInput toggleSidebar={toggleSideBar}/>
-          
+              <svg
+                class="w-5 h-5"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
+              </svg>
+              <span class="sr-only">Search</span>
+          </button>
+          <SearchInput toggleSidebar={toggleSideBar}/>          
           <PopoverHover
             content={
               <span>
@@ -144,7 +142,7 @@ const Header = ({ toggleSideBar }) => {
           <Profile />
         </div>
       </div>
-    </div>
+      </div>
   );
 };
 

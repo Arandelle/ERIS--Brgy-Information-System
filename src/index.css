@@ -41,7 +41,3 @@ input, textarea {
 .rbc-toolbar .rbc-toolbar-label {
   @apply text-xl font-thin text-gray-800 dark:text-white;
 }
-.sidebar {
-  height: calc(100vh - 64px); /* Adjust the height as needed */
-  overflow-y: auto;
-}
