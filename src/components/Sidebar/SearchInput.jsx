@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AllData } from "../Admin/AllData";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import Question from "../../assets/question.svg";
 
 const SearchInput = ({ isOpen, className }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,6 +62,7 @@ const SearchInput = ({ isOpen, className }) => {
           action="#"
           method="GET"
           className={isOpen ? className : "hidden md:block"}
+          autoComplete="off"
         >
           <label for="topbar-search" class="sr-only">
             Search
@@ -100,11 +102,16 @@ const SearchInput = ({ isOpen, className }) => {
 
         {searchQuery && (
           <div
-            class={`scrollable-container absolute py-2 z-50 bg-white dark:bg-gray-600 max-h-72 overflow-y-auto w-full shadow-lg rounded-lg left-1/2 transform -translate-x-1/2 top-full mt-1 flex flex-col ${
+            class={`scrollable-container absolute py-2 z-50 bg-white dark:bg-gray-600 max-h-72 overflow-y-auto w-full shadow-lg rounded-sm left-1/2 transform -translate-x-1/2 top-full mt-1 flex flex-col ${
               isOpen ? className : "hidden md:block"
             }`}
           >
-            {noData && <p className="px-2 py-1 text-gray-500">No data found</p>}
+            {noData && (
+              <div className="px-2 py-1 text-gray-500 text-center flex flex-col items-center">
+              <span className="dark:text-white">No data found</span>
+              <img src={Question} alt="No data found" className="h-[150px] w-[150px]" />
+            </div>            
+            )}
             {searchResult.map((item, index) => (
               <div
                 className="px-2 py-[4px] cursor-pointer"
@@ -113,7 +120,7 @@ const SearchInput = ({ isOpen, className }) => {
               >
                 <p
                   className={`px-2 py-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 hover:dark:text-gray-900 hover:dark:bg-primary hover:bg-primary text-sm text-start rounded-md hover:text-white cursor-pointer ${
-                    focusedIndex === index ? "bg-primary text-white" : ""
+                    focusedIndex === index ? "bg-primary dark:bg-primary text-white" : ""
                   }`}
                 >
                   <div className="flex justify-between">
