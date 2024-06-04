@@ -164,7 +164,7 @@ const MyCalendar = () => {
             )}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4">
-            <div className="col-span-3">
+            <div className="col-span-3 border-t-[3px] border-primary-500 text-gray-600 dark:text-gray-200 mt-2 bg-gray-200 dark:bg-gray-800">
               <Calendar
                 localizer={localizer}
                 events={events}
@@ -172,7 +172,6 @@ const MyCalendar = () => {
                 endAccessor="end"
                 style={{
                   height: 600,
-                  marginTop: 15,
                   marginBottom: 15,
                   paddingTop: 10,
                 }}
@@ -186,10 +185,10 @@ const MyCalendar = () => {
             </div>
             <div className="mr-3 ml-2" onSelectEvent={handleSelectEvent}>
               <div
-                className="bg-gray-200 shadow-md dark:bg-gray-800 dark:text-gray-400 h-full"
+                className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 h-full"
                 ref={containerRef}
               >
-                <div className="block py-2 px-4 text-base text-center font-semibold border-[3px] border-gray-400">
+                <div className="block mt-2 py-2 px-4 text-base text-center font-semibold border-t-[3px] border-primary-500">
                   Upcoming Events
                 </div>
                 <div className="scrollable-container p-4 text-gray-700 overflow-y-auto">
@@ -232,7 +231,7 @@ const MyCalendar = () => {
                   )}
                 </div>
                 <div className="flex justify-end">
-                  <BtnReusable value="See more..." link={"/events/event"} />
+                  <BtnReusable value="See more... " link={"/events/event"} />
                 </div>
               </div>
             </div>

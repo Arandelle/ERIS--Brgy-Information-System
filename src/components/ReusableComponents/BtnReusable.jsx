@@ -11,7 +11,7 @@ const BtnReusable = ({ onClick, value, type, link }) => {
       case 'delete':
         return 'py-2 px-4 rounded-md text-white shadow-md bg-red-600 hover:bg-red-800 focus:bg-red-600';
       default:
-        return 'text-primary-500 hover:text-primary-600 py-0';
+        return 'text-primary-500 hover:text-primary-600 py-0 px-4';
     }
   };
 
