@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import MapContent from "./Maps/MapContent";
-import { useLocation } from "react-router-dom";
 import Skeleton, { Spinner } from "./ReusableComponents/Skeleton";
 import ActivitiesList from "./Events/ActivitiesList";
 import population from "../assets/population.svg";
@@ -33,29 +32,16 @@ const DashboardCard = ({ title, value, img }) => {
 const Dashboard = ({ setAuth }) => {
 
   setAuth(false);
-  const location = useLocation();
-  const [message, setMessage] = useState(location.state?.message);
   const [loading, setLoading] = useState(true);
-
   const [news, setNews] = useState(() => {
     // Retrieve news data from localStorage, or an empty array if it doesn't exist
     const storedNews = localStorage.getItem("news");
     return storedNews ? JSON.parse(storedNews) : [];
   });
 
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => {
-        setMessage("");
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
-
   return (
-    <HeadSide message={message} child={
-      <div>
-        
+    <HeadSide child={
+      <>   
       <DateToday/>
 
       <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-3 mx-3 text-wrap">
@@ -91,10 +77,10 @@ const Dashboard = ({ setAuth }) => {
         </div>
       )}
       <div className="mr-3 ml-2">
-        <ActivitiesList news={news} setNews={setNews} setMessage={setMessage} />
+        <ActivitiesList news={news} setNews={setNews} />
       </div>
           </div>
-    </div>} />  
+    </>} />  
   );
 };
 

@@ -1,24 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import Launcher from "./Launcher";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Launcher from "./Launcher"
+import { toast } from "sonner";
 
 export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError("");
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
 
   const handleShowHidePass = () => {
     setShowPass(!showPass);
@@ -28,11 +18,13 @@ export default function Login({ setAuth }) {
     event.preventDefault();
 
     email !== "admin@example.com"
-      ? setError("The email you entered is incorrect")
+      ? toast.error("The email you entered is incorrect")
       : password !== "password123"
-      ? setError("The password you entered is incorrect")
+      ? toast.error("The password you entered is incorrect")
       : (setAuth(true),
-        navigate("/dashboard", { state: { message: "Login successfully" } }));
+      toast.success("Login successfully"),
+      navigate("/dashboard"));
+        // navigate("/dashboard", { state: toast("Login successfully" )}));
   };
 
   return (
@@ -150,23 +142,6 @@ export default function Login({ setAuth }) {
                   Login
                 </button>
               </div>
-              {error && (
-                <div
-                  class="flex items-center p-2 mb-4 mt-2 text-sm text-red-500 rounded-lg bg-red-200 dark:bg-gray-600 dark:text-red-400"
-                  role="alert"
-                >
-                  <svg
-                    class="flex-shrink-0 inline w-4 h-4 me-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                  </svg>
-                  {error}
-                </div>
-              )}
             </form>
           </div>
         </main>

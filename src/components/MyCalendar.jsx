@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import { Toggle } from "../hooks/Toggle";
 import { Spinner } from "./ReusableComponents/Skeleton";
 import calendarImage from "../assets/calendar.svg";
 import ContainerResizer from "../helper/ContainerResizer";
 import InputReusable from "./ReusableComponents/InputReusable";
 import BtnReusable from "./ReusableComponents/BtnReusable";
 import HeadSide from "./ReusableComponents/HeaderSidebar";
+import { toast } from "sonner";
 
 const MyCalendar = () => {
   const localizer = momentLocalizer(moment);
@@ -45,7 +45,7 @@ const MyCalendar = () => {
 
   const handleAddEvent = () => {
     if (!title || !startDate || !endDate || !organizer || !details) {
-      alert("Please fill all the fields");
+      toast.warning("Please fill all the fields");
       return;
     }
     const newEvent = {
@@ -62,6 +62,7 @@ const MyCalendar = () => {
     setEndDate("");
     setOrganizer("");
     setDetails("");
+    toast.success("Event added successfully")
   };
 
   const handleSelectEvent = (event) => {
@@ -75,7 +76,7 @@ const MyCalendar = () => {
 
   const handleUpdateEvent = () => {
     if (!title || !startDate || !endDate || !organizer || !details) {
-      alert("Please fill all the fields");
+      toast.warning("Please fill all the fields");
       return;
     }
     const updatedEvent = {
@@ -98,6 +99,7 @@ const MyCalendar = () => {
     setEndDate("");
     setOrganizer("");
     setDetails("");
+    toast.success("Event updated successfully")
   };
 
   const CustomAgendaEvent = ({ event }) => (

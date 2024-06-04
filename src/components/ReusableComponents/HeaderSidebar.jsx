@@ -12,9 +12,9 @@ const HeadSide = ({ child, message }) => {
   return (
     <div className="w-full flex-col flex">
       <Header toggleSideBar={toggleDropdown} isOpen={isOpen}/>
-      {message && (
+      {/* {message && (
           <MsgReusable message={message} type={message.includes('successfully') ? "success" : "delete" }/>
-      )}
+      )} */}
       <div className="flex">
         <div className="fixed z-50">
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Toggle } from "../../hooks/Toggle";
+import {toast} from "sonner"
 import ActivitiesList from "./ActivitiesList";
 import InputReusable from "../ReusableComponents/InputReusable";
 import BtnReusable from "../ReusableComponents/BtnReusable";
 import HeadSide from "../ReusableComponents/HeaderSidebar";
 
 const Activities = () => {
-  
-  const [message, setMessage] = useState("");
+
   const [title, setTitle] = useState("");
   const [description, setContent] = useState("");
   const [location, setPlace] = useState("");
@@ -21,14 +20,14 @@ const Activities = () => {
     }, 2000);
   }, []);
   
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => {
-        setMessage("");
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
+  // useEffect(() => {
+  //   if (message) {
+  //     const timer = setTimeout(() => {
+  //       setMessage("");
+  //     }, 3000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [message]);
 
   const [news, setNews] = useState(() => {
     // Get the news data from localStorage, or an empty array if it doesn't exist
@@ -43,7 +42,7 @@ const Activities = () => {
 
   const handleAddNews = () => {
     if (!title || !description || !location || !startTime || !endTime) {
-      alert("Please complete the form");
+      toast.info("Please complete the form")
       return;
     }
 
@@ -65,11 +64,11 @@ const Activities = () => {
     setEndTime("");
     setPlace("");
     setContent("");
-    setMessage("Submitted successfully");
+    toast.success("Submitted successfully");
   };
 
   return (
-    <HeadSide message={message} child={  <div className="m-3">
+    <HeadSide child={  <div className="m-3">
     <div className="flex flex-col gap-4">
       <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-15 my-15 gap-4">
         <InputReusable
@@ -120,7 +119,7 @@ const Activities = () => {
         onClick={handleAddNews}
         />
       </div>
-        <ActivitiesList news={news} setNews={setNews} setMessage={setMessage}/>
+        <ActivitiesList news={news} setNews={setNews}/>
     </div>
   </div>} />
   );

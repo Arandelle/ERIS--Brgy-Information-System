@@ -5,8 +5,9 @@ import ContainerResizer from "../../helper/ContainerResizer";
 import QuestionModal from "../ReusableComponents/AskCard";
 import BtnReusable from "../ReusableComponents/BtnReusable";
 import Question from "../../assets/question.svg"
+import { toast } from "sonner";
 
-const ActivitiesList = ({ news, setNews, setMessage, }) => {
+const ActivitiesList = ({ news, setNews, }) => {
   const [loading, setLoading] = useState(true);
   const { containerSize, containerRef } = ContainerResizer();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -31,11 +32,11 @@ const ActivitiesList = ({ news, setNews, setMessage, }) => {
       {/*Save the updated array back tolocalStorage */}
       localStorage.setItem("news", JSON.stringify(updatedNewsArray)); 
       setNews(updatedNewsArray);
-      setMessage("Item Deleted");
+      toast.error("Item Deleted");
       setNewsToDeleteId(null); // Reset the state
       setShowDeleteModal(false); // Close the modal
     } else {
-      setMessage("No news items found to delete.");
+      toast("No news items found to delete.");
     }
   };  
 

@@ -18,6 +18,7 @@ import AddServices from "./components/Services/AddServices";
 import MyProfile from "./components/Admin/MyProfile";
 import Setting from "./components/Admin/Setting";
 import Archives from "./components/Admin/Archives";
+import { Toaster } from "sonner";
 
 const App = () => {
 
@@ -26,6 +27,7 @@ const App = () => {
   return (
     <Router>
         <>       
+        <Toaster richColors closeButton position="top-center" expand="true" />
             <div className="flex">
               <Routes>
               <Route
