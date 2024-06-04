@@ -8,6 +8,7 @@ import registered from "../assets/registered.svg";
 import events from "../assets/events.svg";
 import emergency from "../assets/emergency.svg";
 import HeadSide from "./ReusableComponents/HeaderSidebar";
+import DateToday from "./Admin/DateToday";
 
 const DashboardCard = ({ title, value, img }) => {
   return (
@@ -16,8 +17,8 @@ const DashboardCard = ({ title, value, img }) => {
         <div className="hidden md:block">
           <img src={img} alt="Empty Image" className="h-20 w-28" />
         </div>
-        <div className="flex flex-col md:flex-row md:items-center justify-end text-end">
-          <div className="flex justify-between w-full md:flex-col md:w-auto">
+        <div className="flex flex-col md:flex-row items-center justify-end text-end">
+          <div className="flex justify-between items-center md:items-end w-full md:flex-col md:w-auto">
             <p className=" text-xs text-ellipsis font-bold uppercase text-gray-500 dark:text-gray-400">
               {title}
             </p>
@@ -52,7 +53,11 @@ const Dashboard = ({ setAuth }) => {
   }, [message]);
 
   return (
-    <HeadSide message={message} child={ <div>
+    <HeadSide message={message} child={
+      <div>
+        
+      <DateToday/>
+
       <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-3 mx-3 text-wrap">
       <DashboardCard
         title="Total Residents"
