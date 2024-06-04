@@ -44,7 +44,7 @@ const DateToday = () => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            class="size-6"
+            class="size-6 text-yellow-300 dark:text-yellow-200"
           >
             <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
           </svg>
@@ -55,7 +55,7 @@ const DateToday = () => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            class="size-6"
+            class="size-6 text-blue-400 dark:text-blue-300"
           >
             <path
               fill-rule="evenodd"
@@ -70,7 +70,7 @@ const DateToday = () => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            class="size-6"
+            class="size-6 text-gray-500 dark:text-gray-400"
           >
             <path
               fill-rule="evenodd"
@@ -86,10 +86,10 @@ const DateToday = () => {
 
   return (
     <div className="bg-white px-4 flex flex-row items-center py-4 mb-2 m-3 rounded-md dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-bold text-sm">
-      {timeOfDay && <div className="text-gray-400">{getIcon()}</div>}
+      {timeOfDay && <div>{getIcon()}</div>}
       <div className="flex flex-col ml-3">
         {timeMessage}, Arandelle!
-        <span className=" font-thin text-xs text-primary">{currentDate}</span>
+        <span className=" font-thin text-xs text-gray-500 dark:text-gray-400">{currentDate}</span>
       </div>{" "}
     </div>
   );

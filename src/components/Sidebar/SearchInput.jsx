@@ -123,7 +123,7 @@ const SearchInput = ({ isOpen, className }) => {
                     focusedIndex === index ? "bg-primary dark:bg-primary text-white" : ""
                   }`}
                 >
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     {item.title}
                     <span>
                       <ArrowRightIcon />
