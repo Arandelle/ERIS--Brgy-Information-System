@@ -81,7 +81,7 @@ function MyMapComponents() {
                   <p className="flex flex-col px-4 text-nowrap w-full text-gray-500 dark:text-gray-400">
                     <span className="font-semibold text-gray-900">{personInfo.name}</span>
                     <span className="text-sm text-wrap">{personInfo.address}</span>
-                    <span className="text-xs font-medium text-primary dark:text-primary">{personInfo.timeAgo}</span>
+                    <span className="text-xs font-medium text-primary-500 dark:text-primary-400">{personInfo.timeAgo}</span>
                   </p>
                 </div>
               </Popup>
@@ -95,7 +95,7 @@ function MyMapComponents() {
                   <p className="flex flex-col px-4 text-nowrap w-full text-gray-500 dark:text-gray-400">
                     <span className="font-semibold text-gray-900">{personInfo1.name}</span>
                     <span className="text-sm text-wrap">{personInfo1.address}</span>
-                    <span className="text-xs font-medium text-primary dark:text-primary">{personInfo1.timeAgo}</span>
+                    <span className="text-xs font-medium text-primary-500 dark:text-primary-400">{personInfo1.timeAgo}</span>
                   </p>
                 </div>
               </Popup>

@@ -49,7 +49,7 @@ const Notification = ()=>{
                       </div>
                       <div class="pl-3 w-full">
                           <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">{val.message}{val.location} <span class="font-semibold text-gray-900 dark:text-white">{val.name}</span></div>
-                          <div class="text-xs font-medium text-primary dark:text-primary">{val.time}</div>
+                          <div class="text-xs font-medium text-primary-500 dark:text-primary-400">{val.time}</div>
                       </div>
                   </a>
                   ))}

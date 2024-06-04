@@ -119,8 +119,8 @@ const SearchInput = ({ isOpen, className }) => {
                 onClick={() => handleNavigate(item.link)}
               >
                 <p
-                  className={`px-2 py-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 hover:dark:text-gray-900 hover:dark:bg-primary hover:bg-primary text-sm text-start rounded-md hover:text-white cursor-pointer ${
-                    focusedIndex === index ? "bg-primary dark:bg-primary text-white" : ""
+                  className={`px-2 py-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 hover:dark:text-gray-900 hover:dark:bg-primary-400 hover:bg-primary-500 text-sm text-start rounded-md hover:text-white cursor-pointer ${
+                    focusedIndex === index ? "bg-primary-500 dark:bg-primary-600 text-white" : ""
                   }`}
                 >
                   <div className="flex justify-between items-center">

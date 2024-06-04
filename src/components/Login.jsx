@@ -144,7 +144,7 @@ export default function Login({ setAuth }) {
               </div>
               <div>
                 <button
-                  className="w-full bg-primary text-white text-bold p-2 rounded"
+                  className="w-full bg-primary-500 text-white text-bold p-2 rounded"
                   type="submit"
                 >
                   Login

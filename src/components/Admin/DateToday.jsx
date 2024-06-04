@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 
 const DateToday = () => {
@@ -70,7 +71,7 @@ const DateToday = () => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            class="size-6 text-gray-500 dark:text-gray-400"
+            class="size-6 text-primary-500 dark:text-primary-400"
           >
             <path
               fill-rule="evenodd"

@@ -108,7 +108,7 @@ const Header = ({ toggleSideBar, isOpen }) => {
                 {" "}
                 Toggle{" "}
                 {theme === "light" ? (
-                  <span className="text-primary">DARK</span>
+                  <span className="text-primary-500">DARK</span>
                 ) : (
                   <span className="text-yellow-300">LIGHT</span>
                 )}{" "}

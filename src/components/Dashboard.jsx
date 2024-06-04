@@ -22,7 +22,7 @@ const DashboardCard = ({ title, value, img }) => {
             <p className=" text-xs text-ellipsis font-bold uppercase text-gray-500 dark:text-gray-400">
               {title}
             </p>
-            <p className=" text-2xl font-bold text-purple-500 dark:text-purple-400">{value}</p>
+            <p className=" text-2xl font-bold text-primary-500 dark:text-primary-400">{value}</p>
           </div>
         </div>
       </div>

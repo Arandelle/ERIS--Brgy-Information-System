@@ -65,7 +65,7 @@ const ActivitiesList = ({ news, setNews, setMessage, }) => {
                   <h3 className={`text-xl font-semibold mb-2 dark:text-green-500 ${containerSize === 'small' ? 'mb-0 text-md' : ''}`}>
                     {activity.title}
                   </h3>
-                  <span className="text-primary text-sm text-nowrap">
+                  <span className="text-primary-500 text-sm text-nowrap">
                     Posted {getTimeDifference(activity.timestamp)}
                   </span>
                 </div>
@@ -92,7 +92,7 @@ const ActivitiesList = ({ news, setNews, setMessage, }) => {
         <QuestionModal
           toggleModal={toggleDeleteModal}
           question={ <span>Do you want to delete 
-            <span className="text-primary text-bold"> {news.find(item => item.id === newsToDeleteId) ?.title}
+            <span className="text-primary-500 text-bold"> {news.find(item => item.id === newsToDeleteId) ?.title}
               </span>  ? </span>}
 
           yesText={"Delete"}
