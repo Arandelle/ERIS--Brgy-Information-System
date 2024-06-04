@@ -55,7 +55,7 @@ const DateToday = () => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            class="size-6 text-blue-400 dark:text-blue-300"
+            class="size-10 text-purple-500 dark:text-purple-400"
           >
             <path
               fill-rule="evenodd"
@@ -85,11 +85,11 @@ const DateToday = () => {
   };
 
   return (
-    <div className="bg-white px-4 flex flex-row items-center py-4 mb-2 m-3 rounded-md dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-bold text-sm">
+    <div className="bg-white px-4 flex flex-row items-center py-4 mb-2 m-3 rounded-md dark:bg-gray-800">
       {timeOfDay && <div>{getIcon()}</div>}
-      <div className="flex flex-col ml-3">
+      <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md">
         {timeMessage}, Arandelle!
-        <span className=" font-thin text-xs text-gray-500 dark:text-gray-400">{currentDate}</span>
+        <span className=" font-thin text-sm text-gray-600 dark:text-gray-200">{currentDate}</span>
       </div>{" "}
     </div>
   );
