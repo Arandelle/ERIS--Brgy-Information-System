@@ -4,10 +4,11 @@ import Skeleton, { Spinner } from "./ReusableComponents/Skeleton";
 import ActivitiesList from "./Events/ActivitiesList";
 import population from "../assets/population.svg";
 import registered from "../assets/registered.svg";
-import events from "../assets/events.svg";
+import Events from "../assets/events.svg";
 import emergency from "../assets/emergency.svg";
 import HeadSide from "./ReusableComponents/HeaderSidebar";
 import DateToday from "./Admin/DateToday";
+import ThunderstormIcon from '@mui/icons-material/Thunderstorm';
 
 const DashboardCard = ({ title, value, img }) => {
   return (
@@ -38,6 +39,18 @@ const Dashboard = ({ setAuth }) => {
     const storedNews = localStorage.getItem("news");
     return storedNews ? JSON.parse(storedNews) : [];
   });
+  const [events, setEvents] = useState(() => {
+    // Retrieve news data from localStorage, or an empty array if it doesn't exist
+    const storedEvents = localStorage.getItem("events");
+    return storedEvents ? JSON.parse(storedEvents) : [];
+  });
+
+//   // Retrieve the array from localStorage
+// const storedData = localStorage.getItem('yourKey');
+// // Parse the JSON string into an array
+// const dataArray = JSON.parse(storedData);
+// // Get the length of the array
+// const arrayLength = dataArray.length;
 
   return (
     <HeadSide child={
@@ -57,8 +70,8 @@ const Dashboard = ({ setAuth }) => {
       />
       <DashboardCard
         title="Events"
-        value={loading ? <Spinner setLoading={setLoading} /> : "10"}
-        img={events}
+        value={loading ? <Spinner setLoading={setLoading} /> : events.length}
+        img={Events}
       />
       <DashboardCard
         title="Emergency"
@@ -77,6 +90,13 @@ const Dashboard = ({ setAuth }) => {
         </div>
       )}
       <div className="mr-3 ml-2">
+      <div className="bg-white border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-4 mb-2 rounded-md dark:bg-gray-800">
+      <ThunderstormIcon style={{ color: "#FF5733" }} />
+      <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md text-nowrap">
+        26.5°C Bagtas Tanza, Cavite
+        <span className=" font-thin text-sm text-gray-600 dark:text-gray-200">It's rainy day, bring your umbrella</span>
+      </div>
+      </div>
         <ActivitiesList news={news} setNews={setNews} />
       </div>
           </div>

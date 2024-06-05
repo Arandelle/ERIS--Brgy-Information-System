@@ -22,6 +22,18 @@ module.exports = {
           800: '#1565c0',
           900: '#0d47a1',
         },
+        orange: {
+          50: '#ffe9e5',
+          100: '#ffd3cc',
+          200: '#ffa799',
+          300: '#ff7c66',
+          400: '#ff5033', // Slightly lighter than #FF5733
+          500: '#ff5733', // Your main color
+          600: '#e64e2e',
+          700: '#cc4529',
+          800: '#b33b24',
+          900: '#99321f',
+        },
         black: "#2f2f2f"
       },
       fontSize: {

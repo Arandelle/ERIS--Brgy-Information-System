@@ -82,6 +82,7 @@ const DateToday = () => {
         {timeMessage}, Arandelle!
         <span className=" font-thin text-sm text-gray-600 dark:text-gray-200">{currentDate}</span>
       </div>{" "}
+      
     </div>
   );
 };
