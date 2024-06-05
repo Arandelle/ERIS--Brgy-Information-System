@@ -57,10 +57,7 @@ function MyMapComponents() {
 
   return (
     <div className="w-full h-screen z-0">
-    <div className="mx-3">
-      <h1 className="hidden md:block absolute m-2 top-3 left-16 z-10 font-medium rounded shadow-lg text-gray-900 bg-white py-2 px-4 dark:bg-gray-600 dark:text-green-400">
-          Ctrl + scroll to zoom in/out
-        </h1>  
+    <div className="">
         <MapContainer
           center={position}
           zoom={15}

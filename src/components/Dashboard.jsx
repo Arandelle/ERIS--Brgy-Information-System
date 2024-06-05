@@ -8,7 +8,7 @@ import Events from "../assets/events.svg";
 import emergency from "../assets/emergency.svg";
 import HeadSide from "./ReusableComponents/HeaderSidebar";
 import DateToday from "./Admin/DateToday";
-import ThunderstormIcon from '@mui/icons-material/Thunderstorm';
+import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 
 const DashboardCard = ({ title, value, img }) => {
   return (
@@ -22,7 +22,9 @@ const DashboardCard = ({ title, value, img }) => {
             <p className=" text-xs text-ellipsis font-bold uppercase text-gray-500 dark:text-gray-400">
               {title}
             </p>
-            <p className=" text-2xl font-bold text-primary-500 dark:text-primary-400">{value}</p>
+            <p className=" text-2xl font-bold text-primary-500 dark:text-primary-400">
+              {value}
+            </p>
           </div>
         </div>
       </div>
@@ -31,7 +33,6 @@ const DashboardCard = ({ title, value, img }) => {
 };
 
 const Dashboard = ({ setAuth }) => {
-
   setAuth(false);
   const [loading, setLoading] = useState(true);
   const [news, setNews] = useState(() => {
@@ -45,62 +46,65 @@ const Dashboard = ({ setAuth }) => {
     return storedEvents ? JSON.parse(storedEvents) : [];
   });
 
-//   // Retrieve the array from localStorage
-// const storedData = localStorage.getItem('yourKey');
-// // Parse the JSON string into an array
-// const dataArray = JSON.parse(storedData);
-// // Get the length of the array
-// const arrayLength = dataArray.length;
+  //   // Retrieve the array from localStorage
+  // const storedData = localStorage.getItem('yourKey');
+  // // Parse the JSON string into an array
+  // const dataArray = JSON.parse(storedData);
+  // // Get the length of the array
+  // const arrayLength = dataArray.length;
 
   return (
-    <HeadSide child={
-      <>   
-      <DateToday/>
+    <HeadSide
+      child={
+        <>
+          <DateToday />
 
-      <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 my-3 mx-3 text-wrap">
-      <DashboardCard
-        title="Total Residents"
-        value={loading ? <Spinner setLoading={setLoading} /> : "1000"}
-        img={population}
-      />
-      <DashboardCard
-        title="Today's Registered"
-        value={loading ? <Spinner setLoading={setLoading} /> : "50"}
-        img={registered}
-      />
-      <DashboardCard
-        title="Events"
-        value={loading ? <Spinner setLoading={setLoading} /> : events.length}
-        img={Events}
-      />
-      <DashboardCard
-        title="Emergency"
-        value={loading ? <Spinner setLoading={setLoading} /> : "5"}
-        img={emergency}
-      />
+          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 md:my-3 mx-3 text-wrap">
+            <DashboardCard
+              title="Total Residents"
+              value={loading ? <Spinner setLoading={setLoading} /> : "1000"}
+              img={population}
+            />
+            <DashboardCard
+              title="Today's Registered"
+              value={loading ? <Spinner setLoading={setLoading} /> : "50"}
+              img={registered}
+            />
+            <DashboardCard
+              title="Events"
+              value={
+                loading ? <Spinner setLoading={setLoading} /> : events.length
+              }
+              img={Events}
+            />
+            <DashboardCard
+              title="Emergency"
+              value={loading ? <Spinner setLoading={setLoading} /> : "5"}
+              img={emergency}
+            />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-4 w-full ">
-      {loading ? (
-        <div className="col-span-3 mx-3">
-          <Skeleton setLoading={setLoading} />
-        </div>
-      ) : (
-        <div className="col-span-3">
-          <MapContent />
-        </div>
-      )}
-      <div className="mr-3 ml-2">
-      <div className="bg-white border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-4 mb-2 rounded-md dark:bg-gray-800">
-      <ThunderstormIcon style={{ color: "#FF5733" }} />
-      <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md text-nowrap">
-        26.5°C Bagtas Tanza, Cavite
-        <span className=" font-thin text-sm text-gray-600 dark:text-gray-200">It's rainy day, bring your umbrella</span>
-      </div>
-      </div>
-        <ActivitiesList news={news} setNews={setNews} />
-      </div>
+          <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4 mx-3 text-wrap">
+              <>
+                <div className="order-3 lg:order-1 col-span-1 lg:col-span-3">
+                  <MapContent />
+                </div>
+                <div className="order-2 md:order-2 col-span-1">
+                  <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-4 mb-2 rounded-lg dark:bg-gray-800">
+                    <ThunderstormIcon style={{ color: "#FF5733" }} />
+                    <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md text-nowrap">
+                      26.5°C Bagtas Tanza, Cavite
+                      <span className="font-thin text-sm text-gray-600 dark:text-gray-200">
+                        It's a rainy day, bring your umbrella
+                      </span>
+                    </div>
+                  </div>
+                  <ActivitiesList news={news} setNews={setNews} />
+                </div>
+              </>          
           </div>
-    </>} />  
+        </>
+      }
+    />
   );
 };
 

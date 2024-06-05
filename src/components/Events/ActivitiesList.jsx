@@ -42,10 +42,10 @@ const ActivitiesList = ({ news, setNews, }) => {
 
   return (
     <div
-      className="bg-gray-50 dark:bg-gray-800 dark:text-gray-400 h-full rounded-lg"
+      className="bg-gray-50 dark:bg-gray-800 dark:text-gray-400 rounded-lg"
       ref={containerRef}
     >
-      <div className="block py-2 px-4 text-base text-center font-semibold">
+      <div className="block py-2 px-3 text-base text-center font-semibold">
         Today's Activities
       </div>
       <div className="scrollable-container p-4 text-gray-700 overflow-y-auto">
