@@ -89,7 +89,7 @@ const Dashboard = ({ setAuth }) => {
                   <MapContent />
                 </div>
                 <div className="order-2 md:order-2 col-span-1">
-                  <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-4 mb-2 rounded-lg dark:bg-gray-800">
+                  <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-6 mb-2 rounded-lg dark:bg-gray-800">
                     <ThunderstormIcon style={{ color: "#FF5733" }} />
                     <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md text-nowrap">
                       26.5°C Bagtas Tanza, Cavite
