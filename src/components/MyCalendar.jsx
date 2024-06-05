@@ -8,6 +8,7 @@ import ContainerResizer from "../helper/ContainerResizer";
 import InputReusable from "./ReusableComponents/InputReusable";
 import BtnReusable from "./ReusableComponents/BtnReusable";
 import HeadSide from "./ReusableComponents/HeaderSidebar";
+import QuestionModal from "./ReusableComponents/AskCard";
 import { toast } from "sonner";
 
 const MyCalendar = () => {
@@ -15,11 +16,14 @@ const MyCalendar = () => {
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [location, setLocation] = useState("");
   const [organizer, setOrganizer] = useState("");
   const [details, setDetails] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const { containerSize, containerRef } = ContainerResizer();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [eventsToDelete, setEventToDelete] = useState(null);
 
   const [events, setEvents] = useState(() => {
     const storedEvents = localStorage.getItem("events");
@@ -43,15 +47,32 @@ const MyCalendar = () => {
     localStorage.setItem("events", JSON.stringify(events));
   }, [events]);
 
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString(undefined, {
+      weekday: "short",
+      month: "short",
+      day: "2-digit",
+    });
+  };
+
   const handleAddEvent = () => {
-    if (!title || !startDate || !endDate || !organizer || !details) {
+    if (
+      !title ||
+      !startDate ||
+      !endDate ||
+      !location ||
+      !organizer ||
+      !details
+    ) {
       toast.warning("Please fill all the fields");
       return;
     }
     const newEvent = {
+      id: Date.now(),
       title,
       start: new Date(startDate),
       end: new Date(endDate),
+      location,
       organizer,
       details,
     };
@@ -60,9 +81,10 @@ const MyCalendar = () => {
     setTitle("");
     setStartDate("");
     setEndDate("");
+    setLocation("");
     setOrganizer("");
     setDetails("");
-    toast.success("Event added successfully")
+    toast.success("Event added successfully");
   };
 
   const handleSelectEvent = (event) => {
@@ -70,20 +92,30 @@ const MyCalendar = () => {
     setTitle(event.title);
     setStartDate(event.start.toISOString().split("T")[0]);
     setEndDate(event.end.toISOString().split("T")[0]);
+    setLocation(event.location);
     setOrganizer(event.organizer);
     setDetails(event.details);
   };
 
   const handleUpdateEvent = () => {
-    if (!title || !startDate || !endDate || !organizer || !details) {
+    if (
+      !title ||
+      !startDate ||
+      !endDate ||
+      !location ||
+      !organizer ||
+      !details
+    ) {
       toast.warning("Please fill all the fields");
       return;
     }
     const updatedEvent = {
       ...selectedEvent,
+      id: Date.now(),
       title,
       start: new Date(startDate),
       end: new Date(endDate),
+      location,
       organizer,
       details,
     };
@@ -97,15 +129,30 @@ const MyCalendar = () => {
     setTitle("");
     setStartDate("");
     setEndDate("");
+    setLocation("");
     setOrganizer("");
     setDetails("");
-    toast.success("Event updated successfully")
+    toast.success("Event updated successfully");
+  };
+
+  const toggleDeleteModal = (id) => {
+    setEventToDelete(id);
+    setShowDeleteModal(!showDeleteModal);
+  };
+
+  const handleDeleteEvent = (id) => {
+    const updatedEventsArray = events.filter((event) => event.id !== id);
+    localStorage.setItem("events", JSON.stringify(updatedEventsArray));
+    setEvents(updatedEventsArray);
+    toast.success("Event deleted");
+    setShowDeleteModal(false);
   };
 
   const CustomAgendaEvent = ({ event }) => (
     <div>
       <strong>{event.title}</strong>
       <br />
+      <span>Location: {event.location}</span>
       <span>Organizer: {event.organizer}</span>
       <br />
       <span>Details: {event.details}</span>
@@ -138,6 +185,12 @@ const MyCalendar = () => {
               onFocus={(e) => (e.target.type = "date")}
               onBlur={(e) => (e.target.type = "text")}
               onChange={(e) => setEndDate(e.target.value)}
+            />
+            <InputReusable
+              type="text"
+              placeholder="Location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
             <InputReusable
               type="text"
@@ -185,12 +238,13 @@ const MyCalendar = () => {
                 onSelectEvent={handleSelectEvent}
               />
             </div>
+
             <div className="mr-3 ml-2" onSelectEvent={handleSelectEvent}>
               <div
                 className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 h-full"
                 ref={containerRef}
               >
-                <div className="block mt-2 py-2 px-4 text-base text-center font-semibold border-t-[3px] border-primary-500">
+                <div className="block mt-2 py-2 px-4 text-base text-center font-semibold border-y-[3px] border-orange-500">
                   Upcoming Events
                 </div>
                 <div className="scrollable-container p-4 text-gray-700 overflow-y-auto">
@@ -208,9 +262,9 @@ const MyCalendar = () => {
                       No events yet
                     </div>
                   ) : (
-                    events.map((activity, key) => (
+                    events.map((activity) => (
                       <div
-                        key={key}
+                        key={activity.id}
                         className="mb-4 border-b pb-4 border-b-gray-500 dark:border-b-gray-200"
                       >
                         <div>
@@ -218,8 +272,11 @@ const MyCalendar = () => {
                             Title: {activity.title}
                           </h3>
                           <p className="text-gray-700 dark:text-gray-200">
-                            Date: {activity.start.toISOString().split("T")[0]} -{" "}
-                            {activity.end.toISOString().split("T")[0]}
+                            Date: {formatDate(activity.start)} -{" "}
+                            {formatDate(activity.end)}
+                          </p>
+                          <p className="text-gray-700 dark:text-gray-200">
+                            Location: {activity.location}
                           </p>
                           <p className="text-gray-700 dark:text-gray-200">
                             Organizer: {activity.organizer}
@@ -227,17 +284,46 @@ const MyCalendar = () => {
                           <p className="text-gray-700 dark:text-gray-200">
                             Details: {activity.details}
                           </p>
+                          <BtnReusable
+                            value={"Delete"}
+                            type="delete"
+                            onClick={() => toggleDeleteModal(activity.id)}
+                          />
                         </div>
                       </div>
                     ))
                   )}
                 </div>
-                <div className="flex justify-end">
-                  <BtnReusable value="See more... " link={"/events/event"} />
-                </div>
+                {events.length > 0 ? (
+                  <div className="flex justify-end">
+                    <BtnReusable
+                      value="See more events "
+                      link={"/events/event"}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
           </div>
+          {showDeleteModal && (
+            <QuestionModal
+              toggleModal={toggleDeleteModal}
+              question={
+                <span>
+                  Do you want to delete
+                  <span className="text-primary-500 text-bold">
+                    {" "}
+                    {events.find((item) => item.id === eventsToDelete)?.title}
+                  </span>{" "}
+                  ?{" "}
+                </span>
+              }
+              yesText={"Delete"}
+              onConfirm={() => handleDeleteEvent(eventsToDelete)}
+            />
+          )}
         </div>
       }
     />
