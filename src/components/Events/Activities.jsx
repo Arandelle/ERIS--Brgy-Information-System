@@ -79,7 +79,8 @@ const Activities = () => {
           type="text"
           value={title}
           placeholder="Event Title"
-          onChange={(e) => setTitle(e.target.value.toUpperCase())}
+          onChange={(e) => setTitle(e.target.value)}
+          onBlur={() => setTitle(title.toUpperCase())}
           notAllowed={notAllowed}
         />
         <InputReusable
@@ -104,7 +105,8 @@ const Activities = () => {
           type="text"
           value={location}
           placeholder="Location"
-          onChange={(e) => setPlace(capitalizeFirstLetter(e.target.value))}
+          onChange={(e) => setPlace(e.target.value)}
+          onBlur={() => setPlace(capitalizeFirstLetter(location))}
           notAllowed={notAllowed}
         />
       </div>
