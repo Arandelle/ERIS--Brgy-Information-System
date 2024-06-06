@@ -4,7 +4,7 @@ import CustomeTheme from "./ReusableComponents/CustomeTheme";
 import Profile from "./Admin/ProfileAdmin";
 import logo from "../assets/logo.png";
 import { PopoverHover } from "./ReusableComponents/Popover";
-import SearchInput from "./Sidebar/SearchInput";
+import SearchInput from "./Admin/SearchInput";
 
 const Header = ({ toggleSideBar, isOpen }) => {
   const [theme, toggleTheme] = CustomeTheme();

@@ -62,7 +62,7 @@ function MyMapComponents({isFullscreen}) {
         <MapContainer
           center={position}
           zoom={15}
-          className={`z-0 rounded-lg ${isFullscreen ? 'h-screen' : 'h-96'}`}
+          className={`z-0 rounded-md ${isFullscreen ? 'h-screen' : 'h-96'}`}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <LayerGroup>

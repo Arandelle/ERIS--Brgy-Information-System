@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { SidebarData } from "./SidebarData";
 import ArrowRightIcon from "@mui/icons-material/ArrowDropDown";
-import SearchInput from "./SearchInput";
+import SearchInput from "../Admin/SearchInput";
 
 function Sidebar({ isOpen, toggleSidebar }) {
   const [openSubMenu, setOpenSubMenu] = useState(null);

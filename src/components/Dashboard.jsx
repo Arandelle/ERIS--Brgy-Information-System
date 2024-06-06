@@ -13,7 +13,7 @@ import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 const DashboardCard = ({ title, value, img }) => {
   return (
     <div className="relative">
-      <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-2 md:gap-4 bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 w-full mb-3 md:mb-0">
+      <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-2 md:gap-4 bg-white dark:bg-gray-800 shadow-md rounded-md p-6 w-full mb-3 md:mb-0">
         <div className="hidden md:block">
           <img src={img} alt="Empty Image" className="h-20 w-28" />
         </div>
@@ -89,7 +89,7 @@ const Dashboard = ({ setAuth }) => {
                   <MapContent isFullscreen={false}/>
                 </div>
                 <div className="order-2 md:order-2 col-span-1">
-                  <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-6 mb-2 rounded-lg dark:bg-gray-800">
+                  <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-6 mb-2 shadow-md rounded-md dark:bg-gray-800">
                     <ThunderstormIcon style={{ color: "#FF5733" }} />
                     <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md text-nowrap">
                       26.5°C Bagtas Tanza, Cavite

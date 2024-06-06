@@ -16,22 +16,6 @@ const Activities = () => {
   const [location, setPlace] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [notAllowed, setNotAllowed] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setNotAllowed(false);
-    }, 2000);
-  }, []);
-  
-  // useEffect(() => {
-  //   if (message) {
-  //     const timer = setTimeout(() => {
-  //       setMessage("");
-  //     }, 3000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [message]);
 
   const [news, setNews] = useState(() => {
     // Get the news data from localStorage, or an empty array if it doesn't exist
@@ -41,7 +25,9 @@ const Activities = () => {
 
   useEffect(() => {
     // Save the news data to localStorage whenever it changes
-    localStorage.setItem("news", JSON.stringify(news));
+    const sortedNews = news.sort((a,b) => a.startTime.localeCompare(b.startTime));
+    localStorage.setItem("news", JSON.stringify(sortedNews));
+
   }, [news]);
 
   const handleAddNews = () => {
@@ -81,7 +67,6 @@ const Activities = () => {
           placeholder="Event Title"
           onChange={(e) => setTitle(e.target.value)}
           onBlur={() => setTitle(title.toUpperCase())}
-          notAllowed={notAllowed}
         />
         <InputReusable
           type="text"
@@ -90,7 +75,6 @@ const Activities = () => {
           value={startTime}
           placeholder="Start Time"
           onChange={(e) => setStartTime(e.target.value)}
-          notAllowed={notAllowed}
         />
         <InputReusable
           type="text"
@@ -99,7 +83,6 @@ const Activities = () => {
           value={endTime}
           placeholder="End Time"
           onChange={(e) => setEndTime(e.target.value)}
-          notAllowed={notAllowed}
         />
         <InputReusable
           type="text"
@@ -107,13 +90,11 @@ const Activities = () => {
           placeholder="Location"
           onChange={(e) => setPlace(e.target.value)}
           onBlur={() => setPlace(capitalizeFirstLetter(location))}
-          notAllowed={notAllowed}
         />
       </div>
       <div>
         <textarea
-          className={`w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600 ${
-            notAllowed ? "cursor-wait" : "cursor-auto"
+          className={`w-full relative z-1 px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring-gray-400 dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600
           }`}
           value={description}
           placeholder="Description"

@@ -41,7 +41,7 @@ const ActivitiesList = ({ news, setNews,isFullscreen }) => {
 
   return (
     <div
-      className="bg-gray-50 dark:bg-gray-800 dark:text-gray-400 rounded-lg"
+      className="bg-gray-50 dark:bg-gray-800 dark:text-gray-400 rounded-md shadow-md"
       ref={containerRef}
     >
       <div className="block py-2 px-3 text-base text-center font-semibold">
