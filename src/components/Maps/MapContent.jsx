@@ -8,11 +8,12 @@ import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import 'leaflet-routing-machine';
 import 'leaflet-control-geocoder';
 
-function MyMapComponents() {
+function MyMapComponents({isFullscreen}) {
   const [position, setPosition] = useState([14.332867, 120.850672]); // Default start position
   const [otherMarkerPosition, setOtherMarkerPosition] = useState([14.334, 120.850]);
   const [otherMarkerPosition1, setOtherMarkerPosition1] = useState([14.3349, 120.851]);
   const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef(null);
 
   const [personInfo, setPersonInfo] = useState({
     name: "Juan Dela cruz",
@@ -56,12 +57,12 @@ function MyMapComponents() {
   }
 
   return (
-    <div className="w-full h-screen z-0">
-    <div className="">
+    <div className={`w-full z-0`} ref={containerRef}>
+    <div className={`${isFullscreen ? 'm-3' : ""}`}>
         <MapContainer
           center={position}
           zoom={15}
-          className="h-screen z-0 rounded-lg"
+          className={`z-0 rounded-lg ${isFullscreen ? 'h-screen' : 'h-80'}`}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <LayerGroup>

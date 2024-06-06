@@ -86,7 +86,7 @@ const Dashboard = ({ setAuth }) => {
           <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4 mx-3 text-wrap">
               <>
                 <div className="order-3 lg:order-1 col-span-1 lg:col-span-3">
-                  <MapContent />
+                  <MapContent isFullscreen={false}/>
                 </div>
                 <div className="order-2 md:order-2 col-span-1">
                   <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-6 mb-2 rounded-lg dark:bg-gray-800">
@@ -98,7 +98,7 @@ const Dashboard = ({ setAuth }) => {
                       </span>
                     </div>
                   </div>
-                  <ActivitiesList news={news} setNews={setNews} />
+                  <ActivitiesList news={news} setNews={setNews} isFullscreen={false} />
                 </div>
               </>          
           </div>

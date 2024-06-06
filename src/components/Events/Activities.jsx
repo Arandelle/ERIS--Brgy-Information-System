@@ -119,7 +119,7 @@ const Activities = () => {
         onClick={handleAddNews}
         />
       </div>
-        <ActivitiesList news={news} setNews={setNews}/>
+        <ActivitiesList news={news} setNews={setNews} isFullscreen={true}/>
     </div>
   </div>} />
   );

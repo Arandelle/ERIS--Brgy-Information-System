@@ -1,17 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Spinner } from "../ReusableComponents/Skeleton";
 import { getTimeDifference } from "../../helper/TimeDiff";
-import ContainerResizer from "../../helper/ContainerResizer";
 import QuestionModal from "../ReusableComponents/AskCard";
 import BtnReusable from "../ReusableComponents/BtnReusable";
 import Question from "../../assets/question.svg"
 import { toast } from "sonner";
 
-const ActivitiesList = ({ news, setNews, }) => {
+const ActivitiesList = ({ news, setNews,isFullscreen }) => {
   const [loading, setLoading] = useState(true);
-  const { containerSize, containerRef } = ContainerResizer();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newsToDeleteId, setNewsToDeleteId] = useState(null);
+  const containerRef = useRef(null);
 
   const toggleDeleteModal = (id) => {
     setNewsToDeleteId(id);
@@ -62,8 +61,8 @@ const ActivitiesList = ({ news, setNews, }) => {
           news.map((activity) => (
             <div key={activity.id} className="mb-4 border-b pb-4 ">
               <div>
-              <div className={`flex justify-between ${containerSize === 'small' ? 'flex-col' : ''}`}>
-                  <h3 className={`text-xl font-semibold mb-2 dark:text-green-500 ${containerSize === 'small' ? 'mb-0 text-md' : ''}`}>
+              <div className={`flex justify-between ${isFullscreen ? 'flex-col' : ''}`}>
+                  <h3 className={`text-xl font-semibold mb-2 dark:text-green-500 ${isFullscreen ? 'mb-0 text-md' : ''}`}>
                     {activity.title}
                   </h3>
                   <span className="text-primary-500 text-sm text-nowrap">
