@@ -5,6 +5,10 @@ import InputReusable from "../ReusableComponents/InputReusable";
 import BtnReusable from "../ReusableComponents/BtnReusable";
 import HeadSide from "../ReusableComponents/HeaderSidebar";
 
+function capitalizeFirstLetter(string) {
+  return string.replace(/\b\w/g, char => char.toUpperCase());
+}
+
 const Activities = () => {
 
   const [title, setTitle] = useState("");
@@ -75,7 +79,7 @@ const Activities = () => {
           type="text"
           value={title}
           placeholder="Event Title"
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value.toUpperCase())}
           notAllowed={notAllowed}
         />
         <InputReusable
@@ -100,7 +104,7 @@ const Activities = () => {
           type="text"
           value={location}
           placeholder="Location"
-          onChange={(e) => setPlace(e.target.value)}
+          onChange={(e) => setPlace(capitalizeFirstLetter(e.target.value))}
           notAllowed={notAllowed}
         />
       </div>

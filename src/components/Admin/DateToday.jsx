@@ -61,7 +61,7 @@ const DateToday = () => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            class="size-8 text-gray-500 dark:text-gray-400"
+            class="size-8 text-gray-700 dark:text-gray-400"
           >
             <path
               fill-rule="evenodd"

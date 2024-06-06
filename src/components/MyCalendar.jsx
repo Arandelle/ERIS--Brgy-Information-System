@@ -11,6 +11,10 @@ import HeadSide from "./ReusableComponents/HeaderSidebar";
 import QuestionModal from "./ReusableComponents/AskCard";
 import { toast } from "sonner";
 
+function capitalizeFirstLetter(string) {
+  return string.replace(/\b\w/g, char => char.toUpperCase());
+}
+
 const MyCalendar = () => {
   const localizer = momentLocalizer(moment);
   const [title, setTitle] = useState("");
@@ -144,7 +148,7 @@ const MyCalendar = () => {
     const updatedEventsArray = events.filter((event) => event.id !== id);
     localStorage.setItem("events", JSON.stringify(updatedEventsArray));
     setEvents(updatedEventsArray);
-    toast.success("Event deleted");
+    toast.error ("Event deleted");
     setShowDeleteModal(false);
   };
 
@@ -169,6 +173,7 @@ const MyCalendar = () => {
               placeholder="Event Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              onBlur={() => setTitle(title.toUpperCase())}
             />
             <InputReusable
               type="text"
@@ -191,18 +196,21 @@ const MyCalendar = () => {
               placeholder="Location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
+              onBlur={(e) => setLocation(capitalizeFirstLetter(location))}
             />
             <InputReusable
               type="text"
               placeholder="Organizer"
               value={organizer}
               onChange={(e) => setOrganizer(e.target.value)}
+              onBlur={(e) => setOrganizer(capitalizeFirstLetter(organizer))}
             />
             <InputReusable
               type="text"
               placeholder="Details"
               value={details}
               onChange={(e) => setDetails(e.target.value)}
+              onBlur={(e) => setDetails(capitalizeFirstLetter(details))}
             />
             {selectedEvent ? (
               <BtnReusable

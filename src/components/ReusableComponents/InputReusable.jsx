@@ -9,6 +9,7 @@ const InputReusable = ({
   onBlur,
   notAllowed,
 }) => {
+
   return (
     <input
       className={`w-full px-4 py-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400 dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600 ${
