@@ -21,7 +21,8 @@ const ResidentsList = ({ residents, label }) => {
   return (
     <HeadSide
       child={
-        <div className="flex flex-col justify-center p-4 ">
+        <div className="flex flex-col justify-center
+        ">
             <div className="flex p-4 items-center md:justify-between flex-column gap-2 flex-wrap md:flex-row space-y-0 pb-4 bg-white dark:bg-gray-800">
               <div>
                 <button
@@ -206,6 +207,7 @@ const ResidentsList = ({ residents, label }) => {
                   1000
                 </span>
               </span>
+              
               <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
                 <li>
                   <a

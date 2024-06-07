@@ -9,6 +9,7 @@ import emergency from "../assets/emergency.svg";
 import HeadSide from "./ReusableComponents/HeaderSidebar";
 import DateToday from "./Admin/DateToday";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
+import { Pabahay, Lumina, Carissa } from "./Residents/ResidentsData";
 
 const DashboardCard = ({ title, value, img }) => {
   return (
@@ -63,12 +64,12 @@ const Dashboard = ({ setAuth }) => {
           <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 md:my-3 mx-3 text-wrap">
             <DashboardCard
               title="Total Residents"
-              value={loading ? <Spinner setLoading={setLoading} /> : "1000"}
+              value={loading ? <Spinner setLoading={setLoading} /> : Pabahay.length + Carissa.length + Lumina.length}
               img={population}
             />
             <DashboardCard
               title="Today's Registered"
-              value={loading ? <Spinner setLoading={setLoading} /> : "50"}
+              value={loading ? <Spinner setLoading={setLoading} /> : 0}
               img={registered}
             />
             <DashboardCard
@@ -80,7 +81,7 @@ const Dashboard = ({ setAuth }) => {
             />
             <DashboardCard
               title="Emergency"
-              value={loading ? <Spinner setLoading={setLoading} /> : "5"}
+              value={loading ? <Spinner setLoading={setLoading} /> : 0}
               img={emergency}
             />
           </div>
