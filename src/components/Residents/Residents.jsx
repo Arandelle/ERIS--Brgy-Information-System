@@ -5,6 +5,25 @@ import HeadSide from "../ReusableComponents/HeaderSidebar";
 
 const ResidentsList = ({ residents, label }) => {
   const [isActionOpen, setActionOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Calculate the indices for the current page items
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = residents.slice(indexOfFirstItem, indexOfLastItem);
+
+  // calculate the item per page
+  const totalPages = Math.ceil(residents.length / itemsPerPage);
+  const lastPageItems = residents.length % itemsPerPage || itemsPerPage;
+
+  const nextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const prevPage = () => {
+    setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));
+  };
 
   const toggleAction = () => {
     setActionOpen(!isActionOpen);
@@ -125,7 +144,7 @@ const ResidentsList = ({ residents, label }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {residents.map((residents, key) => (
+                  {currentItems.map((residents, key) => (
                     <tr
                       key={key}
                       className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -197,75 +216,54 @@ const ResidentsList = ({ residents, label }) => {
               class="flex items-center dark:bg-gray-800 bg-white flex-column flex-wrap md:flex-row justify-between p-4"
               aria-label="Table navigation"
             >
-              <span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
-                Showing{" "}
-                <span class="font-semibold text-gray-900 dark:text-white">
-                  1-10
-                </span>{" "}
-                of{" "}
-                <span class="font-semibold text-gray-900 dark:text-white">
-                  1000
-                </span>
+               <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+              Showing{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {indexOfFirstItem + 1} -{" "}
+                {indexOfLastItem > residents.length
+                  ? residents.length
+                  : indexOfLastItem}
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {residents.length}
               </span>
-              
+            </span>
+
               <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-                <li>
-                  <a
+                <button
                     href="#"
                     class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    onClick={prevPage}
+                    disabled={currentPage === 1}
                   >
                     Previous
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => (
+                <li key={index}>
+                  <button
+                    onClick={() => setCurrentPage(index + 1)}
+                    className={`px-3 py-2 leading-tight ${
+                      currentPage === index + 1
+                        ? "flex items-center justify-center px-3 h-8 leading-tight text-gray-900 bg-primary-300 border border-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+
+                        : "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" 
+                    }`}
                   >
-                    1
-                  </a>
+                    {index + 1}
+                  </button>
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  >
-                    2
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    aria-current="page"
-                    class="flex items-center justify-center px-3 h-8 text-primary-600 border border-gray-300 bg-primary-50 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                  >
-                    3
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  >
-                    4
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  >
-                    5
-                  </a>
-                </li>
-                <li>
-                  <a
+              ))}
+                
+                <button
+                  
                     href="#"
                     class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                  >
+                    onClick={nextPage}
+                    disabled={indexOfLastItem >= residents.length}
+                    >
                     Next
-                  </a>
-                </li>
+                </button>
               </ul>
             </nav>
           </div>

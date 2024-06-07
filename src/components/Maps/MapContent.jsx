@@ -57,7 +57,7 @@ function MyMapComponents({isFullscreen}) {
   }
 
   return (
-    <div className={`w-full z-0`} ref={containerRef}>
+    <div className={`w-full z-0 shadow-md`} ref={containerRef}>
     <div className={`${isFullscreen ? 'm-3' : ""}`}>
         <MapContainer
           center={position}
