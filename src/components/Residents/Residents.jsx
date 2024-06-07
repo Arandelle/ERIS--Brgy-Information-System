@@ -2,20 +2,26 @@ import React, { useState } from "react";
 import ActionButton, { HeaderData } from "./ActionButton";
 import { useNavigate } from "react-router-dom";
 import HeadSide from "../ReusableComponents/HeaderSidebar";
+import Question from "../../assets/question.svg"
 
 const ResidentsList = ({ residents, label }) => {
   const [isActionOpen, setActionOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+    // to show the user using search input
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredResidents = residents.filter(resident => resident.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
   // Calculate the indices for the current page items
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = residents.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredResidents.slice(indexOfFirstItem, indexOfLastItem);
 
   // calculate the item per page
-  const totalPages = Math.ceil(residents.length / itemsPerPage);
-  const lastPageItems = residents.length % itemsPerPage || itemsPerPage;
+  const totalPages = Math.ceil(filteredResidents.length / itemsPerPage);
+  const lastPageItems = filteredResidents.length % itemsPerPage || itemsPerPage;
 
   const nextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -112,12 +118,19 @@ const ResidentsList = ({ residents, label }) => {
                 <input
                   type="text"
                   id="table-search-users"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   placeholder={`Search for residents of ${label}`}
                 />
               </div>
             </div>
             <div className="overflow-auto w-full">
+            {filteredResidents == 0 ? (
+                    <div className="py-32 text-gray-500 text-center justify-center items-center">
+                  No data found
+                  </div>  
+                  ) : (
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
@@ -144,91 +157,97 @@ const ResidentsList = ({ residents, label }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentItems.map((residents, key) => (
-                    <tr
-                      key={key}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                    >
-                      <td className="w-4 p-4">
-                        <div className="flex items-center">
-                          <input
-                            id="checkbox-table-search-1"
-                            type="checkbox"
-                            className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                          />
-                          <label
-                            htmlFor={`checkbox-table-search-${residents.id}`}
-                            className="sr-only"
-                          >
-                            checkbox
-                          </label>
-                        </div>
-                      </td>
-                      <th
-                        scope="row"
-                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                   { currentItems.map((residents, key) => (
+                      <tr
+                        key={key}
+                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       >
-                        <img
-                          className="w-10 h-10 rounded-full"
-                          src={residents.img}
-                          alt="Jese image"
-                        />
-                        <div className="ps-3">
-                          <div className="text-base font-semibold">
-                            {residents.name}
+                        <td className="w-4 p-4">
+                          <div className="flex items-center">
+                            <input
+                              id="checkbox-table-search-1"
+                              type="checkbox"
+                              className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            />
+                            <label
+                              htmlFor={`checkbox-table-search-${residents.id}`}
+                              className="sr-only"
+                            >
+                              checkbox
+                            </label>
                           </div>
-                          <div className="font-normal text-gray-500">
-                            {residents.email}
-                          </div>
-                        </div>
-                      </th>
-                      <td className="px-6 py-4">{residents.address}</td>
-                      <td className="px-6 py-4">{residents.age}</td>
-                      <td className="px-6 py-4">{residents.gender}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          <div
-                            className={`h-2.5 w-2.5 rounded-full bg-green-500 me-2 ${
-                              residents.status === "Activated"
-                                ? "bg-green-500"
-                                : "bg-red-500"
-                            } me-2`}
-                          />{" "}
-                          {residents.status === "Activated"
-                            ? "Activated"
-                            : "Not Activated"}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <a
-                          href="#"
-                          className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
+                        </td>
+                        <th
+                          scope="row"
+                          className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                         >
-                          View user
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
+                          <img
+                            className="w-10 h-10 rounded-full"
+                            src={residents.img}
+                            alt="Jese image"
+                          />
+                          <div className="ps-3">
+                            <div className="text-base font-semibold">
+                              {residents.name}
+                            </div>
+                            <div className="font-normal text-gray-500">
+                              {residents.email}
+                            </div>
+                          </div>
+                        </th>
+                        <td className="px-6 py-4">{residents.address}</td>
+                        <td className="px-6 py-4">{residents.age}</td>
+                        <td className="px-6 py-4">{residents.gender}</td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center">
+                            <div
+                              className={`h-2.5 w-2.5 rounded-full bg-green-500 me-2 ${
+                                residents.status === "Activated"
+                                  ? "bg-green-500"
+                                  : "bg-red-500"
+                              } me-2`}
+                            />{" "}
+                            {residents.status === "Activated"
+                              ? "Activated"
+                              : "Not Activated"}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <a
+                            href="#"
+                            className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
+                          >
+                            View user
+                          </a>
+                        </td>
+                      </tr>
+                    ))} 
                 </tbody>
               </table>
+               )}
             </div>
             <nav
               class="flex items-center dark:bg-gray-800 bg-white flex-column flex-wrap md:flex-row justify-between p-4"
               aria-label="Table navigation"
             >
                <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
-              Showing{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {indexOfFirstItem + 1} -{" "}
-                {indexOfLastItem > residents.length
-                  ? residents.length
-                  : indexOfLastItem}
-              </span>{" "}
-              of{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {residents.length}
-              </span>
-            </span>
+  Showing{" "}
+  <span className="font-semibold text-gray-900 dark:text-white">
+    {filteredResidents.length > 0 ? (
+      `${indexOfFirstItem + 1} - ${
+        indexOfLastItem > filteredResidents.length
+          ? filteredResidents.length
+          : indexOfLastItem
+      }`
+    ) : (
+      "0"
+    )}
+  </span>{" "}
+  of{" "}
+  <span className="font-semibold text-gray-900 dark:text-white">
+    {filteredResidents.length}
+  </span>
+</span>
 
               <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
                 <button
@@ -260,7 +279,7 @@ const ResidentsList = ({ residents, label }) => {
                     href="#"
                     class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                     onClick={nextPage}
-                    disabled={indexOfLastItem >= residents.length}
+                    disabled={indexOfLastItem >= filteredResidents.length}
                     >
                     Next
                 </button>
