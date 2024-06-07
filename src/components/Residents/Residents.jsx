@@ -21,12 +21,8 @@ const ResidentsList = ({ residents, label }) => {
   return (
     <HeadSide
       child={
-        <div className="flex justify-center p-4 ">
-          <div
-            className="relative overflow-x-auto w-full bg-gray-800 shadow-md rounded-lg"
-            style={{ height: "max-content" }}
-          >
-            <div className="flex p-4 items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-800">
+        <div className="flex flex-col justify-center p-4 ">
+            <div className="flex p-4 items-center md:justify-between flex-column gap-2 flex-wrap md:flex-row space-y-0 pb-4 bg-white dark:bg-gray-800">
               <div>
                 <button
                   onClick={toggleAction}
@@ -71,7 +67,7 @@ const ResidentsList = ({ residents, label }) => {
               </label>
               <label
                 htmlFor=""
-                className="text-sm lg:text-lg dark:text-green-500"
+                className="text-md lg:text-lg text-center dark:text-green-500"
               >
                 {label}
               </label>
@@ -97,7 +93,7 @@ const ResidentsList = ({ residents, label }) => {
                   type="text"
                   id="table-search-users"
                   className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Search for users"
+                  placeholder={`Search for residents of ${label}`}
                 />
               </div>
             </div>
@@ -188,7 +184,7 @@ const ResidentsList = ({ residents, label }) => {
                           href="#"
                           className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
                         >
-                          Edit user
+                          View user
                         </a>
                       </td>
                     </tr>
@@ -271,7 +267,6 @@ const ResidentsList = ({ residents, label }) => {
               </ul>
             </nav>
           </div>
-        </div>
       }
     />
   );

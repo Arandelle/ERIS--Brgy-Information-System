@@ -17,18 +17,18 @@ const Activities = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
-  const [news, setNews] = useState(() => {
-    // Get the news data from localStorage, or an empty array if it doesn't exist
-    const storedNews = localStorage.getItem("news");
+  const [activity, setActivity] = useState(() => {
+    // Get the activity data from localStorage, or an empty array if it doesn't exist
+    const storedNews = localStorage.getItem("activity");
     return storedNews ? JSON.parse(storedNews) : [];
   });
 
   useEffect(() => {
-    // Save the news data to localStorage whenever it changes
-    const sortedNews = news.sort((a,b) => a.startTime.localeCompare(b.startTime));
-    localStorage.setItem("news", JSON.stringify(sortedNews));
+    // Save the activity data to localStorage whenever it changes
+    const sortedNews = activity.sort((a,b) => a.startTime.localeCompare(b.startTime));
+    localStorage.setItem("activity", JSON.stringify(sortedNews));
 
-  }, [news]);
+  }, [activity]);
 
   const handleAddNews = () => {
     if (!title || !description || !location || !startTime || !endTime) {
@@ -46,9 +46,9 @@ const Activities = () => {
       timestamp: new Date().toISOString(), // Add a timestamp
     };
 
-    setNews((prevNews) => [...prevNews, addedNews]);
+    setActivity((prevNews) => [...prevNews, addedNews]);
 
-    // Update localStorage with the updated news data
+    // Update localStorage with the updated activity data
     setTitle("");
     setStartTime("");
     setEndTime("");
@@ -106,7 +106,7 @@ const Activities = () => {
         onClick={handleAddNews}
         />
       </div>
-        <ActivitiesList news={news} setNews={setNews} isFullscreen={true}/>
+        <ActivitiesList activity={activity} setActivity={setActivity} isFullscreen={true}/>
     </div>
   </div>} />
   );

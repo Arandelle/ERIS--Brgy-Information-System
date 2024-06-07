@@ -6,7 +6,7 @@ import BtnReusable from "../ReusableComponents/BtnReusable";
 import Question from "../../assets/question.svg"
 import { toast } from "sonner";
 
-const ActivitiesList = ({ news, setNews,isFullscreen }) => {
+const ActivitiesList = ({ activity, setActivity,isFullscreen }) => {
   const [loading, setLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [newsToDeleteId, setNewsToDeleteId] = useState(null);
@@ -24,18 +24,18 @@ const ActivitiesList = ({ news, setNews,isFullscreen }) => {
   }, []);
 
   const handleDelete = (id) => {
-    const storedNews = localStorage.getItem("news"); {/*get the array data from local storage*/}
+    const storedNews = localStorage.getItem("activity"); {/*get the array data from local storage*/}
     if (storedNews) {
       const newsArray = JSON.parse(storedNews); {/**Parse the JSON string into an array: */}
       const updatedNewsArray = newsArray.filter((newsItem) => newsItem.id !== id); {/* filter for specific item */}
       {/*Save the updated array back tolocalStorage */}
-      localStorage.setItem("news", JSON.stringify(updatedNewsArray)); 
-      setNews(updatedNewsArray);
+      localStorage.setItem("activity", JSON.stringify(updatedNewsArray)); 
+      setActivity(updatedNewsArray);
       toast.error("Item Deleted");
       setNewsToDeleteId(null); // Reset the state
       setShowDeleteModal(false); // Close the modal
     } else {
-      toast("No news items found to delete.");
+      toast("No activity items found to delete.");
     }
   };  
 
@@ -52,13 +52,13 @@ const ActivitiesList = ({ news, setNews,isFullscreen }) => {
           <div className="flex items-center justify-center py-3">
             <Spinner setLoading={setLoading} />
           </div>
-        ) : news.length === 0 ? (
+        ) : activity.length === 0 ? (
           <div className="text-center flex flex-col justify-center items-center text-gray-500 dark:text-gray-400">
            <img src={Question} alt="Empty Image"  className="h-[200px] w-[200px]" />
            No Activities yet
           </div>
         ) : (
-          news.map((activity) => (
+          activity.map((activity) => (
             <div key={activity.id} className="mb-4 border-b pb-4 ">
               <div>
               <div className={`flex justify-between ${isFullscreen ? 'flex-col' : ''}`}>
@@ -92,7 +92,7 @@ const ActivitiesList = ({ news, setNews,isFullscreen }) => {
         <QuestionModal
           toggleModal={toggleDeleteModal}
           question={ <span>Do you want to delete 
-            <span className="text-primary-500 text-bold"> {news.find(item => item.id === newsToDeleteId) ?.title}
+            <span className="text-primary-500 text-bold"> {activity.find(item => item.id === newsToDeleteId) ?.title}
               </span>  ? </span>}
 
           yesText={"Delete"}

@@ -35,13 +35,14 @@ const DashboardCard = ({ title, value, img }) => {
 const Dashboard = ({ setAuth }) => {
   setAuth(false);
   const [loading, setLoading] = useState(true);
-  const [news, setNews] = useState(() => {
-    // Retrieve news data from localStorage, or an empty array if it doesn't exist
-    const storedNews = localStorage.getItem("news");
-    return storedNews ? JSON.parse(storedNews) : [];
+
+  const [activity, setActivity] = useState(() => {
+    // Retrieve activity data from localStorage, or an empty array if it doesn't exist
+    const storedActivity = localStorage.getItem("activity");
+    return storedActivity ? JSON.parse(storedActivity) : [];
   });
   const [events, setEvents] = useState(() => {
-    // Retrieve news data from localStorage, or an empty array if it doesn't exist
+    // Retrieve events data from localStorage, or an empty array if it doesn't exist
     const storedEvents = localStorage.getItem("events");
     return storedEvents ? JSON.parse(storedEvents) : [];
   });
@@ -98,7 +99,7 @@ const Dashboard = ({ setAuth }) => {
                       </span>
                     </div>
                   </div>
-                  <ActivitiesList news={news} setNews={setNews} isFullscreen={false} />
+                  <ActivitiesList activity={activity} setActivity={setActivity} isFullscreen={false} />
                 </div>
               </>          
           </div>

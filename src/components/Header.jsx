@@ -78,9 +78,6 @@ const Header = ({ toggleSideBar, isOpen }) => {
         <div className="items-center inline-flex">
           <button
             type="button"
-            data-collapse-toggle="navbar-search"
-            aria-controls="navbar-search"
-            aria-expanded="false"
             onClick={toggleSideBar}
             class="md:hidden ml-0 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2"
           >
