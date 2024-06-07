@@ -46,8 +46,7 @@ const ResidentsList = ({ residents, label }) => {
   return (
     <HeadSide
       child={
-        <div className="flex flex-col justify-center
-        ">
+        <div className="flex flex-col justify-center m-3 rounded-lg">
             <div className="flex p-4 items-center md:justify-between flex-column gap-2 flex-wrap md:flex-row space-y-0 pb-4 bg-white dark:bg-gray-800">
               <div>
                 <button
