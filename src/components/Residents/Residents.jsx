@@ -5,7 +5,8 @@ import Toolbar from "./Toolbar";
 
 export const HeaderData = ["Name", "Address", "Age", "Gender", "Status", "Action"];
 
-const ResidentsList = ({ residents, label }) => {
+const ResidentsList = ({ residents, label}) => {
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredResidents, setFilteredResidents] = useState(residents.slice());
   const [sortDirection, setSortDirection] = useState("asc"); // Track sort direction
@@ -45,6 +46,14 @@ const ResidentsList = ({ residents, label }) => {
   const totalPages = Math.ceil(filteredResidents.length / itemsPerPage);
   const lastPageItems = filteredResidents.length % itemsPerPage || itemsPerPage;
 
+  const handleCheckbox = (userId) => {
+    if (selectedUsers.includes(userId)) {
+      setSelectedUsers(selectedUsers.filter(id => id !== userId));
+    } else {
+      setSelectedUsers([...selectedUsers, userId]);
+    }
+  }
+
   return (
     <HeadSide
       child={
@@ -57,6 +66,8 @@ const ResidentsList = ({ residents, label }) => {
             sortDirection={sortDirection}
             setSortDirection={setSortDirection}
             setFilteredResidents={setFilteredResidents}
+            selectedUsers={selectedUsers}
+            setSelectedUsers={setSelectedUsers}
           />
 
           <div className="overflow-auto w-full">
@@ -101,6 +112,8 @@ const ResidentsList = ({ residents, label }) => {
                           <input
                             id="checkbox-table-search-1"
                             type="checkbox"
+                            onChange={() => handleCheckbox(residents.id)}
+                            checked={selectedUsers.includes(residents.id)}
                             className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           />
                           <label

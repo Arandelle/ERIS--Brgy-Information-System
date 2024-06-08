@@ -1,28 +1,43 @@
-import React from 'react';
+// ActionButton.js
+import React from "react";
+import { toast } from "sonner";
 
-const ActionButton = ({ baseLink, handleActionMenu }) => {
-
+const ActionButton = ({ selectedUsers }) => {
   const actions = [
-    { title: "Add user", link: `${baseLink}/add` },
-    { title: "Activate user", link: `${baseLink}/activate` },
-    { title: "Archive user", link: `${baseLink}/archive`},
-    { title: "Delete user", link: `${baseLink}/delete` }
+    { title: "Add user", type: "add" },
+    { title: "Activate user", type: "activate" },
+    { title: "Archive user", type: "archive" },
+    { title: "Delete user", type: "delete" },
   ];
+
+  const handleButton = (type) => {
+    if (type === "delete") {
+      toast.error(`this button is ${type}`);
+    } else {
+      toast.warning(`this button is ${type}`);
+    }
+  };
 
   return (
     <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
       {actions.map((action, key) => (
         <li key={key}>
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              handleActionMenu(action.link);
-            }}
-            className={`block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ${action.title === "Delete user" ? "border-t-2 border-grey-200 text-red-500" : ""}`}
+          <button
+            type="button"
+            onClick={() => handleButton(action.type)}
+            disabled={action.type !== "add" && selectedUsers.length === 0}
+            className={`w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ${
+              action.title === "Delete user"
+                ? "border-t-2 border-grey-200 text-red-500"
+                : ""
+            } ${
+              action.type !== "add" && selectedUsers.length === 0
+                ? "cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
           >
             {action.title}
-          </a>
+          </button>
         </li>
       ))}
     </ul>
@@ -30,4 +45,3 @@ const ActionButton = ({ baseLink, handleActionMenu }) => {
 };
 
 export default ActionButton;
-

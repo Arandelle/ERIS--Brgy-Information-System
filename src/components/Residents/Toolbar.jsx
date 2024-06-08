@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import ActionButton from "./ActionButton";
 
@@ -8,14 +7,15 @@ const Toolbar = ({
   searchQuery,
   setSearchQuery,
   filteredResidents,
+  setFilteredResidents,
   sortDirection,
   setSortDirection,
-  setFilteredResidents,
+  selectedUsers
 }) => {
 
   const [isActionOpen, setActionOpen] = useState(false);
   const [isFilter, setFilter] = useState(false);
-  
+
   const toggleAction = () => {
     setActionOpen(!isActionOpen);
     setFilter(false);
@@ -43,15 +43,6 @@ const Toolbar = ({
     setFilteredResidents(sortedResidents);
   };
 
-  const navigate = useNavigate();
-
-  const handleActionMenu = (link) => {
-    setActionOpen(false);
-    navigate(link); // Use navigate for React Router navigation
-  };
-
-  const baseLink = `/residents/${label.toLowerCase()}`;
-
   return (
     <div className="flex p-4 items-center md:justify-between flex-column gap-2 flex-wrap md:flex-row space-y-0 pb-4 bg-white dark:bg-gray-800 rounded-md">
       <div className="flex flex-row space-y-0 items-center gap-3">
@@ -63,7 +54,7 @@ const Toolbar = ({
           >
             <span className="sr-only">Action button</span>
             Action
-            <ArrowDropDown />
+            <ArrowDropDown/>
           </button>
           {/* Dropdown menu */}
           {isActionOpen && (
@@ -71,9 +62,7 @@ const Toolbar = ({
               id="dropdownAction"
               className="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
             >
-              <ActionButton
-                baseLink={baseLink}
-                handleActionMenu={handleActionMenu}
+              <ActionButton selectedUsers={selectedUsers}
               />
             </div>
           )}
