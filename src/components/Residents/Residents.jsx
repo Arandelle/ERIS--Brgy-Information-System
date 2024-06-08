@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ActionButton, { HeaderData } from "./ActionButton";
 import { useNavigate } from "react-router-dom";
 import HeadSide from "../ReusableComponents/HeaderSidebar";
@@ -6,16 +6,30 @@ import Pagination from "./Pagination";
 
 const ResidentsList = ({ residents, label }) => {
   const [isActionOpen, setActionOpen] = useState(false);
+  const [isFilter, setFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filteredResidents, setFilteredResidents] = useState(residents.slice());
+  const [sortDirection, setSortDirection] = useState("asc"); // Track sort direction
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   // to show the user using search input
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredResidents = residents.filter((resident) =>
-    resident.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+ 
+  useEffect(() => {
+    let updatedResidents = residents.filter((resident) =>
+      resident.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    if (sortDirection === "asc") {
+      updatedResidents = updatedResidents.sort((a, b) => parseInt(a.age) - parseInt(b.age));
+    } else {
+      updatedResidents = updatedResidents.sort((a, b) => parseInt(b.age) - parseInt(a.age));
+    }
+
+    setFilteredResidents(updatedResidents);
+  }, [residents, searchQuery, sortDirection]);
 
   // Calculate the indices for the current page items
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -31,7 +45,31 @@ const ResidentsList = ({ residents, label }) => {
 
   const toggleAction = () => {
     setActionOpen(!isActionOpen);
+    setFilter(false);
   };
+
+  const toggleFilter = () => {
+    setFilter(!isFilter);
+    setActionOpen(false);
+  };
+
+  const handleSorting = () => {
+    const sortedResidents = filteredResidents.slice().sort((a, b) => {
+      // Convert ages to numbers for numeric comparison
+      const ageA = parseInt(a.age);
+      const ageB = parseInt(b.age);
+
+      if (sortDirection === "asc") {
+        return ageA - ageB; // Sort from younger to older
+      } else {
+        return ageB - ageA; // Sort from older to younger
+      }
+    });
+
+    setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    setFilteredResidents(sortedResidents);
+  };
+
   const navigate = useNavigate();
 
   const handleActionMenu = (link) => {
@@ -46,7 +84,8 @@ const ResidentsList = ({ residents, label }) => {
       child={
         <div className="flex flex-col justify-center m-3 rounded-lg">
           <div className="flex p-4 items-center md:justify-between flex-column gap-2 flex-wrap md:flex-row space-y-0 pb-4 bg-white dark:bg-gray-800">
-            <div>
+            <div className="flex flex-row space-y-0 items-center gap-3">
+              <div>
               <button
                 onClick={toggleAction}
                 id="dropdownActionButton"
@@ -84,7 +123,42 @@ const ResidentsList = ({ residents, label }) => {
                   />
                 </div>
               )}
+              </div>
+            <div>
+              <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="size-5"
+            >
+              <path
+                fill-rule="evenodd"
+                className="text-gray-400 cursor-pointer hover:text-gray-600 p-2 bg-gray-100"
+                onClick={toggleFilter}
+                d="M3.792 2.938A49.069 49.069 0 0 1 12 2.25c2.797 0 5.54.236 8.209.688a1.857 1.857 0 0 1 1.541 1.836v1.044a3 3 0 0 1-.879 2.121l-6.182 6.182a1.5 1.5 0 0 0-.439 1.061v2.927a3 3 0 0 1-1.658 2.684l-1.757.878A.75.75 0 0 1 9.75 21v-5.818a1.5 1.5 0 0 0-.44-1.06L3.13 7.938a3 3 0 0 1-.879-2.121V4.774c0-.897.64-1.683 1.542-1.836Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+
+            {isFilter && (
+              <div
+              id="dropdownAction"
+              className="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+            > <ul className="">
+              <li >
+          <a
+            href="#"
+            onClick={handleSorting}
+            className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white`}
+          >
+           Sort by age
+          </a>
+        </li>
+            </ul>
             </div>
+            )}
+              </div>  
+           </div>
             <label htmlFor="table-search" className="sr-only">
               Search
             </label>
@@ -226,15 +300,14 @@ const ResidentsList = ({ residents, label }) => {
 
           <div>
             <Pagination
-               currentPage={currentPage}
-               totalPages={totalPages}
-               setCurrentPage={setCurrentPage}
-               indexOfFirstItem={indexOfFirstItem}
-               indexOfLastItem={indexOfLastItem}
-               filteredResidents={filteredResidents}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+              indexOfFirstItem={indexOfFirstItem}
+              indexOfLastItem={indexOfLastItem}
+              filteredResidents={filteredResidents}
             />
           </div>
-          
         </div>
       }
     />
