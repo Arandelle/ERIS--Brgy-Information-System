@@ -5,9 +5,10 @@ export const HeaderData = ["Name", "Address", "Age", "Gender", "Status", "Action
 const ActionButton = ({ baseLink, handleActionMenu }) => {
 
   const actions = [
-    { title: "Add Account", link: `${baseLink}/add` },
-    { title: "Activate Account", link: `${baseLink}/activate` },
-    { title: "Delete Account", link: `${baseLink}/delete` }
+    { title: "Add user", link: `${baseLink}/add` },
+    { title: "Activate user", link: `${baseLink}/activate` },
+    { title: "Archive user", link: `${baseLink}/archive`},
+    { title: "Delete user", link: `${baseLink}/delete` }
   ];
 
   return (
@@ -20,7 +21,7 @@ const ActionButton = ({ baseLink, handleActionMenu }) => {
               e.preventDefault();
               handleActionMenu(action.link);
             }}
-            className={`block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ${action.title === "Delete Account" ? "border-t-2 border-grey-200 text-red-500" : ""}`}
+            className={`block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ${action.title === "Delete user" ? "border-t-2 border-grey-200 text-red-500" : ""}`}
           >
             {action.title}
           </a>

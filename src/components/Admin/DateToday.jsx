@@ -53,7 +53,7 @@ const DateToday = () => {
         );
       case "afternoon":
         return (
-         <WbTwilightIcon fontSize="large" style={{color: "#2196f3"}}/>
+         <WbTwilightIcon fontSize="large" style={{color: "#FFAA33"}}/>
         );
       case "night":
         return (
