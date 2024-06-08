@@ -1,13 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-const Pagination = ({residents}) => {
+const Pagination = ({
+  currentPage,
+  setCurrentPage,
+  filteredResidents,
+  indexOfFirstItem,
+  indexOfLastItem,
+  totalPages
+}) => {
+  
+  const [jumpToPage, setJumpToPage] = useState("");
+
+  const nextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const prevPage = () => {
+    setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage));
+  };
+
   const handleJumpToPage = (e) => {
     e.preventDefault();
     const pageNumber = parseInt(jumpToPage);
     if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
     }
-    setJumpToPage('');
+    setJumpToPage("");
   };
 
   const renderPageNumbers = () => {
@@ -50,66 +68,70 @@ const Pagination = ({residents}) => {
   };
 
   return (
-         <div>
-      <nav
-        className="flex items-center dark:bg-gray-800 bg-white flex-column flex-wrap md:flex-row justify-between p-4"
-        aria-label="Table navigation"
-      >
-        <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
-          Showing{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {filteredResidents.length > 0
-              ? `${indexOfFirstItem + 1} - ${
-                  indexOfLastItem > filteredResidents.length
-                    ? filteredResidents.length
-                    : indexOfLastItem
-                }`
-              : "0"}
-          </span>{" "}
-          of{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {filteredResidents.length}
-          </span>
+    <nav
+      className="flex items-center dark:bg-gray-800 bg-white flex-column flex-wrap md:flex-row justify-between p-4 space-y-0"
+      aria-label="Table navigation"
+    >
+      <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+        Showing{" "}
+        <span className="font-semibold text-gray-900 dark:text-white">
+          {filteredResidents.length > 0
+            ? `${indexOfFirstItem + 1} - ${
+                indexOfLastItem > filteredResidents.length
+                  ? filteredResidents.length
+                  : indexOfLastItem
+              }`
+            : "0"}
+        </span>{" "}
+        of{" "}
+        <span className="font-semibold text-gray-900 dark:text-white">
+          {filteredResidents.length}
         </span>
+      </span>
 
-        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-          <button
-            className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            onClick={prevPage}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          {renderPageNumbers()}
-          <button
-            className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            onClick={nextPage}
-            disabled={indexOfLastItem >= filteredResidents.length}
-          >
-            Next
-          </button>
-        </ul>
-      </nav>
+      <ul className="inline-flex  -space-x-px rtl:space-x-reverse text-sm h-8">
+        <button
+          className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          onClick={prevPage}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
 
+        {renderPageNumbers()}
+
+        <button
+          className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          onClick={nextPage}
+          disabled={indexOfLastItem >= filteredResidents.length}
+        >
+          Next
+        </button>
+      </ul>
       <form onSubmit={handleJumpToPage} className="mt-4">
-        <label htmlFor="jumpToPage" className="mr-2">Jump to page:</label>
+        <label
+          htmlFor="jumpToPage"
+          className="mr-2 text-gray-600 dark:text-gray-400"
+        >
+          Jump to page:
+        </label>
         <input
           type="number"
           id="jumpToPage"
           value={jumpToPage}
           onChange={(e) => setJumpToPage(e.target.value)}
-          className="border px-2 py-1"
+          className="border px-2 py-1 h-6 dark:bg-gray-600 dark:text-white"
           min="1"
           max={totalPages}
         />
         <button
           type="submit"
-          className="ml-2 px-4 py-2 bg-primary-300 text-white rounded"
+          className="ml-2 px-4 py-1 h-8 bg-primary-500 dark:ng-primary-400 text-white rounded"
         >
           Go
         </button>
       </form>
-    </div>
+    </nav>
   );
 };
 
