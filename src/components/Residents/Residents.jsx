@@ -4,9 +4,17 @@ import Pagination from "./Pagination";
 import Toolbar from "./Toolbar";
 import { toast } from "sonner";
 
-export const HeaderData = ["Name", "Address", "Age", "Gender", "Status","Date Creatd", "Action"];
+export const HeaderData = [
+  "Name",
+  "Address",
+  "Age",
+  "Gender",
+  "Status",
+  "Date Creatd",
+  "Action",
+];
 
-const ResidentsList = ({ residents, label}) => {
+const ResidentsList = ({ residents, label }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredResidents, setFilteredResidents] = useState(residents.slice());
@@ -38,15 +46,15 @@ const ResidentsList = ({ residents, label}) => {
 
   const handleCheckbox = (userId) => {
     if (selectedUsers.includes(userId)) {
-      setSelectedUsers(selectedUsers.filter(id => id !== userId));
+      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
     } else {
       setSelectedUsers([...selectedUsers, userId]);
     }
-  }
+  };
 
   const handleViewUser = (id) => {
     toast.warning(`view ${id}`);
-  }
+  };
 
   return (
     <HeadSide
@@ -73,8 +81,7 @@ const ResidentsList = ({ residents, label}) => {
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
-                    <th scope="col" className="p-4">
-                    </th>
+                    <th scope="col" className="p-4"></th>
                     {HeaderData.map((header) => (
                       <th scope="col" className="px-6 py-3">
                         {header}
@@ -86,11 +93,13 @@ const ResidentsList = ({ residents, label}) => {
                   {currentItems.map((residents, key) => (
                     <tr
                       key={key}
-                      onClick={()=>handleCheckbox(residents.id)}
+                      onClick={() => handleCheckbox(residents.id)}
                       className={`border-b dark:border-gray-700
-                      ${selectedUsers.includes(residents.id)
-          ? "bg-gray-300 dark:bg-gray-900 hover:bg-gray-400 hover:dark:bg-gray-700"
-          : "bg-white hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-gray-700 " }`}
+                      ${
+                        selectedUsers.includes(residents.id)
+                          ? "bg-gray-300 dark:bg-gray-900 hover:bg-gray-400 hover:dark:bg-gray-700"
+                          : "bg-white hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-gray-700 "
+                      }`}
                     >
                       <td className="w-4 p-4">
                         <div className="flex items-center">

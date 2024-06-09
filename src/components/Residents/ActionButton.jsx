@@ -64,7 +64,7 @@ const ActionButton = ({ selectedUsers,filteredResidents, toggleAction, isActionO
           <button
             type="button"
             onClick={() => handleButton(action.type)}
-            disabled={action.type !== "add" && selectedUsers.length === 0}
+            disabled={isActionDisabled(action.type)}
             className={`w-full text-left px-4 py-2  ${
               action.title === "Delete user"
                 ? "border-t-2 border-grey-200 text-red-500"
