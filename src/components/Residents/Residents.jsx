@@ -3,7 +3,7 @@ import HeadSide from "../ReusableComponents/HeaderSidebar";
 import Pagination from "./Pagination";
 import Toolbar from "./Toolbar";
 
-export const HeaderData = ["Name", "Address", "Age", "Gender", "Status", "Action"];
+export const HeaderData = ["Name", "Address", "Age", "Gender", "Status","Date Creatd", "Action"];
 
 const ResidentsList = ({ residents, label}) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -20,19 +20,8 @@ const ResidentsList = ({ residents, label}) => {
     let updatedResidents = residents.filter((resident) =>
       resident.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-
-    if (sortDirection === "asc") {
-      updatedResidents = updatedResidents.sort(
-        (a, b) => parseInt(a.age) - parseInt(b.age)
-      );
-    } else {
-      updatedResidents = updatedResidents.sort(
-        (a, b) => parseInt(b.age) - parseInt(a.age)
-      );
-    }
-
     setFilteredResidents(updatedResidents);
-  }, [residents, searchQuery, sortDirection]);
+  }, [residents, searchQuery]);
 
   // Calculate the indices for the current page items
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -159,6 +148,7 @@ const ResidentsList = ({ residents, label}) => {
                             : "Not Activated"}
                         </div>
                       </td>
+                      <td className="px-6 py-4">{residents.created}</td>
                       <td className="px-6 py-4">
                         <a
                           href="#"
