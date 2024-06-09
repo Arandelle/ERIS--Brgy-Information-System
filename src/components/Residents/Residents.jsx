@@ -10,7 +10,7 @@ export const HeaderData = [
   "Age",
   "Gender",
   "Status",
-  "Date Creatd",
+  "Date Created",
   "Action",
 ];
 
@@ -18,12 +18,10 @@ const ResidentsList = ({ residents, label }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredResidents, setFilteredResidents] = useState(residents.slice());
-  const [sortDirection, setSortDirection] = useState("asc"); // Track sort direction
+  const [isViewingSelected, setIsViewingSelected] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const itemsPerPage = 10;
-
-  // to show the user using search input
-  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     let updatedResidents = residents.filter((resident) =>
@@ -32,17 +30,17 @@ const ResidentsList = ({ residents, label }) => {
     setFilteredResidents(updatedResidents);
   }, [residents, searchQuery]);
 
-  // Calculate the indices for the current page items
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredResidents.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
 
-  // calculate the item per page
-  const totalPages = Math.ceil(filteredResidents.length / itemsPerPage);
-  const lastPageItems = filteredResidents.length % itemsPerPage || itemsPerPage;
+  const currentItems = isViewingSelected
+    ? selectedUsers.map((id) => residents.find((res) => res.id === id))
+    : filteredResidents.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = isViewingSelected
+    ? Math.ceil(selectedUsers.length / itemsPerPage)
+    : Math.ceil(filteredResidents.length / itemsPerPage);
 
   const handleCheckbox = (userId) => {
     if (selectedUsers.includes(userId)) {
@@ -61,19 +59,19 @@ const ResidentsList = ({ residents, label }) => {
       child={
         <div className="flex flex-col justify-center m-3">
           <Toolbar
-            label={label}
+           label={label}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             filteredResidents={filteredResidents}
-            sortDirection={sortDirection}
-            setSortDirection={setSortDirection}
             setFilteredResidents={setFilteredResidents}
             selectedUsers={selectedUsers}
             setSelectedUsers={setSelectedUsers}
-          />
+            isViewingSelected={isViewingSelected}
+            setIsViewingSelected={setIsViewingSelected}
+          /> 
 
           <div className="overflow-auto w-full">
-            {filteredResidents == 0 ? (
+            {currentItems.length === 0 ? (
               <div className="py-32 text-gray-500 text-center justify-center items-center">
                 No data found
               </div>
@@ -82,8 +80,8 @@ const ResidentsList = ({ residents, label }) => {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="p-4"></th>
-                    {HeaderData.map((header) => (
-                      <th scope="col" className="px-6 py-3">
+                    {HeaderData.map((header, index) => (
+                      <th key={index} scope="col" className="px-6 py-3">
                         {header}
                       </th>
                     ))}
@@ -119,7 +117,7 @@ const ResidentsList = ({ residents, label }) => {
                         <img
                           className="w-10 h-10 rounded-full"
                           src={residents.img}
-                          alt="Jese image"
+                          alt="User image"
                         />
                         <div className="ps-3">
                           <div className="text-base font-semibold">
@@ -171,6 +169,8 @@ const ResidentsList = ({ residents, label }) => {
               indexOfFirstItem={indexOfFirstItem}
               indexOfLastItem={indexOfLastItem}
               filteredResidents={filteredResidents}
+              isViewingSelected={isViewingSelected}
+              selectedUsers={selectedUsers}
             />
           </div>
         </div>

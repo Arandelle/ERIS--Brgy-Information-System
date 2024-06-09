@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ActionButton from "./ActionButton";
 import SortingButton from "./SortingButton";
+import ViewUserButton from "./ViewUserButton";
 
 const Toolbar = ({
   label,
@@ -9,6 +10,8 @@ const Toolbar = ({
   filteredResidents,
   setFilteredResidents,
   selectedUsers,
+  isViewingSelected,
+  setIsViewingSelected
 }) => {
   const [isActionOpen, setActionOpen] = useState(false);
   const [isSort, setSort] = useState(false);
@@ -41,7 +44,7 @@ const Toolbar = ({
           isSort={isSort}
           setSort={setSort}
         />
-
+        <ViewUserButton isViewingSelected={isViewingSelected} setIsViewingSelected={setIsViewingSelected}/>
       </div>
 
       <label htmlFor="table-search" className="sr-only">

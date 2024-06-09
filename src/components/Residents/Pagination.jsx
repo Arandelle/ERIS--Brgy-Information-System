@@ -6,7 +6,9 @@ const Pagination = ({
   filteredResidents,
   indexOfFirstItem,
   indexOfLastItem,
-  totalPages
+  totalPages,
+  isViewingSelected,
+  selectedUsers
 }) => {
   
   const [jumpToPage, setJumpToPage] = useState("");
@@ -67,25 +69,21 @@ const Pagination = ({
     return pages;
   };
 
+  const getShowingText = () => {
+    const totalItems = isViewingSelected ? selectedUsers.length : filteredResidents.length;
+    const startItem = totalItems > 0 ? indexOfFirstItem + 1 : 0;
+    const endItem = Math.min(indexOfLastItem, totalItems);
+    return `Showing ${startItem} - ${endItem} of ${totalItems}`;
+  };
+
   return (
     <nav
       className="flex items-center dark:bg-gray-800 bg-white flex-column flex-wrap md:flex-row justify-between p-4 space-y-0"
       aria-label="Table navigation"
     >
       <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
-        Showing{" "}
         <span className="font-semibold text-gray-900 dark:text-white">
-          {filteredResidents.length > 0
-            ? `${indexOfFirstItem + 1} - ${
-                indexOfLastItem > filteredResidents.length
-                  ? filteredResidents.length
-                  : indexOfLastItem
-              }`
-            : "0"}
-        </span>{" "}
-        of{" "}
-        <span className="font-semibold text-gray-900 dark:text-white">
-          {filteredResidents.length}
+          {getShowingText()}
         </span>
       </span>
 
@@ -103,7 +101,7 @@ const Pagination = ({
         <button
           className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
           onClick={nextPage}
-          disabled={indexOfLastItem >= filteredResidents.length}
+          disabled={indexOfLastItem >= (isViewingSelected ? selectedUsers.length : filteredResidents.length)}
         >
           Next
         </button>
