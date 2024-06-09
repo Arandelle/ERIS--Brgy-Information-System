@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import ActionButton from "./ActionButton";
-import { toast } from "sonner";
+import SwapVertIcon from '@mui/icons-material/SwapVert';
 
 const Toolbar = ({
   label,
@@ -10,18 +10,22 @@ const Toolbar = ({
   filteredResidents,
   setFilteredResidents,
   selectedUsers,
+  residents
 }) => {
   const actionButton = [
     { title: "Default", type: "id" },
-    { title: "Sort by name", type: "name" },
-    { title: "Sort by age", type: "age" },
-    { title: "Sort by date created", type: "created" },
-    { title: "Sort by status", type: "status" },
+    { title: "Name", type: "name" },
+    { title: "Age", type: "age" },
+    { title: "Gender", type: "gender" },
+    { title: "Status", type: "status" },
+    { title: "Date created", type: "created" },
+    
   ];
   const [isActionOpen, setActionOpen] = useState(false);
   const [isFilter, setFilter] = useState(false);
   const [nameSortDirection, setNameSortDirection] = useState("asc");
   const [ageSortDirection, setAgeSortDirection] = useState("asc");
+  const [genderSortDirection, setGenderSortDirection] = useState("asc");
   const [dateSortDirection, setDateSortDirection] = useState("asc");
   const [statusSortDirection, setStatusSortDirection] = useState("asc");
 
@@ -42,21 +46,21 @@ const Toolbar = ({
       sortedResidents = sortedResidents.slice().sort((a, b) => {
         return a.id - b.id;
       });
-    } 
-    else if (field === "name") {
-      sortedResidents = filteredResidents.slice().sort((a, b) => {
+    }     
+    else if(field === "name"){
+      sortedResidents = sortedResidents.slice().sort((a,b)=>{
         const nameA = a.name.toUpperCase();
         const nameB = b.name.toUpperCase();
-        if (nameA < nameB) {
+        
+        if(nameA < nameB){
           return nameSortDirection === "asc" ? -1 : 1;
-        }
-        if (nameA > nameB) {
+        } else if (nameA > nameB){
           return nameSortDirection === "asc" ? 1 : -1;
         }
         return 0;
       });
       setNameSortDirection(nameSortDirection === "asc" ? "desc" : "asc");
-    }    
+    }
     else if (field === "age") {
       sortedResidents = sortedResidents.slice().sort((a, b) => {
         const ageA = parseInt(a.age);
@@ -64,7 +68,17 @@ const Toolbar = ({
         return ageSortDirection === "asc" ? ageA - ageB : ageB - ageA;
       });
       setAgeSortDirection(ageSortDirection === "asc" ? "desc" : "asc");
-    } else if (field === "created") {
+    }
+    else if (field === "gender") {
+      sortedResidents = sortedResidents.slice().sort((a, b) => {
+        const genderType = {"Male": 1, "Female": 0}
+        const genderA = genderType[a.gender];
+        const genderB = genderType[b.gender];
+        return genderSortDirection === "asc" ? genderA - genderB : genderB - genderA;
+      });
+      setGenderSortDirection(genderSortDirection === "asc" ? "desc" : "asc");
+    } 
+    else if (field === "created") {
       sortedResidents = sortedResidents.slice().sort((a, b) => {
         const dateA = new Date(a.created);
         const dateB = new Date(b.created);
@@ -97,7 +111,7 @@ const Toolbar = ({
             type="button"
           >
             <span className="sr-only">Action button</span>
-            Action
+            Action Button
             <ArrowDropDown />
           </button>
           {/* Dropdown menu */}
@@ -106,25 +120,20 @@ const Toolbar = ({
               id="dropdownAction"
               className="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
             >
-              <ActionButton selectedUsers={selectedUsers} />
+              <ActionButton selectedUsers={selectedUsers} residents={residents} filteredResidents={filteredResidents} />
             </div>
           )}
         </div>
+
         <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            class="size-5"
-          >
-            <path
-              fill-rule="evenodd"
-              className="text-gray-400 cursor-pointer hover:text-gray-600 p-2 bg-gray-100"
-              onClick={toggleFilter}
-              d="M3.792 2.938A49.069 49.069 0 0 1 12 2.25c2.797 0 5.54.236 8.209.688a1.857 1.857 0 0 1 1.541 1.836v1.044a3 3 0 0 1-.879 2.121l-6.182 6.182a1.5 1.5 0 0 0-.439 1.061v2.927a3 3 0 0 1-1.658 2.684l-1.757.878A.75.75 0 0 1 9.75 21v-5.818a1.5 1.5 0 0 0-.44-1.06L3.13 7.938a3 3 0 0 1-.879-2.121V4.774c0-.897.64-1.683 1.542-1.836Z"
-              clip-rule="evenodd"
-            />
-          </svg>
+        <button
+        onClick={toggleFilter}
+        className="inline-flex justify-between items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+        type="button"
+       >
+        <SwapVertIcon/>
+          Sort By:  
+        </button>
 
           {isFilter && (
             <div
