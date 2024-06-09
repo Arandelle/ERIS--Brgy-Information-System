@@ -13,12 +13,14 @@ const Toolbar = ({
 }) => {
   const actionButton = [
     { title: "Default", type: "id" },
+    { title: "Sort by name", type: "name" },
     { title: "Sort by age", type: "age" },
     { title: "Sort by date created", type: "created" },
     { title: "Sort by status", type: "status" },
   ];
   const [isActionOpen, setActionOpen] = useState(false);
   const [isFilter, setFilter] = useState(false);
+  const [nameSortDirection, setNameSortDirection] = useState("asc");
   const [ageSortDirection, setAgeSortDirection] = useState("asc");
   const [dateSortDirection, setDateSortDirection] = useState("asc");
   const [statusSortDirection, setStatusSortDirection] = useState("asc");
@@ -40,7 +42,22 @@ const Toolbar = ({
       sortedResidents = sortedResidents.slice().sort((a, b) => {
         return a.id - b.id;
       });
-    } else if (field === "age") {
+    } 
+    else if (field === "name") {
+      sortedResidents = filteredResidents.slice().sort((a, b) => {
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+        if (nameA < nameB) {
+          return nameSortDirection === "asc" ? -1 : 1;
+        }
+        if (nameA > nameB) {
+          return nameSortDirection === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
+      setNameSortDirection(nameSortDirection === "asc" ? "desc" : "asc");
+    }    
+    else if (field === "age") {
       sortedResidents = sortedResidents.slice().sort((a, b) => {
         const ageA = parseInt(a.age);
         const ageB = parseInt(b.age);
@@ -67,6 +84,7 @@ const Toolbar = ({
     }
 
     setFilteredResidents(sortedResidents);
+    setFilter(false)
   };
 
   return (
