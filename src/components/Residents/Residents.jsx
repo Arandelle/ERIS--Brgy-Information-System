@@ -74,19 +74,6 @@ const ResidentsList = ({ residents, label}) => {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="p-4">
-                      <div className="flex items-center">
-                        <input
-                          id="checkbox-all-search"
-                          type="checkbox"
-                          className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label
-                          htmlFor="checkbox-all-search"
-                          className="sr-only"
-                        >
-                          checkbox
-                        </label>
-                      </div>
                     </th>
                     {HeaderData.map((header) => (
                       <th scope="col" className="px-6 py-3">
@@ -99,7 +86,11 @@ const ResidentsList = ({ residents, label}) => {
                   {currentItems.map((residents, key) => (
                     <tr
                       key={key}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                      onClick={()=>handleCheckbox(residents.id)}
+                      className={`border-b dark:border-gray-700
+                      ${selectedUsers.includes(residents.id)
+          ? "bg-gray-300 dark:bg-gray-900 hover:bg-gray-400 hover:dark:bg-gray-700"
+          : "bg-white hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-gray-700 " }`}
                     >
                       <td className="w-4 p-4">
                         <div className="flex items-center">
@@ -110,12 +101,6 @@ const ResidentsList = ({ residents, label}) => {
                             checked={selectedUsers.includes(residents.id)}
                             className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           />
-                          <label
-                            htmlFor={`checkbox-table-search-${residents.id}`}
-                            className="sr-only"
-                          >
-                            checkbox
-                          </label>
                         </div>
                       </td>
                       <th
