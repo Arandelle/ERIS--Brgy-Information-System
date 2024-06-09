@@ -26,14 +26,14 @@ const ActionButton = ({ selectedUsers }) => {
             type="button"
             onClick={() => handleButton(action.type)}
             disabled={action.type !== "add" && selectedUsers.length === 0}
-            className={`w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ${
+            className={`w-full text-left px-4 py-2  ${
               action.title === "Delete user"
                 ? "border-t-2 border-grey-200 text-red-500"
                 : ""
             } ${
               action.type !== "add" && selectedUsers.length === 0
-                ? "cursor-not-allowed"
-                : "cursor-pointer"
+                ? "cursor-not-allowed text-gray-400"
+                : "cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
             }`}
           >
             {action.title}

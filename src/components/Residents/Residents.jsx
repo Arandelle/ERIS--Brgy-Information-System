@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import HeadSide from "../ReusableComponents/HeaderSidebar";
 import Pagination from "./Pagination";
 import Toolbar from "./Toolbar";
+import { toast } from "sonner";
 
 export const HeaderData = ["Name", "Address", "Age", "Gender", "Status","Date Creatd", "Action"];
 
@@ -41,6 +42,10 @@ const ResidentsList = ({ residents, label}) => {
     } else {
       setSelectedUsers([...selectedUsers, userId]);
     }
+  }
+
+  const handleViewUser = (id) => {
+    toast.warning(`view ${id}`);
   }
 
   return (
@@ -150,12 +155,12 @@ const ResidentsList = ({ residents, label}) => {
                       </td>
                       <td className="px-6 py-4">{residents.created}</td>
                       <td className="px-6 py-4">
-                        <a
-                          href="#"
+                        <button
+                          onClick={() => handleViewUser(residents.name)}
                           className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
                         >
                           View user
-                        </a>
+                        </button>
                       </td>
                     </tr>
                   ))}

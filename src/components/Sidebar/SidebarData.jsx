@@ -95,7 +95,7 @@ export const SidebarData = [
     link: "/calendar",
   },
   {
-    title: "Community",
+    title: "Programs",
     icon: (
       <svg
         class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"

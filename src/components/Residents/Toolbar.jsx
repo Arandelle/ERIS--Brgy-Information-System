@@ -9,8 +9,14 @@ const Toolbar = ({
   setSearchQuery,
   filteredResidents,
   setFilteredResidents,
-  selectedUsers
+  selectedUsers,
 }) => {
+  const actionButton = [
+    { title: "Default", type: "id" },
+    { title: "Sort by age", type: "age" },
+    { title: "Sort by date created", type: "created" },
+    { title: "Sort by status", type: "status" },
+  ];
   const [isActionOpen, setActionOpen] = useState(false);
   const [isFilter, setFilter] = useState(false);
   const [ageSortDirection, setAgeSortDirection] = useState("asc");
@@ -28,10 +34,13 @@ const Toolbar = ({
   };
 
   const handleSorting = (field) => {
-
     let sortedResidents = [...filteredResidents];
 
-    if (field === "age") {
+    if (field === "id") {
+      sortedResidents = sortedResidents.slice().sort((a, b) => {
+        return a.id - b.id;
+      });
+    } else if (field === "age") {
       sortedResidents = sortedResidents.slice().sort((a, b) => {
         const ageA = parseInt(a.age);
         const ageB = parseInt(b.age);
@@ -47,10 +56,12 @@ const Toolbar = ({
       setDateSortDirection(dateSortDirection === "asc" ? "desc" : "asc");
     } else if (field === "status") {
       sortedResidents = sortedResidents.slice().sort((a, b) => {
-        const statusOrder = { "Not Activated": 0, "Activated": 1 };
+        const statusOrder = { "Not Activated": 0, Activated: 1 };
         const statusA = statusOrder[a.status];
         const statusB = statusOrder[b.status];
-        return statusSortDirection === "asc" ? statusA - statusB : statusB - statusA;
+        return statusSortDirection === "asc"
+          ? statusA - statusB
+          : statusB - statusA;
       });
       setStatusSortDirection(statusSortDirection === "asc" ? "desc" : "asc");
     }
@@ -104,27 +115,17 @@ const Toolbar = ({
             >
               {" "}
               <ul className="">
-                <button
-                  type="button"
-                  onClick={() => handleSorting("age")}
-                  className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white`}
-                >
-                  {`Sort by ${ageSortDirection === "asc" ? "youngest" : "oldest"} first`}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleSorting("created")}
-                  className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white`}
-                >
-                  Sort by date
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleSorting("status")}
-                  className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white`}
-                >
-                  Sort by status
-                </button>
+                {actionButton.map((action, key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => handleSorting(action.type)}
+                    className={`block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white`}
+                  >
+                    {/* {`Sort by ${ageSortDirection === "asc" ? "youngest" : "oldest"} first`} */}
+                    {action.title}
+                  </button>
+                ))}
               </ul>
             </div>
           )}
