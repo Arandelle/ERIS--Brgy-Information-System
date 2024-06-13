@@ -28,8 +28,4 @@ export const AdminSettings = [
         title: "Archives",
         link: "/archives",
     },
-    {
-        title: "Signout",
-        link: "/signout",
-    },
 ];
