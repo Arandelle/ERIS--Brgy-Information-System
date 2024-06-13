@@ -68,9 +68,8 @@ const Profile = () => {
               >
                 {adminVal.title}
               </li>
-            ))}
-          </ul>
-          <ul
+            {adminVal.title === "Signout" && (
+            <ul
             className="py-1 text-gray-500 dark:text-gray-400"
             aria-labelledby="dropdown"
           >
@@ -83,6 +82,9 @@ const Profile = () => {
                 Sign out
               </a>
             </li>
+          </ul>
+            )}
+            ))}
           </ul>
         </div>
       )}
