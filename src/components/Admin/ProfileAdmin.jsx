@@ -66,9 +66,7 @@ const Profile = () => {
                 className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white cursor-pointer"
                 onClick={() => handleMenuItemClick(adminVal)}
               >
-                {adminVal.title}
-              </li>
-            {adminVal.title === "Signout" && (
+                  {adminVal.title === "Signout" ? (
             <ul
             className="py-1 text-gray-500 dark:text-gray-400"
             aria-labelledby="dropdown"
@@ -83,8 +81,10 @@ const Profile = () => {
               </a>
             </li>
           </ul>
-            )}
+            ) : {adminVal.title}}
             ))}
+              </li>
+          
           </ul>
         </div>
       )}
