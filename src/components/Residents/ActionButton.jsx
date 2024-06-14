@@ -49,7 +49,7 @@ const ActionButton = ({ selectedUsers,filteredResidents, toggleAction, isActionO
   type="button"
 >
   <span className="sr-only">Action button</span>
-  Action Button
+  Action 
   <ArrowDropDown />
 </button>
 {/* Dropdown menu */}
