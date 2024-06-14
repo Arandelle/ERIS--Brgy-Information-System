@@ -4,12 +4,12 @@ export const Pabahay = [
     {
       id: 1,
       img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
-      name: "John Doe",
+      name: "John Does",
       email: "user@gmail.com",
       age: 30,
       address: "123 Main St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2024-01-01T12:00:00.000Z"
     },
     {
@@ -21,7 +21,7 @@ export const Pabahay = [
       address: "456 Elm St",
       gender: "Female",
       city: "Sometown",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2024-02-02T12:00:00.000Z"
     },
     {
@@ -32,7 +32,7 @@ export const Pabahay = [
       age: 40,
       address: "789 Oak St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2024-03-03T12:00:00.000Z"
     },
     {
@@ -43,7 +43,7 @@ export const Pabahay = [
       age: 26,
       address: "123 Main St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2024-04-04T12:00:00.000Z"
     },
     {
@@ -54,7 +54,7 @@ export const Pabahay = [
       age: 19,
       address: "123 Main St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2024-05-05T12:00:00.000Z"
     },
     {
@@ -65,7 +65,7 @@ export const Pabahay = [
       age: 35,
       address: "789 Pine St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2024-06-06T12:00:00.000Z"
     },
     {
@@ -76,7 +76,7 @@ export const Pabahay = [
       age: 45,
       address: "456 Maple St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2024-07-07T12:00:00.000Z"
     },
     {
@@ -87,7 +87,7 @@ export const Pabahay = [
       age: 28,
       address: "789 Oak St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2024-08-08T12:00:00.000Z"
     },
     {
@@ -98,7 +98,7 @@ export const Pabahay = [
       age: 29,
       address: "234 Oak St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2024-10-10T12:00:00.000Z"
     },
     {
@@ -109,7 +109,7 @@ export const Pabahay = [
       age: 38,
       address: "567 Elm St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2024-11-11T12:00:00.000Z"
     },
     {
@@ -120,7 +120,7 @@ export const Pabahay = [
       age: 24,
       address: "890 Maple St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2024-12-12T12:00:00.000Z"
     },
     {
@@ -131,7 +131,7 @@ export const Pabahay = [
       age: 31,
       address: "123 Pine St",
       gender: "Male",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2025-01-01T12:00:00.000Z"
     },
     {
@@ -142,7 +142,7 @@ export const Pabahay = [
       age: 27,
       address: "456 Cedar St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2025-02-02T12:00:00.000Z"
     },
     {
@@ -153,7 +153,7 @@ export const Pabahay = [
       age: 36,
       address: "789 Elm St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2025-03-03T12:00:00.000Z"
     },
     {
@@ -164,7 +164,7 @@ export const Pabahay = [
       age: 22,
       address: "123 Oak St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2025-04-04T12:00:00.000Z"
     },
     {
@@ -175,7 +175,7 @@ export const Pabahay = [
       age: 34,
       address: "456 Maple St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2025-05-05T12:00:00.000Z"
     },
     {
@@ -186,7 +186,7 @@ export const Pabahay = [
       age: 26,
       address: "789 Cedar St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2025-06-06T12:00:00.000Z"
     },
     {
@@ -197,7 +197,7 @@ export const Pabahay = [
       age: 30,
       address: "123 Elm St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2025-07-07T12:00:00.000Z"
     },
     {
@@ -208,7 +208,7 @@ export const Pabahay = [
       age: 29,
       address: "456 Pine St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2025-08-08T12:00:00.000Z"
     },
     {
@@ -219,7 +219,7 @@ export const Pabahay = [
       age: 32,
       address: "789 Maple St",
       gender: "Male",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2025-09-09T12:00:00.000Z"
     },
     {
@@ -230,7 +230,7 @@ export const Pabahay = [
       age: 25,
       address: "123 Cedar St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2025-10-10T12:00:00.000Z"
     },
     {
@@ -241,7 +241,7 @@ export const Pabahay = [
       age: 37,
       address: "456 Oak St",
       gender: "Male",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2025-11-11T12:00:00.000Z"
     },
     {
@@ -252,7 +252,7 @@ export const Pabahay = [
       age: 28,
       address: "789 Pine St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2025-12-12T12:00:00.000Z"
     },
     {
@@ -263,7 +263,7 @@ export const Pabahay = [
       age: 33,
       address: "123 Maple St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2026-01-01T12:00:00.000Z"
     },
     {
@@ -274,7 +274,7 @@ export const Pabahay = [
       age: 30,
       address: "456 Cedar St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2026-02-02T12:00:00.000Z"
     },
     {
@@ -285,7 +285,7 @@ export const Pabahay = [
       age: 28,
       address: "123 Pine St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2026-03-03T12:00:00.000Z"
     },
     {
@@ -296,7 +296,7 @@ export const Pabahay = [
       age: 25,
       address: "456 Cedar St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2026-04-04T12:00:00.000Z"
     },
     {
@@ -307,7 +307,7 @@ export const Pabahay = [
       age: 34,
       address: "789 Elm St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2026-05-05T12:00:00.000Z"
     },
     {
@@ -318,7 +318,7 @@ export const Pabahay = [
       age: 31,
       address: "123 Oak St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2026-06-06T12:00:00.000Z"
     },
     {
@@ -329,7 +329,7 @@ export const Pabahay = [
       age: 29,
       address: "456 Maple St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2026-07-07T12:00:00.000Z"
     },
     {
@@ -340,7 +340,7 @@ export const Pabahay = [
       age: 27,
       address: "789 Pine St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2026-08-08T12:00:00.000Z"
     },
     {
@@ -351,7 +351,7 @@ export const Pabahay = [
       age: 33,
       address: "123 Cedar St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2026-09-09T12:00:00.000Z"
     },
     {
@@ -362,7 +362,7 @@ export const Pabahay = [
       age: 30,
       address: "456 Oak St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2026-10-10T12:00:00.000Z"
     },
     {
@@ -373,7 +373,7 @@ export const Pabahay = [
       age: 32,
       address: "789 Maple St",
       gender: "Male",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2026-11-11T12:00:00.000Z"
     },
     {
@@ -384,7 +384,7 @@ export const Pabahay = [
       age: 28,
       address: "123 Pine St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2026-12-12T12:00:00.000Z"
     },
     {
@@ -395,7 +395,7 @@ export const Pabahay = [
       age: 29,
       address: "456 Cedar St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2027-01-01T12:00:00.000Z"
     },
     {
@@ -406,7 +406,7 @@ export const Pabahay = [
       age: 34,
       address: "789 Elm St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2027-02-02T12:00:00.000Z"
     },
     {
@@ -417,7 +417,7 @@ export const Pabahay = [
       age: 31,
       address: "123 Oak St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2027-03-03T12:00:00.000Z"
     },
     {
@@ -428,7 +428,7 @@ export const Pabahay = [
       age: 33,
       address: "456 Maple St",
       gender: "Male",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2027-04-04T12:00:00.000Z"
     },
     {
@@ -439,7 +439,7 @@ export const Pabahay = [
       age: 30,
       address: "789 Pine St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2027-05-05T12:00:00.000Z"
     },
     {
@@ -450,7 +450,7 @@ export const Pabahay = [
       age: 32,
       address: "123 Cedar St",
       gender: "Male",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2027-06-06T12:00:00.000Z"
     },
     {
@@ -461,7 +461,7 @@ export const Pabahay = [
       age: 28,
       address: "456 Oak St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2027-07-07T12:00:00.000Z"
     },
     {
@@ -472,7 +472,7 @@ export const Pabahay = [
       age: 35,
       address: "789 Maple St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2027-08-08T12:00:00.000Z"
     },
     {
@@ -483,7 +483,7 @@ export const Pabahay = [
       age: 27,
       address: "123 Pine St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2027-09-09T12:00:00.000Z"
     },
     {
@@ -494,7 +494,7 @@ export const Pabahay = [
       age: 33,
       address: "456 Cedar St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2027-10-10T12:00:00.000Z"
     },
     {
@@ -505,7 +505,7 @@ export const Pabahay = [
       age: 30,
       address: "789 Elm St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2027-11-11T12:00:00.000Z"
     },
     {
@@ -516,7 +516,7 @@ export const Pabahay = [
       age: 32,
       address: "123 Oak St",
       gender: "Male",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2027-12-12T12:00:00.000Z"
     },
     {
@@ -527,7 +527,7 @@ export const Pabahay = [
       age: 28,
       address: "456 Maple St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2028-01-01T12:00:00.000Z"
     },
     {
@@ -538,7 +538,7 @@ export const Pabahay = [
       age: 35,
       address: "789 Pine St",
       gender: "Male",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2028-02-02T12:00:00.000Z"
     },
     {
@@ -549,7 +549,7 @@ export const Pabahay = [
       age: 27,
       address: "123 Cedar St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2028-03-03T12:00:00.000Z"
     },
     {
@@ -560,7 +560,7 @@ export const Pabahay = [
       age: 31,
       address: "456 Oak St",
       gender: "Male",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2028-04-04T12:00:00.000Z"
     },
     {
@@ -571,7 +571,7 @@ export const Pabahay = [
       age: 29,
       address: "789 Maple St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2028-05-05T12:00:00.000Z"
     },
     {
@@ -582,7 +582,7 @@ export const Pabahay = [
       age: 33,
       address: "123 Pine St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2028-06-06T12:00:00.000Z"
     },
     {
@@ -593,7 +593,7 @@ export const Pabahay = [
       age: 28,
       address: "456 Cedar St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2028-07-07T12:00:00.000Z"
     },
     {
@@ -604,7 +604,7 @@ export const Pabahay = [
       age: 30,
       address: "789 Oak St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2028-08-08T12:00:00.000Z"
     },
     {
@@ -615,7 +615,7 @@ export const Pabahay = [
       age: 32,
       address: "123 Maple St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2028-09-09T12:00:00.000Z"
     },
     {
@@ -626,7 +626,7 @@ export const Pabahay = [
       age: 27,
       address: "456 Pine St",
       gender: "Male",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2028-10-10T12:00:00.000Z"
     },
     {
@@ -637,7 +637,7 @@ export const Pabahay = [
       age: 29,
       address: "789 Cedar St",
       gender: "Female",
-      status: "Activated",
+      status: "Verified",
       created: "2028-11-11T12:00:00.000Z"
     },
     {
@@ -648,7 +648,7 @@ export const Pabahay = [
       age: 34,
       address: "123 Oak St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
       created: "2028-12-12T12:00:00.000Z"
     },
     {
@@ -659,7 +659,7 @@ export const Pabahay = [
       age: 31,
       address: "456 Maple St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
       created: "2029-01-01T12:00:00.000Z"
     },
   ];
@@ -672,7 +672,7 @@ export const Carissa = [
       age: 30,
       address: "123 Main St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
     },
     {
       id: 2,
@@ -683,7 +683,7 @@ export const Carissa = [
       address: "456 Elm St",
       gender: "Female",
       city: "Sometown",
-      status: "Not Activated",
+      status: "Not Verified",
     },
     {
       id: 3,
@@ -693,7 +693,7 @@ export const Carissa = [
       age: 40,
       address: "789 Oak St",
       gender: "Female",
-      status: "Not Activated",
+      status: "Not Verified",
     },
     {
       id: 1,
@@ -703,7 +703,7 @@ export const Carissa = [
       age: 30,
       address: "123 Main St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
     },
   ];
 export const Lumina = [
@@ -715,7 +715,7 @@ export const Lumina = [
       age: 30,
       address: "123 Main St",
       gender: "Male",
-      status: "Activated",
+      status: "Verified",
     },
     {
       id: 2,
@@ -726,6 +726,6 @@ export const Lumina = [
       address: "456 Elm St",
       gender: "Female",
       city: "Sometown",
-      status: "Not Activated",
+      status: "Not Verified",
     },
   ];

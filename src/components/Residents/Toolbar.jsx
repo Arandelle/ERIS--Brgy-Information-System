@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ActionButton from "./ActionButton";
 import SortingButton from "./SortingButton";
 import ViewUserButton from "./ViewUserButton";
+import FilterButton from "./FilterButton";
 
 const Toolbar = ({
   label,
@@ -44,6 +45,7 @@ const Toolbar = ({
           isSort={isSort}
           setSort={setSort}
         />
+        <FilterButton />
         <ViewUserButton isViewingSelected={isViewingSelected} setIsViewingSelected={setIsViewingSelected} filteredResidents={filteredResidents} selectedUsers={selectedUsers}/>
       </div>
 
