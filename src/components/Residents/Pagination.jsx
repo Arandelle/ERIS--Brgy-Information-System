@@ -12,6 +12,7 @@ const Pagination = ({
 }) => {
   
   const [jumpToPage, setJumpToPage] = useState("");
+  const isDisable = indexOfLastItem >= (isViewingSelected ? selectedUsers.length : filteredResidents.length);
 
   const nextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -90,7 +91,7 @@ const Pagination = ({
 
       <ul className="inline-flex  -space-x-px rtl:space-x-reverse text-sm h-8">
         <button
-          className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          className={`flex items-center justify-center px-3 h-8 ms-0 rounded-s-lg leading-tight  border border-gray-300  dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${currentPage === 1 ? "cursor-not-allowed bg-gray-100 text-gray-400" : "hover:bg-gray-100 hover:text-gray-700 text-gray-600 bg-white"}`}
           onClick={prevPage}
           disabled={currentPage === 1}
         >
@@ -101,9 +102,9 @@ const Pagination = ({
         {renderPageNumbers()}
 
         <button
-          className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${isDisable ? "cursor-not-allowed bg-gray-100 text-gray-400" : "hover:bg-gray-100 hover:text-gray-700 text-gray-600 bg-white"}`}
           onClick={nextPage}
-          disabled={indexOfLastItem >= (isViewingSelected ? selectedUsers.length : filteredResidents.length)}
+          disabled={isDisable}
         >
           Next
         </button>
