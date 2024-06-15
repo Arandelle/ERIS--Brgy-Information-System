@@ -5,6 +5,7 @@ import QuestionModal from "../ReusableComponents/AskCard";
 import Question from "../../assets/question.svg";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import MoreVert from "@mui/icons-material/MoreVert"
+import { formatDate } from "../../helper/FormatDate";
 import { toast } from "sonner";
 
 const actionButtons = [
@@ -71,14 +72,6 @@ const ActivitiesList = ({ activity, setActivity, isFullscreen }) => {
     } else {
       toast("No activity items found to delete.");
     }
-  };
-
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString(undefined, {
-      weekday: "long",
-      month: "long",
-      day: "2-digit",
-    });
   };
 
   return (

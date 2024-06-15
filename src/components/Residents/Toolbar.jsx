@@ -13,11 +13,12 @@ const Toolbar = ({
   selectedUsers,
   isViewingSelected,
   setIsViewingSelected,
+  isFiltered,
+  setIsFiltered
 }) => {
 
   const [isActionOpen, setActionOpen] = useState(false);
   const [isSort, setSort] = useState(false);
-  const [isFilter, setFilter] = useState(false);
 
   const toggleAction = () => {
     setActionOpen(!isActionOpen);
@@ -31,10 +32,8 @@ const Toolbar = ({
     setFilter(false);
   };
   const toggleFilter = () => {
-    setFilter(!isFilter)
-    setSort(false);
-    setActionOpen(false);
-  };
+    setIsFiltered(!isFiltered);
+  }
 
   return (
     <div className="flex p-4 items-center md:justify-between flex-column gap-2 flex-wrap md:flex-row space-y-0 pb-4 bg-white dark:bg-gray-800">
@@ -54,7 +53,7 @@ const Toolbar = ({
           setSort={setSort}
         />
 
-        <FilterButton toggleFilter={toggleFilter}/>
+        <FilterButton toggleFilter={toggleFilter} isFiltered={isFiltered}/>
 
         <ViewUserButton
           filteredResidents={filteredResidents}

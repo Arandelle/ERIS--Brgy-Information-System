@@ -10,7 +10,7 @@ export const Pabahay = [
       address: "123 Main St",
       gender: "Male",
       status: "Verified",
-      created: "2024-01-01T12:00:00.000Z"
+      created: "2024-07-01"
     },
     {
       id: 2,
@@ -22,7 +22,7 @@ export const Pabahay = [
       gender: "Female",
       city: "Sometown",
       status: "Not Verified",
-      created: "2024-02-02T12:00:00.000Z"
+      created: "2024-03-03"
     },
     {
       id: 3,
@@ -33,7 +33,7 @@ export const Pabahay = [
       address: "789 Oak St",
       gender: "Female",
       status: "Not Verified",
-      created: "2024-03-03T12:00:00.000Z"
+      created: "2024-05-03"
     },
     {
       id: 4,
@@ -55,7 +55,7 @@ export const Pabahay = [
       address: "123 Main St",
       gender: "Male",
       status: "Verified",
-      created: "2024-05-05T12:00:00.000Z"
+      created: "2024-11-05T12:00:00.000Z"
     },
     {
       id: 6,

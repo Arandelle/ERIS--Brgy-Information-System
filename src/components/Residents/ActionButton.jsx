@@ -50,7 +50,7 @@ const ActionButton = ({ selectedUsers,filteredResidents, toggleAction, isActionO
 >
   <span className="sr-only">Action button</span>
   Action
-  <ArrowDropDown />
+  <ArrowDropDown style={{fontSize: "large"}} />
 </button>
 {/* Dropdown menu */}
 {isActionOpen && (

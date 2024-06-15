@@ -3,6 +3,7 @@ import HeadSide from "../ReusableComponents/HeaderSidebar";
 import Pagination from "./Pagination";
 import Toolbar from "./Toolbar";
 import { toast } from "sonner";
+import { formatDate } from "../../helper/FormatDate";
 
 export const HeaderData = [
   "Name",
@@ -10,7 +11,7 @@ export const HeaderData = [
   "Age",
   "Gender",
   "Status",
-  "Date Created",
+  "Date",
   "Action",
 ];
 
@@ -20,6 +21,8 @@ const ResidentsList = ({ residents, label }) => {
   const [filteredResidents, setFilteredResidents] = useState(residents.slice());
   const [isViewingSelected, setIsViewingSelected] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFiltered, setIsFiltered] = useState(false);
+
   const [filters, setFilters] = useState({
     name: "",
     address: "",
@@ -39,9 +42,11 @@ const ResidentsList = ({ residents, label }) => {
     Object.keys(filters).forEach((key) => {
       if (filters[key]) {
         updatedResidents = updatedResidents.filter((resident) => {
-          const value = resident[key] ? resident[key].toString().toLowerCase().trim() : "";
+          const value = resident[key]
+            ? resident[key].toString().toLowerCase().trim()
+            : "";
           const filterValue = filters[key].toLowerCase().trim();
-          return value === filterValue;  // Use exact match instead of includes
+          return value === filterValue; // Use exact match instead of includes
         });
       }
     });
@@ -67,11 +72,12 @@ const ResidentsList = ({ residents, label }) => {
       setSelectedUsers([...selectedUsers, userId]);
     }
   };
-
+  // handle to view selected user
   const handleViewUser = (id) => {
     toast.warning(`view ${id}`);
   };
 
+  // filtering header
   const handleFilterChange = (key, value) => {
     setFilters({
       ...filters,
@@ -80,13 +86,20 @@ const ResidentsList = ({ residents, label }) => {
   };
 
   const getUniqueValues = (key) => {
-    return [...new Set(residents.map((resident) => resident[key] ? resident[key].toString().toLowerCase().trim() : ""))].filter(value => value !== "");
+    return [
+      ...new Set(
+        residents.map((resident) =>
+          resident[key] ? resident[key].toString().toLowerCase().trim() : ""
+        )
+      ),
+    ].filter((value) => value !== "");
   };
 
   return (
     <HeadSide
       child={
         <div className="flex flex-col justify-center m-3">
+
           <Toolbar
             label={label}
             searchQuery={searchQuery}
@@ -97,42 +110,62 @@ const ResidentsList = ({ residents, label }) => {
             setSelectedUsers={setSelectedUsers}
             isViewingSelected={isViewingSelected}
             setIsViewingSelected={setIsViewingSelected}
+            isFiltered={isFiltered}
+            setIsFiltered={setIsFiltered}
           />
 
           <div className="overflow-auto w-full">
-            {currentItems.length === 0 ? (
-              <div className="py-32 text-gray-500 text-center justify-center items-center">
-                No data found
-              </div>
-            ) : (
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="p-4">
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="p-4">
                     <input
-                            type="checkbox"
-                            className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                          />
+                      type="checkbox"
+                      className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                  </th>
+                  {HeaderData.map((header, index) => (
+                    <th
+                      key={index}
+                      scope="col"
+                      className="px-6 py-3 text-nowrap"
+                    >
+                      {isFiltered ? (
+                        header
+                      ) : (
+                          <select
+                            className="cursor-pointer bg-transparent text-gray-700 py-1 px-2 rounded focus:outline-none focus:border-transparent border-none uppercase text-sm w-full"
+                            value={
+                              filters[header.toLowerCase().replace(/ /g, "")]
+                            }
+                            onChange={(e) =>
+                              handleFilterChange(
+                                header.toLowerCase().replace(/ /g, ""),
+                                e.target.value
+                              )
+                            }
+                          >
+                            <option value="">{header}</option>
+                            {getUniqueValues(
+                              header.toLowerCase().replace(/ /g, "")
+                            ).map((value, i) => (
+                              <option key={i} value={value}>
+                                {value}
+                              </option>
+                            ))}
+                          </select>
+                      )}
                     </th>
-                    {HeaderData.map((header, index) => (
-                      <th key={index} scope="col" className="px-6 py-3">
-                        {header}
-                        <select
-                          className="ml-2"
-                          value={filters[header.toLowerCase().replace(/ /g, "")]}
-                          onChange={(e) => handleFilterChange(header.toLowerCase().replace(/ /g, ""), e.target.value)}
-                        >
-                          <option value="">All</option>
-                          {getUniqueValues(header.toLowerCase().replace(/ /g, "")).map((value, i) => (
-                            <option key={i} value={value}>
-                              {value}
-                            </option>
-                          ))}
-                        </select>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
+                  ))}
+                </tr>
+              </thead>
+              {currentItems.length === 0 ? (
+                <tr className="py-32 h-96 text-gray-500 text-center justify-center items-center">
+                  <td rowSpan={6} colSpan={8}>
+                    No data found
+                  </td>
+                </tr>
+              ) : (
                 <tbody>
                   {currentItems.map((resident, key) => (
                     <tr
@@ -162,7 +195,7 @@ const ResidentsList = ({ residents, label }) => {
                       >
                         <img
                           className="w-10 h-10 rounded-full"
-                          src={residents.img}
+                          src={resident.img}
                           alt="user image"
                         />
                         <div className="ps-3">
@@ -181,7 +214,8 @@ const ResidentsList = ({ residents, label }) => {
                         <div className="flex items-center">
                           <div
                             className={`h-2.5 w-2.5 rounded-full me-2 ${
-                              resident.status.toLowerCase().trim() === "verified"
+                              resident.status.toLowerCase().trim() ===
+                              "verified"
                                 ? "bg-green-500"
                                 : "bg-red-500"
                             } me-2`}
@@ -191,7 +225,7 @@ const ResidentsList = ({ residents, label }) => {
                             : "Not Verified"}
                         </div>
                       </td>
-                      <td className="px-6 py-4">{resident.created}</td>
+                      <td className="px-6 py-4">{formatDate(resident.created)}</td>
                       <td className="px-6 py-4">
                         <button
                           onClick={() => handleViewUser(resident.name)}
@@ -203,8 +237,8 @@ const ResidentsList = ({ residents, label }) => {
                     </tr>
                   ))}
                 </tbody>
-              </table>
-            )}
+              )}
+            </table>
           </div>
 
           <div>
