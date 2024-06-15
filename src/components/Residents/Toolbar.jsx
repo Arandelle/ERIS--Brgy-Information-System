@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ActionButton from "./ActionButton";
 import SortingButton from "./SortingButton";
 import ViewUserButton from "./ViewUserButton";
+import FilterButton from "./FilterButton";
 
 const Toolbar = ({
   label,
@@ -11,25 +12,33 @@ const Toolbar = ({
   setFilteredResidents,
   selectedUsers,
   isViewingSelected,
-  setIsViewingSelected
+  setIsViewingSelected,
 }) => {
+
   const [isActionOpen, setActionOpen] = useState(false);
   const [isSort, setSort] = useState(false);
+  const [isFilter, setFilter] = useState(false);
 
   const toggleAction = () => {
     setActionOpen(!isActionOpen);
     setSort(false);
+    setFilter(false);
   };
 
-  const toggleFilter = () => {
+  const toggleSort = () => {
     setSort(!isSort);
+    setActionOpen(false);
+    setFilter(false);
+  };
+  const toggleFilter = () => {
+    setFilter(!isFilter)
+    setSort(false);
     setActionOpen(false);
   };
 
   return (
-    <div className="flex p-4 items-center md:justify-between flex-column gap-2 flex-wrap md:flex-row space-y-0 pb-4 bg-white dark:bg-gray-800 rounded-md">
-      <div className="flex flex-row space-y-0 items-center gap-3">
-
+    <div className="flex p-4 items-center md:justify-between flex-column gap-2 flex-wrap md:flex-row space-y-0 pb-4 bg-white dark:bg-gray-800">
+      <div className="flex flex-col md:flex-row space-y-0 gap-2">
         <ActionButton
           selectedUsers={selectedUsers}
           filteredResidents={filteredResidents}
@@ -40,11 +49,19 @@ const Toolbar = ({
         <SortingButton
           filteredResidents={filteredResidents}
           setFilteredResidents={setFilteredResidents}
-          toggleFilter={toggleFilter}
+          toggleSort={toggleSort}
           isSort={isSort}
           setSort={setSort}
         />
-        <ViewUserButton isViewingSelected={isViewingSelected} setIsViewingSelected={setIsViewingSelected}/>
+
+        <FilterButton toggleFilter={toggleFilter}/>
+
+        <ViewUserButton
+          filteredResidents={filteredResidents}
+          isViewingSelected={isViewingSelected}
+          setIsViewingSelected={setIsViewingSelected}
+          selectedUsers={selectedUsers}
+        />
       </div>
 
       <label htmlFor="table-search" className="sr-only">
@@ -56,7 +73,7 @@ const Toolbar = ({
       >
         {label}
       </label>
-      
+
       <div className="relative">
         <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
           <svg

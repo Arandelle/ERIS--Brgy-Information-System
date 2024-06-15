@@ -16,6 +16,7 @@ const Activities = () => {
   const [location, setPlace] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [startDate, setStartDate] = useState("");
 
   const [activity, setActivity] = useState(() => {
     // Get the activity data from localStorage, or an empty array if it doesn't exist
@@ -39,6 +40,7 @@ const Activities = () => {
     const addedNews = {
       id: Date.now(), // Generate a unique ID for the new activity
       title,
+      startDate,
       startTime,
       endTime,
       location,
@@ -50,6 +52,7 @@ const Activities = () => {
 
     // Update localStorage with the updated activity data
     setTitle("");
+    setStartDate("");
     setStartTime("");
     setEndTime("");
     setPlace("");
@@ -64,9 +67,17 @@ const Activities = () => {
         <InputReusable
           type="text"
           value={title}
-          placeholder="Event Title"
+          placeholder="Activity Title"
           onChange={(e) => setTitle(e.target.value)}
           onBlur={() => setTitle(title.toUpperCase())}
+        />
+         <InputReusable
+          type="text"
+          onFocus={(e) => (e.target.type = "date")}
+          onBlur={(e) => (e.target.type = "text")}
+          value={startDate}
+          placeholder="Date"
+          onChange={(e) => setStartDate(e.target.value)}
         />
         <InputReusable
           type="text"
@@ -88,6 +99,7 @@ const Activities = () => {
           type="text"
           value={location}
           placeholder="Location"
+          className = {"col-span-4"}
           onChange={(e) => setPlace(e.target.value)}
           onBlur={() => setPlace(capitalizeFirstLetter(location))}
         />

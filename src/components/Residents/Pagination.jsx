@@ -57,7 +57,7 @@ const Pagination = ({
             onClick={() => setCurrentPage(i)}
             className={`px-3 py-2 leading-tight ${
               currentPage === i
-                ? "flex items-center justify-center px-3 h-8 leading-tight text-gray-900 bg-primary-300 border border-gray-400 hover:bg-primary-400 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                ? "flex items-center justify-center px-3 h-8 leading-tight text-gray-900 bg-primary-300 border border-gray-400 hover:bg-primary-400 hover:text-gray-700 dark:bg-gray-600 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white"
                 : "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-primary-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             }`}
           >
@@ -81,6 +81,7 @@ const Pagination = ({
       className="flex items-center dark:bg-gray-800 bg-white flex-column flex-wrap md:flex-row justify-between p-4 space-y-0"
       aria-label="Table navigation"
     >
+      {/* showing 1-10 of 100 - this span showing the current item of page */}
       <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
         <span className="font-semibold text-gray-900 dark:text-white">
           {getShowingText()}
@@ -96,6 +97,7 @@ const Pagination = ({
           Previous
         </button>
 
+        {/* this render the page button handle of atleast 5 buttons  */}
         {renderPageNumbers()}
 
         <button

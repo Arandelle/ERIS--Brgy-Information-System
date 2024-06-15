@@ -113,7 +113,7 @@ const Header = ({ toggleSideBar, isOpen }) => {
               </span>
             }
             children={
-              <label className="relatice inline-flex items-center cursor-pointer">
+              <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   onClick={toggleTheme}
                   type="checkbox"
