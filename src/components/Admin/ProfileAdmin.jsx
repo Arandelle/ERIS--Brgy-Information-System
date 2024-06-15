@@ -68,9 +68,9 @@ const Profile = () => {
               >
                 {adminVal.title}
               </li>
-            ))}
+          ))}
           </ul>
-          <ul
+            <ul
             className="py-1 text-gray-500 dark:text-gray-400"
             aria-labelledby="dropdown"
           >

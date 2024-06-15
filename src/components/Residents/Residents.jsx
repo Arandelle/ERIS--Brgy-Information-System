@@ -20,6 +20,14 @@ const ResidentsList = ({ residents, label }) => {
   const [filteredResidents, setFilteredResidents] = useState(residents.slice());
   const [isViewingSelected, setIsViewingSelected] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState({
+    name: "",
+    address: "",
+    age: "",
+    gender: "",
+    status: "",
+    created: "",
+  });
 
   const itemsPerPage = 10;
 
@@ -27,9 +35,19 @@ const ResidentsList = ({ residents, label }) => {
     let updatedResidents = residents.filter((resident) =>
       resident.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    setFilteredResidents(updatedResidents);
-  }, [residents, searchQuery]);
 
+    Object.keys(filters).forEach((key) => {
+      if (filters[key]) {
+        updatedResidents = updatedResidents.filter((resident) => {
+          const value = resident[key] ? resident[key].toString().toLowerCase().trim() : "";
+          const filterValue = filters[key].toLowerCase().trim();
+          return value === filterValue;  // Use exact match instead of includes
+        });
+      }
+    });
+
+    setFilteredResidents(updatedResidents);
+  }, [residents, searchQuery, filters]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -54,12 +72,23 @@ const ResidentsList = ({ residents, label }) => {
     toast.warning(`view ${id}`);
   };
 
+  const handleFilterChange = (key, value) => {
+    setFilters({
+      ...filters,
+      [key]: value,
+    });
+  };
+
+  const getUniqueValues = (key) => {
+    return [...new Set(residents.map((resident) => resident[key] ? resident[key].toString().toLowerCase().trim() : ""))].filter(value => value !== "");
+  };
+
   return (
     <HeadSide
       child={
         <div className="flex flex-col justify-center m-3">
           <Toolbar
-           label={label}
+            label={label}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             filteredResidents={filteredResidents}
@@ -68,7 +97,7 @@ const ResidentsList = ({ residents, label }) => {
             setSelectedUsers={setSelectedUsers}
             isViewingSelected={isViewingSelected}
             setIsViewingSelected={setIsViewingSelected}
-          /> 
+          />
 
           <div className="overflow-auto w-full">
             {currentItems.length === 0 ? (
@@ -88,18 +117,30 @@ const ResidentsList = ({ residents, label }) => {
                     {HeaderData.map((header, index) => (
                       <th key={index} scope="col" className="px-6 py-3">
                         {header}
+                        <select
+                          className="ml-2"
+                          value={filters[header.toLowerCase().replace(/ /g, "")]}
+                          onChange={(e) => handleFilterChange(header.toLowerCase().replace(/ /g, ""), e.target.value)}
+                        >
+                          <option value="">All</option>
+                          {getUniqueValues(header.toLowerCase().replace(/ /g, "")).map((value, i) => (
+                            <option key={i} value={value}>
+                              {value}
+                            </option>
+                          ))}
+                        </select>
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {currentItems.map((residents, key) => (
+                  {currentItems.map((resident, key) => (
                     <tr
                       key={key}
-                      onClick={() => handleCheckbox(residents.id)}
+                      onClick={() => handleCheckbox(resident.id)}
                       className={`border-b dark:border-gray-700
                       ${
-                        selectedUsers.includes(residents.id)
+                        selectedUsers.includes(resident.id)
                           ? "bg-gray-300 dark:bg-gray-900 hover:bg-gray-400 hover:dark:bg-gray-700"
                           : "bg-white hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-gray-700 "
                       }`}
@@ -109,8 +150,8 @@ const ResidentsList = ({ residents, label }) => {
                           <input
                             id="checkbox-table-search-1"
                             type="checkbox"
-                            onChange={() => handleCheckbox(residents.id)}
-                            checked={selectedUsers.includes(residents.id)}
+                            onChange={() => handleCheckbox(resident.id)}
+                            checked={selectedUsers.includes(resident.id)}
                             className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           />
                         </div>
@@ -126,34 +167,34 @@ const ResidentsList = ({ residents, label }) => {
                         />
                         <div className="ps-3">
                           <div className="text-base font-semibold">
-                            {residents.name}
+                            {resident.name}
                           </div>
                           <div className="font-normal text-gray-500">
-                            {residents.email}
+                            {resident.email}
                           </div>
                         </div>
                       </th>
-                      <td className="px-6 py-4">{residents.address}</td>
-                      <td className="px-6 py-4">{residents.age}</td>
-                      <td className="px-6 py-4">{residents.gender}</td>
+                      <td className="px-6 py-4">{resident.address}</td>
+                      <td className="px-6 py-4">{resident.age}</td>
+                      <td className="px-6 py-4">{resident.gender}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <div
-                            className={`h-2.5 w-2.5 rounded-full bg-green-500 me-2 ${
-                              residents.status === "Activated"
+                            className={`h-2.5 w-2.5 rounded-full me-2 ${
+                              resident.status.toLowerCase().trim() === "verified"
                                 ? "bg-green-500"
                                 : "bg-red-500"
                             } me-2`}
                           />{" "}
-                          {residents.status === "Activated"
-                            ? "Activated"
-                            : "Not Activated"}
+                          {resident.status.toLowerCase().trim() === "verified"
+                            ? "Verified"
+                            : "Not Verified"}
                         </div>
                       </td>
-                      <td className="px-6 py-4">{residents.created}</td>
+                      <td className="px-6 py-4">{resident.created}</td>
                       <td className="px-6 py-4">
                         <button
-                          onClick={() => handleViewUser(residents.name)}
+                          onClick={() => handleViewUser(resident.name)}
                           className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
                         >
                           View user

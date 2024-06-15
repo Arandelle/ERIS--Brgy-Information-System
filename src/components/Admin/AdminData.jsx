@@ -1,4 +1,3 @@
-
 export const AdminData = [
     {
         id: 1,
@@ -16,6 +15,14 @@ export const AdminSettings = [
     {
         title: "Account Settings",
         link: "/settings",
+    },
+    {
+        title: "FAQS",
+        link: "/FAQS"
+    },
+    {
+        title: "Terms and Conditions",
+        link: "/Terms and Conditions"
     },
     {
         title: "Archives",
