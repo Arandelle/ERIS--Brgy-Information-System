@@ -41,7 +41,7 @@ const ResidentsList = ({ residents, label }) => {
   const [filteredResidents, setFilteredResidents] = useState(residents.slice());
   const [isViewingSelected, setIsViewingSelected] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isFiltered, setIsFiltered] = useState(false);
+  const [isFiltered, setIsFiltered] = useState(true);
 
   const [filters, setFilters] = useState({
     name: "",
@@ -85,6 +85,14 @@ const ResidentsList = ({ residents, label }) => {
     ? Math.ceil(selectedUsers.length / itemsPerPage)
     : Math.ceil(filteredResidents.length / itemsPerPage);
 
+  const handleMainCheckboxChange = () => {
+      if (selectedUsers.length === filteredResidents.length) {
+        setSelectedUsers([]);
+      } else {
+        setSelectedUsers(filteredResidents.map(resident => resident.id));
+      }
+    };
+
   const handleCheckbox = (userId) => {
     if (selectedUsers.includes(userId)) {
       setSelectedUsers(selectedUsers.filter((id) => id !== userId));
@@ -92,6 +100,7 @@ const ResidentsList = ({ residents, label }) => {
       setSelectedUsers([...selectedUsers, userId]);
     }
   };
+
   // handle to view selected user
   const handleViewUser = (id) => {
     toast.warning(`view ${id}`);
@@ -157,8 +166,9 @@ const ResidentsList = ({ residents, label }) => {
                   <th scope="col" className="p-4">
                     <input
                       type="checkbox"
-                      className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
+                      className="w-4 h-4 cursor-pointer text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      checked={selectedUsers.length === filteredResidents.length}
+                      onChange={handleMainCheckboxChange}/>
                   </th>
                   {HeaderData.map((header, index) => (
                     <th

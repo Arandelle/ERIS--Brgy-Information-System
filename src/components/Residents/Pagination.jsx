@@ -134,7 +134,7 @@ const Pagination = ({
           Go
         </button>
       </form>
-      <button onClick={onClick}><PrintIcon style={{fontSize: "large"}} /><span className="text-sm text-green-600"> Print as Excel</span></button>
+      <button onClick={onClick}><PrintIcon style={{fontSize: "large"}} /><span className="text-sm text-green-600"> Export as Excel</span></button>
     </nav>
   );
 };
