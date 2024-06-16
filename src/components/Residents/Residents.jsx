@@ -13,7 +13,7 @@ export const HeaderData = [
   "Age",
   "Gender",
   "Status",
-  "Date",
+  "Date Created",
   "Action",
 ];
 
@@ -123,6 +123,7 @@ const ResidentsList = ({ residents, label }) => {
       ),
     ].filter((value) => value !== "");
   };
+  
   // Export the current view (filtered or selected users)
   const handleExport = () => {
     const dataToExport = isViewingSelected
