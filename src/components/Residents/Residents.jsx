@@ -4,6 +4,8 @@ import Pagination from "./Pagination";
 import Toolbar from "./Toolbar";
 import { toast } from "sonner";
 import { formatDate } from "../../helper/FormatDate";
+import {saveAs} from 'file-saver';
+import * as XLSX from 'xlsx';
 
 export const HeaderData = [
   "Name",
@@ -14,6 +16,24 @@ export const HeaderData = [
   "Date",
   "Action",
 ];
+
+const exportToExcel = (data, fileName = 'residents.xlsx') => {
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(data);
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+  const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
+  saveAs(blob, fileName);
+};
+
+const s2ab = (s) => {
+  const buf = new ArrayBuffer(s.length);
+  const view = new Uint8Array(buf);
+  for (let i = 0; i < s.length; i++) {
+    view[i] = s.charCodeAt(i) & 0xff;
+  }
+  return buf;
+};
 
 const ResidentsList = ({ residents, label }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -94,6 +114,23 @@ const ResidentsList = ({ residents, label }) => {
       ),
     ].filter((value) => value !== "");
   };
+  // Export the current view (filtered or selected users)
+  const handleExport = () => {
+    const dataToExport = isViewingSelected
+      ? selectedUsers.map((id) => residents.find((res) => res.id === id))
+      : filteredResidents;
+
+    const formattedData = dataToExport.map((resident) => ({
+      Name: resident.name,
+      Address: resident.address,
+      Age: resident.age,
+      Gender: resident.gender,
+      Status: resident.status,
+      Date: formatDate(resident.created),
+    }));
+
+    exportToExcel(formattedData);
+  };
 
   return (
     <HeadSide
@@ -113,7 +150,6 @@ const ResidentsList = ({ residents, label }) => {
             isFiltered={isFiltered}
             setIsFiltered={setIsFiltered}
           />
-
           <div className="overflow-auto w-full">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -251,7 +287,8 @@ const ResidentsList = ({ residents, label }) => {
               filteredResidents={filteredResidents}
               isViewingSelected={isViewingSelected}
               selectedUsers={selectedUsers}
-            />
+              onClick={handleExport}
+            />    
           </div>
         </div>
       }

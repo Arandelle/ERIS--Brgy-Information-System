@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PrintIcon from '@mui/icons-material/Print';
 
 const Pagination = ({
   currentPage,
@@ -8,7 +9,8 @@ const Pagination = ({
   indexOfLastItem,
   totalPages,
   isViewingSelected,
-  selectedUsers
+  selectedUsers,
+  onClick
 }) => {
   
   const [jumpToPage, setJumpToPage] = useState("");
@@ -132,6 +134,7 @@ const Pagination = ({
           Go
         </button>
       </form>
+      <button onClick={onClick}><PrintIcon style={{fontSize: "large"}} /><span className="text-sm text-green-600"> Print as Excel</span></button>
     </nav>
   );
 };
