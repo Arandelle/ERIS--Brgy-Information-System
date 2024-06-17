@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MapContent from "./Maps/MapContent";
-import Skeleton, { Spinner } from "./ReusableComponents/Skeleton";
+import { Spinner } from "./ReusableComponents/Skeleton";
 import ActivitiesList from "./Events/ActivitiesList";
 import population from "../assets/population.svg";
 import registered from "../assets/registered.svg";
@@ -10,11 +11,13 @@ import HeadSide from "./ReusableComponents/HeaderSidebar";
 import DateToday from "./Admin/DateToday";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import { Pabahay, Lumina, Carissa } from "./Residents/ResidentsData";
+import { personInfo } from "./Maps/MapContent";
 
-const DashboardCard = ({ title, value, img }) => {
+const DashboardCard = ({ title, value, img, onClick }) => {
   return (
     <div className="relative">
-      <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-2 md:gap-4 bg-white dark:bg-gray-800 shadow-md rounded-md p-6 w-full mb-3 md:mb-0">
+      <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-2 md:gap-4 bg-white dark:bg-gray-800 shadow-md rounded-md p-6 w-full mb-3 md:mb-0"
+      onClick={onClick} >
         <div className="hidden md:block">
           <img src={img} alt="Empty Image" className="h-20 w-28" />
         </div>
@@ -48,6 +51,10 @@ const Dashboard = ({ setAuth }) => {
     return storedEvents ? JSON.parse(storedEvents) : [];
   });
 
+  const navigate = useNavigate();
+  const handleNavigate =(path)=>{
+    navigate(path);
+  }
   //   // Retrieve the array from localStorage
   // const storedData = localStorage.getItem('yourKey');
   // // Parse the JSON string into an array
@@ -61,16 +68,18 @@ const Dashboard = ({ setAuth }) => {
         <>
           <DateToday />
 
-          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 md:my-3 mx-3 text-wrap">
+          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 md:my-3 mx-3 text-wrap cursor-pointer">
             <DashboardCard
               title="Total Residents"
               value={loading ? <Spinner setLoading={setLoading} /> : Pabahay.length + Carissa.length + Lumina.length}
               img={population}
+              onClick={()=>handleNavigate("/residents/pabahay")}
             />
             <DashboardCard
               title="Today's Registered"
               value={loading ? <Spinner setLoading={setLoading} /> : 0}
               img={registered}
+              onClick={()=> handleNavigate("/residents/pabahay")}
             />
             <DashboardCard
               title="Events"
@@ -78,11 +87,13 @@ const Dashboard = ({ setAuth }) => {
                 loading ? <Spinner setLoading={setLoading} /> : events.length
               }
               img={Events}
+              onClick={()=> handleNavigate("/calendar")}
             />
             <DashboardCard
               title="Emergency"
-              value={loading ? <Spinner setLoading={setLoading} /> : 0}
+              value={loading ? <Spinner setLoading={setLoading} /> : personInfo.length}
               img={emergency}
+              onClick={()=>handleNavigate("/maps")}
             />
           </div>
           <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4 mx-3 text-wrap">

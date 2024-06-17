@@ -15,25 +15,26 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
 import "leaflet-control-geocoder";
 
+export const personInfo = [
+  {
+    name: "Juan Dela cruz",
+    address: "Block 16, Lot09 Sec24, Ph2 Pabahay 2000",
+    timeAgo: "40 minutes ago",
+    imageUrl: "https://flowbite.com/docs/images/people/profile-picture-2.jpg",
+    position: [14.334, 120.85],
+    isEndPoint: false, // Assuming this is not the endpoint
+  },
+  {
+    name: "Person 2",
+    address: "Block 16, Lot09 Sec24, Ph2 Pabahay 2000",
+    timeAgo: "30 minutes ago",
+    imageUrl: "https://flowbite.com/docs/images/people/profile-picture-3.jpg",
+    position: [14.3349, 120.851],
+    isEndPoint: true, // Assuming this is the endpoint
+  },
+]
+
 function MyMapComponents({ isFullscreen }) {
-  const [personInfo, setPersonInfo] = useState([
-    {
-      name: "Juan Dela cruz",
-      address: "Block 16, Lot09 Sec24, Ph2 Pabahay 2000",
-      timeAgo: "30 minutes ago",
-      imageUrl: "https://flowbite.com/docs/images/people/profile-picture-2.jpg",
-      position: [14.334, 120.85],
-      isEndPoint: false, // Assuming this is not the endpoint
-    },
-    {
-      name: "Person 2",
-      address: "Block 16, Lot09 Sec24, Ph2 Pabahay 2000",
-      timeAgo: "30 minutes ago",
-      imageUrl: "https://flowbite.com/docs/images/people/profile-picture-3.jpg",
-      position: [14.3349, 120.851],
-      isEndPoint: true, // Assuming this is the endpoint
-    },
-  ]);
 
   const [position, setPosition] = useState([14.332867, 120.850672]); // Default start position
   const [isDragging, setIsDragging] = useState(false);
