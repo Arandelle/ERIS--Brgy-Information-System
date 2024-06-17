@@ -42,6 +42,7 @@ const ResidentsList = ({ residents, label }) => {
   const [isViewingSelected, setIsViewingSelected] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFiltered, setIsFiltered] = useState(true);
+  const itemsPerPage = 10;
 
   const [filters, setFilters] = useState({
     name: "",
@@ -51,9 +52,7 @@ const ResidentsList = ({ residents, label }) => {
     status: "",
     created: "",
   });
-
-  const itemsPerPage = 10;
-
+  
   useEffect(() => {
     let updatedResidents = residents.filter((resident) =>
       resident.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -72,7 +71,7 @@ const ResidentsList = ({ residents, label }) => {
     });
 
     setFilteredResidents(updatedResidents);
-  }, [residents, searchQuery, filters]);
+  }, [residents, searchQuery, filters]); // original list ,filter for search of name and filter for specific data
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -106,14 +105,14 @@ const ResidentsList = ({ residents, label }) => {
     toast.warning(`view ${id}`);
   };
 
-  // filtering header
+  // Function to handle changes in filter inputs
   const handleFilterChange = (key, value) => {
     setFilters({
       ...filters,
       [key]: value,
     });
   };
-
+  // Function to get unique, non-empty values for a specific key from the residents list
   const getUniqueValues = (key) => {
     return [
       ...new Set(
@@ -181,7 +180,7 @@ const ResidentsList = ({ residents, label }) => {
                         header
                       ) : (
                           <select
-                            className="cursor-pointer bg-transparent text-gray-700 py-1 px-2 rounded focus:outline-none focus:border-transparent border-none uppercase text-sm w-full"
+                            className="cursor-pointer bg-transparent text-gray-700 py-1 px-2 rounded focus:outline-none focus:border-transparent border-none uppercase text-sm w-full dark:text-gray-200"
                             value={
                               filters[header.toLowerCase().replace(/ /g, "")]
                             }
@@ -192,11 +191,11 @@ const ResidentsList = ({ residents, label }) => {
                               )
                             }
                           >
-                            <option value="">{header}</option>
+                            <option className="dark:text-gray-600" value="">{header}</option>
                             {getUniqueValues(
                               header.toLowerCase().replace(/ /g, "")
                             ).map((value, i) => (
-                              <option key={i} value={value}>
+                              <option className="dark:text-gray-600" key={i} value={value}>
                                 {value}
                               </option>
                             ))}

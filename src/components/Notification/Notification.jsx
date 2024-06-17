@@ -9,7 +9,7 @@ const Notification = ()=>{
 
     return (    
         <div>      
-          <div className="relative z-50">
+          <div className="flex z-50">
           <PopoverHover content={`${isOpen ? "Close" : "Open"} Notification`}>
             <button
               onClick={toggleDropdown}

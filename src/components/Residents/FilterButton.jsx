@@ -7,8 +7,11 @@ const FilterButton = ({ toggleFilter, isFiltered }) => {
     <div>
       <button
         onClick={toggleFilter}
-        className={`inline-flex justify-between items-center text-nowrap border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 
-        ${!isFiltered ? ("bg-primary-400 text-gray-200 hover:bg-primary-500") : ("bg-white text-gray-500")}`}
+        className={`inline-flex items-center text-nowrap border border-gray-300 focus:outline-none focus:ring-4 font-medium rounded-lg text-sm px-3 py-1.5 
+        ${!isFiltered 
+          ? "bg-primary-500 hover:bg-primary-600 text-white dark:bg-primary-400 dark:hover:bg-primary-500 dark:text-gray-300 focus:ring-primary-100 dark:focus:ring-primary-600" 
+          : "bg-white hover:bg-gray-100 text-gray-500 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300 focus:ring-gray-100 dark:focus:ring-gray-700"}`
+      }
 
         type="button"
       >
