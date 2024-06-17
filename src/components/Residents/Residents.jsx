@@ -107,7 +107,18 @@ const ResidentsList = ({ residents, label }) => {
 
   // Function to handle changes in filter inputs
   const handleFilterChange = (key, value) => {
-    if (key === "createdat") {
+    if (key === "age") {
+      // Parse age range from the selected value
+      const [min, max] = value.split("-").map(Number);
+
+      // Filter residents within the selected age range
+      const filteredResidents = residents.filter((resident) => {
+        const age = resident[key];
+        return age >= min && age <= max;
+      });
+
+      setFilteredResidents(filteredResidents);
+    } else if (key === "createdat") {
       // Filter residents whose "Date Created" year matches the selected value
       const filteredResidents = residents.filter((resident) => {
         if (resident[key]) {
@@ -128,7 +139,34 @@ const ResidentsList = ({ residents, label }) => {
 
   // Function to get unique, non-empty values for a specific key from the residents list
   const getUniqueValues = (key) => {
-    if (key === 'createdat') {
+    if (key === "age") {
+      // Define age ranges
+      const ageRanges = [
+        { label: "18-30", min: 18, max: 30 },
+        { label: "31-40", min: 31, max: 40 },
+        { label: "41-50", min: 41, max: 50 },
+        { label: "51-60", min: 51, max: 60 },
+        { label: "61-70", min: 61, max: 70 },
+        { label: "71-80", min: 71, max: 80 },
+        { label: "81-90", min: 81, max: 90 },
+        { label: "91-100", min: 91, max: 100 },
+        // Add more ranges as needed
+      ];
+
+      // Map residents to their corresponding age range labels
+      return [
+        ...new Set(
+          residents.map((resident) => {
+            const age = resident[key];
+            // Find the range label for the current age
+            const range = ageRanges.find(
+              (range) => age >= range.min && age <= range.max
+            );
+            return range ? range.label : "";
+          })
+        ),
+      ].filter((value) => value !== "");
+    } else if (key === "createdat") {
       return [
         ...new Set(
           residents.map((resident) => {
@@ -151,7 +189,6 @@ const ResidentsList = ({ residents, label }) => {
       ].filter((value) => value !== "");
     }
   };
-  
 
   // Export the current view (filtered or selected users)
   const handleExport = () => {
@@ -226,17 +263,25 @@ const ResidentsList = ({ residents, label }) => {
                           <option className="dark:text-gray-600" value="">
                             {header}
                           </option>
-                          {header.toLowerCase().replace(/ /g, "") === "created"
-                            ? // Render options based on unique years for "Date Created"
-                              getUniqueValues(
-                                header.toLowerCase().replace(/ /g, "")
-                              ).map((year, i) => (
+                          {header.toLowerCase().replace(/ /g, "") === "age"
+                            ? // Render options based on predefined age ranges
+                              [
+                                { label: "18-30", min: 18, max: 30 },
+                                { label: "31-40", min: 31, max: 40 },
+                                { label: "41-50", min: 41, max: 50 },
+                                { label: "51-60", min: 51, max: 60 },
+                                { label: "61-70", min: 61, max: 70 },
+                                { label: "71-80", min: 71, max: 80 },
+                                { label: "81-90", min: 81, max: 90 },
+                                { label: "91-100", min: 91, max: 100 },
+                                // Add more ranges as needed
+                              ].map((range, i) => (
                                 <option
                                   className="dark:text-gray-600"
                                   key={i}
-                                  value={year}
+                                  value={range.value}
                                 >
-                                  {year}
+                                  {range.label}
                                 </option>
                               ))
                             : // Render options based on other attributes
