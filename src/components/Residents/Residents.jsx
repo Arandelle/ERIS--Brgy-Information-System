@@ -4,8 +4,8 @@ import Pagination from "./Pagination";
 import Toolbar from "./Toolbar";
 import { toast } from "sonner";
 import { formatDate } from "../../helper/FormatDate";
-import {saveAs} from 'file-saver';
-import * as XLSX from 'xlsx';
+import { saveAs } from "file-saver";
+import * as XLSX from "xlsx";
 
 export const HeaderData = [
   "Name",
@@ -13,16 +13,16 @@ export const HeaderData = [
   "Age",
   "Gender",
   "Status",
-  "Date Created",
+  "CreatedAt",
   "Action",
 ];
 
-const exportToExcel = (data, fileName = 'residents.xlsx') => {
+const exportToExcel = (data, fileName = "residents.xlsx") => {
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(data);
-  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-  const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-  const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  const wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+  const blob = new Blob([s2ab(wbout)], { type: "application/octet-stream" });
   saveAs(blob, fileName);
 };
 
@@ -50,9 +50,9 @@ const ResidentsList = ({ residents, label }) => {
     age: "",
     gender: "",
     status: "",
-    created: "",
+    createdat: "",
   });
-  
+
   useEffect(() => {
     let updatedResidents = residents.filter((resident) =>
       resident.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -65,7 +65,7 @@ const ResidentsList = ({ residents, label }) => {
             ? resident[key].toString().toLowerCase().trim()
             : "";
           const filterValue = filters[key].toLowerCase().trim();
-          return value === filterValue; // Use exact match instead of includes
+          return value === filterValue; // exact match comparison
         });
       }
     });
@@ -85,12 +85,12 @@ const ResidentsList = ({ residents, label }) => {
     : Math.ceil(filteredResidents.length / itemsPerPage);
 
   const handleMainCheckboxChange = () => {
-      if (selectedUsers.length === filteredResidents.length) {
-        setSelectedUsers([]);
-      } else {
-        setSelectedUsers(filteredResidents.map(resident => resident.id));
-      }
-    };
+    if (selectedUsers.length === filteredResidents.length) {
+      setSelectedUsers([]);
+    } else {
+      setSelectedUsers(filteredResidents.map((resident) => resident.id));
+    }
+  };
 
   const handleCheckbox = (userId) => {
     if (selectedUsers.includes(userId)) {
@@ -107,22 +107,52 @@ const ResidentsList = ({ residents, label }) => {
 
   // Function to handle changes in filter inputs
   const handleFilterChange = (key, value) => {
-    setFilters({
-      ...filters,
-      [key]: value,
-    });
+    if (key === "createdat") {
+      // Filter residents whose "Date Created" year matches the selected value
+      const filteredResidents = residents.filter((resident) => {
+        if (resident[key]) {
+          return new Date(resident[key]).getFullYear() === parseInt(value);
+        } else {
+          return false; // Handle if there's no date
+        }
+      });
+      setFilteredResidents(filteredResidents);
+    } else {
+      // For other attributes, update filters state normally
+      setFilters({
+        ...filters,
+        [key]: value,
+      });
+    }
   };
+
   // Function to get unique, non-empty values for a specific key from the residents list
   const getUniqueValues = (key) => {
-    return [
-      ...new Set(
-        residents.map((resident) =>
-          resident[key] ? resident[key].toString().toLowerCase().trim() : ""
-        )
-      ),
-    ].filter((value) => value !== "");
+    if (key === 'createdat') {
+      return [
+        ...new Set(
+          residents.map((resident) => {
+            if (resident[key]) {
+              // Assuming resident[key] is a string date in ISO format (e.g., "YYYY-MM-DD")
+              return new Date(resident[key]).getFullYear();
+            } else {
+              return null; // Handle if there's no date
+            }
+          })
+        ),
+      ].filter((value) => value !== null); // Filter out null values
+    } else {
+      return [
+        ...new Set(
+          residents.map((resident) =>
+            resident[key] ? resident[key].toString().toLowerCase().trim() : ""
+          )
+        ),
+      ].filter((value) => value !== "");
+    }
   };
   
+
   // Export the current view (filtered or selected users)
   const handleExport = () => {
     const dataToExport = isViewingSelected
@@ -135,7 +165,7 @@ const ResidentsList = ({ residents, label }) => {
       Age: resident.age,
       Gender: resident.gender,
       Status: resident.status,
-      Date: formatDate(resident.created),
+      Date: formatDate(resident.createdat),
     }));
 
     exportToExcel(formattedData);
@@ -145,7 +175,6 @@ const ResidentsList = ({ residents, label }) => {
     <HeadSide
       child={
         <div className="flex flex-col justify-center m-3">
-
           <Toolbar
             label={label}
             searchQuery={searchQuery}
@@ -167,8 +196,11 @@ const ResidentsList = ({ residents, label }) => {
                     <input
                       type="checkbox"
                       className="w-4 h-4 cursor-pointer text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                      checked={selectedUsers.length === filteredResidents.length}
-                      onChange={handleMainCheckboxChange}/>
+                      checked={
+                        selectedUsers.length === filteredResidents.length
+                      }
+                      onChange={handleMainCheckboxChange}
+                    />
                   </th>
                   {HeaderData.map((header, index) => (
                     <th
@@ -179,27 +211,47 @@ const ResidentsList = ({ residents, label }) => {
                       {isFiltered ? (
                         header
                       ) : (
-                          <select
-                            className="cursor-pointer bg-transparent text-gray-700 py-1 px-2 rounded focus:outline-none focus:border-transparent border-none uppercase text-sm w-full dark:text-gray-200"
-                            value={
-                              filters[header.toLowerCase().replace(/ /g, "")]
-                            }
-                            onChange={(e) =>
-                              handleFilterChange(
-                                header.toLowerCase().replace(/ /g, ""),
-                                e.target.value
-                              )
-                            }
-                          >
-                            <option className="dark:text-gray-600" value="">{header}</option>
-                            {getUniqueValues(
-                              header.toLowerCase().replace(/ /g, "")
-                            ).map((value, i) => (
-                              <option className="dark:text-gray-600" key={i} value={value}>
-                                {value}
-                              </option>
-                            ))}
-                          </select>
+                        <select
+                          className="px-1 cursor-pointer bg-transparent text-gray-700 py-1 rounded focus:outline-none focus:border-transparent border-none uppercase text-sm w-full dark:text-gray-200"
+                          value={
+                            filters[header.toLowerCase().replace(/ /g, "")]
+                          }
+                          onChange={(e) =>
+                            handleFilterChange(
+                              header.toLowerCase().replace(/ /g, ""),
+                              e.target.value
+                            )
+                          }
+                        >
+                          <option className="dark:text-gray-600" value="">
+                            {header}
+                          </option>
+                          {header.toLowerCase().replace(/ /g, "") === "created"
+                            ? // Render options based on unique years for "Date Created"
+                              getUniqueValues(
+                                header.toLowerCase().replace(/ /g, "")
+                              ).map((year, i) => (
+                                <option
+                                  className="dark:text-gray-600"
+                                  key={i}
+                                  value={year}
+                                >
+                                  {year}
+                                </option>
+                              ))
+                            : // Render options based on other attributes
+                              getUniqueValues(
+                                header.toLowerCase().replace(/ /g, "")
+                              ).map((value, i) => (
+                                <option
+                                  className="dark:text-gray-600"
+                                  key={i}
+                                  value={value}
+                                >
+                                  {value}
+                                </option>
+                              ))}
+                        </select>
                       )}
                     </th>
                   ))}
@@ -271,7 +323,9 @@ const ResidentsList = ({ residents, label }) => {
                             : "Not Verified"}
                         </div>
                       </td>
-                      <td className="px-6 py-4">{formatDate(resident.created)}</td>
+                      <td className="px-6 py-4">
+                        {formatDate(resident.createdat)}
+                      </td>
                       <td className="px-6 py-4">
                         <button
                           onClick={() => handleViewUser(resident.name)}
@@ -298,7 +352,7 @@ const ResidentsList = ({ residents, label }) => {
               isViewingSelected={isViewingSelected}
               selectedUsers={selectedUsers}
               onClick={handleExport}
-            />    
+            />
           </div>
         </div>
       }
