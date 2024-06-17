@@ -8,7 +8,7 @@ const SortingButton = ({ filteredResidents, setFilteredResidents, toggleSort, is
     { title: "Age", type: "age" },
     { title: "Gender", type: "gender" },
     { title: "Status", type: "status" },
-    { title: "Date created", type: "created" },
+    { title: "Date created", type: "createdat" },
   ];
 
   const [currentSortField, setCurrentSortField] = useState(null); // to know the current sort
@@ -47,10 +47,10 @@ const SortingButton = ({ filteredResidents, setFilteredResidents, toggleSort, is
         return genderSortDirection === "asc" ? genderA - genderB : genderB - genderA;
       });
       setGenderSortDirection(genderSortDirection === "asc" ? "desc" : "asc");
-    } else if (field === "created") {
+    } else if (field === "createdat") {
       sortedResidents = sortedResidents.slice().sort((a, b) => {
-        const dateA = new Date(a.created);
-        const dateB = new Date(b.created);
+        const dateA = new Date(a.createdat);
+        const dateB = new Date(b.createdat);
         return dateSortDirection === "asc" ? dateA - dateB : dateB - dateA;
       });
       setDateSortDirection(dateSortDirection === "asc" ? "desc" : "asc");

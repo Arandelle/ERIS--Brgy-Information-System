@@ -107,17 +107,25 @@ const ResidentsList = ({ residents, label }) => {
 
   // Function to handle changes in filter inputs
   const handleFilterChange = (key, value) => {
-    if (key === "age") {
-      // Parse age range from the selected value
-      const [min, max] = value.split("-").map(Number);
-
-      // Filter residents within the selected age range
-      const filteredResidents = residents.filter((resident) => {
-        const age = resident[key];
-        return age >= min && age <= max;
-      });
-
-      setFilteredResidents(filteredResidents);
+    if (key === 'age') {
+      if (value === '') {
+        // If selecting the default option, clear the age filter
+        setFilters({
+          ...filters,
+          age: '', // Reset age filter
+        });
+      } else {
+        // Parse age range from the selected value
+        const [min, max] = value.split('-').map(Number);
+  
+        // Filter residents within the selected age range
+        const filteredResidents = residents.filter((resident) => {
+          const age = resident[key];
+          return age >= min && age <= max;
+        });
+  
+        setFilteredResidents(filteredResidents);
+      }
     } else if (key === "createdat") {
       // Filter residents whose "Date Created" year matches the selected value
       const filteredResidents = residents.filter((resident) => {
@@ -142,6 +150,7 @@ const ResidentsList = ({ residents, label }) => {
     if (key === "age") {
       // Define age ranges
       const ageRanges = [
+        { label: 'Any Age', value: '' },
         { label: "18-30", min: 18, max: 30 },
         { label: "31-40", min: 31, max: 40 },
         { label: "41-50", min: 41, max: 50 },
@@ -162,7 +171,10 @@ const ResidentsList = ({ residents, label }) => {
             const range = ageRanges.find(
               (range) => age >= range.min && age <= range.max
             );
-            return range ? range.label : "";
+            return [
+              { label: 'Any Age', value: '' }, // Represents the default or clear option
+              ...ageRanges,
+            ];
           })
         ),
       ].filter((value) => value !== "");
@@ -266,6 +278,7 @@ const ResidentsList = ({ residents, label }) => {
                           {header.toLowerCase().replace(/ /g, "") === "age"
                             ? // Render options based on predefined age ranges
                               [
+                                { label: 'Any Age', value: "" },
                                 { label: "18-30", min: 18, max: 30 },
                                 { label: "31-40", min: 31, max: 40 },
                                 { label: "41-50", min: 41, max: 50 },
