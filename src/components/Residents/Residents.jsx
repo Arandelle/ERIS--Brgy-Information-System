@@ -48,7 +48,8 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
   const [isFiltered, setIsFiltered] = useState(true);
   const itemsPerPage = 10;
 
-  const [filters, setFilters] = useState({ // state object for holding filter values
+  const [filters, setFilters] = useState({
+    // state object for holding filter values
     name: "",
     address: "",
     age: "",
@@ -125,12 +126,12 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
   // Function to get unique, sorted values for a specific key from the residents list
   const getUniqueSortedValues = (key) => {
     let uniqueValues = [
-        ...new Set(
-          residents.map((resident) =>
-            resident[key] ? resident[key].toString().toLowerCase().trim() : ""
-          )
-        ),
-      ].filter((value) => value !== "");
+      ...new Set(
+        residents.map((resident) =>
+          resident[key] ? resident[key].toString().toLowerCase().trim() : ""
+        )
+      ),
+    ].filter((value) => value !== "");
     // Sort uniqueValues in ascending order
     uniqueValues.sort((a, b) => a.localeCompare(b));
 
@@ -144,37 +145,37 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
       : filteredResidents;
 
     const formattedData = dataToExport.map((resident) => ({
-      Id: resident.id || '',
-      Image: resident.img || '',
+      Id: resident.id || "",
+      Image: resident.img || "",
       Name: resident.name,
-      Email: resident.email || '',
-      Address: resident.address || '',
-      Age: resident.age || '',
-      Gender: resident.gender || '',
-      Status: resident.status || '',
-      Date: formatDate(resident.created) || '',
+      Email: resident.email || "",
+      Address: resident.address || "",
+      Age: resident.age || "",
+      Gender: resident.gender || "",
+      Status: resident.status || "",
+      Date: formatDate(resident.created) || "",
     }));
 
     exportToExcel(formattedData);
   };
-    // Function to handle importing data from Excel file
+  // Function to handle importing data from Excel file
   const handleImportFile = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
-      // Check file type
-      if (!file.name.match(/\.(xlsx|xls)$/)) {
-        toast.error("Only .xlsx or .xls files are allowed!");
-        return;
-      }
+    // Check file type
+    if (!file.name.match(/\.(xlsx|xls)$/)) {
+      toast.error("Only .xlsx or .xls files are allowed!");
+      return;
+    }
     reader.onload = (e) => {
       try {
         const arrayBuffer = e.target.result;
         const workbook = XLSX.read(arrayBuffer, { type: "array" });
-  
+
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-  
+
         const formattedData = jsonData.map((item, index) => ({
           id: index + Math.random(), // Generate a unique ID for each item, if not already present
           img: item["Image"] || "",
@@ -186,18 +187,17 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
           status: item["Status"] || "",
           created: new Date(item["Date"]), // Ensure Date is correctly parsed as a Date object
         }));
-  
+
         setResidents((prevResidents) => [...prevResidents, ...formattedData]);
       } catch (error) {
         console.error("Error parsing Excel file:", error);
         // Optionally, show a notification or toast to the user about the error
-        toast.error("Error Please try again")
+        toast.error("Error Please try again");
       }
     };
-  
+
     reader.readAsArrayBuffer(file);
   };
-  
 
   return (
     <HeadSide
@@ -342,7 +342,10 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
                       </td>
                       <td className="px-6 py-4">
                         <button
-                          onClick={(e) => {e.stopPropagation(); handleViewUser(resident.name)}}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewUser(resident.name);
+                          }}
                           className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
                         >
                           View user
@@ -356,12 +359,6 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
           </div>
 
           <div>
-          <input
-              type="file"
-              accept=".xlsx, .xls"
-              onChange={handleImportFile}
-              className="mr-3"
-            />
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
@@ -371,7 +368,8 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
               filteredResidents={filteredResidents}
               isViewingSelected={isViewingSelected}
               selectedUsers={selectedUsers}
-              onClick={handleExport}
+              onClickExport={handleExport}
+              onClickImport={handleImportFile}
             />
           </div>
         </div>

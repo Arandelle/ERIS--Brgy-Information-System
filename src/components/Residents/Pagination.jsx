@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ExportButton from "./ExportButton";
+import FileHandlerButtons from "./FileHandlerButtons";
 
 const Pagination = ({
   currentPage,
@@ -10,7 +10,8 @@ const Pagination = ({
   totalPages,
   isViewingSelected,
   selectedUsers,
-  onClick,
+  onClickExport,
+  onClickImport
 }) => {
   const [jumpToPage, setJumpToPage] = useState("");
   const isDisable =
@@ -145,7 +146,7 @@ const Pagination = ({
           Go
         </button>
       </form>
-      <ExportButton onClick={onClick}/>
+      <FileHandlerButtons onClickExport={onClickExport} onClickImport={onClickImport}/>
     </nav>
   );
 };
