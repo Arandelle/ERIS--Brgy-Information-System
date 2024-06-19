@@ -13,7 +13,7 @@ export const HeaderData = [
   "Age",
   "Gender",
   "Status",
-  "CreatedAt",
+  "created",
   "Action",
 ];
 
@@ -50,7 +50,7 @@ const ResidentsList = ({ residents, label }) => {
     age: "",
     gender: "",
     status: "",
-    createdat: "",
+    created: "",
   });
 
   useEffect(() => {
@@ -140,7 +140,7 @@ const ResidentsList = ({ residents, label }) => {
       Age: resident.age,
       Gender: resident.gender,
       Status: resident.status,
-      Date: formatDate(resident.createdat),
+      Date: formatDate(resident.created),
     }));
 
     exportToExcel(formattedData);
@@ -187,7 +187,7 @@ const ResidentsList = ({ residents, label }) => {
                         header
                       ) : (
                         <select
-                          className="px-1 cursor-pointer bg-transparent text-gray-700 py-1 rounded focus:outline-none focus:border-transparent border-none uppercase text-sm w-full dark:text-gray-200"
+                          className="px-1 cursor-pointer bg-transparent text-primary-700 py-1 rounded focus:outline-none focus:border-transparent border-none uppercase text-sm w-full dark:text-gray-200"
                           value={
                             filters[header.toLowerCase().replace(/ /g, "")]
                           }
@@ -285,11 +285,11 @@ const ResidentsList = ({ residents, label }) => {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        {formatDate(resident.createdat)}
+                        {formatDate(resident.created)}
                       </td>
                       <td className="px-6 py-4">
                         <button
-                          onClick={() => handleViewUser(resident.name)}
+                          onClick={(e) => {e.stopPropagation(); handleViewUser(resident.name)}}
                           className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
                         >
                           View user
