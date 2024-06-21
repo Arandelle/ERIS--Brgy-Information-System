@@ -15,9 +15,9 @@ import Events from "./components/Events/Events";
 import News from "./components/Events/News";
 import Request from "./components/Services/Request";
 import AddServices from "./components/Services/AddServices";
-import MyProfile from "./components/Admin/MyProfile";
-import Setting from "./components/Admin/Setting";
-import Archives from "./components/Admin/Archives";
+import MyProfile from "./components/Header/MyProfile"
+import Setting from "./components/Header/Admin/Setting"
+import Archives from "./components/Header/Admin/Archives";
 import { Toaster } from "sonner";
 
 const App = () => {

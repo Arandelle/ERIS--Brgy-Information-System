@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import Header from "../Header";
+import Header from "../Header/Header";
 import Sidebar from "../Sidebar/Sidebar";
 import { Toggle } from "../../hooks/Toggle";
 import Skeleton from "./Skeleton";
-import MsgReusable from "./MsgReusable";
 
 const HeadSide = ({ child, message }) => {
   const { isOpen, toggleDropdown } = Toggle();

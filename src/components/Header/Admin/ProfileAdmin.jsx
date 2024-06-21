@@ -1,8 +1,8 @@
-import { Toggle } from "../../hooks/Toggle";
+import { Toggle } from "../../../hooks/Toggle";
 import { AdminData, AdminSettings } from "./AdminData";
 import { useState } from "react";
-import Logout from "../ReusableComponents/AskCard";
-import { PopoverHover } from "../ReusableComponents/Popover";
+import Logout from "../../ReusableComponents/AskCard";
+import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
@@ -31,13 +31,13 @@ const Profile = () => {
         data-dropdown-toggle="dropdown"
       >
         <span className="sr-only">Open user menu</span>
-        <PopoverHover content={`${isOpen ? "Close" : "Open"} Profile`}>
+        <Tooltip title={<span className="text-sm">{`${isOpen ? "Close" : "Open"} Profile`}</span>} arrow>
           <img
             className="w-8 h-8 rounded-full"
             src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
             alt="user photo"
           />
-        </PopoverHover>
+        </Tooltip>
       </button>
       {isOpen && (
         <div

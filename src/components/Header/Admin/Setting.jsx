@@ -1,6 +1,6 @@
 import React from 'react'
-import HeadSide from '../ReusableComponents/HeaderSidebar'
-import Maintenance from '../ReusableComponents/Maintenance'
+import HeadSide from '../../ReusableComponents/HeaderSidebar'
+import Maintenance from '../../ReusableComponents/Maintenance'
 
 const Setting = () => {
   return (

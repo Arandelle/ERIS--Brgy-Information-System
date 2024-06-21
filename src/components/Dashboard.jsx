@@ -8,7 +8,7 @@ import registered from "../assets/registered.svg";
 import Events from "../assets/events.svg";
 import emergency from "../assets/emergency.svg";
 import HeadSide from "./ReusableComponents/HeaderSidebar";
-import DateToday from "./Admin/DateToday";
+import DateToday from "./Header/Admin/DateToday";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import { Pabahay, Lumina, Carissa } from "./Residents/ResidentsData";
 import { personInfo } from "./Maps/MapContent";

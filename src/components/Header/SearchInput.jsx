@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AllData } from "./AllData";
+import { AllData } from "./Admin/AllData";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Question from "../../assets/question.svg";
 
