@@ -17,6 +17,8 @@ import Request from "./components/Services/Request";
 import AddServices from "./components/Services/AddServices";
 import MyProfile from "./components/Header/MyProfile"
 import Setting from "./components/Header/Admin/Setting"
+import FAQS from "./components/Header/Admin/FAQS"
+import TermsConditions from "./components/Header/Admin/TermsConditions";
 import Archives from "./components/Header/Admin/Archives";
 import { Toaster } from "sonner";
 
@@ -53,6 +55,8 @@ const App = () => {
                 <Route path="/history" element={<History />} />{" "}
                 <Route path="/myProfile" element={<MyProfile />} />{" "}
                 <Route path="/settings" element={<Setting />} />{" "}
+                <Route path="/FAQS" element={<FAQS />} />{" "}
+                <Route path="/Terms and Conditions" element={<TermsConditions />} />{" "}
                 <Route path="/archives" element={<Archives />} />{" "}
               </Routes>
             </div>
