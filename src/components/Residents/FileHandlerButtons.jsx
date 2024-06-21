@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DownloadIcon from "@mui/icons-material/Download";
 import PublishIcon from "@mui/icons-material/Publish";
-import ListIcon from "@mui/icons-material/List";
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import Tooltip from "@mui/material/Tooltip";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 
@@ -13,11 +13,10 @@ const FileHandlerButtons = ({ onClickExport, onClickImport }) => {
   };
 
   const handleTooltipOpen = () => {
-    setOpen(true);
+    setOpen(!open);
   };
 
   return (
-    <div>
       <ClickAwayListener onClickAway={handleTooltipClose}>
         <div>
           <Tooltip
@@ -57,12 +56,11 @@ const FileHandlerButtons = ({ onClickExport, onClickImport }) => {
             disableTouchListener
           >
             <button onClick={handleTooltipOpen} className="flex items-center">
-              <ListIcon />
+              <SettingsOutlinedIcon />
             </button>
           </Tooltip>
         </div>
       </ClickAwayListener>
-    </div>
   );
 };
 

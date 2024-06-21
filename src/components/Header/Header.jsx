@@ -66,11 +66,6 @@ const Header = ({ toggleSideBar, isOpen }) => {
               </button>
             </div>
           </Tooltip>
-          <Tooltip
-            title={<span className="text-sm">Refresh</span>}
-            placement="right"
-            arrow
-          >
             <a
               href="https://eris-brgy-information-system.vercel.app/dashboard"
               className="flex mr-4"
@@ -84,13 +79,12 @@ const Header = ({ toggleSideBar, isOpen }) => {
                 Bagtas
               </span>
             </a>
-          </Tooltip>
         </div>
         <div className="items-center inline-flex">
           {/* Search Button */}
           <Tooltip
-            title={<span className="text-sm">Search section</span>}
-            placement="left"
+            title={<span className="text-sm">Enter keyword</span>}
+            placement="bottom"
             arrow
           >
             <button
