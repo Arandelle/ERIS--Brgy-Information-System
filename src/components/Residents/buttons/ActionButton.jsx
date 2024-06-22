@@ -31,24 +31,45 @@ const ActionButton = ({
   };
 
   const isActionDisabled = (actionType) => {
+
     if (actionType === "add") {
-      return false;
+      return false; // The "add" action is never disabled
     }
+  
     if (selectedUsers.length === 0) {
-      return true;
+      return true; 
     }
+  
     if (actionType === "reset" && selectedUsers.length !== 1) {
       return true;
     }
+
     if (actionType === "activate") {
       return selectedUsers.some(
         (userId) =>
           filteredResidents.find((resident) => resident.id === userId)
-            .status === "Activated"
-      );
+            .status === "Verified"
+      );  // return true 
     }
+
+    if (actionType === "email") {
+      const hasVerified = selectedUsers.some(
+        (userId) => filteredResidents.find((resident) => resident.id === userId).status === "Verified"
+      );
+  
+      const hasNotVerified = selectedUsers.some(
+        (userId) => filteredResidents.find((resident) => resident.id === userId).status === "Not Verified"
+      );
+  
+      // The "email" action is disabled (returns true) if both "Verified" and "Not Verified" users are selected
+      // Otherwise, it is enabled (returns false)
+      return hasVerified && hasNotVerified;
+    }
+  
+    // By default, other actions are not disabled (return false)
     return false;
   };
+  
 
   return (
     <div>
