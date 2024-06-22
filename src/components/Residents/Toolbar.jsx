@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import ActionButton from "./ActionButton";
-import SortingButton from "./SortingButton";
-import ViewUserButton from "./ViewUserButton";
-import FilterButton from "./FilterButton";
+import ActionButton from "./buttons/ActionButton";
+import SortingButton from "./buttons/SortingButton";
+import ViewUserButton from "./buttons/ViewUserButton";
+import FilterButton from "./buttons/FilterButton";
 
 const Toolbar = ({
   label,

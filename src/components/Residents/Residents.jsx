@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HeadSide from "../ReusableComponents/HeaderSidebar";
-import Pagination from "./Pagination";
+import Pagination from "./buttons/Pagination";
 import Toolbar from "./Toolbar";
 import { toast } from "sonner";
 import { formatDate } from "../../helper/FormatDate";
