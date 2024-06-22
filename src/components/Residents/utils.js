@@ -24,10 +24,16 @@ export const exportToExcel = (data, fileName = "residents.xlsx") => {
   };
 
   // Export the current view (filtered or selected users)
- export const handleExport = (isViewingSelected, selectedUsers, residents) => {
+  export const handleExport = (isViewingSelected, selectedUsers, residents, filteredResidents) => {
+    console.log('isViewingSelected:', isViewingSelected);
+    console.log('selectedUsers:', selectedUsers);
+    console.log('residents:', residents);
+
     const dataToExport = isViewingSelected
       ? selectedUsers.map((id) => residents.find((res) => res.id === id))
       : filteredResidents;
+
+    console.log('dataToExport:', dataToExport);
 
     const formattedData = dataToExport.map((resident) => ({
       Id: resident.id || "",
@@ -41,8 +47,11 @@ export const exportToExcel = (data, fileName = "residents.xlsx") => {
       Date: formatDate(resident.created) || "",
     }));
 
+    console.log('formattedData:', formattedData);
+
     exportToExcel(formattedData);
-  };
+};
+
 
     // Function to handle importing data from Excel file
  export const handleImportFile = (event, setResidents) => {

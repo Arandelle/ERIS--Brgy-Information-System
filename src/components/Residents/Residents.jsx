@@ -4,6 +4,7 @@ import Pagination from "./buttons/Pagination";
 import Toolbar from "./Toolbar";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
+import AddUserModal from "./buttons/AddUserModal";
 import { toast } from "sonner";
 import { handleImportFile, handleExport } from "./utils";
 
@@ -18,6 +19,7 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
   const itemsPerPage = 10;
 
   const [addUser, setAddUser] = useState(false);
+  const [next, setNext] = useState(false);
 
   const [filters, setFilters] = useState({
     // state object for holding filter values
@@ -147,27 +149,8 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
                 </tr>
               ) : (
                 <tbody>
-                  {addUser && (
-                    <div className="flex items-center justify-center absolute inset-0 z-50">
-                      <div
-                        className="absolute h-full w-full bg-gray-600 bg-opacity-50"
-                        onClick={() => setAddUser(false)}
-                      ></div>
-                      <div className="relative p-10 bg-white rounded-md shadow-md">
-                        <button
-                          className="absolute top-2 right-2"
-                          onClick={() => setAddUser(false)}
-                        >
-                          Close
-                        </button>
-                        <div className="flex flex-col space-y-1">
-                          <h2>Add user</h2>
-                          <input type="text" placeholder="enter name" />
-                          <input type="text" placeholder="enter address"/>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+
+                  <AddUserModal addUser={addUser} setAddUser={setAddUser} next={next} setNext={setNext}/>
 
                   {currentItems.map((resident, key) => (
                     <TableBody
@@ -194,7 +177,12 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
               isViewingSelected={isViewingSelected}
               selectedUsers={selectedUsers}
               onClickExport={() =>
-                handleExport(isViewingSelected, selectedUsers, residents)
+                handleExport(
+                  isViewingSelected,
+                  selectedUsers,
+                  residents,
+                  filteredResidents
+                )
               }
               onClickImport={(event) => handleImportFile(event, setResidents)}
             />
