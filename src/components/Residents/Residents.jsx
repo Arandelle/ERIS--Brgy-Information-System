@@ -17,6 +17,8 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
   const [isFiltered, setIsFiltered] = useState(true);
   const itemsPerPage = 10;
 
+  const [addUser, setAddUser] = useState(false);
+
   const [filters, setFilters] = useState({
     // state object for holding filter values
     name: "",
@@ -123,6 +125,7 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
             setIsViewingSelected={setIsViewingSelected}
             isFiltered={isFiltered}
             setIsFiltered={setIsFiltered}
+            setAddUser={setAddUser}
           />
           <div className="overflow-auto w-full">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -144,6 +147,28 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
                 </tr>
               ) : (
                 <tbody>
+                  {addUser && (
+                    <div className="flex items-center justify-center absolute inset-0 z-50">
+                      <div
+                        className="absolute h-full w-full bg-gray-600 bg-opacity-50"
+                        onClick={() => setAddUser(false)}
+                      ></div>
+                      <div className="relative p-10 bg-white rounded-md shadow-md">
+                        <button
+                          className="absolute top-2 right-2"
+                          onClick={() => setAddUser(false)}
+                        >
+                          Close
+                        </button>
+                        <div className="flex flex-col space-y-1">
+                          <h2>Add user</h2>
+                          <input type="text" placeholder="enter name" />
+                          <input type="text" placeholder="enter address"/>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {currentItems.map((resident, key) => (
                     <TableBody
                       key={key}
@@ -168,7 +193,9 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
               filteredResidents={filteredResidents}
               isViewingSelected={isViewingSelected}
               selectedUsers={selectedUsers}
-              onClickExport={()=>handleExport(isViewingSelected, selectedUsers, residents)}
+              onClickExport={() =>
+                handleExport(isViewingSelected, selectedUsers, residents)
+              }
               onClickImport={(event) => handleImportFile(event, setResidents)}
             />
           </div>

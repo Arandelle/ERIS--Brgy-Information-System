@@ -14,7 +14,8 @@ const Toolbar = ({
   isViewingSelected,
   setIsViewingSelected,
   isFiltered,
-  setIsFiltered
+  setIsFiltered,
+  setAddUser
 }) => {
 
   const [isActionOpen, setActionOpen] = useState(false);
@@ -43,6 +44,8 @@ const Toolbar = ({
           filteredResidents={filteredResidents}
           toggleAction={toggleAction}
           isActionOpen={isActionOpen}
+          setActionOpen={setActionOpen}
+          setAddUser={setAddUser}
         />
 
         <SortingButton
