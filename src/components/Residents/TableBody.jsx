@@ -8,20 +8,21 @@ const TableBody = ({selectedUsers,resident, handleCheckbox, handleViewUser, setU
     className={`border-b dark:border-gray-700
     ${
       selectedUsers.includes(resident.id)
-        ? "bg-gray-300 dark:bg-gray-900 hover:bg-gray-400 hover:dark:bg-gray-700"
+        ? "bg-gray-300 dark:bg-gray-800 dark:bg-opacity-40 hover:bg-gray-400 hover:dark:bg-gray-700 dark:hover:bg-opacity-40"
         : "bg-white hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-gray-700 "
     }`}
   >
     <td className="w-4 p-4">
-      <div className="flex items-center">
+      <div className="flex items-center justify-between space-y-0">
         <input
         key={key}
           id="checkbox-table-search-1"
           type="checkbox"
           onChange={() => handleCheckbox(resident.id)}
           checked={selectedUsers.includes(resident.id)}
-          className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          className="w-4 h-4 cursor-pointer text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
         />
+        {resident.id}
       </div>
     </td>
     <th

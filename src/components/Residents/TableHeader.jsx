@@ -21,7 +21,7 @@ const TableHeader = ({
   getUniqueSortedValues,
 }) => {
   return (
-    <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-800 dark:bg-opacity-70 dark:text-gray-400">
       <tr>
         <th scope="col" className="p-4">
           <input
