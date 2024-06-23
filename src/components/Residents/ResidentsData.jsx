@@ -10,7 +10,8 @@ export const Pabahay = [
       address: "123 Main St",
       gender: "Male",
       status: "Verified",
-      created: "2020-07-01"
+      created: "2020-07-01",
+      phone: "123456789"
     },
     {
       id: 2,

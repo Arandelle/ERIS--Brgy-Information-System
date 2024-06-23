@@ -20,6 +20,8 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
 
   const [addUser, setAddUser] = useState(false);
   const [next, setNext] = useState(false);
+  const [showUserInfoModal, setShowUserInfoModal] = useState(false);
+  const [userToViewInfo, setUserToViewInfo] = useState(null);
 
   const [filters, setFilters] = useState({
     // state object for holding filter values
@@ -85,8 +87,9 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
   };
 
   // handle to view selected user
-  const handleViewUser = (id) => {
-    toast.warning(`view ${id}`);
+  const handleViewUser = (user) => {
+    setUserToViewInfo(user);
+    setShowUserInfoModal(true);
   };
 
   // Function to handle changes in filter inputs
@@ -151,6 +154,50 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
                 <tbody>
 
                   <AddUserModal addUser={addUser} setAddUser={setAddUser} next={next} setNext={setNext}/>
+
+                  {showUserInfoModal && userToViewInfo && (
+                     <div className="fixed flex items-center justify-center inset-0 z-50">
+                     <div
+                       className="fixed h-full w-full bg-gray-600 bg-opacity-50"
+                       onClick={() => setShowUserInfoModal(false)}
+                     ></div>
+                     <div className="relative p-5 bg-white rounded-md shadow-md">
+                     <h2>User Information</h2>
+                       <button
+                         className="absolute top-2 right-2"
+                         onClick={() => setShowUserInfoModal(false)}
+                       >
+                         Close
+                       </button>
+                       <div className="flex flex-col justify-between space-y-2">
+                          <p className="flex items-center justify-center p-4"><img src={userToViewInfo.img} alt="" className="h-24 w-24"/></p>
+                          <div className="flex flex-row justify-between w-[400px]">
+                            <div>
+                              <p>Name: {userToViewInfo.name}</p>
+                              <p>Email: {userToViewInfo.email}</p>
+                              <p>Phone: {userToViewInfo.phone}</p>
+                              <p>Gender: {userToViewInfo.gender}</p>
+                              <p>Address: {userToViewInfo.address}</p>
+                            </div>
+                            <div>
+                              <p>Birthdate: {userToViewInfo.birthdate}</p>
+                              <p>Civil Status: {userToViewInfo.civil}</p>
+                              <p>Created on: {userToViewInfo.created}</p>
+                              <p>Account status: {userToViewInfo.status}</p>
+                            </div>
+                          </div>
+                         <button
+                           className="p-2 text-gray-200 bg-primary-500"
+                           onClick={() => {
+                             setShowUserInfoModal(false);
+                           }}
+                         >
+                           OK
+                         </button>
+                       </div>
+                     </div>
+                   </div>
+                  )}
 
                   {currentItems.map((resident, key) => (
                     <TableBody

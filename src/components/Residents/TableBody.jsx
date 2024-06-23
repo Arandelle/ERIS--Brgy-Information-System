@@ -1,7 +1,7 @@
 import React from 'react'
 import { formatDate } from '../../helper/FormatDate';
 
-const TableBody = ({selectedUsers,resident, handleCheckbox, handleViewUser, key}) => {
+const TableBody = ({selectedUsers,resident, handleCheckbox, handleViewUser, setUserToViewInfo,key}) => {
   return (
     <tr
     onClick={() => handleCheckbox(resident.id)}
@@ -67,7 +67,7 @@ const TableBody = ({selectedUsers,resident, handleCheckbox, handleViewUser, key}
       <button
         onClick={(e) => {
           e.stopPropagation();
-          handleViewUser(resident.name);
+          handleViewUser(resident);
         }}
         className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
       >
