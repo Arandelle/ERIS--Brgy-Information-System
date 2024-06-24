@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Launcher from "./Launcher";
 import { toast } from "sonner";
 import emailjs from "emailjs-com";
+import OTP from "../assets/otp.svg"
 
 export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
@@ -44,10 +45,10 @@ export default function Login({ setAuth }) {
           "template_kpt56kp",
           templateParams,
           "k6-dH67sAovnHJHAn"
-        );
+        );  
+        toast.success("Email sent successfully");
         setGeneratedOtp(otpCode.toString()); // Store generated OTP as a string
         setOtpSent(true); // Mark OTP as sent
-        toast.success("Email sent successfully");
       }
     } catch (error) {
       toast.error("Error sending email: " + error.message);
@@ -77,7 +78,7 @@ export default function Login({ setAuth }) {
         <Launcher setLoading={setLoading} />
       ) : (
         <main className="flex h-screen w-full items-center justify-center bg-gray-100 dark:bg-gray-800 px-4">
-          <div className="w-full max-w-md">
+          <div className={`w-full max-w-md ${otpSent && !otpVerified ? ("hidden") : "block"}`}>
             <div className="space-y-1 mb-3">
               <h1 className="text-2xl text-center dark:text-gray-300">
                 Welcome Admin
@@ -88,7 +89,7 @@ export default function Login({ setAuth }) {
             <form
               action=""
               onSubmit={handleSubmitWithOtp}
-              className="space-y-4"
+              className={`space-y-4`}
             >
               <div className="space-y-2">
                 <label htmlFor="email" className="dark:text-gray-400">
@@ -182,6 +183,8 @@ export default function Login({ setAuth }) {
                     )}
                   </div>
                 </div>
+
+        
               </div>
               <div>
                 <button
@@ -192,19 +195,23 @@ export default function Login({ setAuth }) {
                 </button>
               </div>
             </form>
+     
           </div>
-
-          {otpSent && !otpVerified && (
-            <div>
-              <input
-                type="text"
-                placeholder="Enter OTP"
-                value={otpInput}
-                onChange={(e) => setOtpInput(e.target.value)}
-              />
-              <button onClick={handleVerify}>Verify OTP</button>
+                 {/*Input for verfication  */}
+         <div className={`flex flex-col ${otpSent && !otpVerified ? ("block") : "hidden"}`}>
+          <img src={OTP} alt="Image" className="h-60 w-60" />
+          <h1>Enter the otp we sent to your email</h1>
+              <div className="flex flex-row space-x-2 ">
+                  <input
+                   class=""
+                    type="text"
+                    placeholder="Enter OTP"
+                    value={otpInput}
+                    onChange={(e) => setOtpInput(e.target.value)}
+                  />
+                  <button className="w-full bg-primary-500 text-white text-bold py-2 px-4 rounded" onClick={handleVerify}>Verify</button>
+              </div>
             </div>
-          )}
         </main>
       )}
     </>
