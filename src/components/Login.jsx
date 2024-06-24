@@ -1,32 +1,76 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Launcher from "./Launcher"
+import Launcher from "./Launcher";
 import { toast } from "sonner";
+import emailjs from "emailjs-com";
 
 export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
   const [loading, setLoading] = useState(true);
   const [showPass, setShowPass] = useState(false);
+
+  const [otpInput, setOtpInput] = useState("");
+  const [otpSent, setOtpSent] = useState(false); // Flag to track if OTP has been sent
+  const [otpVerified, setOtpVerified] = useState(false); // Flag to track if OTP is verified
+  const [generatedOtp, setGeneratedOtp] = useState(""); // State to store the generated OTP
+
   const navigate = useNavigate();
 
   const handleShowHidePass = () => {
     setShowPass(!showPass);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmitWithOtp = async (event) => {
     event.preventDefault();
-
-    email !== "admin@example.com"
-      ? toast.error("The email you entered is incorrect")
-      : password !== "password123"
-      ? toast.error("The password you entered is incorrect")
-      : (setAuth(true),
-      toast.success("Login successfully"),
-      navigate("/dashboard"));
-        // navigate("/dashboard", { state: toast("Login successfully" )}));
+    try {
+      if (!email) {
+        alert("Please enter a valid email address");
+        return;
+      }
+      if (email !== "topaguintsarandell@gmail.com") {
+        toast.error("Invalid email");
+        return;
+      } else if (password !== "password123") {
+        toast.error("The password you entered is incorrect");
+      } else {
+        const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
+        const templateParams = {
+          to_email: email,
+          otp: otpCode,
+        };
+        await emailjs.send(
+          "service_irwj6pe",
+          "template_kpt56kp",
+          templateParams,
+          "k6-dH67sAovnHJHAn"
+        );
+        setGeneratedOtp(otpCode.toString()); // Store generated OTP as a string
+        setOtpSent(true); // Mark OTP as sent
+        toast.success("Email sent successfully");
+      }
+    } catch (error) {
+      toast.error("Error sending email: " + error.message);
+    }
   };
 
+  const handleVerify = () => {
+    if (otpInput === "") {
+      toast.error("Please enter the OTP");
+      return;
+    }
+
+    // Compare the OTP entered by the user with the generated OTP
+    if (otpInput === generatedOtp) {
+      setOtpVerified(true);
+      alert("OTP verified successfully");
+      setAuth(true),
+        toast.success("Login successfully"),
+        navigate("/dashboard");
+    } else {
+      toast.error("Incorrect OTP, please try again");
+    }
+  };
   return (
     <>
       {loading ? (
@@ -41,7 +85,11 @@ export default function Login({ setAuth }) {
               <h2 className="dark:text-gray-400">Email: admin@example.com</h2>
               <h2 className="dark:text-gray-400 mb-3">Password: password123</h2>
             </div>
-            <form action="" onSubmit={handleSubmit} className="space-y-4">
+            <form
+              action=""
+              onSubmit={handleSubmitWithOtp}
+              className="space-y-4"
+            >
               <div className="space-y-2">
                 <label htmlFor="email" className="dark:text-gray-400">
                   Email:
@@ -66,6 +114,7 @@ export default function Login({ setAuth }) {
                     required
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="example@gmail.com"
+                    value={email}
                   />
                 </div>
               </div>
@@ -144,6 +193,18 @@ export default function Login({ setAuth }) {
               </div>
             </form>
           </div>
+
+          {otpSent && !otpVerified && (
+            <div>
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                value={otpInput}
+                onChange={(e) => setOtpInput(e.target.value)}
+              />
+              <button onClick={handleVerify}>Verify OTP</button>
+            </div>
+          )}
         </main>
       )}
     </>
