@@ -29,12 +29,17 @@ export default function Login({ setAuth }) {
         alert("Please enter a valid email address");
         return;
       }
-      if (email !== "topaguintsarandell@gmail.com") {
+      if(email === "admin@example.com" && password === "password123"){
+        setAuth(true),
+        toast.success("Login successfully"),
+        navigate("/dashboard");
+      } else if (email !== "topaguintsarandell@gmail.com") {
         toast.error("Invalid email");
         return;
       } else if (password !== "password123") {
-        toast.error("The password you entered is incorrect");
-      } else {
+        toast.error("The password you entered is incorrect"); 
+      }
+      else {
         const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
         const templateParams = {
           to_email: email,
