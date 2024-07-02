@@ -35,9 +35,15 @@ input, textarea {
 }
 
 .rbc-toolbar .rbc-btn-group button:hover {
- @apply bg-gray-500 text-gray-100 dark:bg-gray-800 dark:text-gray-200
+ @apply bg-gray-500 text-gray-100 dark:bg-gray-800 dark:text-gray-200;
 }
 
 .rbc-toolbar .rbc-toolbar-label {
   @apply text-xl font-thin text-gray-800 dark:text-white;
+}
+.rbc-toolbar .rbc-btn-group .toolbar-btn-addEvent {
+  @apply bg-primary-500 text-gray-100 dark:bg-primary-200 dark:text-gray-700;
+}
+.rbc-toolbar .rbc-btn-group .toolbar-btn-addEvent:hover {
+  @apply bg-primary-600 text-gray-200 dark:bg-primary-300 dark:text-gray-800;
 }

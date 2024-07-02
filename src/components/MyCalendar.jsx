@@ -11,12 +11,30 @@ import HeadSide from "./ReusableComponents/HeaderSidebar";
 import QuestionModal from "./ReusableComponents/AskCard";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { toast } from "sonner";
-import { blue } from "@mui/material/colors";
+
 
 function capitalizeFirstLetter(string) {
   return string.replace(/\b\w/g, (char) => char.toUpperCase());
 }
+const CustomToolbar = ({label, onNavigate, onView, handleAddEventModal}) => {
 
+  return (
+    <div className="rbc-toolbar">
+      <span className="rbc-btn-group">
+        <button type="button" onClick={() => onNavigate('TODAY')}>Today</button>
+        <button type="button" onClick={() => onNavigate('PREV')}>Back</button>
+        <button type="button" onClick={() => onNavigate('NEXT')}>Next</button>
+        <button class="toolbar-btn-addEvent" onClick={handleAddEventModal}>Add Events</button>
+      </span>
+      <span className="rbc-toolbar-label">{label}</span>
+      <span className="rbc-btn-group">
+        <button type="button" onClick={() => onView('month')}>Month</button>
+        <button type="button" onClick={() =>onView('week')}>Week</button>
+        <button type="button" onClick={() => onView('day')}>Day</button>
+      </span>
+    </div>
+  );
+};
 const MyCalendar = () => {
   const localizer = momentLocalizer(moment);
   const [title, setTitle] = useState("");
@@ -195,6 +213,7 @@ const MyCalendar = () => {
                   paddingTop: 10,
                 }}
                 components={{
+                  toolbar: (toolbarProps) => <CustomToolbar {...toolbarProps} handleAddEventModal={handleAddEventModal} />,
                   agenda: {
                     event: CustomAgendaEvent,
                   },
