@@ -192,14 +192,6 @@ const MyCalendar = () => {
     <HeadSide
       child={
         <div className="m-3">
-
-          <BtnReusable onClick={handleAddEventModal} 
-          value={`Add event`}
-          className="space-y-0 flex items-center"
-          Icon={<AddCircleOutlineIcon style={{fontSize: "large"}}/>}
-          type="add"
-          />
-
           <div className="grid grid-cols-1 md:grid-cols-4">
             <div className="col-span-3 border-t-[3px] border-primary-500 text-gray-600 dark:text-gray-200 mt-2 bg-gray-200 dark:bg-gray-800">
               <Calendar
