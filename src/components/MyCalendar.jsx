@@ -9,10 +9,12 @@ import InputReusable from "./ReusableComponents/InputReusable";
 import BtnReusable from "./ReusableComponents/BtnReusable";
 import HeadSide from "./ReusableComponents/HeaderSidebar";
 import QuestionModal from "./ReusableComponents/AskCard";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { toast } from "sonner";
+import { blue } from "@mui/material/colors";
 
 function capitalizeFirstLetter(string) {
-  return string.replace(/\b\w/g, char => char.toUpperCase());
+  return string.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 const MyCalendar = () => {
@@ -28,7 +30,11 @@ const MyCalendar = () => {
   const { containerSize, containerRef } = ContainerResizer();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [eventsToDelete, setEventToDelete] = useState(null);
+  const [addEventModal, setAddEventModal] = useState(false);
 
+  const handleAddEventModal = () => {
+    setAddEventModal(!addEventModal);
+  };
   const [events, setEvents] = useState(() => {
     const storedEvents = localStorage.getItem("events");
     return storedEvents
@@ -99,6 +105,7 @@ const MyCalendar = () => {
     setLocation(event.location);
     setOrganizer(event.organizer);
     setDetails(event.details);
+    setAddEventModal(true);
   };
 
   const handleUpdateEvent = () => {
@@ -148,7 +155,7 @@ const MyCalendar = () => {
     const updatedEventsArray = events.filter((event) => event.id !== id);
     localStorage.setItem("events", JSON.stringify(updatedEventsArray));
     setEvents(updatedEventsArray);
-    toast.error ("Event deleted");
+    toast.error("Event deleted");
     setShowDeleteModal(false);
   };
 
@@ -167,65 +174,14 @@ const MyCalendar = () => {
     <HeadSide
       child={
         <div className="m-3">
-          <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <InputReusable
-              type="text"
-              placeholder="Event Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onBlur={() => setTitle(title.toUpperCase())}
-            />
-            <InputReusable
-              type="text"
-              onFocus={(e) => (e.target.type = "date")}
-              onBlur={(e) => (e.target.type = "text")}
-              placeholder="Start Date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-            <InputReusable
-              type="text"
-              placeholder="End Date"
-              value={endDate}
-              onFocus={(e) => (e.target.type = "date")}
-              onBlur={(e) => (e.target.type = "text")}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-            <InputReusable
-              type="text"
-              placeholder="Location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              onBlur={(e) => setLocation(capitalizeFirstLetter(location))}
-            />
-            <InputReusable
-              type="text"
-              placeholder="Organizer"
-              value={organizer}
-              onChange={(e) => setOrganizer(e.target.value)}
-              onBlur={(e) => setOrganizer(capitalizeFirstLetter(organizer))}
-            />
-            <InputReusable
-              type="text"
-              placeholder="Details"
-              value={details}
-              onChange={(e) => setDetails(e.target.value)}
-              onBlur={(e) => setDetails(capitalizeFirstLetter(details))}
-            />
-            {selectedEvent ? (
-              <BtnReusable
-                onClick={handleUpdateEvent}
-                value="Update Event"
-                type={"edit"}
-              />
-            ) : (
-              <BtnReusable
-                onClick={handleAddEvent}
-                value="Add Event"
-                type={"add"}
-              />
-            )}
-          </div>
+
+          <BtnReusable onClick={handleAddEventModal} 
+          value={`Add event`}
+          className="space-y-0 flex items-center"
+          Icon={<AddCircleOutlineIcon style={{fontSize: "large"}}/>}
+          type="add"
+          />
+
           <div className="grid grid-cols-1 md:grid-cols-4">
             <div className="col-span-3 border-t-[3px] border-primary-500 text-gray-600 dark:text-gray-200 mt-2 bg-gray-200 dark:bg-gray-800">
               <Calendar
@@ -246,6 +202,96 @@ const MyCalendar = () => {
                 onSelectEvent={handleSelectEvent}
               />
             </div>
+
+            {addEventModal && (
+              <div className="fixed flex items-center justify-center inset-0 z-50">
+                <div
+                  className="fixed h-full w-full bg-gray-600 bg-opacity-50"
+                  onClick={() => setAddEventModal(false)}
+                ></div>
+                <div className="relative p-5 bg-white rounded-md shadow-md">
+                  <h2>Add New Event</h2>
+                  <button
+                    className="absolute top-2 right-2"
+                    onClick={() => setAddEventModal(false)}
+                  >
+                    Close
+                  </button>
+                  <div className="flex flex-col justify-between space-y-2">
+                    <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <InputReusable
+                        type="text"
+                        placeholder="Event Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        onBlur={() => setTitle(title.toUpperCase())}
+                      />
+                      <InputReusable
+                        type="text"
+                        onFocus={(e) => (e.target.type = "date")}
+                        onBlur={(e) => (e.target.type = "text")}
+                        placeholder="Start Date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                      />
+                      <InputReusable
+                        type="text"
+                        placeholder="End Date"
+                        value={endDate}
+                        onFocus={(e) => (e.target.type = "date")}
+                        onBlur={(e) => (e.target.type = "text")}
+                        onChange={(e) => setEndDate(e.target.value)}
+                      />
+                      <InputReusable
+                        type="text"
+                        placeholder="Location"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        onBlur={(e) =>
+                          setLocation(capitalizeFirstLetter(location))
+                        }
+                      />
+                      <InputReusable
+                        type="text"
+                        placeholder="Organizer"
+                        value={organizer}
+                        onChange={(e) => setOrganizer(e.target.value)}
+                        onBlur={(e) =>
+                          setOrganizer(capitalizeFirstLetter(organizer))
+                        }
+                      />
+                      <InputReusable
+                        type="text"
+                        placeholder="Details"
+                        value={details}
+                        onChange={(e) => setDetails(e.target.value)}
+                        onBlur={(e) =>
+                          setDetails(capitalizeFirstLetter(details))
+                        }
+                      />
+                      {selectedEvent ? (
+                        <BtnReusable
+                          onClick={handleUpdateEvent}
+                          value="Update Event"
+                          type={"edit"}
+                        />
+                      ) : (
+                        <BtnReusable
+                          onClick={handleAddEvent}
+                          value="Add Event"
+                          type={"add"}
+                        />
+                      )}
+                      <BtnReusable
+                        onClick={handleAddEventModal}
+                        value="Cancel"
+                        type="cancel"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="mr-3 ml-2" onSelectEvent={handleSelectEvent}>
               <div
