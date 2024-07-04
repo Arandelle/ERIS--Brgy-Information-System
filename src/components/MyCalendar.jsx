@@ -9,7 +9,7 @@ import InputReusable from "./ReusableComponents/InputReusable";
 import BtnReusable from "./ReusableComponents/BtnReusable";
 import HeadSide from "./ReusableComponents/HeaderSidebar";
 import QuestionModal from "./ReusableComponents/AskCard";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CloseIcon from '@mui/icons-material/Close';
 import { toast } from "sonner";
 
 
@@ -221,12 +221,12 @@ const MyCalendar = () => {
                   onClick={() => setAddEventModal(false)}
                 ></div>
                 <div className="relative p-5 bg-white rounded-md shadow-md">
-                  <h2>Add New Event</h2>
+                  <h2 className="py-2 px-2 text-primary-500 border-2 mb-5">Add New Event</h2>
                   <button
-                    className="absolute top-2 right-2"
+                    className="absolute p-2 top-0 right-0"
                     onClick={() => setAddEventModal(false)}
                   >
-                    Close
+                    <CloseIcon style={{fontSize: "large"}}/>
                   </button>
                   <div className="flex flex-col justify-between space-y-2">
                     <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
