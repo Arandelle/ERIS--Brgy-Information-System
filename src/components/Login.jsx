@@ -197,8 +197,6 @@ export default function Login({ setAuth }) {
                       )}
                   </div>
                 </div>
-
-        
               </div>
               <div>
                 <button
