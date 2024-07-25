@@ -37,6 +37,7 @@ const FetchData = () => {
             <li key={user.id}>
               <p>Name: {user.firstname} {user.lastname}</p>
               <p>Email: {user.email}</p>
+              <p>Phone: {user.mobileNum}</p>
               <p>Age: {user.age}</p>
               <p>Gender: {user.gender}</p>
               <p>Address: {user.address}</p>

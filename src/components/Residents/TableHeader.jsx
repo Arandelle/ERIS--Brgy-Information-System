@@ -6,7 +6,7 @@ export const HeaderData = [
   "Address",
   "Age",
   "Gender",
-  "Status",
+  "Mobile",
   "created",
   "Action",
 ];

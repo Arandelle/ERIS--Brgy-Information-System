@@ -7,9 +7,11 @@ import TableBody from "./TableBody";
 import AddUserModal from "./buttons/AddUserModal";
 import { toast } from "sonner";
 import { handleImportFile, handleExport } from "./utils";
+import {ref, onValue} from 'firebase/database';
+import { database } from "../firebaseConfig";
 
-const ResidentsList = ({ residents: initialResidents, label }) => {
-  const [residents, setResidents] = useState(initialResidents || []); // state for holding the list of residents
+const ResidentsList = ({ label }) => {
+  const [residents, setResidents] = useState([]); // state for holding the list of residents
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredResidents, setFilteredResidents] = useState(residents.slice());
@@ -29,9 +31,30 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
     address: "",
     age: "",
     gender: "",
-    status: "",
-    created: "",
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // Reference to the path where user data is stored
+      const usersRef = ref(database, 'users'); // Adjust path if necessary
+
+      // Fetch user data
+      onValue(usersRef, (snapshot) => {
+        const data = snapshot.val();
+        const userList = [];
+
+        for (const id in data) {
+          userList.push({ id, ...data[id] });
+        }
+
+        setResidents(userList);
+        setFilteredResidents(userList)
+      });
+    };
+
+    fetchData();
+  }, []);
+
 
   useEffect(() => {
     let updatedResidents = residents;
@@ -39,7 +62,7 @@ const ResidentsList = ({ residents: initialResidents, label }) => {
     // Handle search query
     if (searchQuery) {
       updatedResidents = updatedResidents.filter((resident) =>
-        resident.name?.toLowerCase().includes(searchQuery.toLowerCase())
+        resident.firstname?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 

@@ -22,7 +22,7 @@ const TableBody = ({selectedUsers,resident, handleCheckbox, handleViewUser, setU
           checked={selectedUsers.includes(resident.id)}
           className="w-4 h-4 cursor-pointer text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
         />
-        {resident.id}
+        {/* {resident.id} */}
       </div>
     </td>
     <th
@@ -35,8 +35,8 @@ const TableBody = ({selectedUsers,resident, handleCheckbox, handleViewUser, setU
         alt="user image"
       />
       <div className="ps-3">
-        <div className="text-base font-semibold">
-          {resident.name}
+        <div className="text-base flex flex-row font-semibold space-x-1">
+          <p>{resident.firstname}</p><p>{resident.lastname}</p>
         </div>
         <div className="font-normal text-gray-500">
           {resident.email}
@@ -45,9 +45,9 @@ const TableBody = ({selectedUsers,resident, handleCheckbox, handleViewUser, setU
     </th>
     <td className="px-6 py-4">{resident.address}</td>
     <td className="px-6 py-4">{resident.age}</td>
-    <td className="px-6 py-4">{resident.gender}</td>
+    <td className="px-6 py-4">{resident.gender ? resident.gender : <p className='italic text-nowrap'>not yet set</p>}</td>
     <td className="px-6 py-4">
-      <div className="flex items-center">
+      {/* <div className="flex items-center">
         <div
           className={`h-2.5 w-2.5 rounded-full me-2 ${
             resident.status.toLowerCase().trim() ===
@@ -59,10 +59,11 @@ const TableBody = ({selectedUsers,resident, handleCheckbox, handleViewUser, setU
         {resident.status.toLowerCase().trim() === "verified"
           ? "Verified"
           : "Not Verified"}
-      </div>
+      </div> */}
+      {resident.mobileNum}
     </td>
     <td className="px-6 py-4">
-      {formatDate(resident.created)}
+      {formatDate(resident.createdAt)}
     </td>
     <td className="px-6 py-4">
       <button
