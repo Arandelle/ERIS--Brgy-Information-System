@@ -4,14 +4,14 @@ import { getDatabase } from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyDI67dFOAODcL7dmpvhRzXX93_ertJPJ-M",
-    authDomain: "eris-app-cc463.firebaseapp.com",
-    databaseURL: "https://eris-app-cc463-default-rtdb.firebaseio.com",
-    projectId: "eris-app-cc463",
-    storageBucket: "eris-app-cc463.appspot.com",
-    messagingSenderId: "495460903256",
-    appId: "1:495460903256:web:dcb58ce62e84ba614ddd2d",
-    measurementId: "G-TD6DC1WJDD"
+    apiKey:  import.meta.env.VITE_API_KEY,
+    authDomain:  import.meta.env.VITE_AUTH_DOMAIN,
+    databaseURL:  import.meta.env.VITE_DATABASE_URL,
+    projectId: import.meta.env.VITE_PROJECT_ID,
+    storageBucket:  import.meta.env.VITE_STORAGE_BUCKET,
+    messagingSenderId:  import.meta.env.VITE_MESSAGING_SENDER_ID,
+    appId:  import.meta.env.VITE_APP_ID,
+    measurementId:  import.meta.env.VITE_MEASUREMENT_ID,
   };
 
 // Initialize Firebase

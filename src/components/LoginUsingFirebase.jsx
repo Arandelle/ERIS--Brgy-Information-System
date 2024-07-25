@@ -6,6 +6,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, ref, get } from "firebase/database";
 import OTP from "../assets/otp.svg"
 import { Tooltip } from "@mui/material";
+import { database } from "./firebaseConfig";
 
 export default function LoginUsingFirebaseAuth({ setAuth }) {
   const [email, setEmail] = useState("");
