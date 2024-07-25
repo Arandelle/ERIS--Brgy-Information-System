@@ -100,7 +100,7 @@ const Toolbar = ({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-          placeholder={`Search for residents of ${label}`}
+          placeholder={`Search for users of ${label}`}
         />
       </div>
     </div>

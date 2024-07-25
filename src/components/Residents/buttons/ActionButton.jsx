@@ -14,7 +14,7 @@ const ActionButton = ({
     { title: "Add user", type: "add" },
     { title: "Reset password", type: "reset" },
     { title: "Send email", type: "email" },
-    { title: "Activate user", type: "activate" },
+    // { title: "Activate user", type: "activate" },
     { title: "Archive user", type: "archive" },
     { title: "Delete user", type: "delete" },
   ];
@@ -44,13 +44,13 @@ const ActionButton = ({
       return true;
     }
 
-    if (actionType === "activate") {
-      return selectedUsers.some(
-        (userId) =>
-          filteredResidents.find((resident) => resident.id === userId)
-            .status === "Verified"
-      );  // return true 
-    }
+    // if (actionType === "activate") {
+    //   return selectedUsers.some(
+    //     (userId) =>
+    //       filteredResidents.find((resident) => resident.id === userId)
+    //         .status === "Verified"
+    //   );  // return true 
+    // }
 
     if (actionType === "email") {
       const hasVerified = selectedUsers.some(

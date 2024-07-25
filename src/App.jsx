@@ -21,7 +21,6 @@ import FAQS from "./components/Header/Admin/FAQS"
 import TermsConditions from "./components/Header/Admin/TermsConditions";
 import Archives from "./components/Header/Admin/Archives";
 import { Toaster } from "sonner";
-import FetchData from "./components/FetchData";
 
 const App = () => {
 
@@ -59,7 +58,6 @@ const App = () => {
                 <Route path="/FAQS" element={<FAQS />} />{" "}
                 <Route path="/Terms and Conditions" element={<TermsConditions />} />{" "}
                 <Route path="/archives" element={<Archives />} />{" "}
-                <Route path="/fetchData" element={<FetchData />} />{" "}
               </Routes>
             </div>
         </>

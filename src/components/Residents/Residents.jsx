@@ -7,14 +7,13 @@ import TableBody from "./TableBody";
 import AddUserModal from "./buttons/AddUserModal";
 import { toast } from "sonner";
 import { handleImportFile, handleExport } from "./utils";
-import {ref, onValue} from 'firebase/database';
-import { database } from "../firebaseConfig";
+import { useFetchUsers } from "../../hooks/useFetchUsers";
 
 const ResidentsList = ({ label }) => {
-  const [residents, setResidents] = useState([]); // state for holding the list of residents
+  const {users} = useFetchUsers();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filteredResidents, setFilteredResidents] = useState(residents.slice());
+  const [filteredResidents, setFilteredResidents] = useState(users.slice());
   const [isViewingSelected, setIsViewingSelected] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFiltered, setIsFiltered] = useState(true);
@@ -34,44 +33,21 @@ const ResidentsList = ({ label }) => {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      // Reference to the path where user data is stored
-      const usersRef = ref(database, 'users'); // Adjust path if necessary
-
-      // Fetch user data
-      onValue(usersRef, (snapshot) => {
-        const data = snapshot.val();
-        const userList = [];
-
-        for (const id in data) {
-          userList.push({ id, ...data[id] });
-        }
-
-        setResidents(userList);
-        setFilteredResidents(userList)
-      });
-    };
-
-    fetchData();
-  }, []);
-
-
-  useEffect(() => {
-    let updatedResidents = residents;
+    let updatedResidents = users;
 
     // Handle search query
     if (searchQuery) {
-      updatedResidents = updatedResidents.filter((resident) =>
-        resident.firstname?.toLowerCase().includes(searchQuery.toLowerCase())
+      updatedResidents = updatedResidents.filter((user) =>
+        user.firstname?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     // Handle filters
     Object.keys(filters).forEach((key) => {
       if (filters[key]) {
-        updatedResidents = updatedResidents.filter((resident) => {
-          const value = resident[key]
-            ? resident[key].toString().toLowerCase().trim()
+        updatedResidents = updatedResidents.filter((user) => {
+          const value = user[key]
+            ? user[key].toString().toLowerCase().trim()
             : "";
           const filterValue = filters[key].toLowerCase().trim();
           return value === filterValue; // exact match comparison
@@ -80,13 +56,13 @@ const ResidentsList = ({ label }) => {
     });
 
     setFilteredResidents(updatedResidents);
-  }, [residents, searchQuery, filters]); // original list ,filter for search of name and filter for specific data
+  }, [users, searchQuery, filters]); // original list ,filter for search of name and filter for specific data
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   const currentItems = isViewingSelected
-    ? selectedUsers.map((id) => residents.find((res) => res.id === id))
+    ? selectedUsers.map((id) => users.find((res) => res.id === id))
     : filteredResidents.slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = isViewingSelected
@@ -97,7 +73,7 @@ const ResidentsList = ({ label }) => {
     if (selectedUsers.length === filteredResidents.length) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(filteredResidents.map((resident) => resident.id));
+      setSelectedUsers(filteredResidents.map((user) => user.id));
     }
   };
 
@@ -126,8 +102,8 @@ const ResidentsList = ({ label }) => {
   const getUniqueSortedValues = (key) => {
     let uniqueValues = [
       ...new Set(
-        residents.map((resident) =>
-          resident[key] ? resident[key].toString().toLowerCase().trim() : ""
+        users.map((user) =>
+          user[key] ? user[key].toString().toLowerCase().trim() : ""
         )
       ),
     ].filter((value) => value !== "");
@@ -222,11 +198,11 @@ const ResidentsList = ({ label }) => {
                    </div>
                   )}
 
-                  {currentItems.map((resident, key) => (
+                  {currentItems.map((users, key) => (
                     <TableBody
                       key={key}
                       selectedUsers={selectedUsers}
-                      resident={resident}
+                      users={users}
                       handleCheckbox={handleCheckbox}
                       handleViewUser={handleViewUser}
                     />
@@ -250,7 +226,7 @@ const ResidentsList = ({ label }) => {
                 handleExport(
                   isViewingSelected,
                   selectedUsers,
-                  residents,
+                  users,
                   filteredResidents
                 )
               }

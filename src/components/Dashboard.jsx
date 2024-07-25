@@ -12,8 +12,10 @@ import DateToday from "./Header/Admin/DateToday";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import { Pabahay, Lumina, Carissa } from "./Residents/ResidentsData";
 import { personInfo } from "./Maps/MapContent";
+import { useFetchUsers } from "../hooks/useFetchUsers";
 
 const DashboardCard = ({ title, value, img, onClick }) => {
+
   return (
     <div className="relative">
       <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-2 md:gap-4 bg-white dark:bg-gray-800 shadow-md rounded-md p-6 w-full mb-3 md:mb-0"
@@ -39,6 +41,7 @@ const DashboardCard = ({ title, value, img, onClick }) => {
 const Dashboard = ({ setAuth }) => {
   setAuth(false);
   const [loading, setLoading] = useState(true);
+  const {users, error: usersError} = useFetchUsers();
 
   const [activity, setActivity] = useState(() => {
     // Retrieve activity data from localStorage, or an empty array if it doesn't exist
@@ -71,7 +74,7 @@ const Dashboard = ({ setAuth }) => {
           <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 md:my-3 mx-3 text-wrap cursor-pointer">
             <DashboardCard
               title="Total Residents"
-              value={loading ? <Spinner setLoading={setLoading} /> : Pabahay.length + Carissa.length + Lumina.length}
+              value={loading ? <Spinner setLoading={setLoading} /> : users.length}
               img={population}
               onClick={()=>handleNavigate("/residents/pabahay")}
             />

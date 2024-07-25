@@ -7,7 +7,7 @@ const SortingButton = ({ filteredResidents, setFilteredResidents, toggleSort, is
     { title: "Name", type: "name" },
     { title: "Age", type: "age" },
     { title: "Gender", type: "gender" },
-    { title: "Status", type: "status" },
+    // { title: "Status", type: "status" },
     { title: "Date created", type: "created" },
   ];
 
@@ -27,8 +27,8 @@ const SortingButton = ({ filteredResidents, setFilteredResidents, toggleSort, is
       });
     } else if (field === "name") {
       sortedResidents = sortedResidents.slice().sort((a, b) => {
-        const nameA = a.name.toUpperCase();
-        const nameB = b.name.toUpperCase();
+        const nameA = a.firstname.toUpperCase();
+        const nameB = b.firstname.toUpperCase();
         return nameSortDirection === "asc" ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
       });
       setNameSortDirection(nameSortDirection === "asc" ? "desc" : "asc");
@@ -49,8 +49,8 @@ const SortingButton = ({ filteredResidents, setFilteredResidents, toggleSort, is
       setGenderSortDirection(genderSortDirection === "asc" ? "desc" : "asc");
     } else if (field === "created") {
       sortedResidents = sortedResidents.slice().sort((a, b) => {
-        const dateA = new Date(a.created);
-        const dateB = new Date(b.created);
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
         return dateSortDirection === "asc" ? dateA - dateB : dateB - dateA;
       });
       setDateSortDirection(dateSortDirection === "asc" ? "desc" : "asc");
