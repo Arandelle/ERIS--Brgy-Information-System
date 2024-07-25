@@ -22,6 +22,7 @@ import TermsConditions from "./components/Header/Admin/TermsConditions";
 import Archives from "./components/Header/Admin/Archives";
 import { Toaster } from "sonner";
 import FetchData from "./components/FetchData";
+import LoginUsingFirebaseAuth from "./components/LoginUsingFirebase";
 
 const App = () => {
 
@@ -35,7 +36,7 @@ const App = () => {
               <Routes>
               <Route
                     path="/"
-                    element={isAuthenticated ? <Navigate to="/" /> : <Login setAuth={setAuth} />}
+                    element={isAuthenticated ? <Navigate to="/" /> : <LoginUsingFirebaseAuth setAuth={setAuth} />}
                 />
                <Route
                     path="/dashboard"
