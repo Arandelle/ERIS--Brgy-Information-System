@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import emailjs from "emailjs-com";
 import OTP from "../assets/otp.svg"
 import { Tooltip } from "@mui/material";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebaseConfig"; // Import auth from your Firebase config
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { get, getDatabase, ref } from "firebase/database";
 
 export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
@@ -25,36 +25,60 @@ export default function Login({ setAuth }) {
     setShowPass(!showPass);
   };
 
-  const handleSubmitWithOtp = async (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    try {
-      if (!email || !password) {
-        toast.error("Please enter both email and password");
-        return;
+    try{
+      const auth = getAuth();
+      const userCredentials =  await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredentials.user
+      
+      //check if an account is admin
+      const db = getDatabase();
+      const adminRef = ref(db, `admins/${user.uid}`);
+      const adminSnapshot = await get(adminRef);
+      if (adminSnapshot.exists()){
+        setAuth(true);
+        toast.success("Login successful");
+        navigate("/dashboard");
+      } else{
+        toast.error("You do not have admin priveledges");
+        await auth.signOut();
       }
-
-      // Attempt to sign in with Firebase
-      await signInWithEmailAndPassword(auth, email, password);
-
-      // If sign-in is successful, send OTP
-      const otpCode = Math.floor(100000 + Math.random() * 900000);
-      const templateParams = {
-        to_email: email,
-        otp: otpCode,
-      };
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        templateParams,
-        import.meta.env.VITE_EMAILJS_USER_ID
-      );  
-      toast.success("OTP sent successfully");
-      setGeneratedOtp(otpCode.toString());
-      setOtpSent(true);
-    } catch (error) {
+    } catch (error){
       toast.error("Login failed: " + error.message);
     }
-  };
+  }
+
+  // const handleSubmitWithOtp = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     if (!email || !password) {
+  //       toast.error("Please enter both email and password");
+  //       return;
+  //     }
+
+  //     // Attempt to sign in with Firebase
+  //     await signInWithEmailAndPassword(auth, email, password);
+
+  //     // If sign-in is successful, send OTP
+  //     const otpCode = Math.floor(100000 + Math.random() * 900000);
+  //     const templateParams = {
+  //       to_email: email,
+  //       otp: otpCode,
+  //     };
+  //     await emailjs.send(
+  //       import.meta.env.VITE_EMAILJS_SERVICE_ID,
+  //       import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+  //       templateParams,
+  //       import.meta.env.VITE_EMAILJS_USER_ID
+  //     );  
+  //     toast.success("OTP sent successfully");
+  //     setGeneratedOtp(otpCode.toString());
+  //     setOtpSent(true);
+  //   } catch (error) {
+  //     toast.error("Login failed: " + error.message);
+  //   }
+  // };
 
   const handleVerify = () => {
     if (otpInput === "") {
@@ -87,7 +111,7 @@ export default function Login({ setAuth }) {
             </div>
             <form
               action=""
-              onSubmit={handleSubmitWithOtp}
+              onSubmit={handleLogin}
               className={`space-y-4`}
             >
               <div className="space-y-2">
