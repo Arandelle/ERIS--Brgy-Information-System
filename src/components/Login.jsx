@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import emailjs from "emailjs-com";
 import OTP from "../assets/otp.svg"
 import { Tooltip } from "@mui/material";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./firebaseConfig"; // Import auth from your Firebase config
 
 export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
@@ -13,9 +15,9 @@ export default function Login({ setAuth }) {
   const [showPass, setShowPass] = useState(false);
 
   const [otpInput, setOtpInput] = useState("");
-  const [otpSent, setOtpSent] = useState(false); // Flag to track if OTP has been sent
-  const [otpVerified, setOtpVerified] = useState(false); // Flag to track if OTP is verified
-  const [generatedOtp, setGeneratedOtp] = useState(""); // State to store the generated OTP
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [generatedOtp, setGeneratedOtp] = useState("");
 
   const navigate = useNavigate();
 
@@ -26,38 +28,31 @@ export default function Login({ setAuth }) {
   const handleSubmitWithOtp = async (event) => {
     event.preventDefault();
     try {
-      if (!email) {
-        alert("Please enter a valid email address");
+      if (!email || !password) {
+        toast.error("Please enter both email and password");
         return;
       }
-      if(email === "admin@example.com" && password === "password123"){
-        setAuth(true),
-        toast.success("Login successfully"),
-        navigate("/dashboard");
-      } else if (email !== "topaguintsarandell@gmail.com") {
-        toast.error("Invalid email");
-        return;
-      } else if (password !== "password123") {
-        toast.error("The password you entered is incorrect"); 
-      }
-      else {
-        const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
-        const templateParams = {
-          to_email: email,
-          otp: otpCode,
-        };
-        await emailjs.send(
-          import.meta.env.VITE_EMAILJS_SERVICE_ID,
-          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-          templateParams,
-          import.meta.env.VITE_EMAILJS_USER_ID
-        );  
-        toast.success("Email sent successfully");
-        setGeneratedOtp(otpCode.toString()); // Store generated OTP as a string
-        setOtpSent(true); // Mark OTP as sent
-      }
+
+      // Attempt to sign in with Firebase
+      await signInWithEmailAndPassword(auth, email, password);
+
+      // If sign-in is successful, send OTP
+      const otpCode = Math.floor(100000 + Math.random() * 900000);
+      const templateParams = {
+        to_email: email,
+        otp: otpCode,
+      };
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        templateParams,
+        import.meta.env.VITE_EMAILJS_USER_ID
+      );  
+      toast.success("OTP sent successfully");
+      setGeneratedOtp(otpCode.toString());
+      setOtpSent(true);
     } catch (error) {
-      toast.error("Error sending email: " + error.message);
+      toast.error("Login failed: " + error.message);
     }
   };
 
@@ -67,13 +62,11 @@ export default function Login({ setAuth }) {
       return;
     }
 
-    // Compare the OTP entered by the user with the generated OTP
     if (otpInput === generatedOtp) {
       setOtpVerified(true);
-      alert("OTP verified successfully");
-      setAuth(true),
-        toast.success("Login successfully"),
-        navigate("/dashboard");
+      setAuth(true);
+      toast.success("Login successful");
+      navigate("/dashboard");
     } else {
       toast.error("Incorrect OTP, please try again");
     }
