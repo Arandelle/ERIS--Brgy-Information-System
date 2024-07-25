@@ -22,7 +22,6 @@ import TermsConditions from "./components/Header/Admin/TermsConditions";
 import Archives from "./components/Header/Admin/Archives";
 import { Toaster } from "sonner";
 import FetchData from "./components/FetchData";
-import LoginUsingFirebaseAuth from "./components/LoginUsingFirebase";
 
 const App = () => {
 
