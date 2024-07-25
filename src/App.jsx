@@ -36,7 +36,7 @@ const App = () => {
               <Routes>
               <Route
                     path="/"
-                    element={isAuthenticated ? <Navigate to="/" /> : <Login setAuth={setAuth} />}
+                    element={isAuthenticated ? <Navigate to="/" /> : <LoginUsingFirebaseAuth setAuth={setAuth} />}
                 />
                <Route
                     path="/dashboard"
