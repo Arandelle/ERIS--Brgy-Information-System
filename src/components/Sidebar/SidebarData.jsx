@@ -206,8 +206,4 @@ export const SidebarData = [
     ),
     link: "/history",
   },
-  {
-    title: "Fetch Data",
-    link: "/fetchData"
-  }
 ];
