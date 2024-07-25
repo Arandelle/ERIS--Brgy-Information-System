@@ -15,7 +15,7 @@ const HeadSide = ({ child, message }) => {
           <MsgReusable message={message} type={message.includes('successfully') ? "success" : "delete" }/>
       )} */}
       <div className="flex">
-        <div className="fixed z-50">
+        <div className="fixed">
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
         </div>
         <div className={`w-full ${isOpen ? "ml-0" : "md:ml-60"}`}>
