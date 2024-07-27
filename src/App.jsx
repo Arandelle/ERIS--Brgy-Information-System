@@ -51,10 +51,6 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>; // Or a loading spinner
-  }
-
   return (
     <Router>
         <>       
