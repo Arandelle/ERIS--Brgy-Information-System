@@ -4,6 +4,7 @@ import { useState } from "react";
 import Logout from "../../ReusableComponents/AskCard";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 
 const Profile = () => {
   const [isAuthenticated, setAuth] = useState(false);
@@ -11,9 +12,17 @@ const Profile = () => {
   const [showLogout, setShowLogout] = useState(false);
 
   const navigate = useNavigate();
-  const handleLogout = () => {
-    setAuth(false);
-    navigate("/");
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+    try{
+      await signOut(auth);
+      setAuth(false);
+      navigate("/");  
+    }
+     catch(error){
+      console.error("Error signing out", error)
+     }
   };
 
   const handleMenuItemClick = (adminVal) => {

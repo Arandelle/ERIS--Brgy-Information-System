@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css"
 import Dashboard from "./components/Dashboard";
 import MyCalendar from "./components/MyCalendar";
@@ -21,10 +21,31 @@ import FAQS from "./components/Header/Admin/FAQS"
 import TermsConditions from "./components/Header/Admin/TermsConditions";
 import Archives from "./components/Header/Admin/Archives";
 import { Toaster } from "sonner";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const App = () => {
 
   const [isAuthenticated, setAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuth(true);
+      } else {
+        setAuth(false);
+      }
+      setLoading(false);
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>; // Or a loading spinner
+  }
 
   return (
     <Router>
