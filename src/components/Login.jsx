@@ -38,10 +38,12 @@ export default function Login({ setAuth }) {
       const adminSnapshot = await get(adminRef);
       if (adminSnapshot.exists()){
         setAuth(true);
+        localStorage.setItem('isAuthenticated', 'true');
         toast.success("Login successful");
         navigate("/dashboard");
       } else{
         toast.error("You do not have admin priveledges");
+        localStorage.removeItem('isAuthenticated');
         await auth.signOut();
       }
     } catch (error){

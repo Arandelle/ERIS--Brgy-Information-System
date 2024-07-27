@@ -33,11 +33,19 @@ const App = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuth(true);
+        localStorage.setItem('isAuthenticated', 'true');
       } else {
         setAuth(false);
+        localStorage.removeItem('isAuthenticated');
       }
       setLoading(false);
     });
+
+    // Check localStorage on initial load
+    const persistedAuth = localStorage.getItem('isAuthenticated');
+    if (persistedAuth === 'true') {
+      setAuth(true);
+    }
 
     // Cleanup subscription on unmount
     return () => unsubscribe();
