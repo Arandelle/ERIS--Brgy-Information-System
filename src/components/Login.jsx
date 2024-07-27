@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Launcher from "./Launcher";
 import { toast } from "sonner";
 import emailjs from "emailjs-com";
@@ -20,7 +20,6 @@ export default function Login({ setAuth }) {
   const [generatedOtp, setGeneratedOtp] = useState("");
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleShowHidePass = () => {
     setShowPass(!showPass);
@@ -40,8 +39,7 @@ export default function Login({ setAuth }) {
       if (adminSnapshot.exists()){
         setAuth(true);
         toast.success("Login successful");
-        const from = location.state?.from?.pathname || "/dashboard";
-    navigate(from, { replace: true });
+        navigate("/dashboard");
       } else{
         toast.error("You do not have admin priveledges");
         await auth.signOut();
