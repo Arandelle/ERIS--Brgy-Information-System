@@ -22,34 +22,12 @@ import TermsConditions from "./components/Header/Admin/TermsConditions";
 import Archives from "./components/Header/Admin/Archives";
 import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {useAuthentication} from "./hooks/useAuthentication"
 
 const App = () => {
 
-  const [isAuthenticated, setAuth] = useState(false);
+  const {isAuthenticated, setAuth} = useAuthentication();
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setAuth(true);
-        localStorage.setItem('isAuthenticated', 'true');
-      } else {
-        setAuth(false);
-        localStorage.removeItem('isAuthenticated');
-      }
-      setLoading(false);
-    });
-
-    // Check localStorage on initial load
-    const persistedAuth = localStorage.getItem('isAuthenticated');
-    if (persistedAuth === 'true') {
-      setAuth(true);
-    }
-
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
 
   return (
     <Router>

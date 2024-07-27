@@ -4,18 +4,27 @@ import { useState } from "react";
 import Logout from "../../ReusableComponents/AskCard";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+import { useAuthentication } from "../../../hooks/useAuthentication";
 
 const Profile = () => {
-  const [isAuthenticated, setAuth] = useState(false);
+  const {setAuth} = useAuthentication();
   const { isOpen, toggleDropdown } = Toggle();
   const [showLogout, setShowLogout] = useState(false);
 
   const navigate = useNavigate();
-  const handleLogout = () => {
-    setAuth(false);
-    localStorage.setItem('isAuthenticated', "false")
-    navigate("/");
-  };
+
+  const handleLogout = async () => {
+    try {
+        const auth = getAuth();
+        await auth.signOut();
+        setAuth(false);
+        navigate("/");
+    } catch (error) {
+        console.error("Logout error:", error);
+        // Optionally, show an error message to the user
+    }
+};
 
   const handleMenuItemClick = (adminVal) => {
     window.location.pathname = adminVal.link;
