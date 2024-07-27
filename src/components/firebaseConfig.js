@@ -23,4 +23,12 @@ const auth = getAuth(app);
 // Initialize Realtime Database
 const database = getDatabase(app);
 
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("User is signed in:", user.uid);
+  } else {
+    console.log("No user is signed in.");
+  }
+});
+
 export { app, auth, database };
