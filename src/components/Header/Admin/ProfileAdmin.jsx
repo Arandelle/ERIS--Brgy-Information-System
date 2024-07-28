@@ -4,13 +4,11 @@ import { useState } from "react";
 import Logout from "../../ReusableComponents/AskCard";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { getAuth } from "firebase/auth";
-import { useAuthentication } from "../../../hooks/useAuthentication";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 
 const Profile = () => {
-  const {setAuth} = useAuthentication();
+
   const { isOpen, toggleDropdown } = Toggle();
   const [showLogout, setShowLogout] = useState(false);
 
