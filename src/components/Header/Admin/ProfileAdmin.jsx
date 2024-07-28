@@ -6,6 +6,8 @@ import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { useAuthentication } from "../../../hooks/useAuthentication";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebaseConfig";
 
 const Profile = () => {
   const {setAuth} = useAuthentication();
@@ -16,9 +18,8 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-        const auth = getAuth();
-        await auth.signOut();
-        setAuth(false);
+        await signOut(auth);
+        console.log("Logout")
         navigate("/");
     } catch (error) {
         console.error("Logout error:", error);

@@ -37,8 +37,8 @@ export default function Login({ setAuth }) {
       const adminRef = ref(db, `admins/${user.uid}`);
       const adminSnapshot = await get(adminRef);
       if (adminSnapshot.exists()){
-        setAuth(true);
-        toast.success("Login successful");
+        toast.success("Login successful");  
+        console.log("Login as ", email)
         navigate("/dashboard");
       } else{
         toast.error("You do not have admin priveledges");

@@ -24,11 +24,20 @@ import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useAuthentication } from "./hooks/useAuthentication";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { auth } from "./components/firebaseConfig";
 
 const App = () => {
 
-  const {isAuthenticated, setAuth} = useAuthentication();
+  const [isAuthenticated, setAuth] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setAuth(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <Router>
