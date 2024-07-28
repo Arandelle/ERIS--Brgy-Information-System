@@ -38,8 +38,7 @@ const DashboardCard = ({ title, value, img, onClick }) => {
   );
 };
 
-const Dashboard = ({ setAuth }) => {
-  setAuth(false);
+const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const {users, error: usersError} = useFetchUsers();
 

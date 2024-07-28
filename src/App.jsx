@@ -25,20 +25,36 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useAuthentication } from "./hooks/useAuthentication";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { auth } from "./components/firebaseConfig";
+import { get, getDatabase, ref } from "firebase/database";
 
 const App = () => {
 
-  const [isAuthenticated, setAuth] = useState(null);
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setAuth(currentUser);
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUser(user);
+        const db = getDatabase();
+        const adminRef = ref(db, `admins/${user.uid}`);
+        const adminSnapshot = await get(adminRef);
+        setIsAdmin(adminSnapshot.exists());
+      } else {
+        setUser(null);
+        setIsAdmin(false);
+      }
+      setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <Router>
         <>       
@@ -47,11 +63,11 @@ const App = () => {
               <Routes>
               <Route
                     path="/"
-                    element={isAuthenticated ? <Dashboard setAuth={setAuth} /> : <Login setAuth={setAuth} />}
+                    element={user && isAdmin ? <Navigate to="/dashboard" /> : <Login />}
                 />
                <Route
                     path="/dashboard"
-                    element={isAuthenticated ? <Dashboard setAuth={setAuth} /> : <Navigate to="/" />}
+                    element={user && isAdmin ? <Dashboard /> : <Navigate to="/" />}
                 />
                 <Route path="/calendar" element={<MyCalendar />} />{" "}
                 <Route path="/residents/pabahay" element={<ResidentsList residents={Pabahay} label="Pabahay"/>} />
