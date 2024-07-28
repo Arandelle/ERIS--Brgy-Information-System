@@ -47,11 +47,11 @@ const App = () => {
               <Routes>
               <Route
                     path="/"
-                    element={isAuthenticated ? <Navigate to="/" /> : <Login setAuth={setAuth} />}
+                    element={isAuthenticated ? <Dashboard setAuth={setAuth} /> : <Login setAuth={setAuth} />}
                 />
                <Route
                     path="/dashboard"
-                    element={ <Dashboard setAuth={setAuth} />}
+                    element={isAuthenticated ? <Dashboard setAuth={setAuth} /> : <Navigate to="/" />}
                 />
                 <Route path="/calendar" element={<MyCalendar />} />{" "}
                 <Route path="/residents/pabahay" element={<ResidentsList residents={Pabahay} label="Pabahay"/>} />
