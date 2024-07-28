@@ -28,6 +28,7 @@ import Archives from "./components/Header/Admin/Archives";
 import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";
+import { Spinner } from "./components/ReusableComponents/Skeleton";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -54,7 +55,7 @@ const App = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="w-screen h-screen flex justify-center items-center"><Spinner/></div>
   }
   return (
     <Router>
