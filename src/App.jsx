@@ -29,6 +29,7 @@ import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";
 import { Spinner } from "./components/ReusableComponents/Skeleton";
+import HeadSide from "./components/ReusableComponents/HeaderSidebar";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -54,9 +55,9 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  if (loading) {
-    return <div className="w-screen h-screen flex justify-center items-center"><Spinner/></div>
-  }
+  // if (loading) {
+  //   return <div className="w-screen h-screen flex justify-center items-center"><Spinner/></div>  
+  // }
   return (
     <Router>
       <>
