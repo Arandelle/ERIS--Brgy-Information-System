@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ref, onValue } from "firebase/database";
-import { database } from "../components/firebaseConfig";
+import { database } from "../services/firebaseConfig";
 
 export const useFetchUsers = () => {
   const [users, setUsers] = useState([]);

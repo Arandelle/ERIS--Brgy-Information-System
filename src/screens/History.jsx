@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Maintenance from "./ReusableComponents/Maintenance";
-import HeadSide from "./ReusableComponents/HeaderSidebar";
+import Maintenance from "../components/ReusableComponents/Maintenance";
+import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 
 function History() {
 

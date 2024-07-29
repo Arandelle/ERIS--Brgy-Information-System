@@ -5,7 +5,7 @@ import Logout from "../../ReusableComponents/AskCard";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebaseConfig";
+import { auth } from "../../../services/firebaseConfig";
 
 const Profile = () => {
 

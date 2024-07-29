@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
-import Dashboard from "./components/Dashboard";
-import MyCalendar from "./components/MyCalendar";
+import Dashboard from "./screens/Dashboard";
+import MyCalendar from "./screens/MyCalendar";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,14 +10,14 @@ import {
 } from "react-router-dom";
 import ResidentsList from "./components/Residents/Residents";
 import { Pabahay, Lumina, Carissa } from "./components/Residents/ResidentsData";
-import Map from "./components/Maps/Map";
-import Login from "./components/Login";
-import Reports from "./components/Reports";
-import History from "./components/History";
-import Activities from "./components/Events/Activities";
-import Announcement from "./components/Events/Announcement";
-import Events from "./components/Events/Events";
-import News from "./components/Events/News";
+import Map from "./screens/Maps/Map";
+import Login from "./screens/Login";
+import Reports from "./screens/Reports";
+import History from "./screens/History";
+import Activities from "./screens/Events/Activities";
+import Announcement from "./screens/Events/Announcement";
+import Events from "./screens/Events/Events";
+import News from "./screens/Events/News";
 import Request from "./components/Services/Request";
 import AddServices from "./components/Services/AddServices";
 import MyProfile from "./components/Header/MyProfile";

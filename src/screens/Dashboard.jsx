@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapContent from "./Maps/MapContent";
-import { Spinner } from "./ReusableComponents/Skeleton";
+import { Spinner } from "../components/ReusableComponents/Skeleton";
 import ActivitiesList from "./Events/ActivitiesList";
 import population from "../assets/population.svg";
 import registered from "../assets/registered.svg";
 import Events from "../assets/events.svg";
 import emergency from "../assets/emergency.svg";
-import HeadSide from "./ReusableComponents/HeaderSidebar";
-import DateToday from "./Header/Admin/DateToday";
+import HeadSide from "../components/ReusableComponents/HeaderSidebar";
+import DateToday from "../components/Header/Admin/DateToday";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
-import { Pabahay, Lumina, Carissa } from "./Residents/ResidentsData";
+import { Pabahay, Lumina, Carissa } from "../components/Residents/ResidentsData";
 import { personInfo } from "./Maps/MapContent";
 import { useFetchUsers } from "../hooks/useFetchUsers";
 

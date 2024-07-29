@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {toast} from "sonner"
 import ActivitiesList from "./ActivitiesList";
-import InputReusable from "../ReusableComponents/InputReusable";
-import BtnReusable from "../ReusableComponents/BtnReusable";
-import HeadSide from "../ReusableComponents/HeaderSidebar";
+import InputReusable from "../../components/ReusableComponents/InputReusable";
+import BtnReusable from "../../components/ReusableComponents/BtnReusable";
+import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
 
 function capitalizeFirstLetter(string) {
   return string.replace(/\b\w/g, char => char.toUpperCase());

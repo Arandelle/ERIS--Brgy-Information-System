@@ -1,7 +1,7 @@
 import React from "react";
-import HeadSide from "./ReusableComponents/HeaderSidebar";
-import InputReusable from "./ReusableComponents/InputReusable"
-import BtnReusable from "./ReusableComponents/BtnReusable"
+import HeadSide from "../components/ReusableComponents/HeaderSidebar";
+import InputReusable from "../components/ReusableComponents/InputReusable"
+import BtnReusable from "../components/ReusableComponents/BtnReusable"
 
 const Reports = () => {
   return (

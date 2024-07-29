@@ -1,6 +1,6 @@
 import React from 'react'
-import Maintenance from '../ReusableComponents/Maintenance'
-import HeadSide from '../ReusableComponents/HeaderSidebar'
+import HeadSide from '../../components/ReusableComponents/HeaderSidebar';
+import Maintenance from '../../components/ReusableComponents/Maintenance';
 
 const Events = () => {
     return (

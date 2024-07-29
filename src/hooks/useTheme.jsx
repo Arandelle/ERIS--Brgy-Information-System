@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-const CustomeTheme = () => {
+const CustomTheme = () => {
 
     const [theme, setTheme] = useState("light");
 
@@ -36,4 +36,4 @@ const CustomeTheme = () => {
   return [theme, toggleTheme];
 }
 
-export default CustomeTheme
+export default CustomTheme

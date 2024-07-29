@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import { Spinner } from "./ReusableComponents/Skeleton";
+import { Spinner } from "../components/ReusableComponents/Skeleton";
 import calendarImage from "../assets/calendar.svg";
 import ContainerResizer from "../helper/ContainerResizer";
-import InputReusable from "./ReusableComponents/InputReusable";
-import BtnReusable from "./ReusableComponents/BtnReusable";
-import HeadSide from "./ReusableComponents/HeaderSidebar";
-import QuestionModal from "./ReusableComponents/AskCard";
+import InputReusable from "../components/ReusableComponents/InputReusable";
+import BtnReusable from "../components/ReusableComponents/BtnReusable";
+import HeadSide from "../components/ReusableComponents/HeaderSidebar";
+import QuestionModal from "../components/ReusableComponents/AskCard";
 import CloseIcon from '@mui/icons-material/Close';
 import { toast } from "sonner";
 

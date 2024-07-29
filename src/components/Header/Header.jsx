@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Notification from "./Notification/Notification";
-import CustomeTheme from "../ReusableComponents/CustomeTheme";
+import CustomTheme from "../../hooks/useTheme";
 import Profile from "./Admin/ProfileAdmin";
 import logo from "../../assets/logo.png";
 import SearchInput from "./SearchInput";
 import { Tooltip } from "@mui/material";
 
 const Header = ({ toggleSideBar, isOpen }) => {
-  const [theme, toggleTheme] = CustomeTheme();
+  const [theme, toggleTheme] = CustomTheme();
   const [isMdScreen, setIsMdScreen] = useState(window.innerWidth >= 768);
 
   const handleResize = () => {
