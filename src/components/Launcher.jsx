@@ -2,7 +2,9 @@ import React from 'react'
 import Image from '../assets/logo.png'
 import { useState, useEffect } from 'react'
 
-const Luncher = ({setLoading}) => {
+const Luncher = () => {
+
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
       setTimeout(() => {

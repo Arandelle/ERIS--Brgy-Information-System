@@ -11,7 +11,6 @@ import { get, getDatabase, ref } from "firebase/database";
 export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
-  const [loading, setLoading] = useState(true);
   const [showPass, setShowPass] = useState(false);
 
   const [otpInput, setOtpInput] = useState("");
@@ -97,9 +96,6 @@ export default function Login({ setAuth }) {
   };
   return (
     <>
-      {loading ? (
-        <Launcher setLoading={setLoading} />
-      ) : (
         <main className="flex h-screen w-full items-center justify-center bg-gray-100 dark:bg-gray-800 px-4">
           <div className={`w-full max-w-md ${otpSent && !otpVerified ? ("hidden") : "block"}`}>
             <div className="space-y-1 mb-3">
@@ -242,7 +238,6 @@ export default function Login({ setAuth }) {
               </div>
             </div>
         </main>
-      )}
     </>
   );
 }
