@@ -14,6 +14,9 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
 import "leaflet-control-geocoder";
+import {ref, onValue} from "firebase/database"
+import { auth, database } from "../../services/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 export const personInfo = [
   {
@@ -40,6 +43,36 @@ function MyMapComponents({ isFullscreen }) {
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef(null);
   const endPoint = personInfo.find((person) => person.isEndPoint); // to get the endpoint
+
+  const [emergencyData, setEmergencyData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const requestRef = ref(database, "emergencyRequests");
+    const unsubscribe = onValue(requestRef, (snapshot) => {
+      try {
+        const data = snapshot.val();
+        const emergencyList = [];
+        for (const id in data) {
+          if (data[id].location) {
+            emergencyList.push({
+              id,
+              name: data[id].name || "Unknown",
+              type: data[id].type || "Unspecified",
+              location: [data[id].lat, data[id].long],
+              // Add any other relevant fields
+            });
+          }
+        }
+        setEmergencyData(emergencyList);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error", error);
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const popupRef = useRef(null);
 
@@ -84,6 +117,18 @@ function MyMapComponents({ isFullscreen }) {
                 You are here
               </Popup>
             </Marker>
+
+            {emergencyData.map((emergency) => (
+              <Marker key={emergency.id} position={emergency.location} icon={redIcon}>
+                <Popup>
+                  <div className="flex flex-col w-48">
+                    <span className="font-semibold text-gray-900">{emergency.name}</span>
+                    <span className="text-sm">Type: {emergency.type}</span>
+                    {/* Add more emergency details as needed */}
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
 
             {personInfo.map((person, index) => (
               <Marker key={index} position={person.position} icon={redIcon}>
