@@ -14,7 +14,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
 import "leaflet-control-geocoder";
-import {ref, onValue} from "firebase/database"
+import { ref, onValue } from "firebase/database";
 import { auth, database } from "../../services/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -35,10 +35,9 @@ export const personInfo = [
     position: [14.3349, 120.851],
     isEndPoint: true, // Assuming this is the endpoint
   },
-]
+];
 
 function MyMapComponents({ isFullscreen }) {
-
   const [position, setPosition] = useState([14.332867, 120.850672]); // Default start position
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef(null);
@@ -54,12 +53,13 @@ function MyMapComponents({ isFullscreen }) {
         const data = snapshot.val();
         const emergencyList = [];
         for (const id in data) {
-          if (data[id].location) {
+          if (data[id].location && data[id].status !== "done") {
             emergencyList.push({
               id,
               name: data[id].name || "Unknown",
               type: data[id].type || "Unspecified",
               location: [data[id].lat, data[id].long],
+              status: data[id].status || "active"
               // Add any other relevant fields
             });
           }
@@ -124,6 +124,7 @@ function MyMapComponents({ isFullscreen }) {
                   <div className="flex flex-col w-48">
                     <span className="font-semibold text-gray-900">{emergency.name}</span>
                     <span className="text-sm">Type: {emergency.type}</span>
+                    <span className="text-sm">Status: {emergency.status}</span>
                     {/* Add more emergency details as needed */}
                   </div>
                 </Popup>
