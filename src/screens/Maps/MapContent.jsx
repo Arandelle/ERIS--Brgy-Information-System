@@ -143,9 +143,6 @@ function MyMapComponents({ isFullscreen }) {
               key={emergency.id}
               position={emergency.location}
               icon={redIcon}
-              eventHandlers={{
-                click: () => handleSelectEmergency(emergency),
-              }}
             >
               <Popup>
                 <div className="flex items-center w-full">
