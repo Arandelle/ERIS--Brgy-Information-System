@@ -11,7 +11,7 @@ import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../components/Header/Admin/DateToday";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import { Pabahay, Lumina, Carissa } from "../components/Residents/ResidentsData";
-import { personInfo } from "./Maps/MapContent";
+// import { personInfo } from "./Maps/MapContent";
 import { useFetchUsers } from "../hooks/useFetchUsers";
 
 const DashboardCard = ({ title, value, img, onClick }) => {
@@ -93,7 +93,7 @@ const Dashboard = () => {
             />
             <DashboardCard
               title="Emergency"
-              value={loading ? <Spinner setLoading={setLoading} /> : personInfo.length}
+              value={loading ? <Spinner setLoading={setLoading} /> : 1}
               img={emergency}
               onClick={()=>handleNavigate("/maps")}
             />
