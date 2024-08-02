@@ -65,7 +65,7 @@ function MyMapComponents({ isFullscreen }) {
             id,
             name: emergency.name || "Unknown",
             type: emergency.type || "Unspecified",
-            location: [emergency.lat, emergency.long],
+            location: [emergency.location.latitude, emergency.location.longitude],
             status: emergency.status || "active",
             description: emergency.description || "none",
           }));
@@ -151,7 +151,7 @@ function MyMapComponents({ isFullscreen }) {
                       Name: {emergency.name}
                     </span>
                     <span className="text-sm text-wrap">
-                      Location: {emergency.type}
+                      Type: {emergency.type}
                     </span>
                     <span className="text-sm text-wrap">
                       Description: {emergency.description}
