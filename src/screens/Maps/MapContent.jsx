@@ -55,7 +55,7 @@ function MyMapComponents({ isFullscreen }) {
   }, []);
 
   useEffect(() => {
-    const requestRef = ref(database, "emergencyRequests");
+    const requestRef = ref(database, "emergencyRequest");
     const unsubscribe = onValue(requestRef, (snapshot) => {
       try {
         const data = snapshot.val();
