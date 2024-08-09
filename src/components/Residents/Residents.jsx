@@ -7,13 +7,12 @@ import TableBody from "./TableBody";
 import AddUserModal from "./buttons/AddUserModal";
 import { toast } from "sonner";
 import { handleImportFile, handleExport } from "./utils";
-import { useFetchUsers } from "../../hooks/useFetchUsers";
 
-const ResidentsList = ({ label }) => {
-  const {users} = useFetchUsers();
+const ResidentsList = ({ label, data }) => {
+
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filteredResidents, setFilteredResidents] = useState(users.slice());
+  const [filteredResidents, setFilteredResidents] = useState(data.slice());
   const [isViewingSelected, setIsViewingSelected] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFiltered, setIsFiltered] = useState(true);
@@ -33,7 +32,7 @@ const ResidentsList = ({ label }) => {
   });
 
   useEffect(() => {
-    let updatedResidents = users;
+    let updatedResidents = data;
 
     // Handle search query
     if (searchQuery) {
@@ -56,13 +55,13 @@ const ResidentsList = ({ label }) => {
     });
 
     setFilteredResidents(updatedResidents);
-  }, [users, searchQuery, filters]); // original list ,filter for search of name and filter for specific data
+  }, [data, searchQuery, filters]); // original list ,filter for search of name and filter for specific data
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   const currentItems = isViewingSelected
-    ? selectedUsers.map((id) => users.find((res) => res.id === id))
+    ? selectedUsers.map((id) => data.find((res) => res.id === id))
     : filteredResidents.slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = isViewingSelected
@@ -102,7 +101,7 @@ const ResidentsList = ({ label }) => {
   const getUniqueSortedValues = (key) => {
     let uniqueValues = [
       ...new Set(
-        users.map((user) =>
+        data.map((user) =>
           user[key] ? user[key].toString().toLowerCase().trim() : ""
         )
       ),
@@ -198,11 +197,11 @@ const ResidentsList = ({ label }) => {
                    </div>
                   )}
 
-                  {currentItems.map((users, key) => (
+                  {currentItems.map((data, key) => (
                     <TableBody
                       key={key}
                       selectedUsers={selectedUsers}
-                      users={users}
+                      data={data}
                       handleCheckbox={handleCheckbox}
                       handleViewUser={handleViewUser}
                     />
@@ -226,7 +225,7 @@ const ResidentsList = ({ label }) => {
                 handleExport(
                   isViewingSelected,
                   selectedUsers,
-                  users,
+                  data,
                   filteredResidents
                 )
               }

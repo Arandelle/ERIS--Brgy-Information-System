@@ -29,11 +29,15 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";
 import { Spinner } from "./components/ReusableComponents/Skeleton";
 import Luncher from "./components/Launcher";
+import { useFetchUsers } from "./hooks/useFetchUsers";
+import { useFetchResponder } from "./hooks/useFetchResponder";
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const {users} = useFetchUsers();
+  const {responders} = useFetchResponder();
 
   useEffect(() => {
     const auth = getAuth();
@@ -82,7 +86,7 @@ const App = () => {
               path="/accounts/users"
               element={
                 user && isAdmin ? (
-                  <ResidentsList label="Users List" />
+                  <ResidentsList data={users} label="Users List" />
                 ) : (
                   <Navigate to="/" />
                 )
@@ -92,12 +96,22 @@ const App = () => {
               path="/accounts/responder"
               element={
                 user && isAdmin ? (
-                  <ResidentsList label="Responders List" />
+                  <ResidentsList data={responders} label="Responders List" />
                 ) : (
                   <Navigate to="/" />
                 )
               }
             />
+            {/* <Route
+              path="/residents/lumina"
+              element={
+                user && isAdmin ? (
+                  <ResidentsList residents={Lumina} label="Lumina  " />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            /> */}
             <Route
               path="/maps"
               element={user && isAdmin ? <Map /> : <Navigate to="/" />}
