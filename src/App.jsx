@@ -9,7 +9,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import ResidentsList from "./components/Residents/Residents";
-import { Pabahay, Lumina, Carissa } from "./components/Residents/ResidentsData";
 import Map from "./screens/Maps/Map";
 import Login from "./screens/Login";
 import Reports from "./screens/Reports";
@@ -80,10 +79,10 @@ const App = () => {
               element={user && isAdmin ? <MyCalendar /> : <Navigate to="/" />}
             />
             <Route
-              path="/accounts/user"
+              path="/accounts/users"
               element={
                 user && isAdmin ? (
-                  <ResidentsList residents={Pabahay} label="Users List" />
+                  <ResidentsList label="Users List" />
                 ) : (
                   <Navigate to="/" />
                 )
@@ -93,22 +92,12 @@ const App = () => {
               path="/accounts/responder"
               element={
                 user && isAdmin ? (
-                  <ResidentsList residents={Carissa} label="Responders List" />
+                  <ResidentsList label="Responders List" />
                 ) : (
                   <Navigate to="/" />
                 )
               }
             />
-            {/* <Route
-              path="/residents/lumina"
-              element={
-                user && isAdmin ? (
-                  <ResidentsList residents={Lumina} label="Lumina  " />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            /> */}
             <Route
               path="/maps"
               element={user && isAdmin ? <Map /> : <Navigate to="/" />}

@@ -40,7 +40,7 @@ export const SidebarData = [
     items: [
       {
         title: "User",
-        link: "/accounts/user",
+        link: "/accounts/users",
       },
       {
         title: "Responder",

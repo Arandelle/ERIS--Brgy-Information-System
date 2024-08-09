@@ -10,7 +10,6 @@ import emergency from "../assets/emergency.svg";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../components/Header/Admin/DateToday";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
-import { Pabahay, Lumina, Carissa } from "../components/Residents/ResidentsData";
 // import { personInfo } from "./Maps/MapContent";
 import { useFetchUsers } from "../hooks/useFetchUsers";
 
@@ -57,12 +56,6 @@ const Dashboard = () => {
   const handleNavigate =(path)=>{
     navigate(path);
   }
-  //   // Retrieve the array from localStorage
-  // const storedData = localStorage.getItem('yourKey');
-  // // Parse the JSON string into an array
-  // const dataArray = JSON.parse(storedData);
-  // // Get the length of the array
-  // const arrayLength = dataArray.length;
 
   return (
     <HeadSide
@@ -75,13 +68,13 @@ const Dashboard = () => {
               title="Total Residents"
               value={loading ? <Spinner setLoading={setLoading} /> : users.length}
               img={population}
-              onClick={()=>handleNavigate("/residents/pabahay")}
+              onClick={()=>handleNavigate("/accounts/users")}
             />
             <DashboardCard
               title="Today's Registered"
               value={loading ? <Spinner setLoading={setLoading} /> : 0}
               img={registered}
-              onClick={()=> handleNavigate("/residents/pabahay")}
+              onClick={()=> handleNavigate("/accounts/users")}
             />
             <DashboardCard
               title="Events"
