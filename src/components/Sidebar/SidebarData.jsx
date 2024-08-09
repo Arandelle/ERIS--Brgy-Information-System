@@ -18,7 +18,7 @@ export const SidebarData = [
     link: "/dashboard",
   },
   {
-    title: "Residents",
+    title: "Accounts",
     icon: (
       <svg
         class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -36,20 +36,20 @@ export const SidebarData = [
         />
       </svg>
     ),
-    link: "/residents",
+    link: "/account management",
     items: [
       {
-        title: "Pabahay",
-        link: "/residents/Pabahay",
+        title: "User",
+        link: "/accounts/user",
       },
       {
-        title: "Lumina",
-        link: "/residents/Lumina",
+        title: "Responder",
+        link: "/accounts/responder",
       },
-      {
-        title: "Carissa",
-        link: "/residents/Carissa",
-      },
+      // {
+      //   title: "Carissa",
+      //   link: "/residents/Carissa",
+      // },
     ],
   },
   {

@@ -80,26 +80,26 @@ const App = () => {
               element={user && isAdmin ? <MyCalendar /> : <Navigate to="/" />}
             />
             <Route
-              path="/residents/pabahay"
+              path="/accounts/user"
               element={
                 user && isAdmin ? (
-                  <ResidentsList residents={Pabahay} label="Pabahay" />
+                  <ResidentsList residents={Pabahay} label="Users List" />
                 ) : (
                   <Navigate to="/" />
                 )
               }
             />
             <Route
-              path="/residents/carissa"
+              path="/accounts/responder"
               element={
                 user && isAdmin ? (
-                  <ResidentsList residents={Carissa} label="Carissa" />
+                  <ResidentsList residents={Carissa} label="Responders List" />
                 ) : (
                   <Navigate to="/" />
                 )
               }
             />
-            <Route
+            {/* <Route
               path="/residents/lumina"
               element={
                 user && isAdmin ? (
@@ -108,7 +108,7 @@ const App = () => {
                   <Navigate to="/" />
                 )
               }
-            />
+            /> */}
             <Route
               path="/maps"
               element={user && isAdmin ? <Map /> : <Navigate to="/" />}
