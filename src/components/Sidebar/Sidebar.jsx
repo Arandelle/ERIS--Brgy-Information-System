@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SidebarData } from "./SidebarData";
+import { useSidebarData } from "../../hooks/useSidebarData";
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import SearchInput from "../Header/SearchInput";
 
@@ -39,7 +39,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
           </div>
         </div>
 
-        {SidebarData.map((val, key) => (
+        {useSidebarData.map((val, key) => (
           <li
             key={key}
             className={`${

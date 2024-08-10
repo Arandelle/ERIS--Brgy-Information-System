@@ -1,6 +1,6 @@
 import React from "react";
 
-export const SidebarData = [
+export const useSidebarData = [
   {
     title: "Dashboard",
     icon: (

@@ -12,20 +12,20 @@ export const AdminSettings = [
         title: "My Profile",
         link: "/myProfile"
     },
-    {
-        title: "Account Settings",
-        link: "/settings",
-    },
-    {
-        title: "FAQS",
-        link: "/FAQS"
-    },
-    {
-        title: "Terms and Conditions",
-        link: "/Terms and Conditions"
-    },
-    {
-        title: "Archives",
-        link: "/archives",
-    },
+    // {
+    //     title: "Account Settings",
+    //     link: "/settings",
+    // },
+    // {
+    //     title: "FAQS",
+    //     link: "/FAQS"
+    // },
+    // {
+    //     title: "Terms and Conditions",
+    //     link: "/Terms and Conditions"
+    // },
+    // {
+    //     title: "Archives",
+    //     link: "/archives",
+    // },
 ];
