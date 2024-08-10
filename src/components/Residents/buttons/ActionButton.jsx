@@ -12,11 +12,12 @@ const ActionButton = ({
 }) => {
   const actions = [
     { title: "Add user", type: "add" },
-    { title: "Reset password", type: "reset" },
-    { title: "Send email", type: "email" },
-    // { title: "Activate user", type: "activate" },
-    { title: "Archive user", type: "archive" },
-    { title: "Delete user", type: "delete" },
+    // { title: "Reset password", type: "reset" },
+    // { title: "Send email", type: "email" },
+    // // { title: "Activate user", type: "activate" },
+    // { title: "Archive user", type: "archive" },
+    // { title: "Delete user", type: "delete" },
+    {title: "Lock user", type: "lock"}
   ];
 
   const handleButton = (type) => {
@@ -96,7 +97,7 @@ const ActionButton = ({
                   onClick={() => handleButton(action.type)}
                   disabled={isActionDisabled(action.type)}
                   className={`w-full text-left px-4 py-2  ${
-                    action.title === "Delete user"
+                    action.title === "Delete user" || action.title === "Lock user"
                       ? "border-t-2 border-grey-200 text-red-500"
                       : ""
                   } ${
