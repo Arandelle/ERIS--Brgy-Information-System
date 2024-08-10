@@ -11,7 +11,7 @@ import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../components/Header/Admin/DateToday";
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 // import { personInfo } from "./Maps/MapContent";
-import { useFetchUsers } from "../hooks/useFetchUsers";
+import { useFetchData } from "../hooks/useFetchData";
 
 const DashboardCard = ({ title, value, img, onClick }) => {
 
@@ -39,7 +39,7 @@ const DashboardCard = ({ title, value, img, onClick }) => {
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
-  const {users, error: usersError} = useFetchUsers();
+  const {data: users} = useFetchData("users");
 
   const [activity, setActivity] = useState(() => {
     // Retrieve activity data from localStorage, or an empty array if it doesn't exist

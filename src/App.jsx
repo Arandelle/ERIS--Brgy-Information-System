@@ -27,21 +27,15 @@ import Archives from "./components/Header/Admin/Archives";
 import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";
-import { Spinner } from "./components/ReusableComponents/Skeleton";
 import Luncher from "./components/Launcher";
-// import { useFetchUsers } from "./hooks/useFetchUsers";
-// import { useFetchResponder } from "./hooks/useFetchResponder";
 import { useFetchData } from "./hooks/useFetchData";
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
-  // const {users} = useFetchUsers();
-  // const {responders} = useFetchResponder();
   const {data: users} = useFetchData("users");
   const {data: responders} = useFetchData("responders");
-
 
   useEffect(() => {
     const auth = getAuth();
@@ -106,16 +100,6 @@ const App = () => {
                 )
               }
             />
-            {/* <Route
-              path="/residents/lumina"
-              element={
-                user && isAdmin ? (
-                  <ResidentsList residents={Lumina} label="Lumina  " />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            /> */}
             <Route
               path="/maps"
               element={user && isAdmin ? <Map /> : <Navigate to="/" />}
