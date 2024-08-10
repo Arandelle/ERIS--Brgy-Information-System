@@ -24,7 +24,7 @@
     "emailjs-com": "^3.2.0",
     "express": "^4.19.2",
     "file-saver": "^2.0.5",
-    "firebase": "^10.12.4",
+    "firebase": "^10.12.5",
     "flowbite": "^2.3.0",
     "flowbite-datepicker": "^1.2.6",
     "jquery": "^3.7.1",
