@@ -8,7 +8,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import ResidentsList from "./components/Residents/Residents";
+import ResidentsList from "./screens/AccountList/Residents";
 import Map from "./screens/Maps/Map";
 import Login from "./screens/Login";
 import Reports from "./screens/Reports";
@@ -17,13 +17,11 @@ import Activities from "./screens/Events/Activities";
 import Announcement from "./screens/Events/Announcement";
 import Events from "./screens/Events/Events";
 import News from "./screens/Events/News";
-import Request from "./components/Services/Request";
-import AddServices from "./components/Services/AddServices";
 import MyProfile from "./components/Header/MyProfile";
-import Setting from "./components/Header/Admin/Setting";
-import FAQS from "./components/Header/Admin/FAQS";
-import TermsConditions from "./components/Header/Admin/TermsConditions";
-import Archives from "./components/Header/Admin/Archives";
+import Setting from "./screens/Profile/Setting"
+import FAQS from "./screens/Profile/FAQS"
+import TermsConditions from "./screens/Profile/TermsConditions";
+import Archives from "./screens/Profile/Archives"
 import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";
@@ -123,10 +121,6 @@ const App = () => {
             <Route
               path="/services/request"
               element={user && isAdmin ? <Request /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/services/addService"
-              element={user && isAdmin ? <AddServices /> : <Navigate to="/" />}
             />
             <Route
               path="/reports"

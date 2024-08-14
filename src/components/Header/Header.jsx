@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Notification from "./Notification/Notification";
+import Notification from "./Notification";
 import CustomTheme from "../../hooks/useTheme";
-import Profile from "./Admin/ProfileAdmin";
+import Profile from "../../screens/Profile/ProfileAdmin";
 import logo from "../../assets/logo.png";
 import SearchInput from "./SearchInput";
 import { Tooltip } from "@mui/material";

@@ -1,6 +1,6 @@
-import { Toggle } from "../../../hooks/Toggle";
+import { Toggle } from "../../hooks/Toggle";
 import {useRef } from 'react';
-import { NotificationData } from "./NotificationData";
+import { NotificationData } from "../../data/NotificationData";
 import { Tooltip } from "@mui/material";
 
 const Notification = ()=>{

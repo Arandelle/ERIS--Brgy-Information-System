@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import HeadSide from "../ReusableComponents/HeaderSidebar";
-import Pagination from "./buttons/Pagination";
+import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
+import Pagination from "../AccountList/buttons/Pagination"
 import Toolbar from "./Toolbar";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
-import AddUserModal from "./buttons/AddUserModal";
+import AddUserModal from "../AccountList/buttons/AddUserModal"
 import { toast } from "sonner";
-import { handleImportFile, handleExport } from "./utils";
+import { handleImportFile, handleExport } from "../../helper/utils";
 
 const ResidentsList = ({ label, data }) => {
 

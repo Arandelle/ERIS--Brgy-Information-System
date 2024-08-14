@@ -1,11 +1,11 @@
-import { Toggle } from "../../../hooks/Toggle";
-import { AdminData, AdminSettings } from "./AdminData";
+import { Toggle } from "../../hooks/Toggle";
+import { AdminData, AdminSettings } from "../../data/AdminData";
 import { useState } from "react";
-import Logout from "../../ReusableComponents/AskCard";
+import Logout from "../../components/ReusableComponents/AskCard"
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../../../services/firebaseConfig";
+import {auth} from "../../services/firebaseConfig"
 
 const Profile = () => {
 

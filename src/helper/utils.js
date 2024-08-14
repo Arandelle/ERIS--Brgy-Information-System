@@ -1,7 +1,7 @@
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
-import { formatDate } from "../../helper/FormatDate";
+import { formatDate } from "./FormatDate";
 
 // function to export data to excel
 export const exportToExcel = (data, fileName = "residents.xlsx") => {

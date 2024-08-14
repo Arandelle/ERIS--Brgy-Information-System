@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
-import InputReusable from "../../ReusableComponents/InputReusable";
+import InputReusable from "../../../components/ReusableComponents/InputReusable";
 import { auth, app } from "../../../services/firebaseConfig";
 import {
   createUserWithEmailAndPassword,
