@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 
-const AddUserModal = ({ addUser, setAddUser }) => {
+const AddUserModal = ({ addUser, setAddUser, label}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -22,6 +22,8 @@ const AddUserModal = ({ addUser, setAddUser }) => {
     }
 
     try {
+      const currentUser = auth.currentUser;
+      
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -36,7 +38,10 @@ const AddUserModal = ({ addUser, setAddUser }) => {
         createdAt: new Date().toISOString(),
       };
       const database = getDatabase(app);
-      await set(ref(database, `responders/${user.uid}`), userData);
+      await set(ref(database, `${label}/${user.uid}`), userData);
+
+      await auth.updateCurrentUser(currentUser); // restore the admin session
+
       console.log("User created:", user.uid);
       toast.success("Success", "Please check your email for verification");
       setEmail("");
@@ -51,7 +56,7 @@ const AddUserModal = ({ addUser, setAddUser }) => {
 
   return (
     <div>
-      {addUser && (
+      {addUser &&(
         <form
           className="flex items-center justify-center fixed inset-0 z-50"
           onSubmit={handleAddUser}
@@ -61,7 +66,7 @@ const AddUserModal = ({ addUser, setAddUser }) => {
             onClick={() => setAddUser(false)}
           ></div>
           <div className="relative p-10 bg-white rounded-md shadow-md">
-            <h2>Add user</h2>
+            <h2>Add {`${label}`}</h2>
             <button
               className="absolute top-2 right-2"
               onClick={() => setAddUser(false)}

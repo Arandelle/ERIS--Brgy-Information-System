@@ -82,7 +82,7 @@ const App = () => {
               path="/accounts/users"
               element={
                 user && isAdmin ? (
-                  <ResidentsList data={users} label="Users List" />
+                  <ResidentsList data={users} label="users" />
                 ) : (
                   <Navigate to="/" />
                 )
@@ -92,7 +92,7 @@ const App = () => {
               path="/accounts/responder"
               element={
                 user && isAdmin ? (
-                  <ResidentsList data={responders} label="Responders List" />
+                  <ResidentsList data={responders} label="responders" />
                 ) : (
                   <Navigate to="/" />
                 )

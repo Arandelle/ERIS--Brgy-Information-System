@@ -18,7 +18,7 @@ const ResidentsList = ({ label, data }) => {
   const [isFiltered, setIsFiltered] = useState(true);
   const itemsPerPage = 10;
 
-  const [addUser, setAddUser] = useState(false);
+  const [addUser, setAddUser] = useState(null);
   const [next, setNext] = useState(false);
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
   const [userToViewInfo, setUserToViewInfo] = useState(null);
@@ -151,7 +151,7 @@ const ResidentsList = ({ label, data }) => {
               ) : (
                 <tbody>
 
-                  <AddUserModal addUser={addUser} setAddUser={setAddUser} next={next} setNext={setNext}/>
+                  <AddUserModal addUser={addUser} setAddUser={setAddUser} label={label} next={next} setNext={setNext}/>
 
                   {showUserInfoModal && userToViewInfo && (
                      <div className="fixed flex items-center justify-center inset-0 z-50">
