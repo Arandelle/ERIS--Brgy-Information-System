@@ -19,13 +19,14 @@ const HeadSide = ({ child, message }) => {
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
         </div>
         <div className={`w-full ${isOpen ? "ml-0" : "md:ml-60"}`}>
-          {loading ? (
+          {/* {loading ? (
             <div className="m-3">
               <Skeleton loading={loading} setLoading={setLoading} />
             </div>
           ) : (
             child
-          )}
+          )} */}
+          {child}
         </div>
       </div>
     </div>
