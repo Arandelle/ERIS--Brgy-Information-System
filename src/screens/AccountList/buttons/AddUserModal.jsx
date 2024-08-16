@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 
-const AddUserModal = ({ addUser, setAddUser, label}) => {
+const AddUserModal = ({ addUser, setAddUser, label }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -23,7 +23,7 @@ const AddUserModal = ({ addUser, setAddUser, label}) => {
 
     try {
       const currentUser = auth.currentUser;
-      
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -56,7 +56,7 @@ const AddUserModal = ({ addUser, setAddUser, label}) => {
 
   return (
     <div>
-      {addUser &&(
+      {addUser && (
         <form
           className="flex items-center justify-center fixed inset-0 z-50"
           onSubmit={handleAddUser}
@@ -65,31 +65,34 @@ const AddUserModal = ({ addUser, setAddUser, label}) => {
             className="absolute h-full w-full bg-gray-600 bg-opacity-50"
             onClick={() => setAddUser(false)}
           ></div>
-          <div className="relative p-10 bg-white rounded-md shadow-md">
-            <h2>Add {`${label}`}</h2>
+          <div className="relative p-4 bg-white rounded-sm shadow-md">
             <button
               className="absolute top-2 right-2"
               onClick={() => setAddUser(false)}
             >
               Close
             </button>
-            <div className="flex flex-col space-y-2">
-              <h1>Personal Information</h1>
-              <InputReusable
-                className={"border"}
-                type={"email"}
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                placeholder={"Enter Email"}
-              />
-              <InputReusable
-                className={"border"}
-                type={"password"}
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                placeholder={"Enter Password"}
-              />
-              <button className="p-2 text-gray-200 bg-primary-500">
+            <div className="flex flex-col space-y-10">
+              
+             <div className="w-full space-y-4">
+             <h2 className="text-center text-lg font-extrabold text-gray-700">Create new {`${label}`}</h2>
+                <InputReusable
+                  className={"border"}
+                  type={"email"}
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  placeholder={"Enter Email"}
+                />
+                <InputReusable
+                  className={"border"}
+                  type={"password"}
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  placeholder={"Enter Password"}
+                />
+             </div>
+
+              <button className="p-2 text-white font-bold bg-primary-600 rounded-md">
                 Submit
               </button>
             </div>
