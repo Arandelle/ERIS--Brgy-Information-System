@@ -60,12 +60,12 @@ function MyMapComponents({ isFullscreen }) {
       try {
         const data = snapshot.val();
         const emergencyList = Object.entries(data)
-          .filter(([_, emergency]) => emergency.location && emergency.status !== "done")
+          .filter(([_, emergency]) => emergency.locationCoords && emergency.status !== "done")
           .map(([id, emergency]) => ({
             id,
             name: emergency.name || "Unknown",
             type: emergency.type || "Unspecified",
-            location: [emergency.location.latitude, emergency.location.longitude],
+            location: [emergency.locationCoords.latitude, emergency.locationCoords.longitude],
             status: emergency.status || "active",
             description: emergency.description || "none",
           }));
