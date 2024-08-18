@@ -73,8 +73,7 @@ function History() {
                     <td className="px-6 py-4">{emergency.name}</td>
                     <td className="px-6 py-4">{emergency.description}</td>
                     <td className="px-6 py-4">
-                      {emergency.location.latitude} -{" "}
-                      {emergency.location.longitude}
+                      {emergency.location.location} 
                     </td>
                     <td className="px-6 py-4">{emergency.status}</td>
                     <td className="px-6 py-4">{new Date(emergency.timestamp).toLocaleString()}</td>
