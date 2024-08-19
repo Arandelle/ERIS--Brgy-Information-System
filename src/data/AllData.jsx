@@ -40,18 +40,6 @@ export const AllData = [
     link: "/events/news",
   },
   {
-    title: "Request",
-    link: "/services/request",
-  },
-  {
-    title: "Add Services",
-    link: "/services/addService",
-  },
-  {
-    title: "Reports",
-    link: "/reports",
-  },
-  {
     title: "History",
     link: "/history",
   },
