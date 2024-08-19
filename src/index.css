@@ -23,7 +23,7 @@ input, textarea {
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-200 dark:bg-gray-800;
+  @apply bg-gray-400 dark:bg-gray-800;
 }
 .scrollable-container {
   scrollbar-width: thin; /* Firefox */

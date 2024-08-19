@@ -17,7 +17,7 @@ const Notification = () => {
 
     try {
       const newNotification = {
-        message: "A new user has registered with the system.",
+        message: `A new user has registered with the system ${notifications.length}`,
         isSeen: false,
         date: new Date().toISOString(),
       };
@@ -116,7 +116,7 @@ const Notification = () => {
               type="button"
               data-dropdown-toggle="notification-dropdown"
               className={`p-2 mr-1 ${
-                isOpen ? "text-gray-800" : "text-gray-500"
+                isOpen ? "text-blue-600" : "text-gray-500"
               } rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600`}
             >
               <span className="sr-only">View notifications</span>
@@ -140,24 +140,23 @@ const Notification = () => {
       </div>
       {isOpen && (
         <div
-          className="fixed p-2 right-0 mt-3 w-screen md:w-80 bg-white dark:bg-gray-700 rounded-md shadow-
-          z-10 my-4 text-base list-none shadow-lg dark:divide-gray-600"
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="options-menu"
+          className="fixed inset-x-0 top-16 bottom-0 md:right-0 md:left-auto mt-3 w-screen md:w-80 bg-white dark:bg-gray-700 rounded-md flex flex-col z-10 dark:divide-gray-600"
         >
-          <div className="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <div className="py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             Notifications
           </div>
           <div
-            className="h-96 overflow-y-auto" // Add this line to make it scrollable
+            className="flex-grow overflow-y-auto" // Add this line to make it scrollable
           >
-            {displayedNotifications.map((notification) => (
-              <a
+            {displayedNotifications.map((notification) => {
+              const isNewlyOpened =
+              openedNotifications.includes(notification.id) && isOpen;
+              return (  
+                <a
                 key={notification.id}
                 href="#"
                 className={`${
-                  notification.isSeen ? "bg-gray-200" : "bg-white"
+                  isNewlyOpened ? "bg-white" : "bg-gray-200"
                 } flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600`}
               >
                 <div className="flex-shrink-0">
@@ -178,8 +177,8 @@ const Notification = () => {
                     {notification.date}
                   </div>
                 </div>
-              </a>
-            ))}
+              </a>)
+              })}
             {!viewAll && (
               <button
                 href="#"
