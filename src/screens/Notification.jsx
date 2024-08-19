@@ -91,7 +91,7 @@ const Notification = () => {
   // Determine the notifications to display based on viewAll state
   const displayedNotifications = viewAll
     ? notifications
-    : notifications.slice(0, 5);
+    : notifications.slice(0, 7);
 
   return (
     <div>
