@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Notification from "./Notification";
+import Notification from "../../screens/Notification";
 import CustomTheme from "../../hooks/useTheme";
 import Profile from "../../screens/Profile/ProfileAdmin";
 import logo from "../../assets/logo.png";
