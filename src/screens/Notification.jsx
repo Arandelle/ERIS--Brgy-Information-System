@@ -9,6 +9,7 @@ const Notification = () => {
   const [notificationBadge, setNotificationBadge] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [openedNotifications, setOpenedNotifications] = useState([]);
+  const [viewAll, setViewAll] = useState(false);
   const { isOpen, toggleDropdown } = Toggle();
 
   const handleNotificationBadge = async () => {
@@ -56,7 +57,7 @@ const Notification = () => {
           }
         }
 
-        notificationList.sort((a,b)=> new Date(b.date) - new Date(a.date));
+        notificationList.sort((a, b) => new Date(b.date) - new Date(a.date));
         setNotifications(notificationList);
         setNotificationBadge(unseenCount); // Update the badge count
       });
@@ -77,15 +78,20 @@ const Notification = () => {
             database,
             `admins/${user.uid}/notifications/${notification.id}`
           );
-        update(notificationUpdateRef, {isSeen: true});
+          update(notificationUpdateRef, { isSeen: true });
 
-        setOpenedNotifications((prev) => [...prev, notification.id]);
+          setOpenedNotifications((prev) => [...prev, notification.id]);
         }
       });
 
       setNotificationBadge(0); // Reset the badge count
     }
   };
+
+  // Determine the notifications to display based on viewAll state
+  const displayedNotifications = viewAll
+    ? notifications
+    : notifications.slice(0, 5);
 
   return (
     <div>
@@ -134,8 +140,8 @@ const Notification = () => {
       </div>
       {isOpen && (
         <div
-          className="fixed h-screen right-0 mt-3 w-screen md:w-80 bg-white dark:bg-gray-700 rounded-md shadow-
-                z-10 my-4 text-base list-none shadow-lg dark:divide-gray-600 "
+          className="fixed p-2 right-0 mt-3 w-screen md:w-80 bg-white dark:bg-gray-700 rounded-md shadow-
+          z-10 my-4 text-base list-none shadow-lg dark:divide-gray-600"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="options-menu"
@@ -143,60 +149,63 @@ const Notification = () => {
           <div className="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             Notifications
           </div>
-          {notifications.map((notification) => {
-
-            const isNewlyOpened = openedNotifications.includes(notification.id) && isOpen;
-           return (
-            <a
-              key={notification.id}
-              href="#"
-              className={`${
-                isNewlyOpened ? "bg-gray-400" 
-                : "" } 
-                flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600`}
-            >
-              <div className="flex-shrink-0">
-                <img
-                  className="w-11 h-11 rounded-full"
-                  src={notification.img}
-                  alt="Notification avatar"
-                />
-              </div>
-              <div className="pl-3 w-full">
-                <div className="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-                  {notification.message}
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    {notification.name}
-                  </span>
-                </div>
-                <div className="text-xs font-medium text-primary-500 dark:text-primary-400">
-                  {notification.date}
-                </div>
-              </div>
-            </a>)
-          })}
-          <a
-            href="#"
-            className="block py-2 text-base font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+          <div
+            className="h-96 overflow-y-auto" // Add this line to make it scrollable
           >
-            <div className="inline-flex items-center ">
-              <svg
-                aria-hidden="true"
-                className="mr-2 w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
+            {displayedNotifications.map((notification) => (
+              <a
+                key={notification.id}
+                href="#"
+                className={`${
+                  notification.isSeen ? "bg-gray-200" : "bg-white"
+                } flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600`}
               >
-                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
-                <path
-                  fillRule="evenodd"
-                  d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-              View all
-            </div>
-          </a>
+                <div className="flex-shrink-0">
+                  <img
+                    className="w-11 h-11 rounded-full"
+                    src={notification.img}
+                    alt="Notification avatar"
+                  />
+                </div>
+                <div className="pl-3 w-full">
+                  <div className="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
+                    {notification.message}
+                    <span className="font-semibold text-gray-900 dark:text-white">
+                      {notification.name}
+                    </span>
+                  </div>
+                  <div className="text-xs font-medium text-primary-500 dark:text-primary-400">
+                    {notification.date}
+                  </div>
+                </div>
+              </a>
+            ))}
+            {!viewAll && (
+              <button
+                href="#"
+                className="block w-full py-2 text-base font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                onClick={() => setViewAll(true)}
+              >
+                <div className="inline-flex items-center ">
+                  <svg
+                    aria-hidden="true"
+                    className="mr-2 w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                    <path
+                      fillRule="evenodd"
+                      d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                  View all
+                </div>
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -204,4 +213,3 @@ const Notification = () => {
 };
 
 export default Notification;
-
