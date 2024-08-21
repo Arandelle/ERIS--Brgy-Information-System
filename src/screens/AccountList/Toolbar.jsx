@@ -72,9 +72,9 @@ const Toolbar = ({
       </label>
       <label
         htmlFor=""
-        className="text-md lg:text-lg text-center dark:text-green-500"
+        className="text-md lg:text-lg text-center italic font-bold text-gray-600 dark:text-green-500"
       >
-        {label}
+        {label.toUpperCase()}
       </label>
 
       <div className="relative">
