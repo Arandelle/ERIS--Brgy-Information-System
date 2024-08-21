@@ -7,11 +7,19 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
+import { useEffect } from "react";
 
 const AddUserModal = ({ addUser, setAddUser, label }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState(null);
+
+  useEffect(()=>{
+    const randomNumber = Math.floor(Math.random() * 5) + 1;
+    const url = `https://flowbite.com/docs/images/people/profile-picture-${randomNumber}.jpg`
+    setImageUrl(url);
+  }, [])
 
   const handleAddUser = async (e) => {
     e.preventDefault(); // Prevents the default form submission behavior
@@ -36,6 +44,7 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
         email: user.email,
         profileComplete: false,
         createdAt: new Date().toISOString(),
+        img: imageUrl
       };
       const database = getDatabase(app);
       await set(ref(database, `${label}/${user.uid}`), userData);
