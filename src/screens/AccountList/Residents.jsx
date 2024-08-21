@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
-import Pagination from "../AccountList/buttons/Pagination"
+import Pagination from "../AccountList/buttons/Pagination";
 import Toolbar from "./Toolbar";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
-import AddUserModal from "../AccountList/buttons/AddUserModal"
+import AddUserModal from "../AccountList/buttons/AddUserModal";
 import { toast } from "sonner";
 import { handleImportFile, handleExport } from "../../helper/utils";
+import MaleIcon from "@mui/icons-material/Male";
+import FemaleIcon from "@mui/icons-material/Female";
 
 const ResidentsList = ({ label, data }) => {
-
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredResidents, setFilteredResidents] = useState(data.slice());
@@ -150,51 +151,92 @@ const ResidentsList = ({ label, data }) => {
                 </tr>
               ) : (
                 <tbody>
-
-                  <AddUserModal addUser={addUser} setAddUser={setAddUser} label={label} next={next} setNext={setNext}/>
+                  <AddUserModal
+                    addUser={addUser}
+                    setAddUser={setAddUser}
+                    label={label}
+                    next={next}
+                    setNext={setNext}
+                  />
 
                   {showUserInfoModal && userToViewInfo && (
-                     <div className="fixed flex items-center justify-center inset-0 z-50">
-                     <div
-                       className="fixed h-full w-full bg-gray-600 bg-opacity-50"
-                       onClick={() => setShowUserInfoModal(false)}
-                     ></div>
-                     <div className="relative p-5 bg-white rounded-md shadow-md">
-                     <h2>User Information</h2>
-                       <button
-                         className="absolute top-2 right-2"
-                         onClick={() => setShowUserInfoModal(false)}
-                       >
-                         Close
-                       </button>
-                       <div className="flex flex-col justify-between space-y-2">
-                          <p className="flex items-center justify-center p-4"><img src={userToViewInfo.img} alt="" className="h-24 w-24"/></p>
-                          <div className="flex flex-row justify-between w-[400px]">
-                            <div>
-                              <p>Name: {userToViewInfo.firstname} {userToViewInfo.lastname}</p>
-                              <p>Email: {userToViewInfo.email}</p>
-                              <p>Phone: {userToViewInfo.mobileNum}</p>
-                              <p>Gender: {userToViewInfo.gender}</p>
-                              <p>Address: {userToViewInfo.address}</p>
+                    <div className="fixed flex items-center justify-center inset-0 z-50">
+                      <div
+                        className="fixed h-full w-full bg-gray-600 bg-opacity-50"
+                        onClick={() => setShowUserInfoModal(false)}
+                      ></div>
+                      <div className="relative p-5 bg-white rounded-md shadow-md">
+                        <h2>User Information</h2>
+                        <button
+                          className="absolute top-2 right-2"
+                          onClick={() => setShowUserInfoModal(false)}
+                        >
+                          Close
+                        </button>
+                        <div className="flex flex-col justify-between space-y-2">
+                          <p className="flex items-center justify-center p-2">
+                            <img
+                              src={userToViewInfo.img}
+                              alt=""
+                              className="h-24 w-24 rounded-full"
+                            />
+                          </p>
+                          <div className="flex flex-col space-y-2 w-[400px]">
+                            <div className="space-y-2">
+                              <p className="flex flex-row items-center justify-center space-x-2 font-bold uppercase text-blue-500 text-lg border-b-2 border-b-gray-300">
+                                <p>
+                                  {userToViewInfo.firstname}{" "}
+                                  {userToViewInfo.lastname}
+                                </p>
+                              {userToViewInfo.gender === "male" ? <MaleIcon className="text-gray-500"/> :  <FemaleIcon className="text-gray-500"/>}  
+                              </p>
+                              <div className="text-center text-gray-500 flex flex-row justify-evenly">
+                                <p className="italic text-gray-900">
+                                  {userToViewInfo.email}{" "}
+                                </p>
+                                <p className="italic text-gray-900">
+                                  {userToViewInfo.mobileNum}
+                                </p>
+                              </div>
+                              <p className="text-center flex flex-row justify-evenly bg-gray-200 p-2 text-sm text-gray-900 font-thin lowercase italic">
+                              <p className="font-bold">user id:</p>  {userToViewInfo.id}
+                              </p>
+
+                              <div className="bg-gray-100 p-4 rounded-sm">
+                                <p className="text-gray-900 text-lg">
+                                  {userToViewInfo.address}
+                                </p>
+
+                                <p className="text-gray-900 text-lg">
+                                  {userToViewInfo?.age
+                                    ? `${userToViewInfo.age} years old`
+                                    : "not yet set"}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p>Birthdate: {userToViewInfo.birthdate}</p>
-                              <p>Civil Status: {userToViewInfo.civil}</p>
-                              <p>Created on: {userToViewInfo.createdAt}</p>
-                              <p>Account status: {userToViewInfo?.profileComplete ? "completed" : "not completed" }</p>
-                            </div>
+                            <p className="text-center text-lg uppercase">
+                              {userToViewInfo?.profileComplete ? (
+                                <p className="text-green-500 font-bold bg-green-100 p-2">
+                                  completed
+                                </p>
+                              ) : (
+                                <p className="text-red-500 font-bold bg-red-100">
+                                  not completed
+                                </p>
+                              )}
+                            </p>
                           </div>
-                         <button
-                           className="p-2 text-gray-200 bg-primary-500"
-                           onClick={() => {
-                             setShowUserInfoModal(false);
-                           }}
-                         >
-                           OK
-                         </button>
-                       </div>
-                     </div>
-                   </div>
+                          <button
+                            className="p-2 text-gray-200 bg-primary-500"
+                            onClick={() => {
+                              setShowUserInfoModal(false);
+                            }}
+                          >
+                            OK
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   )}
 
                   {currentItems.map((data, key) => (
