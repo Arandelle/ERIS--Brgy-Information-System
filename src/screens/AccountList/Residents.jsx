@@ -171,17 +171,17 @@ const ResidentsList = ({ label, data }) => {
                           <p className="flex items-center justify-center p-4"><img src={userToViewInfo.img} alt="" className="h-24 w-24"/></p>
                           <div className="flex flex-row justify-between w-[400px]">
                             <div>
-                              <p>Name: {userToViewInfo.name}</p>
+                              <p>Name: {userToViewInfo.firstname} {userToViewInfo.lastname}</p>
                               <p>Email: {userToViewInfo.email}</p>
-                              <p>Phone: {userToViewInfo.phone}</p>
+                              <p>Phone: {userToViewInfo.mobileNum}</p>
                               <p>Gender: {userToViewInfo.gender}</p>
                               <p>Address: {userToViewInfo.address}</p>
                             </div>
                             <div>
                               <p>Birthdate: {userToViewInfo.birthdate}</p>
                               <p>Civil Status: {userToViewInfo.civil}</p>
-                              <p>Created on: {userToViewInfo.created}</p>
-                              <p>Account status: {userToViewInfo.status}</p>
+                              <p>Created on: {userToViewInfo.createdAt}</p>
+                              <p>Account status: {userToViewInfo?.profileComplete ? "completed" : "not completed" }</p>
                             </div>
                           </div>
                          <button
