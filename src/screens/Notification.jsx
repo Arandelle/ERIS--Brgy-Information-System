@@ -67,7 +67,7 @@ const Notification = () => {
         if (!notification.isSeen) {
           const notificationUpdateRef = ref(
             database,
-            `${notificationRef}/${notification.id}`
+            `admins/${user.uid}/notifications/${notification.id}`
           );
           update(notificationUpdateRef, { isSeen: true });
 
