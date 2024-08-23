@@ -4,6 +4,7 @@ import { Tooltip } from "@mui/material";
 import { useState, useEffect } from "react";
 import { auth, database } from "../services/firebaseConfig";
 import { push, ref, onValue, update } from "firebase/database";
+import { getTimeDifference } from "../helper/TimeDiff";
 
 const Notification = () => {
   const [notificationBadge, setNotificationBadge] = useState(0);
@@ -12,22 +13,12 @@ const Notification = () => {
   const [viewAll, setViewAll] = useState(false);
   const { isOpen, toggleDropdown } = Toggle();
 
-  const handleNotificationBadge = async () => {
-    const user = auth.currentUser;
-
-    try {
-      const newNotification = {
-        message: `A new user has registered with the system ${notifications.length}`,
-        isSeen: false,
-        date: new Date().toISOString(),
-      };
-
-      const notificationRef = ref(database, `admins/${user.uid}/notifications`);
-      await push(notificationRef, newNotification);
-      // No need to update the badge here, it will be handled in onValue
-    } catch (error) {
-      console.error(error);
-    }
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString(undefined, {
+      weekday: "short",
+      month: "short",
+      day: "2-digit",
+    });
   };
 
   useEffect(() => {
@@ -76,7 +67,7 @@ const Notification = () => {
         if (!notification.isSeen) {
           const notificationUpdateRef = ref(
             database,
-            `admins/${user.uid}/notifications/${notification.id}`
+            `${notificationRef}/${notification.id}`
           );
           update(notificationUpdateRef, { isSeen: true });
 
@@ -106,12 +97,6 @@ const Notification = () => {
         >
           <div className="relative">
             <button
-              onClick={handleNotificationBadge}
-              className="p-1 bg-gray-400 rounded-md"
-            >
-              Add Notification
-            </button>
-            <button
               onClick={handleDropdownToggle}
               type="button"
               data-dropdown-toggle="notification-dropdown"
@@ -132,16 +117,14 @@ const Notification = () => {
             </button>
             {notificationBadge > 0 && (
               <span className="absolute top-0 right-0 flex items-center justify-center text-white font-bold rounded-full bg-red-500 w-5 h-5 text-xs">
-                {notificationBadge < 100 ? notificationBadge : "99+"}
+                {notificationBadge < 16 ? notificationBadge : "15+"}
               </span>
             )}
           </div>
         </Tooltip>
       </div>
       {isOpen && (
-        <div
-          className="fixed inset-x-0 top-16 bottom-0 md:right-0 md:left-auto mt-3 w-screen md:w-80 bg-white dark:bg-gray-700 rounded-md flex flex-col z-10 dark:divide-gray-600"
-        >
+        <div className="fixed inset-x-0 top-14 bottom-0 md:right-0 md:left-auto mt-3 w-screen md:w-80 bg-white dark:bg-gray-700 rounded-md flex flex-col z-10 dark:divide-gray-600">
           <div className="py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             Notifications
           </div>
@@ -150,35 +133,44 @@ const Notification = () => {
           >
             {displayedNotifications.map((notification) => {
               const isNewlyOpened =
-              openedNotifications.includes(notification.id) && isOpen;
-              return (  
+                openedNotifications.includes(notification.id) && isOpen;
+              return (
                 <a
-                key={notification.id}
-                href="#"
-                className={`${
-                  isNewlyOpened ? "bg-white" : "bg-gray-200"
-                } flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600`}
-              >
-                <div className="flex-shrink-0">
-                  <img
-                    className="w-11 h-11 rounded-full"
-                    src={notification.img}
-                    alt="Notification avatar"
-                  />
-                </div>
-                <div className="pl-3 w-full">
-                  <div className="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-                    {notification.message}
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {notification.name}
-                    </span>
+                  key={notification.id}
+                  href="#"
+                  className={`${
+                    !notification.isSeen
+                      ? "bg-gray-50 font-semibold"
+                      : "bg-white"
+                  } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
+                >
+                  <div className="flex-shrink-0 relative">
+                    <img
+                      className="w-12 h-12 rounded-full border-2 border-primary-500"
+                      src={notification.img}
+                      alt="Notification avatar"
+                    />
+                    {!notification.isSeen && (
+                      <span className="absolute top-0 right-0 block h-3 w-3 bg-red-500 rounded-full border-2 border-white dark:border-gray-700"></span>
+                    )}
                   </div>
-                  <div className="text-xs font-medium text-primary-500 dark:text-primary-400">
-                    {notification.date}
+                  <div className="pl-4 w-full">
+                    <div className="text-sm mb-1 text-gray-600 dark:text-gray-300">
+                      <span className="font-semibold text-gray-800 dark:text-white">
+                        {notification.email}
+                      </span>{" "}
+                      {notification.message}
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                      <span>{getTimeDifference(notification.timestamp)}</span>
+                      <span className="text-blue-500 dark:text-green-400">
+                        {formatDate(notification.date)}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </a>)
-              })}
+                </a>
+              );
+            })}
             {!viewAll && (
               <button
                 href="#"
