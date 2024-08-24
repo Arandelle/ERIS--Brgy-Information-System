@@ -44,7 +44,7 @@ export const useSidebarData = [
       },
       {
         title: "Responder",
-        link: "/accounts/responder",
+        link: "/accounts/responders",
       },
       // {
       //   title: "Carissa",

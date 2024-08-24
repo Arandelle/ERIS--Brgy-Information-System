@@ -89,7 +89,7 @@ const App = () => {
               }
             />
             <Route
-              path="/accounts/responder"
+              path="/accounts/responders"
               element={
                 user && isAdmin ? (
                   <ResidentsList data={responders} label="responders" />

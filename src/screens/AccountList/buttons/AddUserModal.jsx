@@ -6,10 +6,12 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, push, ref, serverTimestamp, set } from "firebase/database";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AddUserModal = ({ addUser, setAddUser, label }) => {
+  const navigation = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -49,7 +51,21 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
       const database = getDatabase(app);
       await set(ref(database, `${label}/${user.uid}`), userData);
 
-      await auth.updateCurrentUser(currentUser); // restore the admin session
+      await auth.updateCurrentUser(currentUser); // restore the admin 
+      navigation("/accounts/users")
+      
+      const adminId = currentUser.uid
+      const notificationRef = ref(database, `admins/${adminId}/notifications`);
+      const newNotification = {
+        message: `You have successfully created an account for ${label}`,
+        email: `${user.email}`,
+        isSeen: false,
+        date: new Date().toISOString(),
+        timestamp: serverTimestamp(),
+        img: imageUrl
+      };
+
+      await push(notificationRef, newNotification);
 
       console.log("User created:", user.uid);
       toast.success("Success", "Please check your email for verification");
