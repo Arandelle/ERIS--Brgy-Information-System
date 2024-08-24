@@ -57,6 +57,7 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
       const adminId = currentUser.uid
       const notificationRef = ref(database, `admins/${adminId}/notifications`);
       const newNotification = {
+        type: `${label}`,
         message: `You have successfully created an account for ${label}`,
         email: `${user.email}`,
         isSeen: false,

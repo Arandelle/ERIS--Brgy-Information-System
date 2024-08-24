@@ -1,25 +1,19 @@
 import { Toggle } from "../hooks/Toggle";
-import { NotificationData } from "../data/NotificationData";
 import { Tooltip } from "@mui/material";
 import { useState, useEffect } from "react";
 import { auth, database } from "../services/firebaseConfig";
-import { push, ref, onValue, update } from "firebase/database";
+import { ref, onValue, update } from "firebase/database";
 import { getTimeDifference } from "../helper/TimeDiff";
+import { formatDate } from "../helper/FormatDate";
+import { useNavigate} from "react-router-dom"
 
 const Notification = () => {
+  const navigation = useNavigate();
   const [notificationBadge, setNotificationBadge] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [openedNotifications, setOpenedNotifications] = useState([]);
   const [viewAll, setViewAll] = useState(false);
   const { isOpen, toggleDropdown } = Toggle();
-
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString(undefined, {
-      weekday: "short",
-      month: "short",
-      day: "2-digit",
-    });
-  };
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -57,26 +51,29 @@ const Notification = () => {
 
   const handleDropdownToggle = () => {
     toggleDropdown();
-
     if (!isOpen) {
-      const user = auth.currentUser;
-      const notificationRef = ref(database, `admins/${user.uid}/notifications`);
-
-      // Mark all notifications as seen when opening the dropdown
-      notifications.forEach((notification) => {
-        if (!notification.isSeen) {
-          const notificationUpdateRef = ref(
-            database,
-            `admins/${user.uid}/notifications/${notification.id}`
-          );
-          update(notificationUpdateRef, { isSeen: true });
-
-          setOpenedNotifications((prev) => [...prev, notification.id]);
-        }
-      });
-
-      setNotificationBadge(0); // Reset the badge count
+      // Keep track of notifications marked as seen during dropdown open
+      setOpenedNotifications([]);
     }
+  };
+
+  const handleNotificationClick = (notificationId) => {
+    const user = auth.currentUser;
+    const notificationUpdateRef = ref(
+      database,
+      `admins/${user.uid}/notifications/${notificationId}`
+    );
+
+    // Mark the notification as seen in Firebase
+    update(notificationUpdateRef, { isSeen: true });
+
+    // Update the local state to reflect the notification has been seen
+    setOpenedNotifications((prev) => [...prev, notificationId]);
+  };
+
+  const handleDropdownClose = () => {
+    // Reset the badge count
+    setNotificationBadge(0);
   };
 
   // Determine the notifications to display based on viewAll state
@@ -98,6 +95,7 @@ const Notification = () => {
           <div className="relative">
             <button
               onClick={handleDropdownToggle}
+              onBlur={handleDropdownClose} // Handle closing the dropdown
               type="button"
               data-dropdown-toggle="notification-dropdown"
               className={`p-2 mr-1 ${
@@ -132,17 +130,17 @@ const Notification = () => {
             className="flex-grow overflow-y-auto" // Add this line to make it scrollable
           >
             {displayedNotifications.map((notification) => {
-              const isNewlyOpened =
-                openedNotifications.includes(notification.id) && isOpen;
+              const isNewlyOpened = openedNotifications.includes(notification.id);
               return (
                 <a
                   key={notification.id}
                   href="#"
                   className={`${
-                    !notification.isSeen
-                      ? "bg-gray-50 font-semibold"
-                      : "bg-white"
+                    !notification.isSeen && !isNewlyOpened
+                      ? "bg-white font-semibold"
+                      : "bg-gray-100"
                   } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
+                  onClick={() =>{ handleNotificationClick(notification.id), navigation(`/accounts/${notification.type}`)}}
                 >
                   <div className="flex-shrink-0 relative">
                     <img
@@ -150,7 +148,7 @@ const Notification = () => {
                       src={notification.img}
                       alt="Notification avatar"
                     />
-                    {!notification.isSeen && (
+                    {(!notification.isSeen && !isNewlyOpened) && (
                       <span className="absolute top-0 right-0 block h-3 w-3 bg-red-500 rounded-full border-2 border-white dark:border-gray-700"></span>
                     )}
                   </div>
