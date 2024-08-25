@@ -185,8 +185,9 @@ const ResidentsList = ({ label, data }) => {
                             <div className="space-y-2">
                               <p className="flex flex-row items-center justify-center space-x-2 font-bold uppercase text-blue-500 text-lg border-b-2 border-b-gray-300">
                                 <p>
-                                  {userToViewInfo.firstname}{" "}
-                                  {userToViewInfo.lastname}
+                                {userToViewInfo?.firstname ? 
+                                (userToViewInfo.firstname,
+                                userToViewInfo.lastname ): "fullname" }
                                 </p>
                               {userToViewInfo.gender === "male" ? <MaleIcon className="text-gray-500"/> :  <FemaleIcon className="text-gray-500"/>}  
                               </p>
@@ -195,7 +196,7 @@ const ResidentsList = ({ label, data }) => {
                                   {userToViewInfo.email}{" "}
                                 </p>
                                 <p className="italic text-gray-900">
-                                  {userToViewInfo.mobileNum}
+                                  {userToViewInfo.mobileNum ? userToViewInfo.mobileNum : "mobile number" }
                                 </p>
                               </div>
                               <p className="text-center flex flex-row justify-evenly bg-gray-200 p-2 text-sm text-gray-900 font-thin lowercase italic">
@@ -210,7 +211,7 @@ const ResidentsList = ({ label, data }) => {
                                 <p className="text-gray-900 text-lg">
                                   {userToViewInfo?.age
                                     ? `${userToViewInfo.age} years old`
-                                    : "not yet set"}
+                                    : "user details"}
                                 </p>
                               </div>
                             </div>
