@@ -6,6 +6,7 @@ import { ref, onValue, update } from "firebase/database";
 import { getTimeDifference } from "../helper/TimeDiff";
 import { formatDate } from "../helper/FormatDate";
 import { useNavigate} from "react-router-dom"
+import Question from "../assets/question.svg"
 
 const Notification = () => {
   const navigation = useNavigate();
@@ -129,7 +130,17 @@ const Notification = () => {
           <div
             className="flex-grow overflow-y-auto" // Add this line to make it scrollable
           >
-            {displayedNotifications.map((notification) => {
+          {displayedNotifications.length === 0 ? (
+            <div className="text-center flex flex-col justify-center items-center text-gray-500 dark:text-gray-400">
+            <img
+              src={Question}
+              alt="Empty Image"
+              className="h-[200px] w-[200px]"
+            />
+           Your notification is empty
+          </div>
+          ) : (
+            displayedNotifications.map((notification) => {
               const isNewlyOpened = openedNotifications.includes(notification.id);
               return (
                 <a
@@ -168,8 +179,10 @@ const Notification = () => {
                   </div>
                 </a>
               );
-            })}
-            {!viewAll && (
+            })
+          )}
+         
+            {!viewAll && displayedNotifications.length > 7 && (
               <button
                 href="#"
                 className="block w-full py-2 text-base font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
