@@ -3,6 +3,7 @@ import Maintenance from "../components/ReusableComponents/Maintenance";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import { auth, database } from "../services/firebaseConfig";
 import { ref, get } from "firebase/database";
+import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 
 export const HeaderData = [
   "emergency id",
@@ -47,7 +48,7 @@ function History() {
   return (
     <HeadSide
       child={
-        <div className="flex flex-col justify-center m-3">
+        <div className="flex flex-col justify-center m-3 h-full">
           <div className="overflow-auto w-full">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-800 dark:bg-opacity-70 dark:text-gray-400">
@@ -65,25 +66,27 @@ function History() {
               </thead>
               {emergencyHistory.length > 0 ? (
                 emergencyHistory.map((emergency) => (
-                  <tr
-                    className={`border-b dark:border-gray-700 bg-white hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-gray-700`}
-                  >
-                    <td className="px-6 py-4">{emergency.id}</td>
-                    <td className="px-6 py-4">{emergency.type}</td>
-                    <td className="px-6 py-4">{emergency.name}</td>
-                    <td className="px-6 py-4">{emergency.description}</td>
-                    <td className="px-6 py-4">
-                      {emergency.location} 
-                    </td>
-                    <td className="px-6 py-4">{emergency.status}</td>
-                    <td className="px-6 py-4">{new Date(emergency.timestamp).toLocaleString()}</td>
-                  </tr>
+                  <tbody>
+                    <tr
+                      className={`border-b dark:border-gray-700 bg-white hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-gray-700`}
+                    >
+                      <td className="px-6 py-4">{emergency.id}</td>
+                      <td className="px-6 py-4">{emergency.type}</td>
+                      <td className="px-6 py-4">{emergency.name}</td>
+                      <td className="px-6 py-4">{emergency.description}</td>
+                      <td className="px-6 py-4">{emergency.location}</td>
+                      <td className="px-6 py-4">{emergency.status}</td>
+                      <td className="px-6 py-4">
+                        {new Date(emergency.timestamp).toLocaleString()}
+                      </td>
+                    </tr>
+                  </tbody>
                 ))
               ) : (
-                <tr
-                  className={`border-b dark:border-gray-700 bg-white hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-gray-700`}
-                >
-                  <td className="px-6 py-4 text-center" colSpan={8}>No data found</td>
+                <tr>
+                  <td colSpan={8}>
+                    <EmptyLogo message={"No history found"} />
+                  </td>
                 </tr>
               )}
             </table>

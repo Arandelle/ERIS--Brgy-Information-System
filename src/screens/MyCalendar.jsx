@@ -3,7 +3,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import { Spinner } from "../components/ReusableComponents/Skeleton";
-import calendarImage from "../assets/calendar.svg";
 import ContainerResizer from "../helper/ContainerResizer";
 import InputReusable from "../components/ReusableComponents/InputReusable";
 import BtnReusable from "../components/ReusableComponents/BtnReusable";
@@ -11,6 +10,8 @@ import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import QuestionModal from "../components/ReusableComponents/AskCard";
 import CloseIcon from '@mui/icons-material/Close';
 import { toast } from "sonner";
+import { formatDate } from "../helper/FormatDate";
+import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 
 
 function capitalizeFirstLetter(string) {
@@ -75,13 +76,6 @@ const MyCalendar = () => {
     localStorage.setItem("events", JSON.stringify(events));
   }, [events]);
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString(undefined, {
-      weekday: "short",
-      month: "short",
-      day: "2-digit",
-    });
-  };
 
   const handleAddEvent = () => {
     if (
@@ -318,14 +312,7 @@ const MyCalendar = () => {
                       <Spinner setLoading={setLoading} />
                     </div>
                   ) : events.length === 0 ? (
-                    <div className="text-center flex flex-col justify-center items-center text-gray-500 dark:text-gray-400">
-                      <img
-                        src={calendarImage}
-                        alt="Empty Image"
-                        className="h-[200px] w-[200px]"
-                      />
-                      No events yet
-                    </div>
+                  <EmptyLogo message={"No events yet"} />
                   ) : (
                     events.map((activity) => (
                       <div

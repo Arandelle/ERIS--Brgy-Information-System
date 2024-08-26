@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { handleImportFile, handleExport } from "../../helper/utils";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
+import EmptyLogo from "../../components/ReusableComponents/EmptyLogo";
 
 const ResidentsList = ({ label, data }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -144,9 +145,9 @@ const ResidentsList = ({ label, data }) => {
               />
 
               {currentItems.length === 0 ? (
-                <tr className="py-32 h-96 text-gray-500 text-center justify-center items-center">
-                  <td rowSpan={6} colSpan={8}>
-                    No data found
+                <tr className="h-screen">
+                  <td colSpan={8}>
+                    <EmptyLogo message={"No users registered"} />
                   </td>
                 </tr>
               ) : (

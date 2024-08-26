@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AllData } from "../../data/AllData";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Question from "../../assets/question.svg";
+import EmptyLogo from "../ReusableComponents/EmptyLogo";
 
 const SearchInput = ({ isOpen, className }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -107,10 +108,7 @@ const SearchInput = ({ isOpen, className }) => {
             }`}
           >
             {noData && (
-              <div className="px-2 py-1 text-gray-500 text-center flex flex-col items-center">
-              <span className="dark:text-white">No data found</span>
-              <img src={Question} alt="No data found" className="h-[150px] w-[150px]" />
-            </div>            
+             <EmptyLogo message={"No data found"}/>         
             )}
             {searchResult.map((item, index) => (
               <div
