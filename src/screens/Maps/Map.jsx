@@ -8,7 +8,7 @@ function MyMapComponent() {
 
   return ( 
     <HeadSide child={
-         <div className="my-2"> <MapContent isFullscreen={true} /></div>
+       <MapContent isFullscreen={true} />
     }/>
   );
 }

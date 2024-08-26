@@ -48,7 +48,7 @@ function History() {
   return (
     <HeadSide
       child={
-        <div className="flex flex-col justify-center m-3 h-full">
+        <div className="flex flex-col justify-center h-full">
           <div className="overflow-auto w-full">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-800 dark:bg-opacity-70 dark:text-gray-400">

@@ -71,7 +71,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
                       onClick={() => handleSubMenuClick(subVal.link)}
                     >
                       <div className="flex items-center w-full">
-                        <div className="flex-grow ml-3 text-gray-600 dark:text-gray-300">- {subVal.title}</div>
+                        <div className="flex-grow ml-3 text-gray-600 dark:text-gray-300">{subVal.title}</div>
                       </div>
                     </li>
                   ))}

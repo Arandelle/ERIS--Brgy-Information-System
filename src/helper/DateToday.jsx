@@ -76,7 +76,7 @@ const DateToday = () => {
   };
 
   return (
-    <div className="bg-white my-3 px-4 border-l-4 border-l-primary-500 dark:border-l-primary-400 flex flex-row items-center py-4 mb-2 m-3 rounded-md shadow-md dark:bg-gray-800">
+    <div className="bg-white px-4 border-l-4 border-l-primary-500 dark:border-l-primary-400 flex flex-row items-center py-4 mb-2 rounded-md shadow-md dark:bg-gray-800">
       {timeOfDay && <div>{getIcon()}</div>}
       <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md">
         {timeMessage}, Admin!

@@ -63,7 +63,7 @@ const Dashboard = () => {
         <>
           <DateToday />
 
-          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 md:my-3 mx-3 text-wrap cursor-pointer">
+          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 md:my-3 text-wrap cursor-pointer">
             <DashboardCard
               title="Total Residents"
               value={loading ? <Spinner setLoading={setLoading} /> : users.length}
@@ -91,7 +91,7 @@ const Dashboard = () => {
               onClick={()=>handleNavigate("/maps")}
             />
           </div>
-          <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4 mx-3 text-wrap">
+          <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4 text-wrap">
               <>
                 <div className="order-3 lg:order-1 col-span-1 lg:col-span-3">
                   <MapContent isFullscreen={false}/>

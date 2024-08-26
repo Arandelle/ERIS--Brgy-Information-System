@@ -128,7 +128,7 @@ function MyMapComponents({ isFullscreen }) {
   }
 
   return (
-    <div className={`w-full z-0 shadow-md ${isFullscreen ? "m-3" : ""}`}>
+    <div className={`w-full z-0 shadow-md`}>
       <MapContainer
         center={position}
         zoom={15}

@@ -185,198 +185,198 @@ const MyCalendar = () => {
   return (
     <HeadSide
       child={
-        <div className="m-3">
-          <div className="grid grid-cols-1 md:grid-cols-4">
-            <div className="col-span-3 border-t-[3px] border-primary-500 text-gray-600 dark:text-gray-200 mt-2 bg-gray-200 dark:bg-gray-800">
-              <Calendar
-                localizer={localizer}
-                events={events}
-                startAccessor="start"
-                endAccessor="end"
-                style={{
-                  height: 600,
-                  marginBottom: 15,
-                  paddingTop: 10,
-                }}
-                components={{
-                  toolbar: (toolbarProps) => <CustomToolbar {...toolbarProps} handleAddEventModal={handleAddEventModal} />,
-                  agenda: {
-                    event: CustomAgendaEvent,
-                  },
-                }}
-                onSelectEvent={handleSelectEvent}
-              />
-            </div>
-
-            {addEventModal && (
-              <div className="fixed flex items-center justify-center inset-0 z-50">
-                <div
-                  className="fixed h-full w-full bg-gray-600 bg-opacity-50"
-                  onClick={() => setAddEventModal(false)}
-                ></div>
-                <div className="relative p-5 bg-white rounded-md shadow-md">
-                  <h2 className="py-2 px-2 text-primary-500 border-2 mb-5">Add New Event</h2>
-                  <button
-                    className="absolute p-2 top-0 right-0"
+        <>
+            <div className="grid grid-cols-1 md:grid-cols-4">
+              <div className="col-span-3 border-t-[3px] border-primary-500 text-gray-600 dark:text-gray-200 mt-2 bg-gray-200 dark:bg-gray-800">
+                <Calendar
+                  localizer={localizer}
+                  events={events}
+                  startAccessor="start"
+                  endAccessor="end"
+                  style={{
+                    height: 600,
+                    marginBottom: 15,
+                    paddingTop: 10,
+                  }}
+                  components={{
+                    toolbar: (toolbarProps) => <CustomToolbar {...toolbarProps} handleAddEventModal={handleAddEventModal} />,
+                    agenda: {
+                      event: CustomAgendaEvent,
+                    },
+                  }}
+                  onSelectEvent={handleSelectEvent}
+                />
+              </div>
+  
+              {addEventModal && (
+                <div className="fixed flex items-center justify-center inset-0 z-50">
+                  <div
+                    className="fixed h-full w-full bg-gray-600 bg-opacity-50"
                     onClick={() => setAddEventModal(false)}
-                  >
-                    <CloseIcon style={{fontSize: "large"}}/>
-                  </button>
-                  <div className="flex flex-col justify-between space-y-2">
-                    <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <InputReusable
-                        type="text"
-                        placeholder="Event Title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        onBlur={() => setTitle(title.toUpperCase())}
-                      />
-                      <InputReusable
-                        type="text"
-                        onFocus={(e) => (e.target.type = "date")}
-                        onBlur={(e) => (e.target.type = "text")}
-                        placeholder="Start Date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                      />
-                      <InputReusable
-                        type="text"
-                        placeholder="End Date"
-                        value={endDate}
-                        onFocus={(e) => (e.target.type = "date")}
-                        onBlur={(e) => (e.target.type = "text")}
-                        onChange={(e) => setEndDate(e.target.value)}
-                      />
-                      <InputReusable
-                        type="text"
-                        placeholder="Location"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        onBlur={(e) =>
-                          setLocation(capitalizeFirstLetter(location))
-                        }
-                      />
-                      <InputReusable
-                        type="text"
-                        placeholder="Organizer"
-                        value={organizer}
-                        onChange={(e) => setOrganizer(e.target.value)}
-                        onBlur={(e) =>
-                          setOrganizer(capitalizeFirstLetter(organizer))
-                        }
-                      />
-                      <InputReusable
-                        type="text"
-                        placeholder="Details"
-                        value={details}
-                        onChange={(e) => setDetails(e.target.value)}
-                        onBlur={(e) =>
-                          setDetails(capitalizeFirstLetter(details))
-                        }
-                      />
-                      {selectedEvent ? (
-                        <BtnReusable
-                          onClick={handleUpdateEvent}
-                          value="Update Event"
-                          type={"edit"}
+                  ></div>
+                  <div className="relative p-5 bg-white rounded-md shadow-md">
+                    <h2 className="py-2 px-2 text-primary-500 border-2 mb-5">Add New Event</h2>
+                    <button
+                      className="absolute p-2 top-0 right-0"
+                      onClick={() => setAddEventModal(false)}
+                    >
+                      <CloseIcon style={{fontSize: "large"}}/>
+                    </button>
+                    <div className="flex flex-col justify-between space-y-2">
+                      <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <InputReusable
+                          type="text"
+                          placeholder="Event Title"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                          onBlur={() => setTitle(title.toUpperCase())}
                         />
-                      ) : (
-                        <BtnReusable
-                          onClick={handleAddEvent}
-                          value="Add Event"
-                          type={"add"}
+                        <InputReusable
+                          type="text"
+                          onFocus={(e) => (e.target.type = "date")}
+                          onBlur={(e) => (e.target.type = "text")}
+                          placeholder="Start Date"
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
                         />
-                      )}
-                      <BtnReusable
-                        onClick={handleAddEventModal}
-                        value="Cancel"
-                        type="cancel"
-                      />
+                        <InputReusable
+                          type="text"
+                          placeholder="End Date"
+                          value={endDate}
+                          onFocus={(e) => (e.target.type = "date")}
+                          onBlur={(e) => (e.target.type = "text")}
+                          onChange={(e) => setEndDate(e.target.value)}
+                        />
+                        <InputReusable
+                          type="text"
+                          placeholder="Location"
+                          value={location}
+                          onChange={(e) => setLocation(e.target.value)}
+                          onBlur={(e) =>
+                            setLocation(capitalizeFirstLetter(location))
+                          }
+                        />
+                        <InputReusable
+                          type="text"
+                          placeholder="Organizer"
+                          value={organizer}
+                          onChange={(e) => setOrganizer(e.target.value)}
+                          onBlur={(e) =>
+                            setOrganizer(capitalizeFirstLetter(organizer))
+                          }
+                        />
+                        <InputReusable
+                          type="text"
+                          placeholder="Details"
+                          value={details}
+                          onChange={(e) => setDetails(e.target.value)}
+                          onBlur={(e) =>
+                            setDetails(capitalizeFirstLetter(details))
+                          }
+                        />
+                        {selectedEvent ? (
+                          <BtnReusable
+                            onClick={handleUpdateEvent}
+                            value="Update Event"
+                            type={"edit"}
+                          />
+                        ) : (
+                          <BtnReusable
+                            onClick={handleAddEvent}
+                            value="Add Event"
+                            type={"add"}
+                          />
+                        )}
+                        <BtnReusable
+                          onClick={handleAddEventModal}
+                          value="Cancel"
+                          type="cancel"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            <div className="mr-3 ml-2" onSelectEvent={handleSelectEvent}>
-              <div
-                className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 h-full"
-                ref={containerRef}
-              >
-                <div className="block mt-2 py-2 px-4 text-base text-center font-semibold border-y-[3px] border-orange-500">
-                  Upcoming Events
-                </div>
-                <div className="scrollable-container p-4 text-gray-700 overflow-y-auto">
-                  {loading ? (
-                    <div className="flex items-center justify-center py-3">
-                      <Spinner setLoading={setLoading} />
-                    </div>
-                  ) : events.length === 0 ? (
-                  <EmptyLogo message={"No events yet"} />
-                  ) : (
-                    events.map((activity) => (
-                      <div
-                        key={activity.id}
-                        className="mb-4 border-b pb-4 border-b-gray-500 dark:border-b-gray-200"
-                      >
-                        <div>
-                          <h3 className="text-xl font-semibold mb-2 dark:text-green-500">
-                            Title: {activity.title}
-                          </h3>
-                          <p className="text-gray-700 dark:text-gray-200">
-                            Date: {formatDate(activity.start)} -{" "}
-                            {formatDate(activity.end)}
-                          </p>
-                          <p className="text-gray-700 dark:text-gray-200">
-                            Location: {activity.location}
-                          </p>
-                          <p className="text-gray-700 dark:text-gray-200">
-                            Organizer: {activity.organizer}
-                          </p>
-                          <p className="text-gray-700 dark:text-gray-200">
-                            Details: {activity.details}
-                          </p>
-                          <BtnReusable
-                            value={"Delete"}
-                            type="delete"
-                            onClick={() => toggleDeleteModal(activity.id)}
-                          />
-                        </div>
+              )}
+  
+              <div className="mr-3 ml-2" onSelectEvent={handleSelectEvent}>
+                <div
+                  className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 h-full"
+                  ref={containerRef}
+                >
+                  <div className="block mt-2 py-2 px-4 text-base text-center font-semibold border-y-[3px] border-orange-500">
+                    Upcoming Events
+                  </div>
+                  <div className="scrollable-container p-4 text-gray-700 overflow-y-auto">
+                    {loading ? (
+                      <div className="flex items-center justify-center py-3">
+                        <Spinner setLoading={setLoading} />
                       </div>
-                    ))
+                    ) : events.length === 0 ? (
+                    <EmptyLogo message={"No events yet"} />
+                    ) : (
+                      events.map((activity) => (
+                        <div
+                          key={activity.id}
+                          className="mb-4 border-b pb-4 border-b-gray-500 dark:border-b-gray-200"
+                        >
+                          <div>
+                            <h3 className="text-xl font-semibold mb-2 dark:text-green-500">
+                              Title: {activity.title}
+                            </h3>
+                            <p className="text-gray-700 dark:text-gray-200">
+                              Date: {formatDate(activity.start)} -{" "}
+                              {formatDate(activity.end)}
+                            </p>
+                            <p className="text-gray-700 dark:text-gray-200">
+                              Location: {activity.location}
+                            </p>
+                            <p className="text-gray-700 dark:text-gray-200">
+                              Organizer: {activity.organizer}
+                            </p>
+                            <p className="text-gray-700 dark:text-gray-200">
+                              Details: {activity.details}
+                            </p>
+                            <BtnReusable
+                              value={"Delete"}
+                              type="delete"
+                              onClick={() => toggleDeleteModal(activity.id)}
+                            />
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  {events.length > 0 ? (
+                    <div className="flex justify-end">
+                      <BtnReusable
+                        value="See more events "
+                        link={"/events/event"}
+                      />
+                    </div>
+                  ) : (
+                    ""
                   )}
                 </div>
-                {events.length > 0 ? (
-                  <div className="flex justify-end">
-                    <BtnReusable
-                      value="See more events "
-                      link={"/events/event"}
-                    />
-                  </div>
-                ) : (
-                  ""
-                )}
               </div>
             </div>
-          </div>
-          {showDeleteModal && (
-            <QuestionModal
-              toggleModal={toggleDeleteModal}
-              question={
-                <span>
-                  Do you want to delete
-                  <span className="text-primary-500 text-bold">
-                    {" "}
-                    {events.find((item) => item.id === eventsToDelete)?.title}
-                  </span>{" "}
-                  ?{" "}
-                </span>
-              }
-              yesText={"Delete"}
-              onConfirm={() => handleDeleteEvent(eventsToDelete)}
-            />
-          )}
-        </div>
+            {showDeleteModal && (
+              <QuestionModal
+                toggleModal={toggleDeleteModal}
+                question={
+                  <span>
+                    Do you want to delete
+                    <span className="text-primary-500 text-bold">
+                      {" "}
+                      {events.find((item) => item.id === eventsToDelete)?.title}
+                    </span>{" "}
+                    ?{" "}
+                  </span>
+                }
+                yesText={"Delete"}
+                onConfirm={() => handleDeleteEvent(eventsToDelete)}
+              />
+            )}
+        </>
       }
     />
   );
