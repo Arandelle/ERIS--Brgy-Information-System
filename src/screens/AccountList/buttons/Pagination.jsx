@@ -60,10 +60,10 @@ const Pagination = ({
         <li key={i}>
           <button
             onClick={() => setCurrentPage(i)}
-            className={`px-3 py-2 leading-tight ${
+            className={`hidden sm:flex items-center justify-center px-3 h-8 leading-tight ${
               currentPage === i
-                ? "flex items-center justify-center px-3 h-8 leading-tight text-gray-900 bg-primary-300 border border-gray-400 hover:bg-primary-400 hover:text-gray-700 dark:bg-gray-600 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white"
-                : "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-primary-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                ? "text-gray-900 bg-primary-300 border border-gray-400 hover:bg-primary-400 hover:text-gray-700 dark:bg-gray-600 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white"
+                : "text-gray-500 bg-white border border-gray-300 hover:bg-primary-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             }`}
           >
             {i}
@@ -85,68 +85,70 @@ const Pagination = ({
 
   return (
     <nav
-      className="flex items-center dark:bg-gray-800 bg-white flex-column flex-wrap md:flex-row justify-between p-4 space-y-0"
+      className="flex flex-col sm:flex-row items-center justify-between p-4 space-y-4 sm:space-y-0 bg-white dark:bg-gray-800"
       aria-label="Table navigation"
     >
-      {/* showing 1-10 of 100 - this span showing the current item of page */}
-      <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+      <span className="text-sm font-normal text-gray-500 dark:text-gray-400 w-full sm:w-auto">
         <span className="font-semibold text-gray-900 dark:text-white">
           {getShowingText()}
         </span>
       </span>
 
-      <ul className="inline-flex  -space-x-px rtl:space-x-reverse text-sm h-8">
-        <button
-          className={`flex items-center justify-center px-3 h-8 ms-0 rounded-s-lg leading-tight  border border-gray-300  dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
-            currentPage === 1
-              ? "cursor-not-allowed bg-gray-100 text-gray-400"
-              : "hover:bg-gray-100 hover:text-gray-700 text-gray-600 bg-white"
-          }`}
-          onClick={prevPage}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
+      <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+          <button
+            className={`flex items-center justify-center px-3 h-8 ms-0 rounded-s-lg leading-tight border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+              currentPage === 1
+                ? "cursor-not-allowed bg-gray-100 text-gray-400"
+                : "hover:bg-gray-100 hover:text-gray-700 text-gray-600 bg-white"
+            }`}
+            onClick={prevPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
 
-        {/* this render the page button handle of atleast 5 buttons  */}
-        {renderPageNumbers()}
+          {renderPageNumbers()}
 
-        <button
-          className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
-            isDisable
-              ? "cursor-not-allowed bg-gray-100 text-gray-400"
-              : "hover:bg-gray-100 hover:text-gray-700 text-gray-600 bg-white"
-          }`}
-          onClick={nextPage}
-          disabled={isDisable}
-        >
-          Next
-        </button>
-      </ul>
-      <form onSubmit={handleJumpToPage} className="mt-4">
-        <label
-          htmlFor="jumpToPage"
-          className="mr-2 text-gray-600 dark:text-gray-400"
-        >
-          Jump to page:
-        </label>
-        <input
-          type="number"
-          id="jumpToPage"
-          value={jumpToPage}
-          onChange={(e) => setJumpToPage(e.target.value)}
-          className="border px-2 py-1 h-6 dark:bg-gray-600 dark:text-white"
-          min="1"
-          max={totalPages}
-        />
-        <button
-          type="submit"
-          className="ml-2 px-4 py-1 h-8 bg-primary-500 dark:ng-primary-400 text-white rounded"
-        >
-          Go
-        </button>
-      </form>
-      <FileHandlerButtons onClickExport={onClickExport} onClickImport={onClickImport}/>
+          <button
+            className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+              isDisable
+                ? "cursor-not-allowed bg-gray-100 text-gray-400"
+                : "hover:bg-gray-100 hover:text-gray-700 text-gray-600 bg-white"
+            }`}
+            onClick={nextPage}
+            disabled={isDisable}
+          >
+            Next
+          </button>
+        </ul>
+
+        <form onSubmit={handleJumpToPage} className="flex items-center">
+          <label
+            htmlFor="jumpToPage"
+            className="mr-2 text-gray-600 dark:text-gray-400 text-sm"
+          >
+            Jump to:
+          </label>
+          <input
+            type="number"
+            id="jumpToPage"
+            value={jumpToPage}
+            onChange={(e) => setJumpToPage(e.target.value)}
+            className="border px-2 py-1 h-8 w-16 dark:bg-gray-600 dark:text-white text-sm"
+            min="1"
+            max={totalPages}
+          />
+          <button
+            type="submit"
+            className="ml-2 px-3 py-1 h-8 bg-primary-500 dark:bg-primary-400 text-white rounded text-sm"
+          >
+            Go
+          </button>
+        </form>
+      </div>
+
+      <FileHandlerButtons onClickExport={onClickExport} onClickImport={onClickImport} />
     </nav>
   );
 };

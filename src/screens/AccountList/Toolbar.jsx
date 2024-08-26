@@ -18,28 +18,30 @@ const Toolbar = ({
   setIsFiltered,
   setAddUser,
 }) => {
-
   const [isActionOpen, setActionOpen] = useState(false);
   const [isSort, setSort] = useState(false);
 
   const toggleAction = () => {
     setActionOpen(!isActionOpen);
     setSort(false);
-    setFilter(false);
+    setIsFiltered(true);
   };
 
   const toggleSort = () => {
     setSort(!isSort);
     setActionOpen(false);
-    setFilter(false);
+    setIsFiltered(true);
   };
+
   const toggleFilter = () => {
     setIsFiltered(!isFiltered);
+    setActionOpen(false);
+    setSort(false);
   }
 
   return (
-    <div className="flex p-4 items-center md:justify-between flex-column gap-2 flex-wrap md:flex-row space-y-0 pb-4 bg-white dark:bg-gray-800">
-      <div className="flex flex-col md:flex-row space-y-0 gap-2">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white dark:bg-gray-800">
+      <div className="flex flex-wrap justify-center sm:justify-start gap-2 w-full sm:w-auto">
         <ActionButton
           selectedUsers={selectedUsers}
           filteredResidents={filteredResidents}
@@ -48,7 +50,6 @@ const Toolbar = ({
           setActionOpen={setActionOpen}
           setAddUser={setAddUser}
         />
-
         <SortingButton
           filteredResidents={filteredResidents}
           setFilteredResidents={setFilteredResidents}
@@ -56,9 +57,7 @@ const Toolbar = ({
           isSort={isSort}
           setSort={setSort}
         />
-
         <FilterButton toggleFilter={toggleFilter} isFiltered={isFiltered}/>
-
         <ViewUserButton
           filteredResidents={filteredResidents}
           isViewingSelected={isViewingSelected}
@@ -67,32 +66,14 @@ const Toolbar = ({
         />
       </div>
 
-      <label htmlFor="table-search" className="sr-only">
-        Search
-      </label>
-      <label
-        htmlFor=""
-        className="text-md lg:text-lg text-center italic font-bold text-gray-600 dark:text-green-500"
-      >
+      <h2 className="text-md lg:text-lg font-bold text-gray-600 dark:text-green-500 text-center w-full sm:w-auto">
         {label.toUpperCase()}
-      </label>
+      </h2>
 
-      <div className="relative">
-        <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-          <svg
-            className="w-4 h-4 text-gray-500 dark:text-gray-400"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 20 20"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-            />
+      <div className="relative w-full sm:w-auto">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
           </svg>
         </div>
         <input
@@ -100,7 +81,7 @@ const Toolbar = ({
           id="table-search-users"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          className="block w-full sm:w-80 p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
           placeholder={`Search for user in ${label} list`}
         />
       </div>

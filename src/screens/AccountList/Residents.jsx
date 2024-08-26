@@ -117,7 +117,7 @@ const ResidentsList = ({ label, data }) => {
   return (
     <HeadSide
       child={
-        <div className="flex flex-col justify-center m-3">
+        <div className="flex flex-col justify-center">
           <Toolbar
             label={label}
             searchQuery={searchQuery}
@@ -133,7 +133,7 @@ const ResidentsList = ({ label, data }) => {
             setAddUser={setAddUser}
           />
           <div className="overflow-auto w-full">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <table className="min-w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <TableHeader
                 selectedUsers={selectedUsers}
                 filteredResidents={filteredResidents}
