@@ -128,11 +128,11 @@ function MyMapComponents({ isFullscreen }) {
   }
 
   return (
-    <div className={`w-full z-0 shadow-md`}>
+    <div className={`w-full h-full z-0 shadow-md`}>
       <MapContainer
         center={position}
         zoom={15}
-        className={`z-0 rounded-md ${isFullscreen ? "h-screen" : "h-96"}`}
+        className={`z-0 rounded-md h-full`}
         ref={mapRef}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

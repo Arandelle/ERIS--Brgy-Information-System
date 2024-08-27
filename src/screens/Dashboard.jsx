@@ -91,7 +91,7 @@ const Dashboard = () => {
               onClick={()=>handleNavigate("/maps")}
             />
           </div>
-          <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4 text-wrap">
+          <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4">
               <>
                 <div className="order-3 lg:order-1 col-span-1 lg:col-span-3">
                   <MapContent isFullscreen={false}/>
@@ -99,7 +99,7 @@ const Dashboard = () => {
                 <div className="order-2 md:order-2 col-span-1">
                   <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-6 mb-2 shadow-md rounded-md dark:bg-gray-800">
                     <ThunderstormIcon style={{ color: "#FF5733" }} />
-                    <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md text-nowrap">
+                    <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md">
                       26.5°C Bagtas Tanza, Cavite
                       <span className="font-thin text-sm text-gray-600 dark:text-gray-200">
                         It's a rainy day, bring your umbrella
