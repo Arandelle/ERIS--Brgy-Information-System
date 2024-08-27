@@ -143,115 +143,122 @@ const ResidentsList = ({ label, data }) => {
                 handleFilterChange={handleFilterChange}
                 getUniqueSortedValues={getUniqueSortedValues}
               />
+              <tbody>
+                <AddUserModal
+                  addUser={addUser}
+                  setAddUser={setAddUser}
+                  label={label}
+                  next={next}
+                  setNext={setNext}
+                />
 
-              {currentItems.length === 0 ? (
-                <tr className="h-screen">
-                  <td colSpan={8}>
-                    <EmptyLogo message={"No users registered"} />
-                  </td>
-                </tr>
-              ) : (
-                <tbody>
-                  <AddUserModal
-                    addUser={addUser}
-                    setAddUser={setAddUser}
-                    label={label}
-                    next={next}
-                    setNext={setNext}
-                  />
-
-                  {showUserInfoModal && userToViewInfo && (
-                    <div className="fixed flex items-center justify-center inset-0 z-50">
-                      <div
-                        className="fixed h-full w-full bg-gray-600 bg-opacity-50"
+                {showUserInfoModal && userToViewInfo && (
+                  <div className="fixed flex items-center justify-center inset-0 z-50">
+                    <div
+                      className="fixed h-full w-full bg-gray-600 bg-opacity-50"
+                      onClick={() => setShowUserInfoModal(false)}
+                    ></div>
+                    <div className="relative p-5 bg-white rounded-md shadow-md">
+                      <h2>User Information</h2>
+                      <button
+                        className="absolute top-2 right-2"
                         onClick={() => setShowUserInfoModal(false)}
-                      ></div>
-                      <div className="relative p-5 bg-white rounded-md shadow-md">
-                        <h2>User Information</h2>
-                        <button
-                          className="absolute top-2 right-2"
-                          onClick={() => setShowUserInfoModal(false)}
-                        >
-                          Close
-                        </button>
-                        <div className="flex flex-col justify-between space-y-2">
-                          <p className="flex items-center justify-center p-2">
-                            <img
-                              src={userToViewInfo.img}
-                              alt=""
-                              className="h-24 w-24 rounded-full"
-                            />
-                          </p>
-                          <div className="flex flex-col space-y-2 w-[400px]">
-                            <div className="space-y-2">
-                              <p className="flex flex-row items-center justify-center space-x-2 font-bold uppercase text-blue-500 text-lg border-b-2 border-b-gray-300">
-                                <p>
-                                {userToViewInfo?.firstname ? 
-                                (userToViewInfo.firstname,
-                                userToViewInfo.lastname ): "fullname" }
-                                </p>
-                              {userToViewInfo.gender === "male" ? <MaleIcon className="text-gray-500"/> :  <FemaleIcon className="text-gray-500"/>}  
+                      >
+                        Close
+                      </button>
+                      <div className="flex flex-col justify-between space-y-2">
+                        <p className="flex items-center justify-center p-2">
+                          <img
+                            src={userToViewInfo.img}
+                            alt=""
+                            className="h-24 w-24 rounded-full"
+                          />
+                        </p>
+                        <div className="flex flex-col space-y-2 w-[400px]">
+                          <div className="space-y-2">
+                            <p className="flex flex-row items-center justify-center space-x-2 font-bold uppercase text-blue-500 text-lg border-b-2 border-b-gray-300">
+                              <p>
+                                {userToViewInfo?.firstname
+                                  ? (userToViewInfo.firstname,
+                                    userToViewInfo.lastname)
+                                  : "fullname"}
                               </p>
-                              <div className="text-center text-gray-500 flex flex-row justify-evenly">
-                                <p className="italic text-gray-900">
-                                  {userToViewInfo.email}{" "}
-                                </p>
-                                <p className="italic text-gray-900">
-                                  {userToViewInfo.mobileNum ? userToViewInfo.mobileNum : "mobile number" }
-                                </p>
-                              </div>
-                              <p className="text-center flex flex-row justify-evenly bg-gray-200 p-2 text-sm text-gray-900 font-thin lowercase italic">
-                              <p className="font-bold">user id:</p>  {userToViewInfo.id}
-                              </p>
-
-                              <div className="bg-gray-100 p-4 rounded-sm">
-                                <p className="text-gray-900 text-lg">
-                                  {userToViewInfo.address}
-                                </p>
-
-                                <p className="text-gray-900 text-lg">
-                                  {userToViewInfo?.age
-                                    ? `${userToViewInfo.age} years old`
-                                    : "user details"}
-                                </p>
-                              </div>
-                            </div>
-                            <p className="text-center text-lg uppercase">
-                              {userToViewInfo?.profileComplete ? (
-                                <p className="text-green-500 font-bold bg-green-100 p-2">
-                                  completed
-                                </p>
+                              {userToViewInfo.gender === "male" ? (
+                                <MaleIcon className="text-gray-500" />
                               ) : (
-                                <p className="text-red-500 font-bold bg-red-100">
-                                  not completed
-                                </p>
+                                <FemaleIcon className="text-gray-500" />
                               )}
                             </p>
+                            <div className="text-center text-gray-500 flex flex-row justify-evenly">
+                              <p className="italic text-gray-900">
+                                {userToViewInfo.email}{" "}
+                              </p>
+                              <p className="italic text-gray-900">
+                                {userToViewInfo.mobileNum
+                                  ? userToViewInfo.mobileNum
+                                  : "mobile number"}
+                              </p>
+                            </div>
+                            <p className="text-center flex flex-row justify-evenly bg-gray-200 p-2 text-sm text-gray-900 font-thin lowercase italic">
+                              <p className="font-bold">user id:</p>{" "}
+                              {userToViewInfo.id}
+                            </p>
+
+                            <div className="bg-gray-100 p-4 rounded-sm">
+                              <p className="text-gray-900 text-lg">
+                                {userToViewInfo.address}
+                              </p>
+
+                              <p className="text-gray-900 text-lg">
+                                {userToViewInfo?.age
+                                  ? `${userToViewInfo.age} years old`
+                                  : "user details"}
+                              </p>
+                            </div>
                           </div>
-                          <button
-                            className="p-2 text-gray-200 bg-primary-500"
-                            onClick={() => {
-                              setShowUserInfoModal(false);
-                            }}
-                          >
-                            OK
-                          </button>
+                          <p className="text-center text-lg uppercase">
+                            {userToViewInfo?.profileComplete ? (
+                              <p className="text-green-500 font-bold bg-green-100 p-2">
+                                completed
+                              </p>
+                            ) : (
+                              <p className="text-red-500 font-bold bg-red-100">
+                                not completed
+                              </p>
+                            )}
+                          </p>
                         </div>
+                        <button
+                          className="p-2 text-gray-200 bg-primary-500"
+                          onClick={() => {
+                            setShowUserInfoModal(false);
+                          }}
+                        >
+                          OK
+                        </button>
                       </div>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {currentItems.map((data, key) => (
+                {currentItems.length === 0 ? (
+                  <tr className="h-screen">
+                    <td colSpan={8}>
+                      <EmptyLogo message={"No users registered"} />
+                    </td>
+                  </tr>
+                ) : (
+                  currentItems.map((data, index) => (
                     <TableBody
-                      key={key}
+                      key={index}
                       selectedUsers={selectedUsers}
                       data={data}
                       handleCheckbox={handleCheckbox}
                       handleViewUser={handleViewUser}
                     />
-                  ))}
-                </tbody>
-              )}
+                  ))
+                )}
+              </tbody>
             </table>
           </div>
 
