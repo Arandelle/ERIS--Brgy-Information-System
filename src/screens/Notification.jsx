@@ -5,7 +5,7 @@ import { auth, database } from "../services/firebaseConfig";
 import { ref, onValue, update } from "firebase/database";
 import { getTimeDifference } from "../helper/TimeDiff";
 import { formatDate } from "../helper/FormatDate";
-import { useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 
 const Notification = () => {
@@ -130,51 +130,58 @@ const Notification = () => {
           <div
             className="flex-grow overflow-y-auto" // Add this line to make it scrollable
           >
-          {displayedNotifications.length === 0 ? (
-            <EmptyLogo message={"Your notification is empty"}/>
-          ) : (
-            displayedNotifications.map((notification) => {
-              const isNewlyOpened = openedNotifications.includes(notification.id);
-              return (
-                <a
-                  key={notification.id}
-                  href="#"
-                  className={`${
-                    !notification.isSeen && !isNewlyOpened
-                      ? "bg-white font-semibold"
-                      : "bg-blue-100 hover:bg-white"
-                  } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
-                  onClick={() =>{ handleNotificationClick(notification.id), navigation(`/accounts/${notification.type}`)}}
-                >
-                  <div className="flex-shrink-0 relative">
-                    <img
-                      className="w-12 h-12 rounded-full border-2 border-primary-500"
-                      src={notification.img}
-                      alt="Notification avatar"
-                    />
-                    {(!notification.isSeen && !isNewlyOpened) && (
-                      <span className="absolute top-0 right-0 block h-3 w-3 bg-red-500 rounded-full border-2 border-white dark:border-gray-700"></span>
-                    )}
-                  </div>
-                  <div className="pl-4 w-full">
-                    <div className="text-sm mb-1 text-gray-600 dark:text-gray-300">
-                      <span className="font-semibold text-gray-800 dark:text-white">
-                        {notification.email}
-                      </span>{" "}
-                      {notification.message}
+            {displayedNotifications.length === 0 ? (
+              <EmptyLogo message={"Your notification is empty"} />
+            ) : (
+              displayedNotifications.map((notification) => {
+                const isNewlyOpened = openedNotifications.includes(
+                  notification.id
+                );
+                return (
+                  <a
+                    key={notification.id}
+                    href="#"
+                    className={`${
+                      !notification.isSeen && !isNewlyOpened
+                        ? "bg-white font-semibold"
+                        : "bg-blue-100 hover:bg-blue-200"
+                    } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
+                    onClick={() => {
+                      handleNotificationClick(notification.id),
+                      notification.type === "request" ? navigation("/maps")
+                       : navigation(`/accounts/${notification.type}`);
+                    }}
+                  >
+                    <div className="flex-shrink-0 relative">
+                      <img
+                        className="w-12 h-12 rounded-full border-2 border-primary-500"
+                        src={notification.img}
+                        alt="Notification avatar"
+                      />
+                      {!notification.isSeen && !isNewlyOpened && (
+                        <span className="absolute top-0 right-0 block h-3 w-3 bg-red-500 rounded-full border-2 border-white dark:border-gray-700"></span>
+                      )}
                     </div>
-                    <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-                      <span>{getTimeDifference(notification.timestamp)}</span>
-                      <span className="text-blue-500 dark:text-green-400">
-                        {formatDate(notification.date)}
-                      </span>
+                    <div className="pl-4 w-full">
+                      <div className="text-sm mb-1 text-gray-600 dark:text-gray-300">
+                        <span className="font-semibold text-gray-800 dark:text-white">
+                          {notification.type !== "request"
+                            && notification.email}
+                        </span>{" "}
+                        <p>{notification.message} <span className="font-bold"> {notification.location}</span></p>
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                        <span>{getTimeDifference(notification.timestamp)}</span>
+                        <span className="text-blue-500 dark:text-green-400">
+                          {formatDate(notification.date)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </a>
-              );
-            })
-          )}
-         
+                  </a>
+                );
+              })
+            )}
+
             {!viewAll && displayedNotifications.length >= 7 && (
               <button
                 href="#"
