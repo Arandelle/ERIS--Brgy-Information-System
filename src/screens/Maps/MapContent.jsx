@@ -9,7 +9,7 @@ import {
 } from "react-leaflet";
 import L from 'leaflet';
 import { CustomScrollZoomHandler } from "../../helper/scrollUtils";
-import { customIcon, redIcon } from "../../helper/iconUtils";
+import { customIcon, redIcon, } from "../../helper/iconUtils";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
@@ -34,7 +34,7 @@ function AutoOpenPopup({ position }) {
   return null;
 }
 
-function MyMapComponents({ isFullscreen }) {
+function MyMapComponents() {
   const [position, setPosition] = useState(null);
   const [emergencyData, setEmergencyData] = useState([]);
   const [loading, setLoading] = useState(true);
