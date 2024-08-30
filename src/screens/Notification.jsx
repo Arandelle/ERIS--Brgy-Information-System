@@ -142,7 +142,7 @@ const Notification = () => {
                   className={`${
                     !notification.isSeen && !isNewlyOpened
                       ? "bg-white font-semibold"
-                      : "bg-gray-100"
+                      : "bg-blue-100 hover:bg-white"
                   } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
                   onClick={() =>{ handleNotificationClick(notification.id), navigation(`/accounts/${notification.type}`)}}
                 >
