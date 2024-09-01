@@ -10,7 +10,6 @@ import emergency from "../assets/emergency.svg";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../helper/DateToday"
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
-// import { personInfo } from "./Maps/MapContent";
 import { useFetchData } from "../hooks/useFetchData";
 
 const DashboardCard = ({ title, value, img, onClick }) => {

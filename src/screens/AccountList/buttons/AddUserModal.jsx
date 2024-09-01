@@ -46,6 +46,7 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
         email: user.email,
         profileComplete: false,
         createdAt: new Date().toISOString(),
+        timestamp: serverTimestamp(),
         img: imageUrl
       };
       const database = getDatabase(app);
