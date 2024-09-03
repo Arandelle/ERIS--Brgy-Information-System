@@ -4,10 +4,7 @@ import ActivitiesList from "./ActivitiesList";
 import InputReusable from "../../components/ReusableComponents/InputReusable";
 import BtnReusable from "../../components/ReusableComponents/BtnReusable";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
-
-function capitalizeFirstLetter(string) {
-  return string.replace(/\b\w/g, char => char.toUpperCase());
-}
+import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 
 const Activities = () => {
 

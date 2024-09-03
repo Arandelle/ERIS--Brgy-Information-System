@@ -7,6 +7,7 @@ import { getTimeDifference } from "../helper/TimeDiff";
 import { formatDate } from "../helper/FormatDate";
 import { useNavigate } from "react-router-dom";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
+import { toast } from "sonner";
 
 const Notification = () => {
   const navigation = useNavigate();
@@ -45,7 +46,7 @@ const Notification = () => {
 
         notificationList.sort((a, b) => new Date(b.date) - new Date(a.date));
         setNotifications(notificationList);
-        setNotificationBadge(unseenCount); // Update the badge count
+        setNotificationBadge(unseenCount); // Update the badge 
       });
     }
   }, []);

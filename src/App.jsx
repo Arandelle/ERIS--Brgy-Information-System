@@ -60,7 +60,7 @@ const App = () => {
   return (
     <Router>
       <>
-        <Toaster richColors closeButton position="top-center" expand="true" />
+        <Toaster richColors Headless position="top-right" expand="true" />
         <div className="flex">
           <Routes>
             <Route path="*" element={<Navigate to="/" replace />} />

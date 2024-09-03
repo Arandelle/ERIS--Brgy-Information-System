@@ -9,6 +9,7 @@ import {
 import { getDatabase, push, ref, serverTimestamp, set } from "firebase/database";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { capitalizeFirstLetter } from "../../../helper/CapitalizeFirstLetter";
 
 const AddUserModal = ({ addUser, setAddUser, label }) => {
   const navigation = useNavigate();
@@ -16,6 +17,8 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
   const [password, setPassword] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState(null);
+
+  const today = new Date();
 
   useEffect(()=>{
     const randomNumber = Math.floor(Math.random() * 5) + 1;
@@ -70,7 +73,19 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
       await push(notificationRef, newNotification);
 
       console.log("User created:", user.uid);
-      toast.success("Success", "Please check your email for verification");
+      toast(
+        <div className="flex items-center justify-center space-x-3 flex-row">
+          <img
+          className="w-12 h-12 rounded-full border-2 border-primary-500"
+          src={imageUrl}
+          alt="Notification avatar"
+        />
+        <div>
+          <p className="font-bold">{`${capitalizeFirstLetter(label)} has been createad`}</p>
+         <p>{`${new Date().toLocaleString()}`}</p>
+        </div>
+        </div>
+      )
       setEmail("");
       setPassword("");
       setAddUser(false); // Close the modal after successful submission
@@ -80,6 +95,7 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
       toast.error("Error signing up", error.message);
     }
   };
+
 
   return (
     <div>
