@@ -5,7 +5,7 @@ import { auth, database } from "../services/firebaseConfig";
 import { ref, onValue, update } from "firebase/database";
 import { getTimeDifference } from "../helper/TimeDiff";
 import { formatDate } from "../helper/FormatDate";
-import { useNavigate } from "react-router-dom";
+import { useFetcher, useNavigate } from "react-router-dom";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 import { toast } from "sonner";
 
@@ -124,7 +124,7 @@ const Notification = () => {
         </Tooltip>
       </div>
       {isOpen && (
-        <div className="fixed inset-x-0 top-14 bottom-0 md:right-0 md:left-auto mt-3 w-screen md:w-80 bg-white dark:bg-gray-700 rounded-md flex flex-col z-10 dark:divide-gray-600">
+        <div className="fixed inset-x-0 top-12 md:top-14 bottom-0 md:right-0 md:left-auto mt-3 w-screen md:w-80 bg-white dark:bg-gray-700 rounded-md flex flex-col z-10 dark:divide-gray-600">
           <div className="py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             Notifications
           </div>

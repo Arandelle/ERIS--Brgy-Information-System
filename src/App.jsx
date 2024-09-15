@@ -11,12 +11,8 @@ import {
 import ResidentsList from "./screens/AccountList/Residents";
 import Map from "./screens/Maps/Map";
 import Login from "./screens/Login";
-import Reports from "./screens/Reports";
 import History from "./screens/History";
 import Activities from "./screens/Events/Activities";
-import Announcement from "./screens/Events/Announcement";
-import Events from "./screens/Events/Events";
-import News from "./screens/Events/News";
 import MyProfile from "./components/Header/MyProfile";
 import Setting from "./screens/Profile/Setting"
 import FAQS from "./screens/Profile/FAQS"
@@ -103,28 +99,8 @@ const App = () => {
               element={user && isAdmin ? <Map /> : <Navigate to="/" />}
             />
             <Route
-              path="/events/announcement"
-              element={user && isAdmin ? <Announcement /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/events/activity"
+              path="/announcement"
               element={user && isAdmin ? <Activities /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/events/event"
-              element={user && isAdmin ? <Events /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/events/news"
-              element={user && isAdmin ? <News /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/services/request"
-              element={user && isAdmin ? <Request /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/reports"
-              element={user && isAdmin ? <Reports /> : <Navigate to="/" />}
             />
             <Route
               path="/history"

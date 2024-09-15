@@ -95,7 +95,7 @@ export const useSidebarData = [
     link: "/calendar",
   },
   {
-    title: "Programs",
+    title: "Announcement",
     icon: (
       <svg
         class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -113,25 +113,25 @@ export const useSidebarData = [
         />
       </svg>
     ),
-    link: "/events",
-    items: [
-      {
-        title: "Activities",
-        link: "/events/activity",
-      },
-      {
-        title: "Announcement",
-        link: "/events/announcement",
-      },
-      {
-        title: "Event",
-        link: "/events/event",
-      },
-      {
-        title: "News",
-        link: "/events/news",
-      },
-    ],
+    link: "/announcement",
+    // items: [
+    //   {
+    //     title: "Activities",
+    //     link: "/events/activity",
+    //   },
+    //   {
+    //     title: "Announcement",
+    //     link: "/events/announcement",
+    //   },
+    //   {
+    //     title: "Event",
+    //     link: "/events/event",
+    //   },
+    //   {
+    //     title: "News",
+    //     link: "/events/news",
+    //   },
+    // ],
   },
   // {
   //   title: "Services",
