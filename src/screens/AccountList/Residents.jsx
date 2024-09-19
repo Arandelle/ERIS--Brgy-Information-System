@@ -158,7 +158,7 @@ const ResidentsList = ({ label, data }) => {
                       className="fixed h-full w-full bg-gray-600 bg-opacity-50"
                       onClick={() => setShowUserInfoModal(false)}
                     ></div>
-                    <div className="relative p-5 bg-white rounded-md shadow-md">
+                    <div className="relative p-5 text-lg bg-white rounded-md shadow-md">
                       <h2>User Information</h2>
                       <button
                         className="absolute top-2 right-2"
@@ -176,11 +176,11 @@ const ResidentsList = ({ label, data }) => {
                         </p>
                         <div className="flex flex-col space-y-2 w-[400px]">
                           <div className="space-y-2">
-                            <p className="flex flex-row items-center justify-center space-x-2 font-bold uppercase text-blue-500 text-lg border-b-2 border-b-gray-300">
+                            <p className="flex flex-row items-center justify-center space-x-2 font-bold text-gray-500 text-lg border-b-2 border-b-gray-300">
                               <p>
                                 {userToViewInfo?.firstname
-                                  ? (userToViewInfo.firstname,
-                                    userToViewInfo.lastname)
+                                  ? (`${userToViewInfo.firstname} ${userToViewInfo.lastname}`
+                                   )
                                   : "fullname"}
                               </p>
                               {userToViewInfo.gender === "male" ? (

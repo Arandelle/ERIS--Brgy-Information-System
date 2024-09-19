@@ -4,16 +4,12 @@ export const AllData = [
     link: "/dashboard",
   },
   {
-    title: "Pabahay",
-    link: "/residents/Pabahay",
+    title: "Users Lists",
+    link: "/accounts/users",
   },
   {
-    title: "Lumina",
-    link: "/residents/Lumina",
-  },
-  {
-    title: "Carissa",
-    link: "/residents/Carissa",
+    title: "Responders Lists",
+    link: "/accounts/responders",
   },
   {
     title: "Map",
@@ -29,19 +25,11 @@ export const AllData = [
   },
   {
     title: "Announcement",
-    link: "/events/announcement",
+    link: "/announcement",
   },
   {
-    title: "Event",
-    link: "/events/event",
-  },
-  {
-    title: "News",
-    link: "/events/news",
-  },
-  {
-    title: "History",
-    link: "/history",
+    title: "Records",
+    link: "/records",
   },
   {
     title: "My Profile",

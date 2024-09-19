@@ -37,7 +37,7 @@ const FileHandlerButtons = ({ onClickExport, onClickImport }) => {
               </Tooltip>
 
               {/* Import button */}
-              <Tooltip title="Import from excel" placement="left" arrow>
+              {/* <Tooltip title="Import from excel" placement="left" arrow>
                 <label className="cursor-pointer flex items-center justify-center rounded-md bg-primary-500 py-2 px-3">
                   <PublishIcon style={{ fontSize: "large", color: "white" }} />
                   <span className="text-sm ml-2 text-gray-200">
@@ -50,7 +50,7 @@ const FileHandlerButtons = ({ onClickExport, onClickImport }) => {
                     onChange={onClickImport}
                   />
                 </label>
-              </Tooltip>
+              </Tooltip> */}
             </div>
           }
           open={open}

@@ -13,6 +13,7 @@ export const HeaderData = [
   "Location",
   "Status",
   "Submitted",
+  "Responder"
 ];
 
 function History() {
@@ -75,9 +76,12 @@ function History() {
                       <td className="px-6 py-4">{emergency.name}</td>
                       <td className="px-6 py-4">{emergency.description}</td>
                       <td className="px-6 py-4">{emergency.location}</td>
-                      <td className="px-6 py-4">{emergency.status}</td>
+                      <td className="px-6 py-4">{emergency.status.toUpperCase()}</td>
                       <td className="px-6 py-4">
-                        {new Date(emergency.timestamp).toLocaleString()}
+                        {new Date(emergency.date).toLocaleString()}
+                      </td>
+                      <td className="px-6 py-4">
+                       {emergency.acceptedBy ?? "waiting for responder"}
                       </td>
                     </tr>
                   </tbody>
@@ -85,7 +89,7 @@ function History() {
               ) : (
                 <tr>
                   <td colSpan={8}>
-                    <EmptyLogo message={"No history found"} />
+                    <EmptyLogo message={"No records found"} />
                   </td>
                 </tr>
               )}

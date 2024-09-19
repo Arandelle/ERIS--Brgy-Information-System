@@ -103,7 +103,7 @@ const App = () => {
               element={user && isAdmin ? <Activities /> : <Navigate to="/" />}
             />
             <Route
-              path="/history"
+              path="/records"
               element={user && isAdmin ? <History /> : <Navigate to="/" />}
             />
             <Route

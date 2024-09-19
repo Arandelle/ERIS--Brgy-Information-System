@@ -85,7 +85,7 @@ const Dashboard = () => {
             />
             <DashboardCard
               title="Emergency"
-              value={loading ? <Spinner setLoading={setLoading} /> : 1}
+              value={loading ? <Spinner setLoading={setLoading} /> : 0}
               img={emergency}
               onClick={()=>handleNavigate("/maps")}
             />

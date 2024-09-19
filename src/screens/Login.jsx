@@ -102,8 +102,8 @@ export default function Login({ setAuth }) {
               <h1 className="text-2xl text-center dark:text-gray-300">
                 Welcome Admin! Login your Account.
               </h1>
-              <h2 className="dark:text-gray-400">Email: topaguintsarandell@gmail.com</h2>
-              <h2 className="dark:text-gray-400 mb-3">Password: password123</h2>
+              {/* <h2 className="dark:text-gray-400">Email: topaguintsarandell@gmail.com</h2>
+              <h2 className="dark:text-gray-400 mb-3">Password: 123456</h2> */}
             </div>
             <form
               action=""
