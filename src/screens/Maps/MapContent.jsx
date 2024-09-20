@@ -14,7 +14,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
 import "leaflet-control-geocoder";
-import { ref, onValue, get } from "firebase/database";
+import { ref, get } from "firebase/database";
 import { database } from "../../services/firebaseConfig";
 
 function AutoOpenPopup({ position }) {
@@ -36,12 +36,13 @@ function AutoOpenPopup({ position }) {
 
 function MyMapComponents() {
   const [position, setPosition] = useState(null);
-  const [userLocation, setUserLocation] = useState([]);
+  const [userLocation, setUserLocation] = useState(null); // Only holds a single location object
   const [loading, setLoading] = useState(true);
   const routingControlRef = useRef(null);
   const mapRef = useRef(null);
 
   useEffect(() => {
+    // Get the user's current position
     navigator.geolocation.getCurrentPosition(
       (location) => {
         setPosition([location.coords.latitude, location.coords.longitude]);
@@ -57,15 +58,21 @@ function MyMapComponents() {
     const fetchUser = async () => {
       try {
         const usersRef = ref(database, "users");
-        const usersSnapshot = await get(usersRef);
+        const usersSnapshot = await get(usersRef); // Fetch snapshot
 
         if (usersSnapshot.exists()) {
-          const usersWithActiveRequest = [];
+          let latestActiveRequest = null;
+
           usersSnapshot.forEach((user) => {
             const userData = user.val();
 
-            if (userData.activeRequest && userData.activeRequest.locationCoords) {
-              usersWithActiveRequest.push({
+            // Check if there's an activeRequest with valid location coordinates
+            if (
+              userData.activeRequest &&
+              userData.activeRequest.locationCoords &&
+              userData.activeRequest.locationOfResponder
+            ) {
+              latestActiveRequest = {
                 id: user.key,
                 location: [
                   userData.activeRequest.locationCoords.latitude,
@@ -75,19 +82,20 @@ function MyMapComponents() {
                   userData.activeRequest.locationOfResponder.latitude,
                   userData.activeRequest.locationOfResponder.longitude
                 ],
-              });
+              };
             }
           });
-          setUserLocation(usersWithActiveRequest);
-          setLoading(false)
-          console.log(usersWithActiveRequest);
+
+          setUserLocation(latestActiveRequest); // Only set the latest valid request
+          setLoading(false);
+          console.log(latestActiveRequest)
         } else {
           console.log("No data available");
-          setLoading(false)
+          setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching data: ", error);
-        setLoading(false)
+        setLoading(false);
       }
     };
 
@@ -99,14 +107,14 @@ function MyMapComponents() {
     mapRef.current = map;
   
     useEffect(() => {
-      if (userLocation.length > 0) {
+      if (userLocation && userLocation.location && userLocation.locationOfResponder) {
         if (routingControlRef.current) {
           map.removeControl(routingControlRef.current);
         }
 
         const waypoints = [
-          ...userLocation.map(user => L.latLng(user.locationOfResponder[0], user.locationOfResponder[1])),
-          ...userLocation.map(user => L.latLng(user.location[0], user.location[1]))
+          L.latLng(userLocation.locationOfResponder[0], userLocation.locationOfResponder[1]),
+          L.latLng(userLocation.location[0], userLocation.location[1])
         ];
 
         const newRoutingControl = L.Routing.control({
@@ -150,29 +158,29 @@ function MyMapComponents() {
         <LayerGroup>
           <AutoOpenPopup position={position} />
 
-          {userLocation.map((emergency) => (
-            <Marker
-              key={emergency.id}
-              position={emergency.location}
-              icon={redIcon}
-            >
-              <Popup>
-                User with active request
-              </Popup>
-            </Marker>
-          ))}
+          {userLocation && (
+            <>
+              <Marker 
+                key={userLocation.id}
+                position={userLocation.location}
+                icon={redIcon}
+              >
+                <Popup>
+                  User with active request
+                </Popup>
+              </Marker>
 
-          {userLocation.map((emergency) => (
-            <Marker
-              key={emergency.id}
-              position={emergency.locationOfResponder}
-              icon={greenIcon}
-            >
-              <Popup>
-               This is Responder
-              </Popup>
-            </Marker>
-          ))}
+              <Marker 
+                key={`responder-${userLocation.id}`}
+                position={userLocation.locationOfResponder}
+                icon={greenIcon}
+              >
+                <Popup>
+                  This is the responder
+                </Popup>
+              </Marker>
+            </>
+          )}
         </LayerGroup>
         <CustomScrollZoomHandler />
         <MapEvents />
