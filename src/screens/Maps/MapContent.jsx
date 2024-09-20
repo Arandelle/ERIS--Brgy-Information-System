@@ -83,9 +83,11 @@ function MyMapComponents() {
           console.log(usersWithActiveRequest);
         } else {
           console.log("No data available");
+          setLoading(false)
         }
       } catch (error) {
         console.error("Error fetching data: ", error);
+        setLoading(false)
       }
     };
 
