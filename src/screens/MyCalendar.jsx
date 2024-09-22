@@ -25,7 +25,7 @@ const CustomToolbar = ({label, onNavigate, onView, handleAddEventModal}) => {
         <button type="button" onClick={() => onNavigate('TODAY')}>Today</button>
         <button type="button" onClick={() => onNavigate('PREV')}>Back</button>
         <button type="button" onClick={() => onNavigate('NEXT')}>Next</button>
-        <button class="toolbar-btn-addEvent" onClick={handleAddEventModal}>Add Events</button>
+        <button class="toolbar-btn-addEvent" onClick={()=> handleAddEventModal(null)}>Add Events</button>
       </span>
       <span className="rbc-toolbar-label">{label}</span>
       <span className="rbc-btn-group">
@@ -51,13 +51,33 @@ const MyCalendar = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [eventsToDelete, setEventToDelete] = useState(null);
   const [addEventModal, setAddEventModal] = useState(false);
+  const [eventDetailModal, setEventDetailModal] = useState(false)
 
-  const handleAddEventModal = () => {
-    if(addEventModal){
-      setSelectedEvent(null)
+  const handleAddEventModal = (event) => {
+    if (event) {
+      setSelectedEvent(event);
+      setTitle(event.title);
+      setStartDate(event.start.toISOString().split("T")[0]);
+      setEndDate(event.end.toISOString().split("T")[0]);
+      setLocation(event.location);
+      setOrganizer(event.organizer);
+      setDetails(event.details);
+      setImage(event.image);
+    } else {
+      setSelectedEvent(null);
+      setTitle("");
+      setStartDate("");
+      setEndDate("");
+      setLocation("");
+      setOrganizer("");
+      setDetails("");
+      setImage(null);
     }
-    setAddEventModal(!addEventModal);
+    setAddEventModal(true);
+    setEventDetailModal(false);
   };
+  
+  
   const [events, setEvents] = useState(() => {
     const storedEvents = localStorage.getItem("events");
     return storedEvents
@@ -88,25 +108,34 @@ const MyCalendar = () => {
     }
   };
 
-  
-  const handleAddEvent = () => {
-    if (
-      !title ||
-      !startDate ||
-      !endDate ||
-      !location ||
-      !organizer || !image ||
-      !details
-    ) {
+  const handleSelectEvent = (event) => {
+    setSelectedEvent(event);
+    setEventDetailModal(true);
+  };
+
+  const handleCloseAddEventModal = () => {
+    setAddEventModal(false);
+    setSelectedEvent(null);
+  };
+
+  const handleCloseDetailModal = () => {
+    setEventDetailModal(false);
+    setSelectedEvent(null);
+  };
+
+  const handleAddOrUpdateEvent = () => {
+    if (!title || !startDate || !endDate || !location || !organizer || !image || !details) {
       toast.warning("Please fill all the fields");
       return;
     }
-    if(new Date(startDate) >= new Date(endDate) || new Date(startDate) < new Date().setHours(0,0,0,0)){
+    
+    if (new Date(startDate) >= new Date(endDate) || new Date(startDate) < new Date().setHours(0,0,0,0)) {
       toast.warning("Start date must be before the end date");
       return;
     }
-    const newEvent = {
-      id: Date.now(),
+    
+    const eventData = {
+      id: selectedEvent ? selectedEvent.id : Date.now(),
       title,
       start: new Date(startDate),
       end: new Date(endDate),
@@ -116,69 +145,17 @@ const MyCalendar = () => {
       details,
     };
 
-    setEvents((prevEvents) => [...prevEvents, newEvent]);
-    setTitle("");
-    setStartDate("");
-    setEndDate("");
-    setLocation("");
-    setOrganizer("");
-    setImage();
-    setDetails("");
-    setAddEventModal(false);
-    setSelectedEvent(null)
-    toast.success("Event added successfully");
-  };
-
-  const handleSelectEvent = (event) => {
-    setSelectedEvent(event);
-    setTitle(event.title);
-    setStartDate(event.start.toISOString().split("T")[0]);
-    setEndDate(event.end.toISOString().split("T")[0]);
-    setLocation(event.location);
-    setOrganizer(event.organizer);
-    setDetails(event.details);
-    setImage(event.image);
-    setAddEventModal(true);
-  };
-
-  const handleUpdateEvent = () => {
-    if (
-      !title ||
-      !startDate ||
-      !endDate ||
-      !location ||
-      !organizer || !image ||
-      !details
-    ) {
-      toast.warning("Please fill all the fields");
-      return;
+    if (selectedEvent) {
+      setEvents(prevEvents =>
+        prevEvents.map(event => event.id === selectedEvent.id ? eventData : event)
+      );
+      toast.success("Event updated successfully");
+    } else {
+      setEvents(prevEvents => [...prevEvents, eventData]);
+      toast.success("Event added successfully");
     }
-    const updatedEvent = {
-      ...selectedEvent,
-      title,
-      start: new Date(startDate),
-      end: new Date(endDate),
-      location,
-      organizer,
-      image,
-      details,
-    };
 
-    setEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event === selectedEvent ? updatedEvent : event
-      )
-    );
-    setSelectedEvent(null);
-    setTitle("");
-    setStartDate("");
-    setEndDate("");
-    setLocation("");
-    setOrganizer("");
-    setDetails("");
-    setImage(null);
-    setAddEventModal(false);
-    toast.success("Event updated successfully");
+    handleCloseAddEventModal();
   };
 
   const toggleDeleteModal = (id) => {
@@ -233,100 +210,86 @@ const MyCalendar = () => {
               </div>
   
               {addEventModal && (
-                <div className="fixed flex items-center justify-center inset-0 z-50">
-                  <div
-                    className="fixed h-full w-full bg-gray-600 bg-opacity-50"
-                    onClick={handleAddEventModal}
-                  ></div>
-                  <div className="relative p-5 bg-white rounded-md shadow-md">
-                    <h2 className="py-2 px-2 text-primary-500 border-2 mb-5">
-                      {selectedEvent ? "Edit Event" : "Add New Event"}
-                    </h2>
-                    <button
-                      className="absolute p-2 top-0 right-0"
-                      onClick={handleAddEventModal}
-                    >
-                      <CloseIcon style={{fontSize: "large"}}/>
-                    </button>
-                    <div className="flex flex-col justify-between space-y-2">
-                      <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <InputReusable
-                          type="text"
-                          placeholder="Event Title"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                          onBlur={() => setTitle(title.toUpperCase())}
-                        />
-                        <InputReusable
-                          type="text"
-                          onFocus={(e) => (e.target.type = "date")}
-                          onBlur={(e) => (e.target.type = "text")}
-                          placeholder="Start Date"
-                          value={startDate}
-                          onChange={(e) => setStartDate(e.target.value)}
-                        />
-                        <InputReusable
-                          type="text"
-                          placeholder="End Date"
-                          value={endDate}
-                          onFocus={(e) => (e.target.type = "date")}
-                          onBlur={(e) => (e.target.type = "text")}
-                          onChange={(e) => setEndDate(e.target.value)}
-                        />
-                        <InputReusable
-                          type="text"
-                          placeholder="Location"
-                          value={location}
-                          onChange={(e) => setLocation(e.target.value)}
-                          onBlur={(e) =>
-                            setLocation(capitalizeFirstLetter(location))
-                          }
-                        />
-                        <InputReusable
-                          type="text"
-                          placeholder="Organizer"
-                          value={organizer}
-                          onChange={(e) => setOrganizer(e.target.value)}
-                          onBlur={(e) =>
-                            setOrganizer(capitalizeFirstLetter(organizer))
-                          }
-                        />
-                        <InputReusable
-                          type="text"
-                          placeholder="Details"
-                          value={details}
-                          onChange={(e) => setDetails(e.target.value)}
-                          onBlur={(e) =>
-                            setDetails(capitalizeFirstLetter(details))
-                          }
-                        />
-                        <InputReusable 
-                          type="file"
-                          onChange={handleImageChange}
-                        />
-                        {selectedEvent ? (
-                          <BtnReusable
-                            onClick={handleUpdateEvent}
-                            value="Update Event"
-                            type={"edit"}
-                          />
-                        ) : (
-                          <BtnReusable
-                            onClick={handleAddEvent}
-                            value="Add Event"
-                            type={"add"}
-                          />
-                        )}
-                        <BtnReusable
-                          onClick={handleAddEventModal}
-                          value="Cancel"
-                          type="cancel"
-                        />
-                      </div>
+              <div className="fixed flex items-center justify-center inset-0 z-50">
+                <div
+                  className="fixed h-full w-full bg-gray-600 bg-opacity-50"
+                  onClick={handleCloseAddEventModal}
+                ></div>
+                <div className="relative p-5 bg-white rounded-md shadow-md">
+                  <h2 className="py-2 px-2 text-primary-500 border-2 mb-5">
+                    {selectedEvent ? "Edit Event" : "Add New Event"}
+                  </h2>
+                  <button
+                    className="absolute p-2 top-0 right-0"
+                    onClick={handleCloseAddEventModal}
+                  >
+                    <CloseIcon style={{fontSize: "large"}}/>
+                  </button>
+                  <div className="flex flex-col justify-between space-y-2">
+                    <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <InputReusable
+                        type="text"
+                        placeholder="Event Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        onBlur={() => setTitle(title.toUpperCase())}
+                      />
+                      <InputReusable
+                        type="text"
+                        onFocus={(e) => (e.target.type = "date")}
+                        onBlur={(e) => (e.target.type = "text")}
+                        placeholder="Start Date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                      />
+                      <InputReusable
+                        type="text"
+                        placeholder="End Date"
+                        value={endDate}
+                        onFocus={(e) => (e.target.type = "date")}
+                        onBlur={(e) => (e.target.type = "text")}
+                        onChange={(e) => setEndDate(e.target.value)}
+                      />
+                      <InputReusable
+                        type="text"
+                        placeholder="Location"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        onBlur={(e) => setLocation(capitalizeFirstLetter(location))}
+                      />
+                      <InputReusable
+                        type="text"
+                        placeholder="Organizer"
+                        value={organizer}
+                        onChange={(e) => setOrganizer(e.target.value)}
+                        onBlur={(e) => setOrganizer(capitalizeFirstLetter(organizer))}
+                      />
+                      <InputReusable
+                        type="text"
+                        placeholder="Details"
+                        value={details}
+                        onChange={(e) => setDetails(e.target.value)}
+                        onBlur={(e) => setDetails(capitalizeFirstLetter(details))}
+                      />
+                      <InputReusable 
+                        type="file"
+                        onChange={handleImageChange}
+                      />
+                      <BtnReusable
+                        onClick={handleAddOrUpdateEvent}
+                        value={selectedEvent ? "Update Event" : "Add Event"}
+                        type={selectedEvent ? "edit" : "add"}
+                      />
+                      <BtnReusable
+                        onClick={handleCloseAddEventModal}
+                        value="Cancel"
+                        type="cancel"
+                      />
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
   
               <div className="mr-3 ml-2" onSelectEvent={handleSelectEvent}>
                 <div
@@ -382,6 +345,51 @@ const MyCalendar = () => {
                   ) : (
                     ""
                   )}
+
+                  {eventDetailModal && (
+              <div className="fixed flex items-center justify-center inset-0 z-50">
+                <div
+                  className="fixed h-full w-full bg-gray-600 bg-opacity-50"
+                  onClick={handleCloseDetailModal}
+                ></div>
+                <div className="relative p-5 bg-white rounded-md shadow-md">
+                  <h2 className="py-2 px-2 text-primary-500 border-2 mb-5">
+                    Event Details
+                  </h2>
+                  <button
+                    className="absolute p-2 top-0 right-0"
+                    onClick={handleCloseDetailModal}
+                  >
+                    <CloseIcon style={{ fontSize: "large" }} />
+                  </button>
+                  <div className="flex flex-col space-y-2">
+                    <p><strong>Title:</strong> {selectedEvent?.title}</p>
+                    <p><strong>Start Date:</strong> {formatDate(selectedEvent?.start)}</p>
+                    <p><strong>End Date:</strong> {formatDate(selectedEvent?.end)}</p>
+                    <p><strong>Location:</strong> {selectedEvent?.location}</p>
+                    <p><strong>Organizer:</strong> {selectedEvent?.organizer}</p>
+                    <p><strong>Details:</strong> {selectedEvent?.details}</p>
+                    <img src={selectedEvent?.image} alt="Event" className="rounded-lg" />
+                    
+                    <div className="flex space-x-2">
+                      <BtnReusable
+                        value="Edit Event"
+                        onClick={() => {
+                          handleAddEventModal(selectedEvent);
+                        }}
+                        type="edit"
+                      />
+                      <BtnReusable
+                        value="Delete Event"
+                        onClick={() => toggleDeleteModal(selectedEvent.id)}
+                        type="delete"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
                 </div>
               </div>
             </div>
