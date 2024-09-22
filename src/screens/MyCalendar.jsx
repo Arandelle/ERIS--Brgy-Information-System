@@ -10,7 +10,7 @@ import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import QuestionModal from "../components/ReusableComponents/AskCard";
 import CloseIcon from '@mui/icons-material/Close';
 import { toast } from "sonner";
-import { formatDate } from "../helper/FormatDate";
+import { formatDate, formatTime} from "../helper/FormatDate";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 
 
@@ -44,6 +44,7 @@ const MyCalendar = () => {
   const [location, setLocation] = useState("");
   const [organizer, setOrganizer] = useState("");
   const [details, setDetails] = useState("");
+  const [image, setImage] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const { containerSize, containerRef } = ContainerResizer();
@@ -52,6 +53,9 @@ const MyCalendar = () => {
   const [addEventModal, setAddEventModal] = useState(false);
 
   const handleAddEventModal = () => {
+    if(addEventModal){
+      setSelectedEvent(null)
+    }
     setAddEventModal(!addEventModal);
   };
   const [events, setEvents] = useState(() => {
@@ -76,17 +80,29 @@ const MyCalendar = () => {
     localStorage.setItem("events", JSON.stringify(events));
   }, [events]);
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setImage(imageUrl);
+    }
+  };
 
+  
   const handleAddEvent = () => {
     if (
       !title ||
       !startDate ||
       !endDate ||
       !location ||
-      !organizer ||
+      !organizer || !image ||
       !details
     ) {
       toast.warning("Please fill all the fields");
+      return;
+    }
+    if(new Date(startDate) >= new Date(endDate) || new Date(startDate) < new Date().setHours(0,0,0,0)){
+      toast.warning("Start date must be before the end date");
       return;
     }
     const newEvent = {
@@ -96,6 +112,7 @@ const MyCalendar = () => {
       end: new Date(endDate),
       location,
       organizer,
+      image,
       details,
     };
 
@@ -105,7 +122,10 @@ const MyCalendar = () => {
     setEndDate("");
     setLocation("");
     setOrganizer("");
+    setImage();
     setDetails("");
+    setAddEventModal(false);
+    setSelectedEvent(null)
     toast.success("Event added successfully");
   };
 
@@ -117,6 +137,7 @@ const MyCalendar = () => {
     setLocation(event.location);
     setOrganizer(event.organizer);
     setDetails(event.details);
+    setImage(event.image);
     setAddEventModal(true);
   };
 
@@ -126,7 +147,7 @@ const MyCalendar = () => {
       !startDate ||
       !endDate ||
       !location ||
-      !organizer ||
+      !organizer || !image ||
       !details
     ) {
       toast.warning("Please fill all the fields");
@@ -134,12 +155,12 @@ const MyCalendar = () => {
     }
     const updatedEvent = {
       ...selectedEvent,
-      id: Date.now(),
       title,
       start: new Date(startDate),
       end: new Date(endDate),
       location,
       organizer,
+      image,
       details,
     };
 
@@ -155,6 +176,8 @@ const MyCalendar = () => {
     setLocation("");
     setOrganizer("");
     setDetails("");
+    setImage(null);
+    setAddEventModal(false);
     toast.success("Event updated successfully");
   };
 
@@ -172,13 +195,13 @@ const MyCalendar = () => {
   };
 
   const CustomAgendaEvent = ({ event }) => (
-    <div>
-      <strong>{event.title}</strong>
-      <br />
-      <span>Location: {event.location}</span>
-      <span>Organizer: {event.organizer}</span>
-      <br />
-      <span>Details: {event.details}</span>
+    <div className="flex flex-row items-center space-x-2">
+     <img alt="not available" src={event.image} className="h-12 w-12 rounded-full" />
+     <div>
+        <p className="text-sm">{event.title}</p>
+        <p className="text-sm">{formatTime(event.start)} - {formatTime(event.end)}</p>
+        <p className="text-sm">{event.details}</p>
+     </div>
     </div>
   );
 
@@ -203,6 +226,7 @@ const MyCalendar = () => {
                     agenda: {
                       event: CustomAgendaEvent,
                     },
+                    event: CustomAgendaEvent,
                   }}
                   onSelectEvent={handleSelectEvent}
                 />
@@ -212,13 +236,15 @@ const MyCalendar = () => {
                 <div className="fixed flex items-center justify-center inset-0 z-50">
                   <div
                     className="fixed h-full w-full bg-gray-600 bg-opacity-50"
-                    onClick={() => setAddEventModal(false)}
+                    onClick={handleAddEventModal}
                   ></div>
                   <div className="relative p-5 bg-white rounded-md shadow-md">
-                    <h2 className="py-2 px-2 text-primary-500 border-2 mb-5">Add New Event</h2>
+                    <h2 className="py-2 px-2 text-primary-500 border-2 mb-5">
+                      {selectedEvent ? "Edit Event" : "Add New Event"}
+                    </h2>
                     <button
                       className="absolute p-2 top-0 right-0"
-                      onClick={() => setAddEventModal(false)}
+                      onClick={handleAddEventModal}
                     >
                       <CloseIcon style={{fontSize: "large"}}/>
                     </button>
@@ -274,6 +300,10 @@ const MyCalendar = () => {
                             setDetails(capitalizeFirstLetter(details))
                           }
                         />
+                        <InputReusable 
+                          type="file"
+                          onChange={handleImageChange}
+                        />
                         {selectedEvent ? (
                           <BtnReusable
                             onClick={handleUpdateEvent}
@@ -306,7 +336,7 @@ const MyCalendar = () => {
                   <div className="block mt-2 py-2 px-4 text-base text-center font-semibold border-y-[3px] border-orange-500">
                     Upcoming Events
                   </div>
-                  <div className="scrollable-container p-4 text-gray-700 overflow-y-auto">
+                  <div className="scrollable-container p-2 text-gray-700 overflow-y-auto">
                     {loading ? (
                       <div className="flex items-center justify-center py-3">
                         <Spinner setLoading={setLoading} />
@@ -317,18 +347,14 @@ const MyCalendar = () => {
                       events.map((activity) => (
                         <div
                           key={activity.id}
-                          className="mb-4 border-b pb-4 border-b-gray-500 dark:border-b-gray-200"
+                          className="mb-3 border-b pb-4 border-b-gray-500 dark:border-b-gray-200"
                         >
                           <div>
-                            <h3 className="text-xl font-semibold mb-2 dark:text-green-500">
+                            <h2 className="font-semibold mb-2 dark:text-green-500">
                               Title: {activity.title}
-                            </h3>
+                            </h2>
                             <p className="text-gray-700 dark:text-gray-200">
-                              Date: {formatDate(activity.start)} -{" "}
-                              {formatDate(activity.end)}
-                            </p>
-                            <p className="text-gray-700 dark:text-gray-200">
-                              Location: {activity.location}
+                             {activity.location}
                             </p>
                             <p className="text-gray-700 dark:text-gray-200">
                               Organizer: {activity.organizer}
@@ -344,9 +370,9 @@ const MyCalendar = () => {
                           </div>
                         </div>
                       ))
-                    )}
+                    ).slice(0,2)}
                   </div>
-                  {events.length > 0 ? (
+                  {events.length > 1 ? (
                     <div className="flex justify-end">
                       <BtnReusable
                         value="See more events "

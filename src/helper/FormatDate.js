@@ -6,3 +6,11 @@ export const formatDate = (date) => {
       year: "numeric"
     });
   };
+
+export const formatTime = (date) =>{
+  return new Date(date).toLocaleTimeString([], {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  }).replace(':00', '')
+}
