@@ -51,7 +51,8 @@ const MyCalendar = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [eventsToDelete, setEventToDelete] = useState(null);
   const [addEventModal, setAddEventModal] = useState(false);
-  const [eventDetailModal, setEventDetailModal] = useState(false)
+  const [eventDetailModal, setEventDetailModal] = useState(false);
+
 
   const handleAddEventModal = (event) => {
     if (event) {
@@ -96,6 +97,8 @@ const MyCalendar = () => {
     }, 2000);
   }, []);
 
+ events.sort((a,b) => new Date(a.start) - new Date(b.start));
+
   useEffect(() => {
     localStorage.setItem("events", JSON.stringify(events));
   }, [events]);
@@ -129,7 +132,7 @@ const MyCalendar = () => {
       return;
     }
     
-    if (new Date(startDate) >= new Date(endDate) || new Date(startDate) < new Date().setHours(0,0,0,0)) {
+    if (new Date(startDate) > new Date(endDate) || new Date(startDate) < new Date().setHours(0,0,0,0)) {
       toast.warning("Start date must be before the end date");
       return;
     }
@@ -236,7 +239,7 @@ const MyCalendar = () => {
                       />
                       <InputReusable
                         type="text"
-                        onFocus={(e) => (e.target.type = "date")}
+                        onFocus={(e) => (e.target.type = "datetime-local")}
                         onBlur={(e) => (e.target.type = "text")}
                         placeholder="Start Date"
                         value={startDate}
@@ -246,7 +249,7 @@ const MyCalendar = () => {
                         type="text"
                         placeholder="End Date"
                         value={endDate}
-                        onFocus={(e) => (e.target.type = "date")}
+                        onFocus={(e) => (e.target.type = "datetime-local")}
                         onBlur={(e) => (e.target.type = "text")}
                         onChange={(e) => setEndDate(e.target.value)}
                       />
