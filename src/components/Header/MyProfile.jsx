@@ -5,7 +5,7 @@ import Maintenance from '../ReusableComponents/Maintenance';
 const MyProfile = () => {
   return (
     <HeadSide child={
-      <div className='m-3'>
+      <div className='h-screen flex-grow-0'>
         <Maintenance title={"MyProfile"} />
       </div>
     } />

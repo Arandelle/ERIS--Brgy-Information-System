@@ -15,7 +15,7 @@ import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 
 
 function capitalizeFirstLetter(string) {
-  return string.replace(/\b\w/g, (char) => char.toUpperCase());
+  return string.replace(/\b\w/, (char) => char.toUpperCase());
 }
 const CustomToolbar = ({label, onNavigate, onView, handleAddEventModal}) => {
 
