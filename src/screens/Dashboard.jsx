@@ -11,6 +11,7 @@ import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../helper/DateToday"
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import { useFetchData } from "../hooks/useFetchData";
+import fetchEmergency from "../hooks/fetchEmergency";
 
 const DashboardCard = ({ title, value, img, onClick }) => {
 
@@ -39,6 +40,7 @@ const DashboardCard = ({ title, value, img, onClick }) => {
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const {data: users} = useFetchData("users");
+  const {emergencyData} = fetchEmergency();
 
   const [activity, setActivity] = useState(() => {
     // Retrieve activity data from localStorage, or an empty array if it doesn't exist
@@ -85,7 +87,7 @@ const Dashboard = () => {
             />
             <DashboardCard
               title="Emergency"
-              value={loading ? <Spinner setLoading={setLoading} /> : 0}
+              value={loading ? <Spinner setLoading={setLoading} /> : emergencyData.length}
               img={emergency}
               onClick={()=>handleNavigate("/maps")}
             />
