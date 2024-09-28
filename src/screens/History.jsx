@@ -46,6 +46,13 @@ function History() {
     }
   };
 
+  const statusColor = {
+    done: "text-green-500",
+    pending: "text-yellow-500",
+    accepted: "text-orange-500",
+    expired: "text-red-500"
+  }
+
   return (
     <HeadSide
       child={
@@ -76,7 +83,7 @@ function History() {
                       <td className="px-6 py-4">{emergency.name}</td>
                       <td className="px-6 py-4">{emergency.description}</td>
                       <td className="px-6 py-4">{emergency.location}</td>
-                      <td className="px-6 py-4">{emergency.status.toUpperCase()}</td>
+                      <td className={`px-6 py-4 ${statusColor[emergency.status]}`}>{emergency.status.toUpperCase()}</td>
                       <td className="px-6 py-4">
                         {new Date(emergency.date).toLocaleString()}
                       </td>
