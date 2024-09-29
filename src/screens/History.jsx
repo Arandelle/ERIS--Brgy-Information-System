@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Maintenance from "../components/ReusableComponents/Maintenance";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import { auth, database } from "../services/firebaseConfig";
 import { ref, get } from "firebase/database";
@@ -80,7 +79,7 @@ function History() {
                     >
                       <td className="px-6 py-4">{emergency.id}</td>
                       <td className="px-6 py-4">{emergency.type}</td>
-                      <td className="px-6 py-4">{emergency.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{emergency.name}</td>
                       <td className="px-6 py-4">{emergency.description}</td>
                       <td className="px-6 py-4">{emergency.location}</td>
                       <td className={`px-6 py-4 ${statusColor[emergency.status]}`}>{emergency.status.toUpperCase()}</td>

@@ -5,6 +5,8 @@ import InputReusable from "../../components/ReusableComponents/InputReusable";
 import BtnReusable from "../../components/ReusableComponents/BtnReusable";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
+import { push, ref, update } from "firebase/database";
+import { database } from "../../services/firebaseConfig";
 
 const Activities = () => {
 
@@ -28,7 +30,7 @@ const Activities = () => {
 
   }, [activity]);
 
-  const handleAddNews = () => {
+  const handleAddNews = async () => {
     if (!title || !description || !location || !startTime || !endTime) {
       toast.info("Please complete the form")
       return;
@@ -45,8 +47,15 @@ const Activities = () => {
       timestamp: new Date().toISOString(), // Add a timestamp
     };
 
-    setActivity((prevNews) => [...prevNews, addedNews]);
+    const announcementRef = ref(database, `announcement`);
 
+    try{
+      await push(announcementRef, addedNews);
+      setActivity((prevNews) => [...prevNews, addedNews]);
+    }
+    catch(error){
+      console.error("Error :", error)
+    }
     // Update localStorage with the updated activity data
     setTitle("");
     setStartDate("");
