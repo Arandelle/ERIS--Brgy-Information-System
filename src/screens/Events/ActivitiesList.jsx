@@ -55,7 +55,7 @@ const ActivitiesList = ({ activity, setActivity, isFullscreen }) => {
       ref={containerRef}
     >
       <div className="block py-2 px-3 text-base text-center font-semibold">
-        Today's Activities
+        List of Announcement
       </div>
       <div className="scrollable-container p-4 text-gray-700 overflow-y-auto">
         {loading ? (
@@ -69,7 +69,7 @@ const ActivitiesList = ({ activity, setActivity, isFullscreen }) => {
               alt="Empty Image"
               className="h-[200px] w-[200px]"
             />
-            No Activities yet
+            No Announcement yet
           </div>
         ) : (
           activity.map((activity) => (
@@ -136,53 +136,7 @@ const ActivitiesList = ({ activity, setActivity, isFullscreen }) => {
                         )}
                       </div>
               </div>
-          ))
-
-          // activity.map((activity) => (
-          //   <table className={`w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400`}>
-          //     <tbody>
-          //       <tr>
-          //         <td className="flex flex-col">
-          //             <span className="text-lg">{activity.title}</span>
-          //             <span className="text-xs text-primary-500">{getTimeDifference(activity.timestamp)}</span>
-          //             <span>{formatDate(activity.startDate)}</span>
-          //         </td>
-          //         <td>
-          //           {activity.startTime} - {activity.endTime}
-          //         </td>
-          //         <td>{activity.location}</td>
-          //         <td>{activity.description}</td>
-          //         <td>
-          //           {" "}
-          //           <button
-          //             className="inline-flex justify-between items-center text-nowrap text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-          //             onClick={() => toggleShowButtons(activity.id)}
-          //           >
-          //             ...
-          //           </button>
-          //           {activeButtonId === activity.id && (
-          //             <div className="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-          //               <ul>
-          //                 {actionButtons.map((button, key) => (
-          //                   <button
-          //                     key={key}
-          //                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-          //                     onClick={() =>
-          //                       handleButtons(button.title, activity.id)
-          //                     }
-          //                   >
-          //                     {button.title}
-          //                   </button>
-          //                 ))}
-          //               </ul>
-          //             </div>
-          //           )}
-          //         </td>
-          //       </tr>
-          //     </tbody>
-          //   </table>
-          // ))
-        )}
+          )))}
       </div>
       {showDeleteModal && (
         <QuestionModal

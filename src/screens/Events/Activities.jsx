@@ -5,18 +5,18 @@ import InputReusable from "../../components/ReusableComponents/InputReusable";
 import BtnReusable from "../../components/ReusableComponents/BtnReusable";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
-import { onValue, push, ref, update } from "firebase/database";
+import { onValue, push, ref, serverTimestamp, update } from "firebase/database";
 import { database } from "../../services/firebaseConfig";
 
 const Activities = () => {
 
+  const [activity, setActivity] = useState([]);
   const [title, setTitle] = useState("");
-  const [description, setContent] = useState("");
-  const [location, setPlace] = useState("");
+  const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [activity, setActivity] = useState([]);
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(()=>{
     const announcementRef = ref(database, `announcement`);
@@ -30,16 +30,27 @@ const Activities = () => {
         setActivity(announcementList)
       } catch(error){
         console.log("Error: ", error)
-        toast.error(`Invalid ${error}`)
       }
     });
 
     return ()=> unsubscribe()
   }, [])
 
-  const handleAddNews = async () => {
+  const handleAddAnnouncement = async () => {
     if (!title || !description || !location || !startTime || !endTime) {
       toast.info("Please complete the form")
+      return;
+    }
+    if(new Date(startDate).setHours(0,0,0,0) < new Date().setHours(0,0,0,0)){
+      toast.error("Start date must be greater than or equal to today's date");
+      return;
+    }
+
+    const startHour = new Date(`1970-01-01T${startTime}`);
+    const endHour = new Date(`1970-01-01T${endTime}`)
+
+    if(startHour >= endHour){
+      toast.error("Start time must be earlier than end time");
       return;
     }
 
@@ -51,7 +62,7 @@ const Activities = () => {
       endTime,
       location,
       description,
-      timestamp: new Date().toISOString(), // Add a timestamp
+      timestamp: serverTimestamp(), // Add a timestamp
     };
 
     const announcementRef = ref(database, `announcement`);
@@ -63,6 +74,12 @@ const Activities = () => {
       console.error("Error :", error)
     }
 
+    setTitle("");
+    setStartDate("");
+    setStartTime("");
+    setEndTime("");
+    setLocation("");
+    setDescription("");
     toast.success("Submitted successfully");
   };
 
@@ -106,8 +123,8 @@ const Activities = () => {
           value={location}
           placeholder="Location"
           className = {"col-span-4"}
-          onChange={(e) => setPlace(e.target.value)}
-          onBlur={() => setPlace(capitalizeFirstLetter(location))}
+          onChange={(e) => setLocation(e.target.value)}
+          onBlur={() => setLocation(capitalizeFirstLetter(location))}
         />
       </div>
       <div>
@@ -116,12 +133,12 @@ const Activities = () => {
           }`}
           value={description}
           placeholder="Description"
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <BtnReusable
         value={"Submit"}
         type={"add"}
-        onClick={handleAddNews}
+        onClick={handleAddAnnouncement}
         />
       </div>
         <ActivitiesList activity={activity} setActivity={setActivity} isFullscreen={true}/>
