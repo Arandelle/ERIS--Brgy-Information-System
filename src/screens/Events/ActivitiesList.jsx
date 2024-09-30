@@ -46,32 +46,7 @@ const ActivitiesList = ({ activity, setActivity, isFullscreen }) => {
   }, []);
 
   const handleDelete = (id) => {
-    const storedNews = localStorage.getItem("activity");
-    {
-      /*get the array data from local storage*/
-    }
-    if (storedNews) {
-      const newsArray = JSON.parse(storedNews);
-      {
-        /**Parse the JSON string into an array: */
-      }
-      const updatedNewsArray = newsArray.filter(
-        (newsItem) => newsItem.id !== id
-      );
-      {
-        /* filter for specific item */
-      }
-      {
-        /*Save the updated array back tolocalStorage */
-      }
-      localStorage.setItem("activity", JSON.stringify(updatedNewsArray));
-      setActivity(updatedNewsArray);
-      toast.error("Item Deleted");
-      setNewsToDeleteId(null); // Reset the state
-      setShowDeleteModal(false); // Close the modal
-    } else {
-      toast("No activity items found to delete.");
-    }
+    toast.error(`deleted`)
   };
 
   return (

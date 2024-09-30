@@ -5,7 +5,7 @@ import InputReusable from "../../components/ReusableComponents/InputReusable";
 import BtnReusable from "../../components/ReusableComponents/BtnReusable";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
-import { push, ref, update } from "firebase/database";
+import { onValue, push, ref, update } from "firebase/database";
 import { database } from "../../services/firebaseConfig";
 
 const Activities = () => {
@@ -16,19 +16,26 @@ const Activities = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [startDate, setStartDate] = useState("");
+  const [activity, setActivity] = useState([]);
 
-  const [activity, setActivity] = useState(() => {
-    // Get the activity data from localStorage, or an empty array if it doesn't exist
-    const storedNews = localStorage.getItem("activity");
-    return storedNews ? JSON.parse(storedNews) : [];
-  });
+  useEffect(()=>{
+    const announcementRef = ref(database, `announcement`);
+    const unsubscribe = onValue(announcementRef, (snapshot) => {
+      try{
+        const announcementData = snapshot.val();
+        const announcementList = Object.keys(announcementData).map((key) => ({
+          id: key,
+          ...announcementData[key]
+        }));
+        setActivity(announcementList)
+      } catch(error){
+        console.log("Error: ", error)
+        toast.error(`Invalid ${error}`)
+      }
+    });
 
-  useEffect(() => {
-    // Save the activity data to localStorage whenever it changes
-    const sortedNews = activity.sort((a,b) => a.startTime.localeCompare(b.startTime));
-    localStorage.setItem("activity", JSON.stringify(sortedNews));
-
-  }, [activity]);
+    return ()=> unsubscribe()
+  }, [])
 
   const handleAddNews = async () => {
     if (!title || !description || !location || !startTime || !endTime) {
@@ -51,18 +58,11 @@ const Activities = () => {
 
     try{
       await push(announcementRef, addedNews);
-      setActivity((prevNews) => [...prevNews, addedNews]);
     }
     catch(error){
       console.error("Error :", error)
     }
-    // Update localStorage with the updated activity data
-    setTitle("");
-    setStartDate("");
-    setStartTime("");
-    setEndTime("");
-    setPlace("");
-    setContent("");
+
     toast.success("Submitted successfully");
   };
 
