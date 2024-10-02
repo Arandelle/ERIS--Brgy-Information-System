@@ -5,10 +5,9 @@ import InputReusable from "../../components/ReusableComponents/InputReusable";
 import BtnReusable from "../../components/ReusableComponents/BtnReusable";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
-import { onValue, push, ref, serverTimestamp, update } from "firebase/database";
-import { database } from "../../services/firebaseConfig";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-
+import { onValue, push, ref, serverTimestamp } from "firebase/database";
+import { database, storage } from "../../services/firebaseConfig";
+import {getDownloadURL, ref as storageRef, uploadBytes} from "firebase/storage"
 
 const Activities = () => {
 
@@ -39,52 +38,49 @@ const Activities = () => {
     return ()=> unsubscribe()
   }, []);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file); // Store the file object for uploading to Firebase Storage
+  const handleImageChange = (e) =>{
+    const file = e.target.files[0]
+
+    if(file){
+      setImage(file)
     }
-  };
-  
+  }
 
   const handleAddAnnouncement = async () => {
     if (!title || !description || !location || !startTime || !endTime) {
-      toast.info("Please complete the form");
+      toast.info("Please complete the form")
       return;
     }
-  
-    if (new Date(startDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
+    if(new Date(startDate).setHours(0,0,0,0) < new Date().setHours(0,0,0,0)){
       toast.error("Start date must be greater than or equal to today's date");
       return;
     }
-  
+
     const startHour = new Date(`1970-01-01T${startTime}`);
-    const endHour = new Date(`1970-01-01T${endTime}`);
-    if (startHour >= endHour) {
+    const endHour = new Date(`1970-01-01T${endTime}`)
+
+    if(startHour >= endHour){
       toast.error("Start time must be earlier than end time");
       return;
     }
-  
-    // Initialize Firebase Storage
-    const storage = getStorage();
-  
-    let imageUrl = ""; // Initialize a variable to store the image URL
-  
-    if (image) {
-      const imageFile = image; // Assuming `image` is the file you want to upload
+
+    let imageUrl = ""
+
+    if(image){
+      const imageFile = image
       const imageRef = storageRef(storage, `announcement-images/${imageFile.name}`);
-      try {
-        // Upload image to Firebase Storage
-        await uploadBytes(imageRef, imageFile);
-        // Get the download URL of the image
+
+      try{
+        // upload image to firabase storage
+        await uploadBytes(imageRef, imageFile)
         imageUrl = await getDownloadURL(imageRef);
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        toast.error("Failed to upload image");
+      } catch(error){
+        console.error("Error uploading image: ", error);
+        toast.error(`Error uploading image: ${error}`)
         return;
       }
     }
-  
+
     const addedNews = {
       id: Date.now(), // Generate a unique ID for the new activity
       title,
@@ -93,29 +89,28 @@ const Activities = () => {
       endTime,
       location,
       description,
-      imageUrl, // Save the image URL in the database
+      imageUrl,
       timestamp: serverTimestamp(), // Add a timestamp
     };
-  
+
     const announcementRef = ref(database, `announcement`);
-  
-    try {
-      await push(announcementRef, addedNews); // Save the announcement with the image URL
-      toast.success("Submitted successfully");
-    } catch (error) {
-      console.error("Error adding announcement:", error);
+
+    try{
+      await push(announcementRef, addedNews);
+      toast.success("Submmited successfully!")
     }
-  
-    // Reset form fields
+    catch(error){
+      console.error("Error :", error)
+    }
+
     setTitle("");
     setStartDate("");
     setStartTime("");
     setEndTime("");
     setLocation("");
     setDescription("");
-    setImage(""); // Reset image
+    setImage("")
   };
-  
 
   return (
     <HeadSide child={  <div className="m-3">
