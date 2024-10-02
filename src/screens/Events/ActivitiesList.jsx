@@ -110,6 +110,7 @@ const ActivitiesList = ({ activity, setActivity, isFullscreen }) => {
                 <span>
                   {activity.startTime} - {activity.endTime}
                 </span>
+                <img src={activity.imageUrl} />
                         {isFullscreen ?  <MoreHorizIcon
                           className="cursor-pointer hover:bg-gray-200 rounded-full"
                           onClick={() => toggleShowButtons(activity.id)}
