@@ -17,6 +17,7 @@ const Activities = () => {
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
 
   useEffect(()=>{
     const announcementRef = ref(database, `announcement`);
@@ -34,7 +35,16 @@ const Activities = () => {
     });
 
     return ()=> unsubscribe()
-  }, [])
+  }, []);
+
+  const handleImageChange = (e) =>{
+    const file = e.target.files[0]
+
+    if(file){
+      const ImageUrl = URL.createObjectURL(file);
+      setImage(ImageUrl)
+    }
+  }
 
   const handleAddAnnouncement = async () => {
     if (!title || !description || !location || !startTime || !endTime) {
@@ -135,11 +145,18 @@ const Activities = () => {
           placeholder="Description"
           onChange={(e) => setDescription(e.target.value)}
         />
-        <BtnReusable
-        value={"Submit"}
-        type={"add"}
-        onClick={handleAddAnnouncement}
-        />
+       <div className="flex flex-row">
+          <InputReusable
+          type="file"
+          onChange={handleImageChange}
+          />
+          <BtnReusable
+          value={"Submit"}
+          type={"add"}
+          onClick={handleAddAnnouncement}
+          className={"w-60"}
+          />
+       </div>
       </div>
         <ActivitiesList activity={activity} setActivity={setActivity} isFullscreen={true}/>
     </div>
