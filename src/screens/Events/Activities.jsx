@@ -103,7 +103,8 @@ const Activities = () => {
     "Title",
     "Date",
     "Description",
-    "Image"
+    "Image",
+    "Action"
   ]
 
   const renderRow = (announcement) => {
@@ -112,7 +113,21 @@ const Activities = () => {
       <td className="px-6 py-4">{announcement.title}</td>
        <td className="px-6 py-4">{announcement.startDate}</td>
        <td className="px-6 py-4 whitespace-nowrap">{announcement.description}</td>
-       <td className="px-6 py-4">{announcement.imageUrl}</td>
+       <td className="px-6 py-4">
+       <img src= {announcement.imageUrl} alt="image" className="h-24 w-24 rounded-full" />
+      </td>
+      <td>
+       <div className="flex flex-row items-center justify-evenly">
+          <BtnReusable
+          value={"Delete"}
+          type="delete"
+          />
+           <BtnReusable
+          value={"Edit"}
+          type="edit"
+          />
+       </div>
+      </td>
      </>
     )
   }

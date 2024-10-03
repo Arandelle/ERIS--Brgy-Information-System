@@ -1,7 +1,7 @@
 import React from 'react';
 import EmptyLogo from './ReusableComponents/EmptyLogo';
 
-const Table = ({ headers, data, renderRow, emptyMessage = "No records found" }) => {
+const Table = ({ headers = [], data, renderRow, emptyMessage = "No records found" }) => {
   return (
     <div className="flex flex-col justify-center h-full">
       <div className="overflow-auto w-full">
@@ -16,7 +16,7 @@ const Table = ({ headers, data, renderRow, emptyMessage = "No records found" }) 
             </tr>
           </thead>
 
-          {data.length > 0 ? (
+          {data?.length > 0 ? (
             <tbody>
               {data.map((item, index) => (
                 <tr
