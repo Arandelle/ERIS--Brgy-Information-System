@@ -105,6 +105,7 @@ const Activities = () => {
     setStartDate("");
     setDescription("");
     setImage("");
+    setModal(false)
   };
 
   const headerData = ["Title", "Date", "Description", "Image", "Action"];
