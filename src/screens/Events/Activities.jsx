@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from "react";
 import {toast} from "sonner"
-import ActivitiesList from "./ActivitiesList";
 import InputReusable from "../../components/ReusableComponents/InputReusable";
 import BtnReusable from "../../components/ReusableComponents/BtnReusable";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
-import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import { onValue, push, ref, serverTimestamp } from "firebase/database";
 import { database, storage } from "../../services/firebaseConfig";
 import {getDownloadURL, ref as storageRef, uploadBytes} from "firebase/storage"
+import Table from "../../components/Table";
 
 const Activities = () => {
 
   const [activity, setActivity] = useState([]);
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
+  const [modal, setModal] = useState(false);
 
   useEffect(()=>{
     const announcementRef = ref(database, `announcement`);
@@ -38,6 +35,10 @@ const Activities = () => {
     return ()=> unsubscribe()
   }, []);
 
+  const handleModal = () => {
+    setModal(!modal);
+  }
+
   const handleImageChange = (e) =>{
     const file = e.target.files[0]
 
@@ -47,20 +48,12 @@ const Activities = () => {
   }
 
   const handleAddAnnouncement = async () => {
-    if (!title || !description || !location || !startTime || !endTime) {
+    if (!title || !startDate || !description) {
       toast.info("Please complete the form")
       return;
     }
     if(new Date(startDate).setHours(0,0,0,0) < new Date().setHours(0,0,0,0)){
       toast.error("Start date must be greater than or equal to today's date");
-      return;
-    }
-
-    const startHour = new Date(`1970-01-01T${startTime}`);
-    const endHour = new Date(`1970-01-01T${endTime}`)
-
-    if(startHour >= endHour){
-      toast.error("Start time must be earlier than end time");
       return;
     }
 
@@ -85,9 +78,6 @@ const Activities = () => {
       id: Date.now(), // Generate a unique ID for the new activity
       title,
       startDate,
-      startTime,
-      endTime,
-      location,
       description,
       imageUrl,
       timestamp: serverTimestamp(), // Add a timestamp
@@ -105,16 +95,35 @@ const Activities = () => {
 
     setTitle("");
     setStartDate("");
-    setStartTime("");
-    setEndTime("");
-    setLocation("");
     setDescription("");
     setImage("")
   };
 
+  const headerData = [
+    "Title",
+    "Date",
+    "Description",
+    "Image"
+  ]
+
+  const renderRow = (announcement) => {
+    return(
+      <>
+      <td className="px-6 py-4">{announcement.title}</td>
+       <td className="px-6 py-4">{announcement.startDate}</td>
+       <td className="px-6 py-4 whitespace-nowrap">{announcement.description}</td>
+       <td className="px-6 py-4">{announcement.imageUrl}</td>
+     </>
+    )
+  }
   return (
-    <HeadSide child={  <div className="m-3">
+    <HeadSide child={  
+    <div className="m-3">
     <div className="flex flex-col gap-4">
+      <BtnReusable 
+        value={"Add announcement"}
+        type="add"
+      />
       <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-15 my-15 gap-4">
         <InputReusable
           type="text"
@@ -130,30 +139,6 @@ const Activities = () => {
           value={startDate}
           placeholder="Date"
           onChange={(e) => setStartDate(e.target.value)}
-        />
-        <InputReusable
-          type="text"
-          onFocus={(e) => (e.target.type = "time")}
-          onBlur={(e) => (e.target.type = "text")}
-          value={startTime}
-          placeholder="Start Time"
-          onChange={(e) => setStartTime(e.target.value)}
-        />
-        <InputReusable
-          type="text"
-          onFocus={(e) => (e.target.type = "time")}
-          onBlur={(e) => (e.target.type = "text")}
-          value={endTime}
-          placeholder="End Time"
-          onChange={(e) => setEndTime(e.target.value)}
-        />
-        <InputReusable
-          type="text"
-          value={location}
-          placeholder="Location"
-          className = {"col-span-4"}
-          onChange={(e) => setLocation(e.target.value)}
-          onBlur={() => setLocation(capitalizeFirstLetter(location))}
         />
       </div>
       <div>
@@ -177,8 +162,13 @@ const Activities = () => {
           />
        </div>
       </div>
-        <ActivitiesList activity={activity} setActivity={setActivity} isFullscreen={true}/>
     </div>
+      <Table 
+        headers={headerData}
+        data={activity}
+        renderRow={renderRow}
+        emptyMessage="No announcement found"
+      />
   </div>} />
   );
 };
