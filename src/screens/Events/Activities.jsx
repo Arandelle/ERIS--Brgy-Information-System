@@ -3,12 +3,13 @@ import { toast } from "sonner";
 import InputReusable from "../../components/ReusableComponents/InputReusable";
 import BtnReusable from "../../components/ReusableComponents/BtnReusable";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
-import { onValue, push, ref, serverTimestamp } from "firebase/database";
+import { onValue, push, ref, remove, serverTimestamp, get } from "firebase/database";
 import { database, storage } from "../../services/firebaseConfig";
 import {
   getDownloadURL,
   ref as storageRef,
   uploadBytes,
+  deleteObject
 } from "firebase/storage";
 import Table from "../../components/Table";
 import CloseIcon from "@mui/icons-material/Close";
@@ -84,7 +85,6 @@ const Activities = () => {
     }
 
     const addedNews = {
-      id: Date.now(), // Generate a unique ID for the new activity
       title,
       startDate,
       description,
@@ -110,6 +110,40 @@ const Activities = () => {
 
   const headerData = ["File","Title", "Date", "Description", "Action"];
 
+
+  const handleDelete = async (id) => {
+    // Reference to the announcement in the Realtime Database
+    const announcementRef = ref(database, `announcement/${id}`);
+    
+    try {
+      if (id) {
+        // First, fetch the announcement data to get the image path
+        const snapshot = await get(announcementRef);
+        if (snapshot.exists()) {
+          const announcementData = snapshot.val();
+          
+          // Assuming the image path is stored under announcementData.imageUrl
+          const imagePath = announcementData.imageUrl;
+  
+          // Remove the announcement from Realtime Database
+          await remove(announcementRef);
+  
+          // If there is an image associated with the announcement, remove it from Firebase Storage
+          if (imagePath) {
+            const imageRef = storageRef(storage, imagePath); // Reference to the image in Firebase Storage
+            await deleteObject(imageRef); // Delete the image from Firebase Storage
+          }
+  
+          toast.success("Announcement and image successfully removed");
+        }
+      }
+    } catch (error) {
+      toast.error(`Error: ${error}`);
+    }
+  };
+  
+  
+
   const renderRow = (announcement) => {
     return (
       <>
@@ -127,7 +161,7 @@ const Activities = () => {
         </td>
         <td>
           <div className="flex flex-row items-center justify-evenly">
-            <BtnReusable value={"Delete"} type="delete" />
+            <BtnReusable value={"Delete"} type="delete" onClick={()=>handleDelete(announcement.id)}/>
             <BtnReusable value={"Edit"} type="edit" />
           </div>
         </td>
