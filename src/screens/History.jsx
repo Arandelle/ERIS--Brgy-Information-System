@@ -54,8 +54,8 @@ function History() {
       <td className="px-6 py-4 whitespace-nowrap">{emergency.name}</td>
       <td className="px-6 py-4">{emergency.description}</td>
       <td className="px-6 py-4">{emergency.location}</td>
-      <td className={`px-6 py-4 ${statusColor[emergency.status]}`}>
-        {emergency.status.toUpperCase()}
+      <td>
+      <p className={`${statusColor[emergency.status]}`}>  {emergency.status.toUpperCase()}</p>
       </td>
       <td className="px-6 py-4">
         {new Date(emergency.date).toLocaleString()}
@@ -70,10 +70,10 @@ function History() {
    
 
   const statusColor = {
-    done: "text-green-500",
-    pending: "text-yellow-500",
-    accepted: "text-orange-500",
-    expired: "text-red-500"
+    done: "text-green-500 bg-green-200 flex items-center justify-center font-bold p-0.5 rounded-md",
+    pending: "text-yellow-500 bg-yellow-200 flex items-center justify-center font-bold p-0.5 rounded-md",
+    accepted: "text-blue-500 bg-blue-200 flex items-center justify-center font-bold p-0.5 rounded-md",
+    expired: "text-red-500 bg-red-200 flex items-center justify-center font-bold p-0.5 rounded-md"
   }
 
   return (

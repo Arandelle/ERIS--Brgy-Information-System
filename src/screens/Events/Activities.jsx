@@ -108,22 +108,22 @@ const Activities = () => {
     setModal(false)
   };
 
-  const headerData = ["Title", "Date", "Description", "Image", "Action"];
+  const headerData = ["File","Title", "Date", "Description", "Action"];
 
   const renderRow = (announcement) => {
     return (
       <>
+       <td className="px-6 py-4">
+          <img
+            src={announcement.imageUrl}
+            alt="image"
+            className="h-12 w-12 rounded-full"
+          />
+        </td>
         <td className="px-6 py-4">{announcement.title}</td>
         <td className="px-6 py-4">{announcement.startDate}</td>
         <td className="px-6 py-4 whitespace-nowrap">
           {announcement.description}
-        </td>
-        <td className="px-6 py-4">
-          <img
-            src={announcement.imageUrl}
-            alt="image"
-            className="h-24 w-24 rounded-full"
-          />
         </td>
         <td>
           <div className="flex flex-row items-center justify-evenly">
@@ -166,7 +166,7 @@ const Activities = () => {
                   className="absolute p-2 top-0 right-0"
                   onClick={handleModal}
                 >
-                  <CloseIcon style={{ fontSize: "large" }} />
+                  <CloseIcon style={{ fontSize: "large"}} />
                 </button>
                 <div className="w-full flex flex-col">
                   <div className="flex flex-row space-x-3 py-2">
