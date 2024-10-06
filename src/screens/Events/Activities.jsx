@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import InputReusable from "../../components/ReusableComponents/InputReusable";
 import BtnReusable from "../../components/ReusableComponents/BtnReusable";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
-import { onValue, push, ref, remove, serverTimestamp, get } from "firebase/database";
+import { onValue, push, ref, remove, serverTimestamp, get, update } from "firebase/database";
 import { database, storage } from "../../services/firebaseConfig";
 import {
   getDownloadURL,
@@ -21,6 +21,8 @@ const Activities = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [modal, setModal] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
 
   useEffect(() => {
     const announcementRef = ref(database, `announcement`);
@@ -84,7 +86,7 @@ const Activities = () => {
       }
     }
 
-    const addedNews = {
+    const addAnnouncement = {
       title,
       startDate,
       description,
@@ -95,7 +97,7 @@ const Activities = () => {
     const announcementRef = ref(database, `announcement`);
 
     try {
-      await push(announcementRef, addedNews);
+      await push(announcementRef, addAnnouncement);
       toast.success("Submmited successfully!");
     } catch (error) {
       console.error("Error :", error);
@@ -141,7 +143,69 @@ const Activities = () => {
       toast.error(`Error: ${error}`);
     }
   };
-  
+
+  const handleEditAnnouncement = async (id) => {
+    if(!title || !startDate || !description){
+      toast.info("Please complete the form")
+      return;
+    }
+
+    const announcementRef = ref(database, `announcement/${id}`);
+
+    try{
+      // Fetch  existing announcement data
+     const snapshot = await get(announcementRef);
+
+     if(snapshot.exists()){
+      const announcementData = snapshot.val();
+     let imageUrl = announcementData.imageUrl; // retain the existing image url
+      
+     //check if new image is selected
+     if(image){
+      const imageFile = image;
+      const imageRef = storageRef(storage, `announcement-images/${imageFile.name}`);
+
+      //upload the new image
+      try{
+        await uploadBytes(imageRef, imageFile);
+        imageUrl = await getDownloadURL(imageRef);
+
+        if(announcementData.imageUrl){
+          const oldImageRef = storageRef(storage, announcementData.imageUrl);
+          await deleteObject(oldImageRef)
+        }
+
+      }catch(error){
+        toast.error(`Error uploading new image: ${error}`);
+        return;
+      }
+     }
+
+     const updatedAnnouncement = {
+      title,
+      startDate,
+      description,
+      imageUrl,
+      timestamp: serverTimestamp()
+     }
+
+     await update(announcementRef, updatedAnnouncement);
+
+     toast.success("Announcement update successfully");
+
+     setTitle("");
+     setStartDate("");
+     setDescription("");
+     setImage("");
+     setModal(false);
+     }else{
+      toast.error("Announcement not found")
+     }
+    }catch(error){
+      toast.error(`Error: ${error}`);
+      console.error("Error", error)
+    }
+  }
   
 
   const renderRow = (announcement) => {
@@ -156,18 +220,27 @@ const Activities = () => {
         </td>
         <td className="px-6 py-4">{announcement.title}</td>
         <td className="px-6 py-4">{announcement.startDate}</td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          {announcement.description}
-        </td>
+        <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
+  {announcement.description}
+</td>
         <td>
           <div className="flex flex-row items-center justify-evenly">
             <BtnReusable value={"Delete"} type="delete" onClick={()=>handleDelete(announcement.id)}/>
-            <BtnReusable value={"Edit"} type="edit" />
+            <BtnReusable value={"Edit"} type="edit" onClick={()=>{
+              setModal(true);
+              setTitle(announcement.title)
+              setStartDate(announcement.startDate)
+              setDescription(announcement.description);
+              setImage("") // clear the image field
+              setIsEdit(true);
+              setSelectedId(announcement.id);
+            }} />
           </div>
         </td>
       </>
     );
   };
+
   return (
     <HeadSide
       child={
@@ -234,7 +307,8 @@ const Activities = () => {
                         <BtnReusable
                           value={"Submit"}
                           type={"add"}
-                          onClick={handleAddAnnouncement}
+                          onClick={isEdit ? ()=> handleEditAnnouncement(selectedId) : 
+                          handleAddAnnouncement}
                           className={"w-60"}
                         />
                     </div>
