@@ -68,12 +68,12 @@ function History() {
   );
   }
    
-
+  const statusStyle = "flex items-center justify-center font-bold p-0.5 rounded-md"
   const statusColor = {
-    done: "text-green-500 bg-green-200 flex items-center justify-center font-bold p-0.5 rounded-md",
-    pending: "text-yellow-500 bg-yellow-200 flex items-center justify-center font-bold p-0.5 rounded-md",
-    accepted: "text-blue-500 bg-blue-200 flex items-center justify-center font-bold p-0.5 rounded-md",
-    expired: "text-red-500 bg-red-200 flex items-center justify-center font-bold p-0.5 rounded-md"
+    done: `text-green-500 bg-green-200 ${statusStyle}`,
+    pending: `text-yellow-500 bg-yellow-200 ${statusStyle}`,
+    accepted: `text-blue-500 bg-blue-200 ${statusStyle}`,
+    expired: `text-red-500 bg-red-200 ${statusStyle}`
   }
 
   return (
