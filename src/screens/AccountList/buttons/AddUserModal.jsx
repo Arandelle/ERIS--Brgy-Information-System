@@ -10,6 +10,7 @@ import { getDatabase, push, ref, serverTimestamp, set } from "firebase/database"
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { capitalizeFirstLetter } from "../../../helper/CapitalizeFirstLetter";
+import { generateUniqueBarangayID } from "../../../helper/generateID";
 
 const AddUserModal = ({ addUser, setAddUser, label }) => {
   const navigation = useNavigate();
@@ -18,10 +19,8 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState(null);
 
-  const today = new Date();
-
   useEffect(()=>{
-    const randomNumber = Math.floor(Math.random() * 5) + 1;
+    const randomNumber = Math.floor(Math.random() * 6);
     const url = `https://flowbite.com/docs/images/people/profile-picture-${randomNumber}.jpg`
     setImageUrl(url);
   }, [])
@@ -36,6 +35,7 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
 
     try {
       const currentUser = auth.currentUser;
+      const userId = await generateUniqueBarangayID("user");
 
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -50,7 +50,8 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
         profileComplete: false,
         createdAt: new Date().toISOString(),
         timestamp: serverTimestamp(),
-        img: imageUrl
+        img: imageUrl,
+        customId: userId
       };
       const database = getDatabase(app);
       await set(ref(database, `${label}/${user.uid}`), userData);
