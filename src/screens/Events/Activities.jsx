@@ -236,8 +236,8 @@ const Activities = () => {
 </td>
         <td>
           <div className="flex flex-row items-center justify-evenly">
-           <p className="bg-red-100 p-1 rounded-full hover:bg-gray-300"> <DeleteForeverIcon className="cursor-pointer text-red-500 hover:text-red-600" onClick={()=>handleDelete(announcement.id)}  /></p>
-            <p className="bg-green-100 p-1 rounded-full hover:bg-gray-300">
+           <p className="bg-red-100 p-1 rounded-full hover:bg-red-200"> <DeleteForeverIcon className="cursor-pointer text-red-500 hover:text-red-600" onClick={()=>handleDelete(announcement.id)}  /></p>
+            <p className="bg-green-100 p-1 rounded-full hover:bg-green-200">
               <EditIcon className="cursor-pointer text-green-500 hover:text-green-600" onClick={()=>{
                 setModal(true);
                 setTitle(announcement.title)
@@ -247,7 +247,7 @@ const Activities = () => {
                 setSelectedId(announcement.id);
               }}  />
             </p>
-          <p className="bg-blue-100 p-1 rounded-full hover:bg-gray-300">  <VisibilityIcon className="cursor-pointer text-blue-500 hover:text-blue-600"/></p>
+          <p className="bg-blue-100 p-1 rounded-full hover:bg-blue-200">  <VisibilityIcon className="cursor-pointer text-blue-500 hover:text-blue-600"/></p>
           </div>
         </td>
       </>
