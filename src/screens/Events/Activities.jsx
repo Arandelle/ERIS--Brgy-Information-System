@@ -13,12 +13,16 @@ import {
 } from "firebase/storage";
 import Table from "../../components/Table";
 import CloseIcon from "@mui/icons-material/Close";
+import { formatDateWithTime } from "../../helper/FormatDate";
+import { getTimeDifference } from "../../helper/TimeDiff";
+import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 const Activities = () => {
   const [activity, setActivity] = useState([]);
   const [title, setTitle] = useState("");
-  const [startDate, setStartDate] = useState("");
   const [description, setDescription] = useState("");
+  const [date, setDate] = useState("")
   const [image, setImage] = useState("");
   const [modal, setModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -42,8 +46,17 @@ const Activities = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleModal = () => {
+  const handleModal = (isEditMode = false) => {
     setModal(!modal);
+
+    if(!isEditMode){
+      setTitle("");
+    setDescription("");
+    setImage("");
+    setIsEdit(false); // Indicating that we are adding a new announcement
+    setSelectedId(""); // Clear any selected id
+    }
+
   };
 
   const handleImageChange = (e) => {
@@ -55,17 +68,10 @@ const Activities = () => {
   };
 
   const handleAddAnnouncement = async () => {
-    if (!title || !startDate || !description) {
+    if (!title || !description) {
       toast.info("Please complete the form");
       return;
     }
-    if (
-      new Date(startDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)
-    ) {
-      toast.error("Start date must be greater than or equal to today's date");
-      return;
-    }
-
     let imageUrl = "";
 
     if (image) {
@@ -88,9 +94,10 @@ const Activities = () => {
 
     const addAnnouncement = {
       title,
-      startDate,
       description,
       imageUrl,
+      date: new Date().toISOString(),
+      isEdited: false,
       timestamp: serverTimestamp(), // Add a timestamp
     };
 
@@ -104,13 +111,13 @@ const Activities = () => {
     }
 
     setTitle("");
-    setStartDate("");
     setDescription("");
+    setDate("")
     setImage("");
     setModal(false)
   };
 
-  const headerData = ["File","Title", "Date", "Description", "Action"];
+  const headerData = ["File","Title", "Date", "Description", "Action", "Last Post/Edit"];
 
 
   const handleDelete = async (id) => {
@@ -145,7 +152,7 @@ const Activities = () => {
   };
 
   const handleEditAnnouncement = async (id) => {
-    if(!title || !startDate || !description){
+    if(!title || !description){
       toast.info("Please complete the form")
       return;
     }
@@ -183,9 +190,9 @@ const Activities = () => {
 
      const updatedAnnouncement = {
       title,
-      startDate,
       description,
       imageUrl,
+      isEdited: true,
       timestamp: serverTimestamp()
      }
 
@@ -194,7 +201,6 @@ const Activities = () => {
      toast.success("Announcement update successfully");
 
      setTitle("");
-     setStartDate("");
      setDescription("");
      setImage("");
      setModal(false);
@@ -218,8 +224,8 @@ const Activities = () => {
             className="h-12 w-12 rounded-full"
           />
         </td>
-        <td className="px-6 py-4">{announcement.title}</td>
-        <td className="px-6 py-4">{announcement.startDate}</td>
+        <td className="px-6 py-4 max-w-32 whitespace-nowrap overflow-hidden text-ellipsis">{announcement.title}</td>
+        <td className="px-6 py-4 max-w-32 whitespace-nowrap overflow-hidden text-ellipsis">{formatDateWithTime(announcement.date)}</td>
         <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
   {announcement.description}
 </td>
@@ -229,7 +235,6 @@ const Activities = () => {
             <BtnReusable value={"Edit"} type="edit" onClick={()=>{
               setModal(true);
               setTitle(announcement.title)
-              setStartDate(announcement.startDate)
               setDescription(announcement.description);
               setImage("") // clear the image field
               setIsEdit(true);
@@ -237,6 +242,9 @@ const Activities = () => {
             }} />
           </div>
         </td>
+        <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
+  {getTimeDifference(announcement.timestamp)}
+</td>
       </>
     );
   };
@@ -285,15 +293,6 @@ const Activities = () => {
                         onBlur={() => setTitle(title.toUpperCase())}
                         className={"w-full"}
                       />
-                      <InputReusable
-                        type="text"
-                        onFocus={(e) => (e.target.type = "date")}
-                        onBlur={(e) => (e.target.type = "text")}
-                        placeholder="Start Date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className={"w-full"}
-                      />
                   </div>
                   <textarea
                         className={`border-gray-300 rounded-md  dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600
@@ -301,6 +300,7 @@ const Activities = () => {
                         value={description}
                         placeholder="Description"
                         onChange={(e) => setDescription(e.target.value)}
+                        onBlur={() => setDescription(capitalizeFirstLetter(description))}
                       />
                     <div className="flex flex-row py-2">
                         <InputReusable type="file" onChange={handleImageChange} />

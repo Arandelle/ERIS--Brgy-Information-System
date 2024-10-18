@@ -201,7 +201,7 @@ const ResidentsList = ({ label, data }) => {
                             </div>
                             <p className="text-center flex flex-row justify-evenly bg-gray-200 p-2 text-sm text-gray-900 font-thin lowercase italic">
                               <p className="font-bold">user id:</p>{" "}
-                              {userToViewInfo.id}
+                              {userToViewInfo.customId}
                             </p>
 
                             <div className="bg-gray-100 p-4 rounded-sm">
