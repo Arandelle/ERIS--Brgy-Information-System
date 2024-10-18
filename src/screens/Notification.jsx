@@ -8,9 +8,9 @@ import { formatDate } from "../helper/FormatDate";
 import { useFetcher, useNavigate } from "react-router-dom";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 import { toast } from "sonner";
+import {useFetchData} from "../hooks/useFetchData"
 
 const Notification = () => {
-  const navigation = useNavigate();
   const [notificationBadge, setNotificationBadge] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [openedNotifications, setOpenedNotifications] = useState([]);
@@ -139,46 +139,9 @@ const Notification = () => {
                   notification.id
                 );
                 return (
-                  <a
-                    key={notification.id}
-                    href="#"
-                    className={`${
-                      !notification.isSeen && !isNewlyOpened
-                        ? "bg-white font-semibold"
-                        : "bg-blue-100 hover:bg-blue-200"
-                    } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
-                    onClick={() => {
-                      handleNotificationClick(notification.id),
-                      notification.type === "request" ? navigation("/maps")
-                       : navigation(`/accounts/${notification.type}`);
-                    }}
-                  >
-                    <div className="flex-shrink-0 relative">
-                      <img
-                        className="w-12 h-12 rounded-full border-2 border-primary-500"
-                        src={notification.img}
-                        alt="Notification avatar"
-                      />
-                      {!notification.isSeen && !isNewlyOpened && (
-                        <span className="absolute top-0 right-0 block h-3 w-3 bg-red-500 rounded-full border-2 border-white dark:border-gray-700"></span>
-                      )}
-                    </div>
-                    <div className="pl-4 w-full">
-                      <div className="text-sm mb-1 text-gray-600 dark:text-gray-300">
-                        <span className="font-semibold text-gray-800 dark:text-white">
-                          {notification.type !== "request"
-                            && notification.email}
-                        </span>{" "}
-                        <p>{notification.message} <span className="font-bold"> {notification.location}</span></p>
-                      </div>
-                      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-                        <span>{getTimeDifference(notification.timestamp)}</span>
-                        <span className="text-blue-500 dark:text-green-400">
-                          {formatDate(notification.date)}
-                        </span>
-                      </div>
-                    </div>
-                  </a>
+                 <NotificationItem isNewlyOpened={isNewlyOpened} notification={notification}
+                  handleNotificationClick={handleNotificationClick}
+                 />
                 );
               })
             )}
@@ -215,4 +178,53 @@ const Notification = () => {
   );
 };
 
+const NotificationItem = ({notification, isNewlyOpened, handleNotificationClick}) => {
+  const navigation = useNavigate();
+  const {data: users} = useFetchData("users");
+  const {data: responders} = useFetchData("responders");
+
+  const userDetails = users?.find((user) => user.id === notification.userId);
+  const responderDetails = responders?.find((responder) => responder.id === notification.responderId);
+  const image = userDetails?.img || responderDetails?.img || "Unknown"
+ 
+  const dataType = userDetails ? "users" : "responders"
+
+  return (
+    <a
+    key={notification.id}
+    href="#"
+    className={`${
+      !notification.isSeen && !isNewlyOpened
+        ? "bg-white hover:bg-gray-100 font-semibold"
+        : "bg-blue-50 hover:bg-blue-100"
+    } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
+    onClick={() => {
+      handleNotificationClick(notification.id),
+      navigation(`/accounts/${dataType}`)
+    }}
+  >
+    <div className="flex-shrink-0 relative">
+      <img
+        className="w-12 h-12 rounded-full border-2 border-primary-500"
+        src={image}
+        alt="Notification avatar"
+      />
+      {!notification.isSeen && !isNewlyOpened && (
+        <span className="absolute top-0 right-0 block h-3 w-3 bg-red-500 rounded-full border-2 border-white dark:border-gray-700"></span>
+      )}
+    </div>
+    <div className="pl-4 w-full">
+      <div className="text-sm mb-1 text-gray-600 dark:text-gray-300">
+        <p>{notification.message}</p>
+      </div>
+      <div className="flex justify-between text-xs text-blue-400 dark:text-gray-400">
+        <span>{getTimeDifference(notification.timestamp)}</span>
+        <span className="text-gray-500 dark:text-green-400">
+          {formatDate(notification.date)}
+        </span>
+      </div>
+    </div>
+  </a>
+  )
+}
 export default Notification;
