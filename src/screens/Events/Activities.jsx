@@ -17,6 +17,8 @@ import { formatDateWithTime } from "../../helper/FormatDate";
 import { getTimeDifference } from "../../helper/TimeDiff";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const Activities = () => {
   const [activity, setActivity] = useState([]);
@@ -117,7 +119,7 @@ const Activities = () => {
     setModal(false)
   };
 
-  const headerData = ["File","Title", "Date", "Description", "Action", "Last Post/Edit"];
+  const headerData = ["File","Title", "Date", "Description", "Last Post/Edit", "Action",];
 
 
   const handleDelete = async (id) => {
@@ -229,22 +231,25 @@ const Activities = () => {
         <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
   {announcement.description}
 </td>
+ <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">  
+ {getTimeDifference(announcement.timestamp)}
+</td>
         <td>
           <div className="flex flex-row items-center justify-evenly">
-            <BtnReusable value={"Delete"} type="delete" onClick={()=>handleDelete(announcement.id)}/>
-            <BtnReusable value={"Edit"} type="edit" onClick={()=>{
-              setModal(true);
-              setTitle(announcement.title)
-              setDescription(announcement.description);
-              setImage("") // clear the image field
-              setIsEdit(true);
-              setSelectedId(announcement.id);
-            }} />
+           <p className="bg-red-100 p-1 rounded-full hover:bg-gray-300"> <DeleteForeverIcon className="cursor-pointer text-red-500 hover:text-red-600" onClick={()=>handleDelete(announcement.id)}  /></p>
+            <p className="bg-green-100 p-1 rounded-full hover:bg-gray-300">
+              <EditIcon className="cursor-pointer text-green-500 hover:text-green-600" onClick={()=>{
+                setModal(true);
+                setTitle(announcement.title)
+                setDescription(announcement.description);
+                setImage("") // clear the image field
+                setIsEdit(true);
+                setSelectedId(announcement.id);
+              }}  />
+            </p>
+          <p className="bg-blue-100 p-1 rounded-full hover:bg-gray-300">  <VisibilityIcon className="cursor-pointer text-blue-500 hover:text-blue-600"/></p>
           </div>
         </td>
-        <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
-  {getTimeDifference(announcement.timestamp)}
-</td>
       </>
     );
   };
