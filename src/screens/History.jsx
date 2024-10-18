@@ -8,6 +8,7 @@ import {capitalizeFirstLetter} from "../helper/CapitalizeFirstLetter"
 
 function History() {
   const [emergencyHistory, setEmergencyHistory] = useState([]);
+  emergencyHistory.sort((a,b) => new Date(b.date) - new Date(a.date))
 
   const HeaderData = [
     "emergency id",
@@ -50,7 +51,12 @@ function History() {
   const renderRow = (emergency) => {
 
     const {data: users} = useFetchData("users");
+    const {data: responders} = useFetchData("responders");
     const userDetails = users?.find((user) => user.id === emergency.userId);
+    const responderDetails = responders?.find((responder) => responder.id === emergency.responderId);
+
+    const userName = userDetails?.firstname + userDetails?.lastname
+    const responderName = responderDetails?.firstname + responderDetails?.lastname || "Waiting for Responder"
 
     const statusStyle = "flex items-center justify-center font-bold p-0.5 rounded-md"
     const statusColor = {
@@ -64,7 +70,7 @@ function History() {
       <>
       <td className="px-6 py-4 whitespace-nowrap">{emergency.emergencyId}</td>
       <td className="px-6 py-4">{emergency.type}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{userDetails?.firstname} {userDetails?.lastname}</td>
+      <td className="px-6 py-4 whitespace-nowrap">{userName}</td>
       <td className="px-6 py-4">{emergency.description}</td>
       <td className="px-6 py-4">{emergency.location.address}</td>
       <td>
@@ -74,7 +80,7 @@ function History() {
         {new Date(emergency.date).toLocaleString()}
       </td>
       <td className="px-6 py-4">
-        {emergency.acceptedBy ?? 'waiting for responder'}
+     {responderName}
       </td>
     </>
     
