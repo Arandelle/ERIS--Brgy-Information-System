@@ -1,5 +1,5 @@
 import React from 'react'
-import Image from '../assets/logo.png'
+import Image from '../assets/images/logo.png'
 import { useState, useEffect } from 'react'
 
 const Luncher = () => {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Notification from "../../screens/Notification";
 import CustomTheme from "../../hooks/useTheme";
 import Profile from "../../screens/Profile/ProfileAdmin";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/images/logo.png";
 import SearchInput from "./SearchInput";
 import { Tooltip } from "@mui/material";
 

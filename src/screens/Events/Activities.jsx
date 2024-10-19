@@ -19,6 +19,7 @@ import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Toolbar from "../../components/ToolBar";
 
 const Activities = () => {
   const [activity, setActivity] = useState([]);
@@ -265,6 +266,7 @@ const Activities = () => {
               onClick={handleModal}
             />
           </div>
+          <Toolbar />
           <Table
             headers={headerData}
             data={activity}

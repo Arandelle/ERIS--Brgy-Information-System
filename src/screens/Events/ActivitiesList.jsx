@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Spinner } from "../../components/ReusableComponents/Skeleton";
 import { getTimeDifference } from "../../helper/TimeDiff";
 import QuestionModal from "../../components/ReusableComponents/AskCard"
-import Question from "../../assets/question.svg";
+import Question from "../../assets/images/question.svg";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import MoreVert from "@mui/icons-material/MoreVert"
 import { formatDate } from "../../helper/FormatDate";

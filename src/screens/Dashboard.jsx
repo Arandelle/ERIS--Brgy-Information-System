@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import MapContent from "./Maps/MapContent";
 import { Spinner } from "../components/ReusableComponents/Skeleton";
 import ActivitiesList from "./Events/ActivitiesList";
-import population from "../assets/population.svg";
-import registered from "../assets/registered.svg";
-import Events from "../assets/events.svg";
-import emergency from "../assets/emergency.svg";
+import population from "../assets/images/population.svg";
+import registered from "../assets/images/registered.svg";
+import Events from "../assets/images/events.svg";
+import emergency from "../assets/images/emergency.svg";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../helper/DateToday"
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";

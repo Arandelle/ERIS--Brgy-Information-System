@@ -1,5 +1,5 @@
 import React from "react";
-import Maintenances from "../../assets/maintenance.svg"
+import Maintenances from "../../assets/images/maintenance.svg"
 
 const Maintenance = ({ title }) => {
   return (

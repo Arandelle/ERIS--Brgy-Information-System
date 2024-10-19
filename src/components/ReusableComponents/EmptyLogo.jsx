@@ -1,5 +1,5 @@
 import React from 'react'
-import emptyMessage from "../../assets/question.svg"
+import emptyMessage from "../../assets/images/question.svg"
 
 const EmptyLogo = ({ message }) => {
   return (
