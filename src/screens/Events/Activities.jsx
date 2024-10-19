@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import InputReusable from "../../components/ReusableComponents/InputReusable";
-import BtnReusable from "../../components/ReusableComponents/BtnReusable";
+import BtnReusable from "../../components/ReusableComponents/Button";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
 import {
   onValue,
@@ -26,6 +26,7 @@ import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import Toolbar from "../../components/ToolBar";
 import icons from "../../assets/icons/Icons";
 import IconButton from "../../components/ReusableComponents/IconButton";
+import ButtonStyle from "../../components/ReusableComponents/Button";
 
 const Activities = () => {
   const [activity, setActivity] = useState([]);
@@ -302,14 +303,13 @@ const Activities = () => {
           <Toolbar
             buttons={
               <>
-                <button
+                <ButtonStyle
+                  label="Add new"
+                  color="gray"
+                  icon={icons.addCircle}
+                  fontSize="small"
                   onClick={handleModal}
-                  className="inline-flex justify-between items-center text-nowrap text-blue-400 bg-white border border-blue-300 focus:outline-none hover:bg-blue-100 focus:ring-4 focus:ring-blue-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-blue-800 dark:text-blue-400 dark:border-blue-600 dark:hover:bg-blue-700 dark:hover:border-blue-600 dark:focus:ring-blue-700"
-                  type="button"
-                >
-                  <icons.addCircle fontSize="small" />
-                  Add new
-                </button>
+                />
               </>
             }
           />
@@ -359,16 +359,19 @@ const Activities = () => {
                   />
                   <div className="flex flex-row py-2">
                     <InputReusable type="file" onChange={handleImageChange} />
-                    <BtnReusable
-                      value={"Submit"}
-                      type={"add"}
-                      onClick={
-                        isEdit
-                          ? () => handleEditAnnouncement(selectedId)
-                          : handleAddAnnouncement
-                      }
-                      className={"w-60"}
-                    />
+                   <p className="flex items-center">
+                      <ButtonStyle
+                        label={"Submit"}
+                        color={"blue"}
+                        onClick={
+                          isEdit
+                            ? () => handleEditAnnouncement(selectedId)
+                            : handleAddAnnouncement
+                        }
+                        icon={icons.publish}
+                        fontSize={"small"}
+                      />
+                   </p>
                   </div>
                 </div>
               </div>

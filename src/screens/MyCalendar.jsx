@@ -5,13 +5,13 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import { Spinner } from "../components/ReusableComponents/Skeleton";
 import ContainerResizer from "../helper/ContainerResizer";
 import InputReusable from "../components/ReusableComponents/InputReusable";
-import BtnReusable from "../components/ReusableComponents/BtnReusable";
+import ButtonStyle from "../components/ReusableComponents/Button";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import QuestionModal from "../components/ReusableComponents/AskCard";
 import { toast } from "sonner";
 import { formatDate, formatTime} from "../helper/FormatDate";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
-import icons from "../assets/icons/Icons";
+import icons from "../assets/icons/Icons"
 
 
 function capitalizeFirstLetter(string) {
@@ -278,15 +278,19 @@ const MyCalendar = () => {
                         type="file"
                         onChange={handleImageChange}
                       />
-                      <BtnReusable
+                      <ButtonStyle
                         onClick={handleAddOrUpdateEvent}
-                        value={selectedEvent ? "Update Event" : "Add Event"}
-                        type={selectedEvent ? "edit" : "add"}
+                        label={selectedEvent ? "Update Event" : "Add Event"}
+                        color={selectedEvent ? "green" : "blue"}
+                        icon={selectedEvent ? icons.edit : icons.addCircle}
+                        fontSize={"small"}
                       />
-                      <BtnReusable
+                      <ButtonStyle
                         onClick={handleCloseAddEventModal}
-                        value="Cancel"
-                        type="cancel"
+                        label="Cancel"
+                        color="gray"
+                        fontSize={"small"}
+                        icon={icons.close}
                       />
                     </div>
                   </div>
@@ -328,9 +332,11 @@ const MyCalendar = () => {
                             <p className="text-gray-700 dark:text-gray-200">
                               Details: {activity.details}
                             </p>
-                            <BtnReusable
-                              value={"Delete"}
-                              type="delete"
+                            <ButtonStyle
+                              label={"Delete"}
+                              color={"red"}
+                              fontSize={"small"}
+                              icon={icons.delete}
                               onClick={() => toggleDeleteModal(activity.id)}
                             />
                           </div>
@@ -340,9 +346,11 @@ const MyCalendar = () => {
                   </div>
                   {events.length > 1 ? (
                     <div className="flex justify-end">
-                      <BtnReusable
-                        value="See more events "
-                        link={"/events/event"}
+                      <ButtonStyle
+                       icon={icons.view}
+                        color={"blue"}
+                        fontSize={"small"}
+                        label="See more events "
                       />
                     </div>
                   ) : (
@@ -363,7 +371,7 @@ const MyCalendar = () => {
                     className="absolute p-2 top-0 right-0"
                     onClick={handleCloseDetailModal}
                   >
-                    <CloseIcon style={{ fontSize: "large" }} />
+                    <icons.close style={{ fontSize: "large" }} />
                   </button>
                   <div className="flex flex-col space-y-2">
                     <p><strong>Title:</strong> {selectedEvent?.title}</p>
@@ -375,17 +383,21 @@ const MyCalendar = () => {
                     <img src={selectedEvent?.image} alt="Event" className="rounded-lg" />
                     
                     <div className="flex space-x-2">
-                      <BtnReusable
-                        value="Edit Event"
+                      <ButtonStyle
+                        label="Edit Event"
+                        icon={icons.edit}
+                        color={"green"}
+                        fontSize={"small"}
                         onClick={() => {
                           handleAddEventModal(selectedEvent);
                         }}
-                        type="edit"
                       />
-                      <BtnReusable
-                        value="Delete Event"
+                      <ButtonStyle
+                       icon={icons.delete}
+                       fontSize={"small"}
+                        label={"Delete Event"}
+                        color={"red"}
                         onClick={() => toggleDeleteModal(selectedEvent.id)}
-                        type="delete"
                       />
                     </div>
                   </div>
