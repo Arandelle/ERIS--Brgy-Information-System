@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import { toast } from "sonner";
+import icons from "../../../assets/icons/Icons";
 
 const ActionButton = ({
   selectedUsers,
@@ -81,7 +80,7 @@ const ActionButton = ({
       >
         <span className="sr-only">Action button</span>
         Action
-        <ArrowDropDown style={{ fontSize: "large" }} />
+        <icons.arrowDropDown style={{ fontSize: "large" }} />
       </button>
       {/* Dropdown menu */}
       {isActionOpen && (

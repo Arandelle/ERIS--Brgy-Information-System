@@ -9,9 +9,9 @@ import Events from "../assets/images/events.svg";
 import emergency from "../assets/images/emergency.svg";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../helper/DateToday"
-import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import { useFetchData } from "../hooks/useFetchData";
 import fetchEmergency from "../hooks/fetchEmergency";
+import icons from "../assets/icons/Icons";
 
 const DashboardCard = ({ title, value, img, onClick }) => {
 
@@ -99,7 +99,7 @@ const Dashboard = () => {
                 </div>
                 <div className="order-2 md:order-2 col-span-1">
                   <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-6 mb-2 shadow-md rounded-md dark:bg-gray-800">
-                    <ThunderstormIcon style={{ color: "#FF5733" }} />
+                    <icons.thunder style={{ color: "#FF5733" }} />
                     <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md">
                       26.5°C Bagtas Tanza, Cavite
                       <span className="font-thin text-sm text-gray-600 dark:text-gray-200">

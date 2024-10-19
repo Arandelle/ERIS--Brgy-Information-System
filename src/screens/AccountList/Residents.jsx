@@ -7,9 +7,8 @@ import TableBody from "./TableBody";
 import AddUserModal from "../AccountList/buttons/AddUserModal";
 import { toast } from "sonner";
 import { handleImportFile, handleExport } from "../../helper/utils";
-import MaleIcon from "@mui/icons-material/Male";
-import FemaleIcon from "@mui/icons-material/Female";
 import EmptyLogo from "../../components/ReusableComponents/EmptyLogo";
+import icons from "../../assets/icons/Icons";
 
 const ResidentsList = ({ label, data }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -184,9 +183,9 @@ const ResidentsList = ({ label, data }) => {
                                   : "fullname"}
                               </p>
                               {userToViewInfo.gender === "male" ? (
-                                <MaleIcon className="text-gray-500" />
+                                <icons.male className="text-gray-500" />
                               ) : (
-                                <FemaleIcon className="text-gray-500" />
+                                <icons.female className="text-gray-500" />
                               )}
                             </p>
                             <div className="text-center text-gray-500 flex flex-row justify-evenly">

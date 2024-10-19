@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSidebarData } from "../data/useSidebarData";
-import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import SearchInput from "./Header/SearchInput";
+import icons from "../assets/icons/Icons";
 
 function Sidebar({ isOpen, toggleSidebar }) {
   const [openSubMenu, setOpenSubMenu] = useState(null);
@@ -55,7 +55,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
                 <div className="mr-2">{val.icon}</div>
                 <div className="flex-grow ml-3 text-wrap">{val.title}</div>
                 {val.items && (
-                  <ArrowDropDown
+                  <icons.arrowDropDown
                     className={`transition-transform ${
                       openSubMenu === val.title ? "rotate-180" : "rotate-0"
                     }`}

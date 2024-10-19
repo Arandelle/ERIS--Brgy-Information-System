@@ -12,14 +12,11 @@ import {
   deleteObject
 } from "firebase/storage";
 import Table from "../../components/Table";
-import CloseIcon from "@mui/icons-material/Close";
 import { formatDateWithTime } from "../../helper/FormatDate";
 import { getTimeDifference } from "../../helper/TimeDiff";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import EditIcon from '@mui/icons-material/Edit';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import Toolbar from "../../components/ToolBar";
+import icons from "../../assets/icons/Icons";
 
 const Activities = () => {
   const [activity, setActivity] = useState([]);
@@ -237,9 +234,9 @@ const Activities = () => {
 </td>
         <td>
           <div className="flex flex-row items-center justify-evenly">
-           <p className="bg-red-100 p-1 rounded-full hover:bg-red-200"> <DeleteForeverIcon className="cursor-pointer text-red-500 hover:text-red-600" onClick={()=>handleDelete(announcement.id)}  /></p>
+           <p className="bg-red-100 p-1 rounded-full hover:bg-red-200"> <icons.delete className="cursor-pointer text-red-500 hover:text-red-600" onClick={()=>handleDelete(announcement.id)}  /></p>
             <p className="bg-green-100 p-1 rounded-full hover:bg-green-200">
-              <EditIcon className="cursor-pointer text-green-500 hover:text-green-600" onClick={()=>{
+              <icons.edit className="cursor-pointer text-green-500 hover:text-green-600" onClick={()=>{
                 setModal(true);
                 setTitle(announcement.title)
                 setDescription(announcement.description);
@@ -248,7 +245,7 @@ const Activities = () => {
                 setSelectedId(announcement.id);
               }}  />
             </p>
-          <p className="bg-blue-100 p-1 rounded-full hover:bg-blue-200">  <VisibilityIcon className="cursor-pointer text-blue-500 hover:text-blue-600"/></p>
+          <p className="bg-blue-100 p-1 rounded-full hover:bg-blue-200">  <icons.view className="cursor-pointer text-blue-500 hover:text-blue-600"/></p>
           </div>
         </td>
       </>
@@ -288,7 +285,7 @@ const Activities = () => {
                   className="absolute p-2 top-0 right-0"
                   onClick={handleModal}
                 >
-                  <CloseIcon style={{ fontSize: "large"}} />
+                  <icons.close style={{ fontSize: "large"}} />
                 </button>
                 <div className="w-full flex flex-col">
                   <div className="flex flex-row space-x-3 py-2">

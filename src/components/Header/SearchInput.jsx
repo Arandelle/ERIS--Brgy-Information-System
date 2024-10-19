@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AllData } from "../../data/AllData";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Question from "../../assets/images/question.svg";
 import EmptyLogo from "../ReusableComponents/EmptyLogo";
+import icons from "../../assets/icons/Icons";
 
 const SearchInput = ({ isOpen, className }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -124,7 +124,7 @@ const SearchInput = ({ isOpen, className }) => {
                   <div className="flex justify-between items-center">
                     {item.title}
                     <span>
-                      <ArrowRightIcon />
+                      <icons.arrowRight />
                     </span>
                   </div>
                 </p>

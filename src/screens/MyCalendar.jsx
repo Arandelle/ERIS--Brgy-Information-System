@@ -8,10 +8,10 @@ import InputReusable from "../components/ReusableComponents/InputReusable";
 import BtnReusable from "../components/ReusableComponents/BtnReusable";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import QuestionModal from "../components/ReusableComponents/AskCard";
-import CloseIcon from '@mui/icons-material/Close';
 import { toast } from "sonner";
 import { formatDate, formatTime} from "../helper/FormatDate";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
+import icons from "../assets/icons/Icons";
 
 
 function capitalizeFirstLetter(string) {
@@ -226,7 +226,7 @@ const MyCalendar = () => {
                     className="absolute p-2 top-0 right-0"
                     onClick={handleCloseAddEventModal}
                   >
-                    <CloseIcon style={{fontSize: "large"}}/>
+                    <icons.close style={{fontSize: "large"}}/>
                   </button>
                   <div className="flex flex-col justify-between space-y-2">
                     <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -1,6 +1,5 @@
 import React from "react";
-import FilterAltIcon from "@mui/icons-material/FilterAltOutlined";
-import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
+import icons from "../../../assets/icons/Icons";
 
 const FilterButton = ({ toggleFilter, isFiltered }) => {
   return (
@@ -16,9 +15,9 @@ const FilterButton = ({ toggleFilter, isFiltered }) => {
         type="button"
       >
         {isFiltered ? (
-          <FilterAltIcon style={{ fontSize: "large" }} />
+          <icons.filter style={{ fontSize: "large" }} />
         ) : (
-          <FilterAltOffIcon style={{ fontSize: "large" }} />
+          <icons.filterOff style={{ fontSize: "large" }} />
         )}
         <span>Filter</span>
       </button>
