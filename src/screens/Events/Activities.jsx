@@ -3,13 +3,21 @@ import { toast } from "sonner";
 import InputReusable from "../../components/ReusableComponents/InputReusable";
 import BtnReusable from "../../components/ReusableComponents/BtnReusable";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
-import { onValue, push, ref, remove, serverTimestamp, get, update } from "firebase/database";
+import {
+  onValue,
+  push,
+  ref,
+  remove,
+  serverTimestamp,
+  get,
+  update,
+} from "firebase/database";
 import { database, storage } from "../../services/firebaseConfig";
 import {
   getDownloadURL,
   ref as storageRef,
   uploadBytes,
-  deleteObject
+  deleteObject,
 } from "firebase/storage";
 import Table from "../../components/Table";
 import { formatDateWithTime } from "../../helper/FormatDate";
@@ -17,12 +25,13 @@ import { getTimeDifference } from "../../helper/TimeDiff";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import Toolbar from "../../components/ToolBar";
 import icons from "../../assets/icons/Icons";
+import IconButton from "../../components/ReusableComponents/IconButton";
 
 const Activities = () => {
   const [activity, setActivity] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("")
+  const [date, setDate] = useState("");
   const [image, setImage] = useState("");
   const [modal, setModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -49,14 +58,13 @@ const Activities = () => {
   const handleModal = (isEditMode = false) => {
     setModal(!modal);
 
-    if(!isEditMode){
+    if (!isEditMode) {
       setTitle("");
-    setDescription("");
-    setImage("");
-    setIsEdit(false); // Indicating that we are adding a new announcement
-    setSelectedId(""); // Clear any selected id
+      setDescription("");
+      setImage("");
+      setIsEdit(false); // Indicating that we are adding a new announcement
+      setSelectedId(""); // Clear any selected id
     }
-
   };
 
   const handleImageChange = (e) => {
@@ -112,37 +120,43 @@ const Activities = () => {
 
     setTitle("");
     setDescription("");
-    setDate("")
+    setDate("");
     setImage("");
-    setModal(false)
+    setModal(false);
   };
 
-  const headerData = ["File","Title", "Date", "Description", "Last Post/Edit", "Action",];
-
+  const headerData = [
+    "File",
+    "Title",
+    "Date",
+    "Description",
+    "Last Post/Edit",
+    "Action",
+  ];
 
   const handleDelete = async (id) => {
     // Reference to the announcement in the Realtime Database
     const announcementRef = ref(database, `announcement/${id}`);
-    
+
     try {
       if (id) {
         // First, fetch the announcement data to get the image path
         const snapshot = await get(announcementRef);
         if (snapshot.exists()) {
           const announcementData = snapshot.val();
-          
+
           // Assuming the image path is stored under announcementData.imageUrl
           const imagePath = announcementData.imageUrl;
-  
+
           // Remove the announcement from Realtime Database
           await remove(announcementRef);
-  
+
           // If there is an image associated with the announcement, remove it from Firebase Storage
           if (imagePath) {
             const imageRef = storageRef(storage, imagePath); // Reference to the image in Firebase Storage
             await deleteObject(imageRef); // Delete the image from Firebase Storage
           }
-  
+
           toast.success("Announcement and image successfully removed");
         }
       }
@@ -151,101 +165,130 @@ const Activities = () => {
     }
   };
 
+  const handleEditClick = (announcement) => {
+    setModal(true);
+    setTitle(announcement.title);
+    setDescription(announcement.description);
+    setImage("");
+    setIsEdit(true);
+    setSelectedId(announcement.id);
+  };
+
   const handleEditAnnouncement = async (id) => {
-    if(!title || !description){
-      toast.info("Please complete the form")
+    if (!title || !description) {
+      toast.info("Please complete the form");
       return;
     }
 
     const announcementRef = ref(database, `announcement/${id}`);
 
-    try{
+    try {
       // Fetch  existing announcement data
-     const snapshot = await get(announcementRef);
+      const snapshot = await get(announcementRef);
 
-     if(snapshot.exists()){
-      const announcementData = snapshot.val();
-     let imageUrl = announcementData.imageUrl; // retain the existing image url
-      
-     //check if new image is selected
-     if(image){
-      const imageFile = image;
-      const imageRef = storageRef(storage, `announcement-images/${imageFile.name}`);
+      if (snapshot.exists()) {
+        const announcementData = snapshot.val();
+        let imageUrl = announcementData.imageUrl; // retain the existing image url
 
-      //upload the new image
-      try{
-        await uploadBytes(imageRef, imageFile);
-        imageUrl = await getDownloadURL(imageRef);
+        //check if new image is selected
+        if (image) {
+          const imageFile = image;
+          const imageRef = storageRef(
+            storage,
+            `announcement-images/${imageFile.name}`
+          );
 
-        if(announcementData.imageUrl){
-          const oldImageRef = storageRef(storage, announcementData.imageUrl);
-          await deleteObject(oldImageRef)
+          //upload the new image
+          try {
+            await uploadBytes(imageRef, imageFile);
+            imageUrl = await getDownloadURL(imageRef);
+
+            if (announcementData.imageUrl) {
+              const oldImageRef = storageRef(
+                storage,
+                announcementData.imageUrl
+              );
+              await deleteObject(oldImageRef);
+            }
+          } catch (error) {
+            toast.error(`Error uploading new image: ${error}`);
+            return;
+          }
         }
 
-      }catch(error){
-        toast.error(`Error uploading new image: ${error}`);
-        return;
+        const updatedAnnouncement = {
+          title,
+          description,
+          imageUrl,
+          isEdited: true,
+          timestamp: serverTimestamp(),
+        };
+
+        await update(announcementRef, updatedAnnouncement);
+
+        toast.success("Announcement update successfully");
+
+        setTitle("");
+        setDescription("");
+        setImage("");
+        setModal(false);
+      } else {
+        toast.error("Announcement not found");
       }
-     }
-
-     const updatedAnnouncement = {
-      title,
-      description,
-      imageUrl,
-      isEdited: true,
-      timestamp: serverTimestamp()
-     }
-
-     await update(announcementRef, updatedAnnouncement);
-
-     toast.success("Announcement update successfully");
-
-     setTitle("");
-     setDescription("");
-     setImage("");
-     setModal(false);
-     }else{
-      toast.error("Announcement not found")
-     }
-    }catch(error){
+    } catch (error) {
       toast.error(`Error: ${error}`);
-      console.error("Error", error)
+      console.error("Error", error);
     }
-  }
-  
+  };
 
   const renderRow = (announcement) => {
     return (
       <>
-       <td className="px-6 py-4">
+        <td className="px-6 py-4">
           <img
             src={announcement.imageUrl}
             alt="image"
             className="h-12 w-12 rounded-full"
           />
         </td>
-        <td className="px-6 py-4 max-w-32 whitespace-nowrap overflow-hidden text-ellipsis">{announcement.title}</td>
-        <td className="px-6 py-4 max-w-32 whitespace-nowrap overflow-hidden text-ellipsis">{formatDateWithTime(announcement.date)}</td>
+        <td className="px-6 py-4 max-w-32 whitespace-nowrap overflow-hidden text-ellipsis">
+          {announcement.title}
+        </td>
+        <td className="px-6 py-4 max-w-32 whitespace-nowrap overflow-hidden text-ellipsis">
+          {formatDateWithTime(announcement.date)}
+        </td>
         <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
-  {announcement.description}
-</td>
- <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">  
- {getTimeDifference(announcement.timestamp)}
-</td>
+          {announcement.description}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
+          {getTimeDifference(announcement.timestamp)}
+        </td>
         <td>
-          <div className="flex flex-row items-center justify-evenly">
-           <p className="bg-red-100 p-1 rounded-full hover:bg-red-200"> <icons.delete className="cursor-pointer text-red-500 hover:text-red-600" onClick={()=>handleDelete(announcement.id)}  /></p>
-            <p className="bg-green-100 p-1 rounded-full hover:bg-green-200">
-              <icons.edit className="cursor-pointer text-green-500 hover:text-green-600" onClick={()=>{
-                setModal(true);
-                setTitle(announcement.title)
-                setDescription(announcement.description);
-                setImage("") // clear the image field
-                setIsEdit(true);
-                setSelectedId(announcement.id);
-              }}  />
-            </p>
-          <p className="bg-blue-100 p-1 rounded-full hover:bg-blue-200">  <icons.view className="cursor-pointer text-blue-500 hover:text-blue-600"/></p>
+          <div className="flex px-2 space-x-2 flex-row items-center justify-evenly">
+            <IconButton
+              icon={icons.delete}
+              color={"red"}
+              bgColor={"bg-red-100"}
+              onClick={() => handleDelete(announcement.id)}
+              tooltip={"Delete"}
+              fontSize={"small"}
+            />
+            <IconButton
+              icon={icons.edit}
+              color={"green"}
+              bgColor={"bg-green-100"}
+              onClick={() => handleEditClick(announcement)}
+              tooltip={"Edit"}
+              fontSize={"small"}
+            />
+            <IconButton
+              icon={icons.view}
+              color={"blue"}
+              bgColor={"bg-blue-100"}
+              onClick={() => toast.info("This is view")}
+              tooltip={"View"}
+              fontSize={"small"}
+            />
           </div>
         </td>
       </>
@@ -255,15 +298,21 @@ const Activities = () => {
   return (
     <HeadSide
       child={
-        <div className="m-3">
-          <div className="pb-3">
-            <BtnReusable
-              value={"Add announcement"}
-              type="add"
-              onClick={handleModal}
-            />
-          </div>
-          <Toolbar />
+        <>
+          <Toolbar
+            buttons={
+              <>
+                <button
+                  onClick={handleModal}
+                  className="inline-flex justify-between items-center text-nowrap text-blue-400 bg-white border border-blue-300 focus:outline-none hover:bg-blue-100 focus:ring-4 focus:ring-blue-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-blue-800 dark:text-blue-400 dark:border-blue-600 dark:hover:bg-blue-700 dark:hover:border-blue-600 dark:focus:ring-blue-700"
+                  type="button"
+                >
+                  <icons.addCircle fontSize="small" />
+                  Add new
+                </button>
+              </>
+            }
+          />
           <Table
             headers={headerData}
             data={activity}
@@ -285,42 +334,47 @@ const Activities = () => {
                   className="absolute p-2 top-0 right-0"
                   onClick={handleModal}
                 >
-                  <icons.close style={{ fontSize: "large"}} />
+                  <icons.close style={{ fontSize: "large" }} />
                 </button>
                 <div className="w-full flex flex-col">
                   <div className="flex flex-row space-x-3 py-2">
-                      <InputReusable
-                        type="text"
-                        placeholder="Title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        onBlur={() => setTitle(title.toUpperCase())}
-                        className={"w-full"}
-                      />
+                    <InputReusable
+                      type="text"
+                      placeholder="Title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      onBlur={() => setTitle(title.toUpperCase())}
+                      className={"w-full"}
+                    />
                   </div>
                   <textarea
-                        className={`border-gray-300 rounded-md  dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600
+                    className={`border-gray-300 rounded-md  dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600
             }`}
-                        value={description}
-                        placeholder="Description"
-                        onChange={(e) => setDescription(e.target.value)}
-                        onBlur={() => setDescription(capitalizeFirstLetter(description))}
-                      />
-                    <div className="flex flex-row py-2">
-                        <InputReusable type="file" onChange={handleImageChange} />
-                        <BtnReusable
-                          value={"Submit"}
-                          type={"add"}
-                          onClick={isEdit ? ()=> handleEditAnnouncement(selectedId) : 
-                          handleAddAnnouncement}
-                          className={"w-60"}
-                        />
-                    </div>
+                    value={description}
+                    placeholder="Description"
+                    onChange={(e) => setDescription(e.target.value)}
+                    onBlur={() =>
+                      setDescription(capitalizeFirstLetter(description))
+                    }
+                  />
+                  <div className="flex flex-row py-2">
+                    <InputReusable type="file" onChange={handleImageChange} />
+                    <BtnReusable
+                      value={"Submit"}
+                      type={"add"}
+                      onClick={
+                        isEdit
+                          ? () => handleEditAnnouncement(selectedId)
+                          : handleAddAnnouncement
+                      }
+                      className={"w-60"}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           )}
-        </div>
+        </>
       }
     />
   );

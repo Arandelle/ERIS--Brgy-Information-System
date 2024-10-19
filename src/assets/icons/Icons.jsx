@@ -15,6 +15,7 @@ import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import DownloadIcon from "@mui/icons-material/Download";
 import PublishIcon from "@mui/icons-material/Publish";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const icons = {
     arrowRight: ArrowRightIcon,
@@ -32,7 +33,8 @@ const icons = {
     moreVert: MoreVert,
     thunder: ThunderstormIcon,
     download: DownloadIcon,
-    publish: PublishIcon
+    publish: PublishIcon,
+    addCircle: AddCircleOutlineIcon
 }
 
 export default icons;
