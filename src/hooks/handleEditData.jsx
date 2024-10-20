@@ -3,7 +3,7 @@ import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "fi
 import { ref, serverTimestamp, update, get} from "firebase/database";
 import { toast } from "sonner";
 
-const handleEditData = async (id, type, data) => {
+const handleEditData = async (id,data, type) => {
     const {title, description, image, date, location, startDate, endDate, organizer} = data
 
     if(type === "announcement"){
