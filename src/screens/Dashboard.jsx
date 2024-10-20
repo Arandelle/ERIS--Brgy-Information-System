@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapContent from "./Maps/MapContent";
 import { Spinner } from "../components/ReusableComponents/Skeleton";
-import ActivitiesList from "./Events/ActivitiesList";
 import population from "../assets/images/population.svg";
 import registered from "../assets/images/registered.svg";
 import Events from "../assets/images/events.svg";
@@ -107,7 +106,6 @@ const Dashboard = () => {
                       </span>
                     </div>
                   </div>
-                  <ActivitiesList activity={activity} setActivity={setActivity} isFullscreen={false} />
                 </div>
               </>          
           </div>
