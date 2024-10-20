@@ -14,6 +14,7 @@ import handleAddData from "../../hooks/handleAddData";
 import handleDeleteData from "../../hooks/handleDeleteData";
 import handleEditData from "../../hooks/handleEditData";
 import AnnouncementModal from "./AnnouncementModal";
+import QuestionModal from "../../components/ReusableComponents/AskCard"
 
 const Activities = () => {
   const { activity } = useFetchActivity("announcement");
@@ -24,6 +25,7 @@ const Activities = () => {
   const [modal, setModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedId, setSelectedId] = useState("");
+  const [isDelete, setIsDelete] = useState(false)
 
   const headerData = [
     "File",
@@ -89,6 +91,11 @@ const Activities = () => {
     setModal(false);
   };
 
+  const handleDeleteClick = (id) => {
+    setSelectedId(id)
+    setIsDelete(!isDelete)
+  } 
+
   const renderRow = (announcement) => {
     return (
       <>
@@ -117,7 +124,7 @@ const Activities = () => {
               icon={icons.delete}
               color={"red"}
               bgColor={"bg-red-100"}
-              onClick={() => handleDeleteData(announcement.id, "announcement")}
+              onClick={() => handleDeleteClick(announcement.id)}
               tooltip={"Delete"}
               fontSize={"small"}
             />
@@ -183,6 +190,23 @@ const Activities = () => {
               }}
             />
           )}
+          {isDelete && (
+              <QuestionModal
+              toggleModal={() => setIsDelete(!isDelete)}
+                question={
+                  <span>
+                    Do you want to delete
+                    <span className="text-primary-500 text-bold">
+                      {" "}
+                      {activity.find((item) => item.id === selectedId)?.title}
+                    </span>{" "}
+                    ?{" "}
+                  </span>
+                }
+                yesText={"Delete"}
+                onConfirm={() => {handleDeleteData(selectedId, "announcement"); setIsDelete(!isDelete)}}
+              />
+            )}
         </>
       }
     />
