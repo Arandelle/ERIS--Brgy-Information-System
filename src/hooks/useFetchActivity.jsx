@@ -24,7 +24,7 @@ const useFetchActivity = (datatype) => {
       }, []);
     
 
-  return {activity}
+  return {activity, setActivity}
 }
 
 export default useFetchActivity

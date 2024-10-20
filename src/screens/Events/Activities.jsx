@@ -17,7 +17,7 @@ import AnnouncementModal from "./AnnouncementModal";
 import QuestionModal from "../../components/ReusableComponents/AskCard"
 
 const Activities = () => {
-  const { activity } = useFetchActivity("announcement");
+  const { activity, setActivity } = useFetchActivity("announcement");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
@@ -95,6 +95,24 @@ const Activities = () => {
     setSelectedId(id)
     setIsDelete(!isDelete)
   } 
+
+  const handleConfirmDelete = async () => {
+    const itemToDelete = activity.find((item) => item.id === selectedId);
+    
+    // Optimistically remove the item from local state
+    setActivity(prevActivity => 
+      prevActivity.filter(item => item.id !== selectedId)
+    );
+    
+    try {
+      await handleDeleteData(selectedId, "announcement");
+    } catch (error) {
+      // If deletion fails, restore the item to the list
+      setActivity(prevActivity => [...prevActivity, itemToDelete]);
+      toast.error("Failed to delete item");
+    }
+    setIsDelete(false);
+  };
 
   const renderRow = (announcement) => {
     return (
@@ -204,7 +222,7 @@ const Activities = () => {
                   </span>
                 }
                 yesText={"Delete"}
-                onConfirm={() => {handleDeleteData(selectedId, "announcement"); setIsDelete(!isDelete)}}
+                onConfirm={handleConfirmDelete}
               />
             )}
         </>
