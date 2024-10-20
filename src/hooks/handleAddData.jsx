@@ -14,7 +14,7 @@ const handleAddData = async (data ,type) => {
           }
     } else{
         if (!location || !startDate || !endDate || !organizer) {
-            toast.info("Please complete the form");
+            toast.info(`Please complete the form for ${type}`);
             return;
           }
     }
@@ -43,7 +43,7 @@ const handleAddData = async (data ,type) => {
         timestamp: serverTimestamp()
       }
 
-      if(type === "event"){
+      if(type === "events"){
         newData.location = location,
         newData.startDate = startDate,
         newData.endDate = endDate,

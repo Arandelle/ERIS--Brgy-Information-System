@@ -12,11 +12,12 @@ import { toast } from "sonner";
 import { formatDate, formatTime} from "../helper/FormatDate";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 import icons from "../assets/icons/Icons"
+import {capitalizeFirstLetter} from "../helper/CapitalizeFirstLetter"
+import useFetchActivity from "../hooks/useFetchActivity"
+import handleAddData from "../hooks/handleAddData"
+import handleEditData from "../hooks/handleEditData";
+import handleDeleteData from "../hooks/handleDeleteData";
 
-
-function capitalizeFirstLetter(string) {
-  return string.replace(/\b\w/, (char) => char.toUpperCase());
-}
 const CustomToolbar = ({label, onNavigate, onView, handleAddEventModal}) => {
 
   return (
@@ -38,6 +39,7 @@ const CustomToolbar = ({label, onNavigate, onView, handleAddEventModal}) => {
 };
 const MyCalendar = () => {
   const localizer = momentLocalizer(moment);
+  const {activity, setActivity} = useFetchActivity("events")
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -53,6 +55,16 @@ const MyCalendar = () => {
   const [addEventModal, setAddEventModal] = useState(false);
   const [eventDetailModal, setEventDetailModal] = useState(false);
 
+  const events = activity.map(event => ({
+    id: event.id,
+    title: event.title,
+    start: new Date(event.startDate),
+    end: new Date(event.endDate),
+    location: event.location,
+    organizer: event.organizer,
+    details: event.description,
+    image: event.image
+  }));
 
   const handleAddEventModal = (event) => {
     if (event) {
@@ -77,31 +89,6 @@ const MyCalendar = () => {
     setAddEventModal(true);
     setEventDetailModal(false);
   };
-  
-  
-  const [events, setEvents] = useState(() => {
-    const storedEvents = localStorage.getItem("events");
-    return storedEvents
-      ? JSON.parse(storedEvents, (key, value) => {
-          if (key === "start" || key === "end") {
-            return new Date(value);
-          }
-          return value;
-        })
-      : [];
-  });
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, []);
-
- events.sort((a,b) => new Date(a.start) - new Date(b.start));
-
-  useEffect(() => {
-    localStorage.setItem("events", JSON.stringify(events));
-  }, [events]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -126,11 +113,7 @@ const MyCalendar = () => {
     setSelectedEvent(null);
   };
 
-  const handleAddOrUpdateEvent = () => {
-    if (!title || !startDate || !endDate || !location || !organizer || !image || !details) {
-      toast.warning("Please fill all the fields");
-      return;
-    }
+  const handleAddOrUpdateEvent = async () => {
     
     if (new Date(startDate) > new Date(endDate) || new Date(startDate) < new Date().setHours(0,0,0,0)) {
       toast.warning("Start date must be before the end date");
@@ -140,22 +123,18 @@ const MyCalendar = () => {
     const eventData = {
       id: selectedEvent ? selectedEvent.id : Date.now(),
       title,
-      start: new Date(startDate),
-      end: new Date(endDate),
+      startDate: new Date(startDate).toISOString(),
+      endDate: new Date(endDate).toISOString(),
       location,
       organizer,
       image,
-      details,
+      description: details,
     };
 
     if (selectedEvent) {
-      setEvents(prevEvents =>
-        prevEvents.map(event => event.id === selectedEvent.id ? eventData : event)
-      );
-      toast.success("Event updated successfully");
+      await handleEditData(selectedEvent.id, eventData, "events")
     } else {
-      setEvents(prevEvents => [...prevEvents, eventData]);
-      toast.success("Event added successfully");
+    await  handleAddData(eventData, "events")
     }
 
     handleCloseAddEventModal();
@@ -166,25 +145,34 @@ const MyCalendar = () => {
     setShowDeleteModal(!showDeleteModal);
   };
 
-  const handleDeleteEvent = (id) => {
-    const updatedEventsArray = events.filter((event) => event.id !== id);
-    localStorage.setItem("events", JSON.stringify(updatedEventsArray));
-    setEvents(updatedEventsArray);
-    toast.error("Event deleted");
-    setShowDeleteModal(false);
+  const handleDeleteEvent = async () => {
+    const itemToDelete = activity.find((item) => item.id === eventsToDelete);
+    setActivity(prevAct => prevAct.filter(item => item.id !== eventsToDelete));
+    try{
+      await handleDeleteData(eventsToDelete, "events");
+    }catch(error){
+      setActivity(prevActivity => [...prevActivity, itemToDelete]);
+      console.error("Error deleting an item: ", error)
+    }
+    setShowDeleteModal(!showDeleteModal)
   };
 
   const CustomAgendaEvent = ({ event }) => (
     <div className="flex flex-row items-center space-x-2">
-     <img alt="not available" src={event.image} className="h-12 w-12 rounded-full" />
-     <div>
-        <p className="text-sm">{event.title}</p>
+      {event.image && (
+        <img 
+          alt="Event" 
+          src={event.image} 
+          className="h-12 w-12 rounded-full object-cover"
+        />
+      )}
+      <div>
+        <p className="text-sm font-semibold">{event.title}</p>
         <p className="text-sm">{formatTime(event.start)} - {formatTime(event.end)}</p>
-        <p className="text-sm">{event.details}</p>
-     </div>
+        <p className="text-xs text-gray-600">{event.details}</p>
+      </div>
     </div>
   );
-
   return (
     <HeadSide
       child={
@@ -204,9 +192,9 @@ const MyCalendar = () => {
                   components={{
                     toolbar: (toolbarProps) => <CustomToolbar {...toolbarProps} handleAddEventModal={handleAddEventModal} />,
                     agenda: {
-                      event: CustomAgendaEvent,
+                      activity: CustomAgendaEvent,
                     },
-                    event: CustomAgendaEvent,
+                    activity: CustomAgendaEvent,
                   }}
                   onSelectEvent={handleSelectEvent}
                 />
@@ -311,10 +299,10 @@ const MyCalendar = () => {
                       <div className="flex items-center justify-center py-3">
                         <Spinner setLoading={setLoading} />
                       </div>
-                    ) : events.length === 0 ? (
-                    <EmptyLogo message={"No events yet"} />
+                    ) : activity.length === 0 ? (
+                    <EmptyLogo message={"No activity yet"} />
                     ) : (
-                      events.map((activity) => (
+                      activity.map((activity) => (
                         <div
                           key={activity.id}
                           className="mb-3 border-b pb-4 border-b-gray-500 dark:border-b-gray-200"
@@ -330,7 +318,7 @@ const MyCalendar = () => {
                               Organizer: {activity.organizer}
                             </p>
                             <p className="text-gray-700 dark:text-gray-200">
-                              Details: {activity.details}
+                              Details: {activity.description}
                             </p>
                             <ButtonStyle
                               label={"Delete"}
@@ -344,7 +332,7 @@ const MyCalendar = () => {
                       ))
                     ).slice(0,2)}
                   </div>
-                  {events.length > 1 ? (
+                  {activity.length > 1 ? (
                     <div className="flex justify-end">
                       <ButtonStyle
                        icon={icons.view}
@@ -416,7 +404,7 @@ const MyCalendar = () => {
                     Do you want to delete
                     <span className="text-primary-500 text-bold">
                       {" "}
-                      {events.find((item) => item.id === eventsToDelete)?.title}
+                      {activity.find((item) => item.id === eventsToDelete)?.title}
                     </span>{" "}
                     ?{" "}
                   </span>
