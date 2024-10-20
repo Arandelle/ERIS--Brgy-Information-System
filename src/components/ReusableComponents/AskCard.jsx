@@ -1,4 +1,6 @@
 import React from "react";
+import icons from "../../assets/icons/Icons";
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const AskCard = ({ toggleModal, question, yesText,onConfirm }) => {
   return (
@@ -15,21 +17,7 @@ const AskCard = ({ toggleModal, question, yesText,onConfirm }) => {
             className="absolute top-1 right-1 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-7 h-7 md:w-8 md:h-8 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white"
             data-modal-hide="popup-modal"
           >
-            <svg
-              className="w-2 h-2 md:w-3 md:h-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
-            </svg>
+            <icons.close fontSize="small" />
             <span className="sr-only">Close modal</span>
           </button>
           <div className="p-3 md:p-5 text-center">

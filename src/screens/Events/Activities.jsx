@@ -327,28 +327,30 @@ const Activities = () => {
                 onClick={handleModal}
               ></div>
               <div className="relative p-5 bg-white rounded-md shadow-md">
-                <h2 className="py-2 px-2 text-primary-500 border-2 mb-5">
-                  Add new announcement
-                </h2>
                 <button
-                  className="absolute p-2 top-0 right-0"
+                  type="button"
                   onClick={handleModal}
+                  className="absolute top-1 right-1 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-7 h-7 md:w-8 md:h-8 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white"
+                  data-modal-hide="popup-modal"
                 >
-                  <icons.close style={{ fontSize: "large" }} />
+                  <icons.close fontSize="small" />
+                  <span className="sr-only">Close modal</span>
                 </button>
-                <div className="w-full flex flex-col">
-                  <div className="flex flex-row space-x-3 py-2">
-                    <InputReusable
-                      type="text"
-                      placeholder="Title"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      onBlur={() => setTitle(title.toUpperCase())}
-                      className={"w-full"}
-                    />
-                  </div>
+
+                <div className="w-full flex flex-col pt-4 space-y-2">
+                  <h3 className=" text-gray-600 text-center pb-2">
+                    Add new announcement
+                  </h3>
+                  <InputReusable
+                    type="text"
+                    placeholder="Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    onBlur={() => setTitle(capitalizeFirstLetter(title))}
+                    className={"w-full"}
+                  />
                   <textarea
-                    className={`border-gray-300 rounded-md  dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600
+                    className={`border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:ring-gray-400 focus:border-gray-400 dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600
             }`}
                     value={description}
                     placeholder="Description"
@@ -359,7 +361,7 @@ const Activities = () => {
                   />
                   <div className="flex flex-row py-2">
                     <InputReusable type="file" onChange={handleImageChange} />
-                   <p className="flex items-center">
+                    <p className="flex items-center">
                       <ButtonStyle
                         label={"Submit"}
                         color={"blue"}
@@ -371,7 +373,7 @@ const Activities = () => {
                         icon={icons.publish}
                         fontSize={"small"}
                       />
-                   </p>
+                    </p>
                   </div>
                 </div>
               </div>
