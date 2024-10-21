@@ -22,21 +22,24 @@ const AnnouncementModal = (
         className="fixed h-full w-full bg-gray-600 bg-opacity-50"
         onClick={handleModal}
       ></div>
-      <div className="relative p-5 bg-white rounded-md shadow-md">
-        <button
-          type="button"
-          onClick={handleModal}
-          className="absolute top-1 right-1 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-7 h-7 md:w-8 md:h-8 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white"
-          data-modal-hide="popup-modal"
-        >
-          <icons.close fontSize="small" />
-          <span className="sr-only">Close modal</span>
-        </button>
-
-        <div className="w-full flex flex-col pt-4 space-y-2">
-          <h3 className=" text-gray-600 text-center pb-2">
-            Add new announcement
-          </h3>
+      <div className="relative bg-white  shadow-md">
+      <div className="flex flex-row items-center justify-between">
+          
+          <h3 className="ml-4 text-gray-600">
+                Add new announcement
+              </h3>
+            <button
+              type="button"
+              onClick={handleModal}
+              className="text-gray-400 bg-transparent hover:bg-red-400 hover:text-gray-900 text-sm w-7 h-7 md:w-8 md:h-8 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white"
+              data-modal-hide="popup-modal"
+            >
+              <icons.close fontSize="small" />
+              <span className="sr-only">Close modal</span>
+            </button>
+  
+          </div>
+        <div className="w-full flex flex-col pt-4 space-y-4 p-4">
           <InputReusable
             type="text"
             placeholder="Title"
@@ -53,7 +56,7 @@ const AnnouncementModal = (
             onChange={(e) => setDescription(e.target.value)}
             onBlur={() => setDescription(capitalizeFirstLetter(description))}
           />
-          <div className="flex flex-row py-2">
+          <div className="flex flex-row">
             <InputReusable type="file" onChange={handleImageChange} />
             <p className="flex items-center">
               <ButtonStyle
