@@ -60,7 +60,7 @@ const handleEditData = async (id,data, type) => {
           timestamp: serverTimestamp(),
         };
 
-        if(type === "event"){
+        if(type === "events"){
             updatedData.location = location,
             updatedData.startDate = startDate,
             updatedData.endDate = endDate,
@@ -69,10 +69,10 @@ const handleEditData = async (id,data, type) => {
 
         await update(dataRef, updatedData);
 
-        toast.success("Announcement update successfully");
+        toast.success(`${type} update successfully`);
 
       } else {
-        toast.error("Announcement not found");
+        toast.error(`${type} not found`);
       }
     } catch (error) {
       toast.error(`Error: ${error}`);
