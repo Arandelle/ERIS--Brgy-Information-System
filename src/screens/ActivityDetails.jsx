@@ -5,6 +5,7 @@ import icons from "../assets/icons/Icons";
 const ActivityDetails = ({
   handleCloseDetailModal,
   handleAddEventModal,
+  toggleDeleteModal,
   selectedEvent,
 }) => {
   return (
@@ -68,7 +69,8 @@ const ActivityDetails = ({
             fontSize={"small"}
             label={"Delete Event"}
             color={"red"}
-            onClick={() => toggleDeleteModal(selectedEvent.id)}
+            onClick={() => {toggleDeleteModal(selectedEvent.id);
+            handleCloseDetailModal()}}
           />
         </div>
 

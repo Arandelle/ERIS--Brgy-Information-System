@@ -18,6 +18,7 @@ import handleAddData from "../hooks/handleAddData";
 import handleEditData from "../hooks/handleEditData";
 import handleDeleteData from "../hooks/handleDeleteData";
 import ActivityDetails from "./ActivityDetails";
+import { Tooltip } from "@mui/material";
 
 const CustomToolbar = ({ label, onNavigate, onView, handleAddEventModal }) => {
   return (
@@ -115,9 +116,11 @@ const MyCalendar = () => {
     }
   };
   const handleSelectEvent = (event) => {
+    console.log(event); // Check if event contains imageUrl and details
     setSelectedEvent(event);
     setEventDetailModal(true);
   };
+  
 
   const handleCloseAddEventModal = () => {
     setAddEventModal(false);
@@ -193,14 +196,6 @@ const MyCalendar = () => {
       </div>
     </div>
   );
-
-  // Add this temporarily to check your data
-  useEffect(() => {
-    console.log("All activities:", activity);
-    activity.forEach((event) => {
-      console.log("Event image URL:", event.imageUrl);
-    });
-  }, [activity]);
 
   return (
     <HeadSide
@@ -330,48 +325,39 @@ const MyCalendar = () => {
                 <div className="block mt-2 py-2 px-4 text-base text-center font-semibold border-y-[3px] border-orange-500">
                   Upcoming Events
                 </div>
-                <div className="scrollable-container p-2 text-gray-700 overflow-y-auto">
+                <div className="scrollable-container py-2 text-gray-700 overflow-y-auto">
                   {loading ? (
                     <div className="flex items-center justify-center py-3">
                       <Spinner setLoading={setLoading} />
                     </div>
-                  ) : activity.length === 0 ? (
+                  ) : events.length === 0 ? (
                     <EmptyLogo message={"No activity yet"} />
                   ) : (
-                    activity
+                    events
                       .map((activity) => (
                         <div
                           key={activity.id}
                           className="mb-3 border-b pb-4 border-b-gray-500 dark:border-b-gray-200"
                         >
                           <div>
-                            <img src={activity.imageUrl} alt="not defined" />
-                            <h2 className="font-semibold mb-2 dark:text-green-500">
-                              Title: {activity.title}
-                            </h2>
-                            <p className="text-gray-700 dark:text-gray-200">
-                              {activity.location}
-                            </p>
-                            <p className="text-gray-700 dark:text-gray-200">
-                              Organizer: {activity.organizer}
-                            </p>
-                            <p className="text-gray-700 dark:text-gray-200">
-                              Details: {activity.description}
-                            </p>
-                            <ButtonStyle
-                              label={"Delete"}
-                              color={"red"}
-                              fontSize={"small"}
-                              icon={icons.delete}
-                              onClick={() => toggleDeleteModal(activity.id)}
-                            />
+                            <Tooltip title={`Show details`} placement="top" arrow>
+                              <div
+                              onClick={() => handleSelectEvent(activity)}
+                              className="p-1 flex flex-row items-center justify-between cursor-pointer bg-blue-100 shadow-md rounded-r-md border-l-blue-400 border-l-2">
+                              <div>
+                                <p className="font-semibold text-lg text-blue-500"> {activity.title}</p>
+                                <p className="text-xs text-gray-400"> {formatDate(activity.start)}</p>
+                              </div>
+                              <icons.arrowRight />
+                              </div>
+                            </Tooltip>
                           </div>
                         </div>
                       ))
-                      .slice(0, 2)
+                      .slice(0, 10)
                   )}
                 </div>
-                {activity.length > 1 ? (
+                {events.length > 1 && (
                   <div className="flex justify-end">
                     <ButtonStyle
                       icon={icons.view}
@@ -380,8 +366,6 @@ const MyCalendar = () => {
                       label="See more events "
                     />
                   </div>
-                ) : (
-                  ""
                 )}
               </div>
             </div>
@@ -405,12 +389,13 @@ const MyCalendar = () => {
           )}
 
           {eventDetailModal && (
-                <ActivityDetails 
-                  handleCloseDetailModal={handleCloseDetailModal}
-                  handleAddEventModal={handleAddEventModal}
-                  selectedEvent={selectedEvent}
-                />
-              )}
+            <ActivityDetails
+              handleCloseDetailModal={handleCloseDetailModal}
+              handleAddEventModal={handleAddEventModal}
+              toggleDeleteModal={toggleDeleteModal}
+              selectedEvent={selectedEvent}
+            />
+          )}
         </>
       }
     />
