@@ -15,6 +15,7 @@ import handleDeleteData from "../../hooks/handleDeleteData";
 import handleEditData from "../../hooks/handleEditData";
 import AnnouncementModal from "./AnnouncementModal";
 import QuestionModal from "../../components/ReusableComponents/AskCard"
+import DetailsAnnouncement from "./DetailsAnnouncement";
 
 const Activities = () => {
   const { activity, setActivity } = useFetchActivity("announcement");
@@ -25,7 +26,8 @@ const Activities = () => {
   const [modal, setModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedId, setSelectedId] = useState("");
-  const [isDelete, setIsDelete] = useState(false)
+  const [isDelete, setIsDelete] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   const headerData = [
     "File",
@@ -76,6 +78,7 @@ const Activities = () => {
     setImage("");
     setIsEdit(true);
     setSelectedId(announcement.id);
+    setShowDetails(false)
   };
 
   const handleEditAnnouncement = async (id) => {
@@ -94,6 +97,7 @@ const Activities = () => {
   const handleDeleteClick = (id) => {
     setSelectedId(id)
     setIsDelete(!isDelete)
+    setShowDetails(false)
   } 
 
   const handleConfirmDelete = async () => {
@@ -158,7 +162,7 @@ const Activities = () => {
               icon={icons.view}
               color={"blue"}
               bgColor={"bg-blue-100"}
-              onClick={() => toast.info("This is view")}
+              onClick={() => {setShowDetails(!showDetails); setSelectedId(announcement.id)}}
               tooltip={"View"}
               fontSize={"small"}
             />
@@ -223,6 +227,14 @@ const Activities = () => {
                 }
                 yesText={"Delete"}
                 onConfirm={handleConfirmDelete}
+              />
+            )}
+            {showDetails && (
+              <DetailsAnnouncement
+              closeButton={() => setShowDetails(!showDetails)} 
+              handleEditClick={handleEditClick}
+              handleDeleteClick={handleDeleteClick}
+              selectedId={selectedId}
               />
             )}
         </>
