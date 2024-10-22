@@ -17,6 +17,7 @@ import useFetchActivity from "../hooks/useFetchActivity";
 import handleAddData from "../hooks/handleAddData";
 import handleEditData from "../hooks/handleEditData";
 import handleDeleteData from "../hooks/handleDeleteData";
+import ActivityDetails from "./ActivityDetails";
 
 const CustomToolbar = ({ label, onNavigate, onView, handleAddEventModal }) => {
   return (
@@ -256,7 +257,7 @@ const MyCalendar = () => {
                         placeholder="Event Title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        onBlur={() => setTitle(title.toUpperCase())}
+                        onBlur={() => setTitle(capitalizeFirstLetter(title))}
                       />
                       <InputReusable
                         type="text"
@@ -321,7 +322,6 @@ const MyCalendar = () => {
                 </div>
               </div>
             )}
-
             <div className="mr-3 ml-2" onSelectEvent={handleSelectEvent}>
               <div
                 className="bg-gray-200 dark:bg-gray-800 dark:text-gray-400 h-full"
@@ -383,72 +383,6 @@ const MyCalendar = () => {
                 ) : (
                   ""
                 )}
-
-                {eventDetailModal && (
-                  <div className="fixed flex items-center justify-center inset-0 z-50">
-                    <div
-                      className="fixed h-full w-full bg-gray-600 bg-opacity-50"
-                      onClick={handleCloseDetailModal}
-                    ></div>
-                    <div className="relative p-5 bg-white rounded-md shadow-md">
-                      <h2 className="py-2 px-2 text-primary-500 border-2 mb-5">
-                        Event Details
-                      </h2>
-                      <button
-                        className="absolute p-2 top-0 right-0"
-                        onClick={handleCloseDetailModal}
-                      >
-                        <icons.close style={{ fontSize: "large" }} />
-                      </button>
-                      <div className="flex flex-col space-y-2">
-                        <p>
-                          <strong>Title:</strong> {selectedEvent?.title}
-                        </p>
-                        <p>
-                          <strong>Start Date:</strong>{" "}
-                          {formatDate(selectedEvent?.start)}
-                        </p>
-                        <p>
-                          <strong>End Date:</strong>{" "}
-                          {formatDate(selectedEvent?.end)}
-                        </p>
-                        <p>
-                          <strong>Location:</strong> {selectedEvent?.location}
-                        </p>
-                        <p>
-                          <strong>Organizer:</strong> {selectedEvent?.organizer}
-                        </p>
-                        <p>
-                          <strong>Details:</strong> {selectedEvent?.details}
-                        </p>
-                        <img
-                          src={selectedEvent?.image}
-                          alt="Event"
-                          className="rounded-lg"
-                        />
-
-                        <div className="flex space-x-2">
-                          <ButtonStyle
-                            label="Edit Event"
-                            icon={icons.edit}
-                            color={"green"}
-                            fontSize={"small"}
-                            onClick={() => {
-                              handleAddEventModal(selectedEvent);
-                            }}
-                          />
-                          <ButtonStyle
-                            icon={icons.delete}
-                            fontSize={"small"}
-                            label={"Delete Event"}
-                            color={"red"}
-                            onClick={() => toggleDeleteModal(selectedEvent.id)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -469,6 +403,14 @@ const MyCalendar = () => {
               onConfirm={() => handleDeleteEvent(eventsToDelete)}
             />
           )}
+
+          {eventDetailModal && (
+                <ActivityDetails 
+                  handleCloseDetailModal={handleCloseDetailModal}
+                  handleAddEventModal={handleAddEventModal}
+                  selectedEvent={selectedEvent}
+                />
+              )}
         </>
       }
     />
