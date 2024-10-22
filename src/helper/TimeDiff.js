@@ -1,4 +1,9 @@
 export const getTimeDifference = (timestamp) =>{
+
+  if (!timestamp || isNaN(new Date(timestamp).getTime())) {
+    return "Invalid date";
+  }
+  
   const now = new Date();
   const addedTime = new Date(timestamp)
 
@@ -19,6 +24,7 @@ export const getTimeDifference = (timestamp) =>{
   if (diffInDays < 30) return `${diffInDays} days ago`;
   if (diffInMonths === 1) return `Last month`;
   if (diffInMonths < 12 ) return `${diffInMonths} months ago`
+  if (diffInMonths >= 12)  return `${diffInYears} years ago`
 
-  return `${diffInYears} years ago`
+  return `Invalid`
 }

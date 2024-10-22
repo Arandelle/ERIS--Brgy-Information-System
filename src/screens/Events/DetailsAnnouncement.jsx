@@ -1,6 +1,6 @@
 import Modal from "../../components/ReusableComponents/Modal";
 import useFetchActivity from "../../hooks/useFetchActivity";
-import { formatDate } from "../../helper/FormatDate";
+import { formatDateWithTime } from "../../helper/FormatDate";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import icons from "../../assets/icons/Icons";
 import { getTimeDifference } from "../../helper/TimeDiff";
@@ -23,7 +23,7 @@ const DetailsAnnouncement = ({ closeButton, selectedId, handleEditClick, handleD
         <div className="text-sm md:text-md">
           <p className="font-bold text-center">{announcementDetails?.title}</p>
           <p className="text-gray-500 text-center">
-            {formatDate(announcementDetails?.date)}
+            {formatDateWithTime(announcementDetails?.date)}
           </p>
         </div>
       </div>

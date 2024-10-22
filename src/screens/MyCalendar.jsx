@@ -82,6 +82,7 @@ const MyCalendar = () => {
     organizer: event.organizer,
     details: event.description,
     image: event.imageUrl,
+    timestamp: event.timestamp
   }));
 
   const handleAddEventModal = (event) => {

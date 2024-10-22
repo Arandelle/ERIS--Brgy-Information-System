@@ -2,6 +2,7 @@ import { formatDate } from "../helper/FormatDate";
 import ButtonStyle from "../components/ReusableComponents/Button";
 import icons from "../assets/icons/Icons";
 import Modal from "../components/ReusableComponents/Modal";
+import { getTimeDifference } from "../helper/TimeDiff";
 
 const ActivityDetails = ({
   handleCloseDetailModal,
@@ -40,6 +41,10 @@ const ActivityDetails = ({
         <div className="flex flex-row">
           <p className="w-1/3 text-gray-500">Details: </p>
           <p className="flex-1 font-bold"> {selectedEvent?.details}</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="w-1/3 text-gray-500">Last Edit: </p>
+          <p className="flex-1 font-bold"> {getTimeDifference(selectedEvent?.timestamp)}</p>
         </div>
       </div>
 
