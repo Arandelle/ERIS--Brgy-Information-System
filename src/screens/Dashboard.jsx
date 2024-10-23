@@ -12,7 +12,7 @@ import { useFetchData } from "../hooks/useFetchData";
 import fetchEmergency from "../hooks/fetchEmergency";
 import icons from "../assets/icons/Icons";
 
-const DashboardCard = ({ title, value, img, onClick }) => {
+const DashboardCard = ({ title, value,img, onClick }) => {
 
   return (
     <div className="relative">
@@ -93,7 +93,7 @@ const Dashboard = () => {
           </div>
           <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4">
               <>
-                <div className="order-3 lg:order-1 col-span-1 lg:col-span-3">
+                <div className="order-3 lg:order-1 col-span-1 lg:col-span-3 row-span-5">
                   <MapContent isFullscreen={false}/>
                 </div>
                 <div className="order-2 md:order-2 col-span-1">
