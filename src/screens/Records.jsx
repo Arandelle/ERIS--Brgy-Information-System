@@ -10,7 +10,7 @@ const Records = () => {
   const { data: emergencyHistory } = useFetchData("emergencyRequest");
   const { data: users } = useFetchData("users");
   const { data: responders } = useFetchData("responders");
-  
+
   const sortedEmergencyHistory = useMemo(() => {
     return [...emergencyHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [emergencyHistory]);
@@ -27,7 +27,7 @@ const Records = () => {
   ];
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

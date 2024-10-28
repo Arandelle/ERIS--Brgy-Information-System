@@ -62,7 +62,7 @@ const Dashboard = () => {
 
           <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 md:my-3 text-wrap cursor-pointer">
             <DashboardCard
-              title="Total Residents"
+              title="Total Users"
               value={loading ? <Spinner setLoading={setLoading} /> : users.length}
               img={population}
               onClick={()=>handleNavigate("/accounts/users")}

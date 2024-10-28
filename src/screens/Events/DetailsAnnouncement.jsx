@@ -6,7 +6,7 @@ import icons from "../../assets/icons/Icons";
 import { getTimeDifference } from "../../helper/TimeDiff";
 
 const DetailsAnnouncement = ({ closeButton, selectedId, handleEditClick, handleDeleteClick }) => {
-  const {data: activity} = useFetchData("annnouncement");
+  const {data: activity} = useFetchData("announcement");
   const announcementDetails = activity.find(
     (announcement) => announcement.id === selectedId
   );
