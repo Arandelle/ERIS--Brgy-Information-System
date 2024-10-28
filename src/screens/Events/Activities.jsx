@@ -29,6 +29,10 @@ const Activities = () => {
   const [isDelete, setIsDelete] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
+  const sortedActivities = useMemo(() => {
+    return [...activity].sort((a,b) => new Date(b.date) - new Date(a.date))
+  }, [activity])
+
   const headerData = [
     "File",
     "Title",
@@ -46,8 +50,8 @@ const Activities = () => {
   
   // Use useMemo to memoize the currentItems calculation
   const currentItems = useMemo(() => {
-    return activity.slice(indexOfFirstItem, indexOfLastItem);
-  }, [activity, indexOfFirstItem, indexOfLastItem]);
+    return sortedActivities.slice(indexOfFirstItem, indexOfLastItem);
+  }, [sortedActivities, indexOfFirstItem, indexOfLastItem]);
   
   const totalPages = Math.ceil(activity.length / itemsPerPage);
 
