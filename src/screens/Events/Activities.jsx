@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
 import Table from "../../components/Table";
@@ -37,6 +37,19 @@ const Activities = () => {
     "Last Post/Edit",
     "Action",
   ];
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  
+  // Use useMemo to memoize the currentItems calculation
+  const currentItems = useMemo(() => {
+    return activity.slice(indexOfFirstItem, indexOfLastItem);
+  }, [activity, indexOfFirstItem, indexOfLastItem]);
+  
+  const totalPages = Math.ceil(activity.length / itemsPerPage);
 
   const handleModal = () => {
     setModal(!modal);
@@ -191,11 +204,18 @@ const Activities = () => {
           />
           <Table
             headers={headerData}
-            data={activity}
+            data={currentItems}
             renderRow={renderRow}
             emptyMessage="No announcement found"
           />
-          <Pagination />
+          <Pagination 
+             currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+            indexOfFirstItem={indexOfFirstItem}
+            indexOfLastItem={indexOfLastItem}
+            data={activity}
+          />
           {modal && (
             <AnnouncementModal
               handleModal={handleModal}

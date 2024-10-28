@@ -11,7 +11,7 @@ import {
 import ResidentsList from "./screens/AccountList/Residents";
 import Map from "./screens/Maps/Map";
 import Login from "./screens/Login";
-import History from "./screens/History";
+import Records from "./screens/Records";
 import Activities from "./screens/Events/Activities";
 import MyProfile from "./components/Header/MyProfile";
 import Setting from "./screens/Profile/Setting"
@@ -107,7 +107,7 @@ const App = () => {
               />
               <Route
                 path="/records"
-                element={user && isAdmin ? <History /> : <Navigate to="/" />}
+                element={user && isAdmin ? <Records /> : <Navigate to="/" />}
               />
               <Route
                 path="/myProfile"
