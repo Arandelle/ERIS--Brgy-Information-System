@@ -9,7 +9,7 @@ import icons from "../../assets/icons/Icons";
 import IconButton from "../../components/ReusableComponents/IconButton";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import Pagination from "../../components/Pagination";
-import useFetchActivity from "../../hooks/useFetchActivity";
+import { useFetchData } from "../../hooks/useFetchData";
 import handleAddData from "../../hooks/handleAddData";
 import handleDeleteData from "../../hooks/handleDeleteData";
 import handleEditData from "../../hooks/handleEditData";
@@ -18,7 +18,7 @@ import QuestionModal from "../../components/ReusableComponents/AskCard"
 import DetailsAnnouncement from "./DetailsAnnouncement";
 
 const Activities = () => {
-  const { activity, setActivity } = useFetchActivity("announcement");
+  const {data: activity, setData: setActivity} = useFetchData("announcement");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");

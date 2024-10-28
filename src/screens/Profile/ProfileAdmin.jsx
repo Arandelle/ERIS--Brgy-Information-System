@@ -1,4 +1,3 @@
-import { Toggle } from "../../hooks/Toggle";
 import { AdminData, AdminSettings } from "../../data/AdminData";
 import { useState } from "react";
 import Logout from "../../components/ReusableComponents/AskCard"
@@ -9,7 +8,10 @@ import {auth} from "../../services/firebaseConfig"
 
 const Profile = () => {
 
-  const { isOpen, toggleDropdown } = Toggle();
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleDropdown = () => {
+          setIsOpen(!isOpen);
+  };
   const [showLogout, setShowLogout] = useState(false);
 
   const navigate = useNavigate();

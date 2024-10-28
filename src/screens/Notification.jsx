@@ -1,55 +1,39 @@
-import { Toggle } from "../hooks/Toggle";
 import { Tooltip } from "@mui/material";
 import { useState, useEffect } from "react";
 import { auth, database } from "../services/firebaseConfig";
 import { ref, onValue, update } from "firebase/database";
 import { getTimeDifference } from "../helper/TimeDiff";
 import { formatDate } from "../helper/FormatDate";
-import { useFetcher, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
-import { toast } from "sonner";
 import {useFetchData} from "../hooks/useFetchData"
 
 const Notification = () => {
   const [notificationBadge, setNotificationBadge] = useState(0);
-  const [notifications, setNotifications] = useState([]);
   const [openedNotifications, setOpenedNotifications] = useState([]);
   const [viewAll, setViewAll] = useState(false);
-  const { isOpen, toggleDropdown } = Toggle();
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleDropdown = () => {
+          setIsOpen(!isOpen);
+  };
 
+  const currentUser = auth.currentUser;
+  const {data: notifications} = useFetchData(`admins/${currentUser.uid}/notifications`)
+  
   useEffect(() => {
-    const user = auth.currentUser;
+    if(notifications.length){
+      let unseenCount = 0;
 
-    if (user) {
-      const notificationRef = ref(database, `admins/${user.uid}/notifications`);
-
-      // Listen for changes in the notifications data
-      onValue(notificationRef, (snapshot) => {
-        const data = snapshot.val();
-        const notificationList = [];
-        let unseenCount = 0;
-
-        // Convert the notifications data into an array
-        for (let id in data) {
-          const notification = {
-            id, // The unique notification ID
-            ...data[id], // The notification data
-          };
-
-          notificationList.push(notification);
-
-          // Count the number of unseen notifications
-          if (!notification.isSeen) {
-            unseenCount++;
-          }
+      notifications.forEach((notification) => {
+        if(!notification.isSeen){
+          unseenCount++;
         }
-
-        notificationList.sort((a, b) => new Date(b.date) - new Date(a.date));
-        setNotifications(notificationList);
-        setNotificationBadge(unseenCount); // Update the badge 
       });
+
+      notifications.sort((a,b) => new Date(b.date) - new Date(a.date));
+      setNotificationBadge(unseenCount); // Update the badge 
     }
-  }, []);
+  })
 
   const handleDropdownToggle = () => {
     toggleDropdown();

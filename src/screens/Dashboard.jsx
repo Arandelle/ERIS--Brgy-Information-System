@@ -9,7 +9,6 @@ import emergency from "../assets/images/emergency.svg";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../helper/DateToday"
 import { useFetchData } from "../hooks/useFetchData";
-import fetchEmergency from "../hooks/fetchEmergency";
 import icons from "../assets/icons/Icons";
 
 const DashboardCard = ({ title, value,img, onClick }) => {
@@ -39,19 +38,17 @@ const DashboardCard = ({ title, value,img, onClick }) => {
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const {data: users} = useFetchData("users");
-  const {emergencyData} = fetchEmergency();
+  const {data: emergencyData} = useFetchData("emergencyRequest");
+  const {data: events} = useFetchData("events");
+  const {data: announcement} = useFetchData("announcement");
 
-  const [activity, setActivity] = useState(() => {
-    // Retrieve activity data from localStorage, or an empty array if it doesn't exist
-    const storedActivity = localStorage.getItem("activity");
-    return storedActivity ? JSON.parse(storedActivity) : [];
-  });
-  const [events, setEvents] = useState(() => {
-    // Retrieve events data from localStorage, or an empty array if it doesn't exist
-    const storedEvents = localStorage.getItem("events");
-    return storedEvents ? JSON.parse(storedEvents) : [];
-  });
+  const activities = [
+    ...events,
+    ...announcement
+  ];
 
+  const activeEmergency = emergencyData.filter((emergency) => emergency.status === "awaiting response")
+  
   const navigate = useNavigate();
   const handleNavigate =(path)=>{
     navigate(path);
@@ -77,16 +74,16 @@ const Dashboard = () => {
               onClick={()=> handleNavigate("/accounts/users")}
             />
             <DashboardCard
-              title="Events"
+              title="Activities"
               value={
-                loading ? <Spinner setLoading={setLoading} /> : events.length
+                loading ? <Spinner setLoading={setLoading} /> : activities.length
               }
               img={Events}
               onClick={()=> handleNavigate("/calendar")}
             />
             <DashboardCard
               title="Emergency"
-              value={loading ? <Spinner setLoading={setLoading} /> : emergencyData.length}
+              value={loading ? <Spinner setLoading={setLoading} /> : activeEmergency.length}
               img={emergency}
               onClick={()=>handleNavigate("/maps")}
             />

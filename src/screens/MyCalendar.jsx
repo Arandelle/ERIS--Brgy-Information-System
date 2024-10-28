@@ -13,12 +13,12 @@ import { formatDate, formatTime } from "../helper/FormatDate";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 import icons from "../assets/icons/Icons";
 import { capitalizeFirstLetter } from "../helper/CapitalizeFirstLetter";
-import useFetchActivity from "../hooks/useFetchActivity";
 import handleAddData from "../hooks/handleAddData";
 import handleEditData from "../hooks/handleEditData";
 import handleDeleteData from "../hooks/handleDeleteData";
 import ActivityDetails from "./ActivityDetails";
 import { Tooltip } from "@mui/material";
+import { useFetchData } from "../hooks/useFetchData";
 
 const CustomToolbar = ({ label, onNavigate, onView, handleAddEventModal }) => {
   return (
@@ -57,7 +57,7 @@ const CustomToolbar = ({ label, onNavigate, onView, handleAddEventModal }) => {
 };
 const MyCalendar = () => {
   const localizer = momentLocalizer(moment);
-  const { activity, setActivity } = useFetchActivity("events");
+  const {data: activity, setData: setActivity} = useFetchData("events");
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");

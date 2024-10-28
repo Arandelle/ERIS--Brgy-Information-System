@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Header from "../Header/Header";
 import Sidebar from "../Sidebar";
-import { Toggle } from "../../hooks/Toggle";
-import Skeleton from "./Skeleton";
 
 const HeadSide = ({ child, message }) => {
-  const { isOpen, toggleDropdown } = Toggle();
-  const [loading, setLoading] = useState(true);
+  
+    const [isOpen, setIsOpen] = useState(false)
+    const toggleDropdown = () => {
+            setIsOpen(!isOpen);
+    };
 
   return (
     <div className="w-full flex-col flex">

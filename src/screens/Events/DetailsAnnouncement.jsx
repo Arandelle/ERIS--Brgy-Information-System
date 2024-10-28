@@ -1,12 +1,12 @@
 import Modal from "../../components/ReusableComponents/Modal";
-import useFetchActivity from "../../hooks/useFetchActivity";
+import { useFetchData } from "../../hooks/useFetchData";
 import { formatDateWithTime } from "../../helper/FormatDate";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import icons from "../../assets/icons/Icons";
 import { getTimeDifference } from "../../helper/TimeDiff";
 
 const DetailsAnnouncement = ({ closeButton, selectedId, handleEditClick, handleDeleteClick }) => {
-  const { activity } = useFetchActivity("announcement");
+  const {data: activity} = useFetchData("annnouncement");
   const announcementDetails = activity.find(
     (announcement) => announcement.id === selectedId
   );
