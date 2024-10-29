@@ -5,11 +5,39 @@ import { capitalizeFirstLetter } from "../helper/CapitalizeFirstLetter";
 import Toolbar from "../components/ToolBar";
 import Pagination from "../components/Pagination";
 import usePagination from "../hooks/usePagination";
+import SearchQuery from "../components/SearchQuery";
+import { useState, useEffect } from "react";
 
 const Records = () => {
   const { data: emergencyHistory } = useFetchData("emergencyRequest");
   const { data: users } = useFetchData("users");
   const { data: responders } = useFetchData("responders");
+
+  const [searchQuery, setSearchQuery] = useState("")
+  const [filteredData, setFilteredData] = useState(emergencyHistory.slice());
+
+  useEffect(() => {
+    // Combine emergencyHistory and users data
+    const updatedData = emergencyHistory?.map((emergency) => {
+      const user = users?.find((user) => user.id === emergency.userId);
+      return {
+        ...emergency,
+        userFirstname: user?.firstname || "", // Add user firstname to each record
+        userLastname: user?.lastname || "",
+      };
+    });
+  
+    // Handle search query
+    let filteredResults = updatedData;
+    if (searchQuery) {
+      filteredResults = updatedData.filter((item) =>
+        item.status.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+  
+    setFilteredData(filteredResults);
+  }, [emergencyHistory, users, searchQuery]);
+  
 
   const {
     currentPage,
@@ -18,7 +46,7 @@ const Records = () => {
     indexOfFirstItem,
     currentItems,
     totalPages
-  } = usePagination(emergencyHistory);
+  } = usePagination(filteredData);
 
   const HeaderData = [
     "emergency id",
@@ -75,7 +103,10 @@ const Records = () => {
     <HeadSide
       child={
         <>
-          <Toolbar />
+          <Toolbar 
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          />
           <Table
             headers={HeaderData}
             data={currentItems} 
@@ -88,7 +119,7 @@ const Records = () => {
             setCurrentPage={setCurrentPage}
             indexOfFirstItem={indexOfFirstItem}
             indexOfLastItem={indexOfLastItem}
-            data={emergencyHistory}
+            data={filteredData}
           />
         </>
       }

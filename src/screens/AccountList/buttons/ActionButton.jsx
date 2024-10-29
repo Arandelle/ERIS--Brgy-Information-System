@@ -86,22 +86,22 @@ const ActionButton = ({
       {isActionOpen && (
         <div
           id="dropdownAction"
-          className="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+          className="z-10 absolute bg-white divide-y divide-gray-100 shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
         >
-          <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
+          <ul className="text-sm text-gray-700 dark:text-gray-200">
             {actions.map((action, key) => (
               <li key={key}>
                 <button
                   type="button"
                   onClick={() => handleButton(action.type)}
                   disabled={isActionDisabled(action.type)}
-                  className={`w-full text-left px-4 py-2  ${
-                    action.title === "Delete user" || action.title === "Lock user"
+                  className={` w-full text-left px-4 py-2  ${
+                    action.type === "delete" || action.type === "lock"
                       ? "border-t-2 border-grey-200 text-red-500"
                       : ""
                   } ${
                     isActionDisabled(action.type)
-                      ? "cursor-not-allowed text-gray-400"
+                      ? `cursor-not-allowed ${action.type === "lock" ? "text-red-300" : "text-gray-300"} `
                       : "hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                   }`}
                 >
