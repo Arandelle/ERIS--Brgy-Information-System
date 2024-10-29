@@ -13,31 +13,45 @@ const Records = () => {
   const { data: users } = useFetchData("users");
   const { data: responders } = useFetchData("responders");
 
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState(emergencyHistory.slice());
 
   useEffect(() => {
     // Combine emergencyHistory and users data
     const updatedData = emergencyHistory?.map((emergency) => {
       const user = users?.find((user) => user.id === emergency.userId);
+      const responder = responders?.find((responder) => responder.id === emergency.responderId )
       return {
         ...emergency,
-        userFirstname: user?.firstname || "", // Add user firstname to each record
-        userLastname: user?.lastname || "",
+        userName: `${user?.firstname} ${user?.lastname}` || "",
+        responderName: `${responder?.firstname} ${responder?.lastname}` || "",
+        userID: user?.customId || "",
+        responderID: responder?.customId || ""
       };
     });
-  
-    // Handle search query
+
+    // Handle search query across all relevant fields
     let filteredResults = updatedData;
     if (searchQuery) {
-      filteredResults = updatedData.filter((item) =>
-        item.status.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      filteredResults = updatedData.filter((item) => {
+        const searchTerm = searchQuery.toLowerCase();
+
+        return (
+          item.userName.toLowerCase().includes(searchTerm) ||
+          item.responderName.toLowerCase().includes(searchTerm) ||
+          item.userID.toLowerCase().includes(searchTerm) ||
+          item.responderID.toLowerCase().includes(searchTerm) ||
+          item.emergencyId.toLowerCase().includes(searchTerm) ||
+          item.status.toLowerCase().includes(searchTerm) ||
+          item.type.toLowerCase().includes(searchTerm) ||
+          item.description.toLowerCase().includes(searchTerm) ||
+          item.location.address.toLowerCase().includes(searchTerm)
+        );
+      });
     }
-  
+
     setFilteredData(filteredResults);
   }, [emergencyHistory, users, searchQuery]);
-  
 
   const {
     currentPage,
@@ -45,8 +59,8 @@ const Records = () => {
     indexOfLastItem,
     indexOfFirstItem,
     currentItems,
-    totalPages
-  } = usePagination(filteredData);
+    totalPages,
+  } = usePagination(filteredData); // pass the filtered data instead of default emergencyHistory
 
   const HeaderData = [
     "emergency id",
@@ -65,9 +79,9 @@ const Records = () => {
       (responder) => responder.id === emergency.responderId
     );
 
-    const userName = userDetails?.firstname + userDetails?.lastname;
+    const userName =  `${userDetails?.firstname} ${userDetails?.lastname}` || "";
     const responderName =
-      responderDetails?.firstname + responderDetails?.lastname ||
+    `${responderDetails?.firstname} ${responderDetails?.lastname}` ||
       "Waiting for Responder";
 
     const statusStyle =
@@ -103,13 +117,10 @@ const Records = () => {
     <HeadSide
       child={
         <>
-          <Toolbar 
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          />
+          <Toolbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <Table
             headers={HeaderData}
-            data={currentItems} 
+            data={currentItems} // pass the currentItems from usePagination
             renderRow={renderRow}
             emptyMessage={"No records found"}
           />
@@ -119,7 +130,7 @@ const Records = () => {
             setCurrentPage={setCurrentPage}
             indexOfFirstItem={indexOfFirstItem}
             indexOfLastItem={indexOfLastItem}
-            data={filteredData}
+            data={filteredData} // pass the filteredData instead of default emergencyHistory
           />
         </>
       }
