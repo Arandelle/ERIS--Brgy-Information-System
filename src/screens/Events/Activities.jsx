@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
 import Table from "../../components/Table";
@@ -16,9 +16,18 @@ import handleEditData from "../../hooks/handleEditData";
 import AnnouncementModal from "./AnnouncementModal";
 import QuestionModal from "../../components/ReusableComponents/AskCard"
 import DetailsAnnouncement from "./DetailsAnnouncement";
+import usePagination from "../../hooks/usePagination";
 
 const Activities = () => {
   const {data: activity, setData: setActivity} = useFetchData("announcement");
+  const {
+    currentPage,
+    setCurrentPage,
+    indexOfLastItem,
+    indexOfFirstItem,
+    currentItems,
+    totalPages
+  } = usePagination(activity);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
@@ -29,10 +38,6 @@ const Activities = () => {
   const [isDelete, setIsDelete] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
-  const sortedActivities = useMemo(() => {
-    return [...activity].sort((a,b) => new Date(b.date) - new Date(a.date))
-  }, [activity])
-
   const headerData = [
     "File",
     "Title",
@@ -41,19 +46,6 @@ const Activities = () => {
     "Last Post/Edit",
     "Action",
   ];
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  
-  // Use useMemo to memoize the currentItems calculation
-  const currentItems = useMemo(() => {
-    return sortedActivities.slice(indexOfFirstItem, indexOfLastItem);
-  }, [sortedActivities, indexOfFirstItem, indexOfLastItem]);
-  
-  const totalPages = Math.ceil(activity.length / itemsPerPage);
 
   const handleModal = () => {
     setModal(!modal);

@@ -4,16 +4,21 @@ import { useFetchData } from "../hooks/useFetchData";
 import { capitalizeFirstLetter } from "../helper/CapitalizeFirstLetter";
 import Toolbar from "../components/ToolBar";
 import Pagination from "../components/Pagination";
-import { useState, useMemo } from "react";
+import usePagination from "../hooks/usePagination";
 
 const Records = () => {
   const { data: emergencyHistory } = useFetchData("emergencyRequest");
   const { data: users } = useFetchData("users");
   const { data: responders } = useFetchData("responders");
 
-  const sortedEmergencyHistory = useMemo(() => {
-    return [...emergencyHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [emergencyHistory]);
+  const {
+    currentPage,
+    setCurrentPage,
+    indexOfLastItem,
+    indexOfFirstItem,
+    currentItems,
+    totalPages
+  } = usePagination(emergencyHistory);
 
   const HeaderData = [
     "emergency id",
@@ -25,19 +30,6 @@ const Records = () => {
     "Submitted",
     "Responder",
   ];
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  
-  // Use useMemo to memoize the currentItems calculation
-  const currentItems = useMemo(() => {
-    return sortedEmergencyHistory.slice(indexOfFirstItem, indexOfLastItem);
-  }, [sortedEmergencyHistory, indexOfFirstItem, indexOfLastItem]);
-  
-  const totalPages = Math.ceil(sortedEmergencyHistory.length / itemsPerPage);
 
   const renderRow = (emergency) => {
     const userDetails = users?.find((user) => user.id === emergency.userId);
@@ -86,7 +78,7 @@ const Records = () => {
           <Toolbar />
           <Table
             headers={HeaderData}
-            data={currentItems} // Pass currentItems instead of full emergencyHistory
+            data={currentItems} 
             renderRow={renderRow}
             emptyMessage={"No records found"}
           />
@@ -96,7 +88,7 @@ const Records = () => {
             setCurrentPage={setCurrentPage}
             indexOfFirstItem={indexOfFirstItem}
             indexOfLastItem={indexOfLastItem}
-            data={sortedEmergencyHistory}
+            data={emergencyHistory}
           />
         </>
       }
