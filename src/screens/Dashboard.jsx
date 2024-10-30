@@ -36,6 +36,8 @@ const DashboardCard = ({ title, value,img, onClick }) => {
 };
 
 const Dashboard = () => {
+  
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const {data: users} = useFetchData("users");
   const {data: emergencyData} = useFetchData("emergencyRequest");
@@ -47,9 +49,14 @@ const Dashboard = () => {
     ...announcement
   ];
 
-  const activeEmergency = emergencyData.filter((emergency) => emergency.status === "awaiting response")
+  const {awaitingResponseCount, resolvedCount} = emergencyData.reduce((counts, emergency) => {
+    if (emergency.status === "awaiting response") counts.awaitingResponseCount++;
+    if (emergency.status === "resolved") counts.resolvedCount++;
+    return counts;
+  }, {awaitingResponseCount: 0, resolvedCount: 0}
+  );
   
-  const navigate = useNavigate();
+
   const handleNavigate =(path)=>{
     navigate(path);
   }
@@ -62,10 +69,10 @@ const Dashboard = () => {
 
           <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 md:my-3 text-wrap cursor-pointer">
             <DashboardCard
-              title="Total Users"
-              value={loading ? <Spinner setLoading={setLoading} /> : users.length}
+              title="Total Responded"
+              value={loading ? <Spinner setLoading={setLoading} /> : resolvedCount}
               img={population}
-              onClick={()=>handleNavigate("/accounts/users")}
+              onClick={()=>handleNavigate("/records")}
             />
             <DashboardCard
               title="Today's Registered"
@@ -74,16 +81,16 @@ const Dashboard = () => {
               onClick={()=> handleNavigate("/accounts/users")}
             />
             <DashboardCard
-              title="Activities"
+              title="Announcement"
               value={
                 loading ? <Spinner setLoading={setLoading} /> : activities.length
               }
               img={Events}
-              onClick={()=> handleNavigate("/calendar")}
+              onClick={()=> handleNavigate("/announcement")}
             />
             <DashboardCard
               title="Emergency"
-              value={loading ? <Spinner setLoading={setLoading} /> : activeEmergency.length}
+              value={loading ? <Spinner setLoading={setLoading} /> : awaitingResponseCount}
               img={emergency}
               onClick={()=>handleNavigate("/maps")}
             />
