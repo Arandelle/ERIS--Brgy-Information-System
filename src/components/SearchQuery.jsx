@@ -1,21 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react';
 
-const SearchQuery = (data, searchQuery, searchField) => {
-    
-    const [filteredData, setFilteredData] = useState([]);
+function useFilteredData(data, searchQuery, searchFields) {
+  const [filteredData, setFilteredData] = useState(data);
 
-    useEffect(() => {
-        let updatedData = data;
+  useEffect(() => {
+    if (!searchQuery) {
+      setFilteredData(data);
+      return;
+    }
 
-        // Handle search query
-        if(searchQuery && searchField){
-            updatedData = updatedData.filter((item) => 
-            item[searchField]?.toString().toLowerCase().includes(searchQuery.toLowerCase()));
-        }
+    const searchTerm = searchQuery.toLowerCase();
 
-        setFilteredData(updatedData)
-    })
-  return filteredData
+    const filteredResults = data.filter((item) =>
+      searchFields.some((field) => {
+        const fieldValue = field.split('.').reduce((obj, key) => obj?.[key], item);
+        return fieldValue?.toString().toLowerCase().includes(searchTerm);
+      })
+    );
+
+    setFilteredData(filteredResults);
+  }, [data, searchQuery, searchFields]);
+
+  return filteredData;
 }
 
-export default SearchQuery
+export default useFilteredData;

@@ -197,6 +197,7 @@ const Activities = () => {
                 />
               </>
             }
+            label={"Emergency Announcement"}
           />
           <Table
             headers={headerData}
