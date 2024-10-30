@@ -17,17 +17,10 @@ import AnnouncementModal from "./AnnouncementModal";
 import QuestionModal from "../../components/ReusableComponents/AskCard"
 import DetailsAnnouncement from "./DetailsAnnouncement";
 import usePagination from "../../hooks/usePagination";
+import useFilteredData from "../../components/SearchQuery";
 
 const Activities = () => {
   const {data: activity, setData: setActivity} = useFetchData("announcement");
-  const {
-    currentPage,
-    setCurrentPage,
-    indexOfLastItem,
-    indexOfFirstItem,
-    currentItems,
-    totalPages
-  } = usePagination(activity);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
@@ -37,6 +30,23 @@ const Activities = () => {
   const [selectedId, setSelectedId] = useState("");
   const [isDelete, setIsDelete] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const searchField = [
+    "title",
+    "description"
+  ]
+
+  const filteredData = useFilteredData(activity,searchQuery, searchField)
+
+  const {
+    currentPage,
+    setCurrentPage,
+    indexOfLastItem,
+    indexOfFirstItem,
+    currentItems,
+    totalPages
+  } = usePagination(filteredData);
 
   const headerData = [
     "File",
@@ -198,6 +208,8 @@ const Activities = () => {
               </>
             }
             label={"Emergency Announcement"}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
           />
           <Table
             headers={headerData}
@@ -211,7 +223,7 @@ const Activities = () => {
             setCurrentPage={setCurrentPage}
             indexOfFirstItem={indexOfFirstItem}
             indexOfLastItem={indexOfLastItem}
-            data={activity}
+            data={filteredData}
           />
           {modal && (
             <AnnouncementModal
