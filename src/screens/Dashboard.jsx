@@ -11,10 +11,67 @@ import DateToday from "../helper/DateToday";
 import { useFetchData } from "../hooks/useFetchData";
 import icons from "../assets/icons/Icons";
 
-const DashboardCard = ({ title, value, img, onClick }) => {
-  const lastValue = 1;
-  const percentage = lastValue * value;
-  const isIncrease = value > lastValue;
+const DashboardCard = ({
+  title,
+  value,
+  img,
+  onClick,
+  onOptionChange,
+  selectedOption,
+  counts,
+  hasOption,
+}) => {
+  // Calculate percentage change based on selected period
+  const getPercentageChange = () => {
+
+    if (!counts) return 0;
+
+    if (!hasOption) {
+      const currentValue = counts.current || 0
+      const previousValue = counts.previous || 0
+
+      if(previousValue === 0){
+        return currentValue > 0 ? 100 : 0;
+      }
+
+      return ((currentValue - previousValue) / previousValue * 100).toFixed(1);
+
+    }
+
+    if (!hasOption && !counts) return 0;
+
+    const now = new Date();
+    const currentValue = counts[selectedOption];
+    let previousValue = 0;
+
+    switch (selectedOption) {
+      case "daily":
+        // Compare with yesterday's count
+        previousValue = counts.previousDay || 0;
+        break;
+      case "weekly":
+        // Compare with previous week's count
+        previousValue = counts.previousWeek || 0;
+        break;
+      case "monthly":
+        // Compare with previous month's count
+        previousValue = counts.previousMonth || 0;
+        break;
+      default:
+        return 0;
+    }
+
+    // Avoid division by zero
+    if (previousValue === 0) {
+      return currentValue > 0 ? 100 : 0;
+    }
+
+    return (((currentValue - previousValue) / previousValue) * 100).toFixed(1);
+  };
+
+  const percentage = getPercentageChange();
+  const isIncrease = percentage > 0;
+  const displayValue = hasOption ? counts[selectedOption] : (counts ? counts.current : value);
 
   return (
     <div className="relative">
@@ -23,32 +80,57 @@ const DashboardCard = ({ title, value, img, onClick }) => {
           <p className="text-xs font-bold uppercase text-gray-600 dark:text-gray-400">
             {title}
           </p>
-          <select id="select"
-          className="text-sm font-semibold text-gray-500 cursor-pointer border-b-1 border-t-0 border-x-0 focus:ring-0">
-            <option value="monthly">Monthly</option>
-            <option value="daily">Daily</option>
-          </select>
+          {hasOption && (
+            <select
+              id="select"
+              value={selectedOption}
+              onChange={(e) => onOptionChange(e.target.value)}
+              className="text-sm font-semibold text-gray-500 cursor-pointer border-b-1 border-t-0 border-x-0 focus:ring-0"
+            >
+              <option value="daily">Today</option>
+              <option value="weekly">This week</option>
+              <option value="monthly">This month</option>
+            </select>
+          )}
         </div>
 
         <div className="flex justify-between items-center mt-4">
           <div className="w-full hidden md:block">
-            <img src={img} alt="Icon"
-             onClick={onClick}
-             className="h-16 w-16 cursor-pointer" />
+            <img
+              src={img}
+              alt="Icon"
+              onClick={onClick}
+              className="h-16 w-16 cursor-pointer"
+            />
           </div>
 
           <div className="flex flex-row md:flex-col justify-between w-full items-center md:items-end">
             <p
               onClick={onClick}
-             className="text-2xl cursor-pointer text-center font-bold text-primary-500 dark:text-primary-400">
-              {value}
+              className="text-2xl cursor-pointer text-center font-bold text-primary-500 dark:text-primary-400"
+            >
+              {displayValue}
             </p>
             <p
               className={`text-lg md:text-sm font-semibold text-nowrap ${
-                isIncrease ? "text-red-500" : "text-green-500"
+                title === "Total Responded"
+                  ? isIncrease
+                    ? "text-green-500" // Resolved increase (good)
+                    : "text-red-500" // Resolved decrease (bad)
+                  : title === "Emergency"
+                  ? isIncrease
+                    ? "text-red-500" // Awaiting increase (bad)
+                    : "text-green-500" // Awaiting decrease (good)
+                  : ""
               }`}
             >
-              {isIncrease ? `${percentage}% ↑` : `${percentage}% ↓`}
+            {(title === "Total Responded" || title === "Emergency") && (
+              percentage !== 0
+                ? `${Math.abs(percentage.toFixed(1))}% ${
+                    isIncrease ? "↑" : "↓"
+                  }`
+                : "0%"
+            )}
             </p>
           </div>
         </div>
@@ -64,18 +146,77 @@ const Dashboard = () => {
   const { data: emergencyData } = useFetchData("emergencyRequest");
   const { data: events } = useFetchData("events");
   const { data: announcement } = useFetchData("announcement");
+  const [selectedOption, setSelectedOption] = useState("monthly");
 
   const activities = [...events, ...announcement];
 
-  const { awaitingResponseCount, resolvedCount } = emergencyData.reduce(
-    (counts, emergency) => {
-      if (emergency.status === "awaiting response")
-        counts.awaitingResponseCount++;
-      if (emergency.status === "resolved") counts.resolvedCount++;
+  const calculateCounts = (emergencyData) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    const thisWeekStart = new Date(now);
+    thisWeekStart.setDate(now.getDate() - now.getDay());
+    const lastWeekStart = new Date(thisWeekStart);
+    lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+    
+    const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+    return emergencyData.reduce((counts, emergency) => {
+      const emergencyDate = new Date(emergency.timestamp);
+      const isResolved = emergency.status === "resolved";
+      const isAwaiting = emergency.status === "awaiting response";
+
+      // Awaiting response counts (today vs yesterday)
+      if (emergencyDate >= today && isAwaiting) {
+        counts.awaitingResponse.current++;
+      } else if (emergencyDate >= yesterday && emergencyDate < today && isAwaiting) {
+        counts.awaitingResponse.previous++;
+      }
+
+      // Daily resolved counts
+      if (emergencyDate >= today && isResolved) {
+        counts.daily++;
+      } else if (emergencyDate >= yesterday && emergencyDate < today && isResolved) {
+        counts.previousDay++;
+      }
+
+      // Weekly resolved counts
+      if (emergencyDate >= thisWeekStart && isResolved) {
+        counts.weekly++;
+      } else if (emergencyDate >= lastWeekStart && emergencyDate < thisWeekStart && isResolved) {
+        counts.previousWeek++;
+      }
+
+      // Monthly resolved counts
+      if (emergencyDate >= thisMonthStart && isResolved) {
+        counts.monthly++;
+      } else if (emergencyDate >= lastMonthStart && emergencyDate < thisMonthStart && isResolved) {
+        counts.previousMonth++;
+      }
+
       return counts;
-    },
-    { awaitingResponseCount: 0, resolvedCount: 0 }
-  );
+    }, {
+      awaitingResponse: {
+        current: 0,    // Today's awaiting
+        previous: 0    // Yesterday's awaiting
+      },
+      daily: 0,
+      previousDay: 0,
+      weekly: 0,
+      previousWeek: 0,
+      monthly: 0,
+      previousMonth: 0
+    });
+  };
+
+  const counts = calculateCounts(emergencyData);
+
+  const handleOptionChange = (option) => {
+    setSelectedOption(option);
+  };
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -91,16 +232,25 @@ const Dashboard = () => {
             <DashboardCard
               title="Total Responded"
               value={
-                loading ? <Spinner setLoading={setLoading} /> : resolvedCount
+                loading ? (
+                  <Spinner setLoading={setLoading} />
+                ) : (
+                  counts[selectedOption]
+                )
               }
               img={population}
               onClick={() => handleNavigate("/records")}
+              selectedOption={selectedOption}
+              onOptionChange={handleOptionChange}
+              counts={counts}
+              hasOption={true}
             />
             <DashboardCard
               title="Today's Register"
               value={loading ? <Spinner setLoading={setLoading} /> : 0}
               img={registered}
               onClick={() => handleNavigate("/accounts/users")}
+              hasOption={false}
             />
             <DashboardCard
               title="Total Announcement"
@@ -113,6 +263,7 @@ const Dashboard = () => {
               }
               img={Events}
               onClick={() => handleNavigate("/announcement")}
+              hasOption={false}
             />
             <DashboardCard
               title="Emergency"
@@ -120,11 +271,13 @@ const Dashboard = () => {
                 loading ? (
                   <Spinner setLoading={setLoading} />
                 ) : (
-                  awaitingResponseCount
+                 counts.awaitingResponse.current
                 )
               }
               img={emergency}
               onClick={() => handleNavigate("/maps")}
+              hasOption={false}
+              counts={counts.awaitingResponse}
             />
           </div>
           <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4">
