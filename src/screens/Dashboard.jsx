@@ -12,18 +12,19 @@ import { useFetchData } from "../hooks/useFetchData";
 import icons from "../assets/icons/Icons";
 
 const DashboardCard = ({ title, value, img, onClick }) => {
-  const lastValue = 10;
+  const lastValue = 1;
   const percentage = lastValue * value;
   const isIncrease = value > lastValue;
 
   return (
     <div className="relative">
-      <div className="flex flex-col bg-white dark:bg-gray-800 shadow-md rounded-md p-4 w-full mb-3 md:mb-0">
+      <div className="flex h-full flex-col bg-white dark:bg-gray-800 shadow-md rounded-md p-4 w-full mb-3 md:mb-0">
         <div className="flex justify-between items-center">
-          <p className="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">
+          <p className="text-xs font-bold uppercase text-gray-600 dark:text-gray-400">
             {title}
           </p>
-          <select className="text-sm text-gray-500 cursor-pointer rounded-md p-1 border-none focus:ring-0">
+          <select id="select"
+          className="text-sm font-semibold text-gray-500 cursor-pointer border-b-1 border-t-0 border-x-0 focus:ring-0">
             <option value="monthly">Monthly</option>
             <option value="daily">Daily</option>
           </select>
@@ -31,11 +32,15 @@ const DashboardCard = ({ title, value, img, onClick }) => {
 
         <div className="flex justify-between items-center mt-4">
           <div className="w-full hidden md:block">
-            <img src={img} alt="Icon" className="h-16 w-16" />
+            <img src={img} alt="Icon"
+             onClick={onClick}
+             className="h-16 w-16 cursor-pointer" />
           </div>
 
           <div className="flex flex-row md:flex-col justify-between w-full items-center md:items-end">
-            <p className="text-2xl text-center font-bold text-primary-500 dark:text-primary-400">
+            <p
+              onClick={onClick}
+             className="text-2xl cursor-pointer text-center font-bold text-primary-500 dark:text-primary-400">
               {value}
             </p>
             <p
@@ -82,7 +87,7 @@ const Dashboard = () => {
         <>
           <DateToday />
 
-          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 lg:grid-cols-4 md:my-3 text-wrap cursor-pointer">
+          <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 xl:grid-cols-4 md:my-3 text-wrap space-y-2 md:space-y-0">
             <DashboardCard
               title="Total Responded"
               value={
@@ -92,7 +97,7 @@ const Dashboard = () => {
               onClick={() => handleNavigate("/records")}
             />
             <DashboardCard
-              title="Today's Registered"
+              title="Today's Register"
               value={loading ? <Spinner setLoading={setLoading} /> : 0}
               img={registered}
               onClick={() => handleNavigate("/accounts/users")}
@@ -127,7 +132,7 @@ const Dashboard = () => {
               <div className="order-3 lg:order-1 col-span-1 lg:col-span-3 row-span-5">
                 <MapContent isFullscreen={false} />
               </div>
-              <div className="order-2 md:order-2 col-span-1">
+              <div className="my-2 md:my-0 order-2 md:order-2 col-span-1">
                 <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-6 mb-2 shadow-md rounded-md dark:bg-gray-800">
                   <icons.thunder style={{ color: "#FF5733" }} />
                   <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md">

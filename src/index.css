@@ -47,3 +47,9 @@ input, textarea {
 .rbc-toolbar .rbc-btn-group .toolbar-btn-addEvent:hover {
   @apply bg-primary-600 text-gray-200 dark:bg-primary-300 dark:text-gray-800;
 }
+
+/* to hide the arrow icon in dashboard select option */
+#select {
+  background-image: none;
+  padding: 0;
+}
