@@ -23,19 +23,19 @@ const DashboardCard = ({
 }) => {
   // Calculate percentage change based on selected period
   const getPercentageChange = () => {
-
     if (!counts) return 0;
 
     if (!hasOption) {
-      const currentValue = counts.current || 0
-      const previousValue = counts.previous || 0
+      const currentValue = counts.current || 0;
+      const previousValue = counts.previous || 0;
 
-      if(previousValue === 0){
+      if (previousValue === 0) {
         return currentValue > 0 ? 100 : 0;
       }
 
-      return ((currentValue - previousValue) / previousValue * 100).toFixed(1);
-
+      return (((currentValue - previousValue) / previousValue) * 100).toFixed(
+        1
+      );
     }
 
     if (!hasOption && !counts) return 0;
@@ -71,7 +71,11 @@ const DashboardCard = ({
 
   const percentage = getPercentageChange();
   const isIncrease = percentage > 0;
-  const displayValue = hasOption ? counts[selectedOption] : (counts ? counts.current : value);
+  const displayValue = hasOption
+    ? counts[selectedOption]
+    : counts
+    ? counts.current
+    : value;
 
   return (
     <div className="relative">
@@ -124,13 +128,10 @@ const DashboardCard = ({
                   : ""
               }`}
             >
-            {(title === "Total Responded" || title === "Emergency") && (
-              percentage !== 0
-                ? `${Math.abs(percentage.toFixed(1))}% ${
-                    isIncrease ? "↑" : "↓"
-                  }`
-                : "0%"
-            )}
+              {(title === "Total Responded" || title === "Emergency") &&
+                (percentage !== 0
+                  ? `${Math.abs(percentage)}% ${isIncrease ? "↑" : "↓"}`
+                  : "0%")}
             </p>
           </div>
         </div>
@@ -155,61 +156,71 @@ const Dashboard = () => {
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    
+
     const thisWeekStart = new Date(now);
     thisWeekStart.setDate(now.getDate() - now.getDay());
     const lastWeekStart = new Date(thisWeekStart);
     lastWeekStart.setDate(lastWeekStart.getDate() - 7);
-    
+
     const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
-    return emergencyData.reduce((counts, emergency) => {
-      const emergencyDate = new Date(emergency.timestamp);
-      const isResolved = emergency.status === "resolved";
-      const isAwaiting = emergency.status === "awaiting response";
+    return emergencyData.reduce(
+      (counts, emergency) => {
+        const emergencyDate = new Date(emergency.timestamp);
+        const isResolved = emergency.status === "resolved";
 
-      // Awaiting response counts (today vs yesterday)
-      if (emergencyDate >= today && isAwaiting) {
-        counts.awaitingResponse.current++;
-      } else if (emergencyDate >= yesterday && emergencyDate < today && isAwaiting) {
-        counts.awaitingResponse.previous++;
-      }
+        // total emergencies counts regardless of status
+        if (emergencyDate >= today) {
+          counts.awaitingResponse.current++;
+        } else if (emergencyDate >= yesterday && emergencyDate < today) {
+          counts.awaitingResponse.previous++;
+        }
 
-      // Daily resolved counts
-      if (emergencyDate >= today && isResolved) {
-        counts.daily++;
-      } else if (emergencyDate >= yesterday && emergencyDate < today && isResolved) {
-        counts.previousDay++;
-      }
+        if (isResolved) {
+          // Daily resolved counts
+          if (emergencyDate >= today) {
+            counts.daily++;
+          } else if (emergencyDate >= yesterday && emergencyDate < today) {
+            counts.previousDay++;
+          }
 
-      // Weekly resolved counts
-      if (emergencyDate >= thisWeekStart && isResolved) {
-        counts.weekly++;
-      } else if (emergencyDate >= lastWeekStart && emergencyDate < thisWeekStart && isResolved) {
-        counts.previousWeek++;
-      }
+          // Weekly resolved counts
+          if (emergencyDate >= thisWeekStart) {
+            counts.weekly++;
+          } else if (
+            emergencyDate >= lastWeekStart &&
+            emergencyDate < thisWeekStart
+          ) {
+            counts.previousWeek++;
+          }
 
-      // Monthly resolved counts
-      if (emergencyDate >= thisMonthStart && isResolved) {
-        counts.monthly++;
-      } else if (emergencyDate >= lastMonthStart && emergencyDate < thisMonthStart && isResolved) {
-        counts.previousMonth++;
-      }
+          // Monthly resolved counts
+          if (emergencyDate >= thisMonthStart) {
+            counts.monthly++;
+          } else if (
+            emergencyDate >= lastMonthStart &&
+            emergencyDate < thisMonthStart
+          ) {
+            counts.previousMonth++;
+          }
+        }
 
-      return counts;
-    }, {
-      awaitingResponse: {
-        current: 0,    // Today's awaiting
-        previous: 0    // Yesterday's awaiting
+        return counts;
       },
-      daily: 0,
-      previousDay: 0,
-      weekly: 0,
-      previousWeek: 0,
-      monthly: 0,
-      previousMonth: 0
-    });
+      {
+        awaitingResponse: {
+          current: 0, // Today's awaiting
+          previous: 0, // Yesterday's awaiting
+        },
+        daily: 0,
+        previousDay: 0,
+        weekly: 0,
+        previousWeek: 0,
+        monthly: 0,
+        previousMonth: 0,
+      }
+    );
   };
 
   const counts = calculateCounts(emergencyData);
@@ -221,7 +232,8 @@ const Dashboard = () => {
   const handleNavigate = (path) => {
     navigate(path);
   };
-
+  const now = new Date();
+  
   return (
     <HeadSide
       child={
@@ -271,7 +283,7 @@ const Dashboard = () => {
                 loading ? (
                   <Spinner setLoading={setLoading} />
                 ) : (
-                 counts.awaitingResponse.current
+                  counts.awaitingResponse.current
                 )
               }
               img={emergency}
