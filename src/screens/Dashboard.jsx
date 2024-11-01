@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import MapContent from "./Maps/MapContent";
 import { Spinner } from "../components/ReusableComponents/Skeleton";
 import population from "../assets/images/population.svg";
-import registered from "../assets/images/registered.svg";
 import Events from "../assets/images/events.svg";
 import emergency from "../assets/images/emergency.svg";
 import navigator from "../assets/images/direction.svg"
