@@ -5,9 +5,13 @@ import { capitalizeFirstLetter } from "../helper/CapitalizeFirstLetter";
 import Toolbar from "../components/ToolBar";
 import Pagination from "../components/Pagination";
 import usePagination from "../hooks/usePagination";
-import SearchQuery from "../components/SearchQuery";
 import { useState, useEffect } from "react";
 import useFilteredData from "../components/SearchQuery";
+import { formatDateWithTime } from "../helper/FormatDate";
+import IconButton from "../components/ReusableComponents/IconButton";
+import { toast } from "sonner";
+import icons from "../assets/icons/Icons";
+import { Tooltip } from "@mui/material";
 
 const Records = () => {
   const { data: emergencyHistory } = useFetchData("emergencyRequest");
@@ -41,7 +45,7 @@ const Records = () => {
     "status",
     "type",
     "description",
-    "location.address"
+    "location.address",
   ];
 
   // to updated the value of filteredData which is the searchQuery
@@ -58,13 +62,12 @@ const Records = () => {
 
   const HeaderData = [
     "emergency id",
-    "Type",
     "Name",
-    "Decription",
     "Location",
-    "Status",
     "Submitted",
+    "Status",
     "Responder",
+    "Action",
   ];
 
   const renderRow = (emergency) => {
@@ -79,30 +82,53 @@ const Records = () => {
       "Waiting for Responder";
 
     const statusStyle =
-      "flex items-center justify-center font-bold p-0.5 rounded-md";
+      "flex items-center justify-center font-bold py-1 rounded-r-sm";
     const statusColor = {
-      resolved: `text-green-500 bg-green-200 ${statusStyle}`,
-      "awaiting response": `text-yellow-500 bg-yellow-200 ${statusStyle}`,
-      "on-going": `text-blue-500 bg-blue-200 ${statusStyle}`,
-      expired: `text-red-500 bg-red-200 ${statusStyle}`,
+      resolved: `text-green-500 bg-green-100 border-l-2 border-l-green-500 ${statusStyle}`,
+      "awaiting response": `text-yellow-500 bg-yellow-100 ${statusStyle}`,
+      "on-going": `text-blue-500 bg-blue-100 ${statusStyle}`,
+      expired: `text-red-500 bg-red-100 ${statusStyle}`,
     };
-
     return (
       <>
         <td className="px-6 py-4 whitespace-nowrap">{emergency.emergencyId}</td>
-        <td className="px-6 py-4">{emergency.type}</td>
-        <td className="px-6 py-4 whitespace-nowrap">{userName}</td>
-        <td className="px-6 py-4">{emergency.description}</td>
-        <td className="px-6 py-4">{emergency.location.address}</td>
+        <Tooltip title={userDetails.customId} placement="top" arrow><td className="px-6 py-4 whitespace-nowrap">{userName}</td></Tooltip>
+        <Tooltip title={emergency.location.address} placement="top" arrow>
+          <td className="px-6 py-4 max-w-16 text-ellipsis overflow-hidden whitespace-nowrap">
+            {emergency.location.address}
+          </td>
+        </Tooltip>
+        <td className="px-6 py-4 whitespace-normal text-wrap">
+          {formatDateWithTime(emergency.date)}
+        </td>
         <td>
           <p className={`${statusColor[emergency.status]} whitespace-nowrap`}>
             {capitalizeFirstLetter(emergency.status)}
           </p>
         </td>
         <td className="px-6 py-4">
-          {new Date(emergency.date).toLocaleString()}
+          <Tooltip title={responderName} placement="top" arrow>
+            <div className="flex items-center justify-center">
+              <img
+                src={responderDetails?.img}
+                alt="responder"
+                className="h-8 w-8 p-0 bg-gray-600 rounded-full"
+              />
+            </div>
+          </Tooltip>
         </td>
-        <td className="px-6 py-4">{responderName}</td>
+        <td className="px-6 py-4">
+          <div className="flex px-2 space-x-2 flex-row items-center justify-evenly">
+            <IconButton
+              icon={icons.view}
+              color={"blue"}
+              bgColor={"bg-blue-100"}
+              onClick={() => toast.info("Show more details clicked")}
+              tooltip={"Show more details"}
+              fontSize={"small"}
+            />
+          </div>
+        </td>
       </>
     );
   };
@@ -111,7 +137,11 @@ const Records = () => {
     <HeadSide
       child={
         <>
-          <Toolbar label={"Emergency Records"} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <Toolbar
+            label={"Emergency Records"}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
           <Table
             headers={HeaderData}
             data={currentItems} // pass the currentItems from usePagination
