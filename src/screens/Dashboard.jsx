@@ -29,39 +29,59 @@ const DashboardCard = ({
       const currentValue = counts.current || 0;
       const previousValue = counts.previous || 0;
 
+      // If values are the same, return 0%
+      if (currentValue === previousValue) {
+        return 0;
+      }
+
       if (previousValue === 0) {
         return currentValue > 0 ? 100 : 0;
       }
 
-      return (((currentValue - previousValue) / previousValue) * 100).toFixed(
-        1
-      );
+      return (((currentValue - previousValue) / previousValue) * 100).toFixed(1);
     }
 
     if (!hasOption && !counts) return 0;
 
-    const now = new Date();
-    const currentValue = counts[selectedOption];
+    // Get the appropriate values based on the selected period
+    let currentValue = 0;
     let previousValue = 0;
 
+    // Match current with previous periods
     switch (selectedOption) {
       case "daily":
-        // Compare with yesterday's count
-        previousValue = counts.previousDay || 0;
+        currentValue = counts.daily;
+        previousValue = counts.previousDay;
+        break;
+      case "previousDay":
+        currentValue = counts.previousDay;
+        previousValue = counts.daily; // Compare with current day
         break;
       case "weekly":
-        // Compare with previous week's count
-        previousValue = counts.previousWeek || 0;
+        currentValue = counts.weekly;
+        previousValue = counts.previousWeek;
+        break;
+      case "previousWeek":
+        currentValue = counts.previousWeek;
+        previousValue = counts.weekly; // Compare with current week
         break;
       case "monthly":
-        // Compare with previous month's count
-        previousValue = counts.previousMonth || 0;
+        currentValue = counts.monthly;
+        previousValue = counts.previousMonth;
+        break;
+      case "previousMonth":
+        currentValue = counts.previousMonth;
+        previousValue = counts.monthly; // Compare with current month
         break;
       default:
         return 0;
     }
 
-    // Avoid division by zero
+    // If values are the same, return 0%
+    if (currentValue === previousValue) {
+      return 0;
+    }
+
     if (previousValue === 0) {
       return currentValue > 0 ? 100 : 0;
     }
@@ -71,11 +91,30 @@ const DashboardCard = ({
 
   const percentage = getPercentageChange();
   const isIncrease = percentage > 0;
-  const displayValue = hasOption
-    ? counts[selectedOption]
-    : counts
-    ? counts.current
-    : value;
+  
+  // Get the display value based on the selected period
+  const getDisplayValue = () => {
+    if (!hasOption) return counts ? counts.current : value;
+    
+    switch (selectedOption) {
+      case "daily":
+        return counts.daily;
+      case "previousDay":
+        return counts.previousDay;
+      case "weekly":
+        return counts.weekly;
+      case "previousWeek":
+        return counts.previousWeek;
+      case "monthly":
+        return counts.monthly;
+      case "previousMonth":
+        return counts.previousMonth;
+      default:
+        return value;
+    }
+  };
+
+  const displayValue = getDisplayValue();
 
   return (
     <div className="relative">
@@ -92,8 +131,11 @@ const DashboardCard = ({
               className="text-sm font-semibold text-gray-500 cursor-pointer border-b-1 border-t-0 border-x-0 focus:ring-0"
             >
               <option value="daily">Today</option>
+              <option value="previousDay">Yesterday</option>
               <option value="weekly">This week</option>
+              <option value="previousWeek">Last Week</option>
               <option value="monthly">This month</option>
+              <option value="previousMonth">Last month</option>
             </select>
           )}
         </div>
@@ -119,16 +161,16 @@ const DashboardCard = ({
               className={`text-lg md:text-sm font-semibold text-nowrap ${
                 title === "Total Responded"
                   ? isIncrease
-                    ? "text-green-500" // Resolved increase (good)
-                    : "text-red-500" // Resolved decrease (bad)
-                  : title === "Emergency"
+                    ? "text-green-500"
+                    : "text-red-500"
+                  : title === "Today's Emergency"
                   ? isIncrease
-                    ? "text-red-500" // Awaiting increase (bad)
-                    : "text-green-500" // Awaiting decrease (good)
+                    ? "text-red-500"
+                    : "text-green-500"
                   : ""
               }`}
             >
-              {(title === "Total Responded" || title === "Emergency") &&
+              {(title === "Total Responded" || title === "Today's Emergency") &&
                 (percentage !== 0
                   ? `${Math.abs(percentage)}% ${isIncrease ? "↑" : "↓"}`
                   : "0%")}
@@ -147,7 +189,7 @@ const Dashboard = () => {
   const { data: emergencyData } = useFetchData("emergencyRequest");
   const { data: events } = useFetchData("events");
   const { data: announcement } = useFetchData("announcement");
-  const [selectedOption, setSelectedOption] = useState("monthly");
+  const [selectedOption, setSelectedOption] = useState("daily");
 
   const activities = [...events, ...announcement];
 
@@ -257,6 +299,20 @@ const Dashboard = () => {
               counts={counts}
               hasOption={true}
             />
+             <DashboardCard
+              title="Today's Emergency"
+              value={
+                loading ? (
+                  <Spinner setLoading={setLoading} />
+                ) : (
+                  counts.awaitingResponse.current
+                )
+              }
+              img={emergency}
+              onClick={() => handleNavigate("/maps")}
+              hasOption={false}
+              counts={counts.awaitingResponse}
+            />
             <DashboardCard
               title="Today's Register"
               value={loading ? <Spinner setLoading={setLoading} /> : 0}
@@ -276,20 +332,6 @@ const Dashboard = () => {
               img={Events}
               onClick={() => handleNavigate("/announcement")}
               hasOption={false}
-            />
-            <DashboardCard
-              title="Emergency"
-              value={
-                loading ? (
-                  <Spinner setLoading={setLoading} />
-                ) : (
-                  counts.awaitingResponse.current
-                )
-              }
-              img={emergency}
-              onClick={() => handleNavigate("/maps")}
-              hasOption={false}
-              counts={counts.awaitingResponse}
             />
           </div>
           <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4">
