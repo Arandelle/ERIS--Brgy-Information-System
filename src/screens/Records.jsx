@@ -14,33 +14,59 @@ import icons from "../assets/icons/Icons";
 import { Tooltip } from "@mui/material";
 import Modal from "../components/ReusableComponents/Modal";
 
+const StatusBadge = ({ status }) => {
+  const getStatusStyles = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'resolved':
+        return 'text-green-500 bg-green-100 border-l-green-500';
+      case 'awaiting response':
+        return 'text-yellow-500 bg-yellow-100 border-l-yellow-500';
+      case 'on-going':
+        return 'text-blue-500 bg-blue-100 border-l-blue-500';
+      case 'expired':
+        return 'text-red-500 bg-red-100 border-l-red-500';
+      default:
+        return 'text-gray-500 bg-gray-100 border-l-gray-500';
+    }
+  };
+
+  return (
+    <p className={`flex items-center justify-center font-bold py-1 rounded-r-sm border-l-2 ${getStatusStyles(status)}`}>
+      {capitalizeFirstLetter(status || 'unknown')}
+    </p>
+  );
+};
+
 const Records = () => {
-  const { data: emergencyHistory } = useFetchData("emergencyRequest");
-  const { data: users } = useFetchData("users");
-  const { data: responders } = useFetchData("responders");
+  const { data: emergencyHistory = [] } = useFetchData("emergencyRequest");
+  const { data: users = [] } = useFetchData("users");
+  const { data: responders = [] } = useFetchData("responders");
   const [isView, setIsView] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Helper function to safely concatenate name parts
+  const formatFullName = (firstname, lastname) => {
+    const name = [firstname, lastname].filter(Boolean).join(" ").trim();
+    return name || "Anonymous";
+  };
+
   // updated data to include the name of users and responder which not included in original list of emergencyHistory
-  const updatedData = emergencyHistory?.map((emergency) => {
-    const user = users?.find((user) => user.id === emergency.userId);
-    const responder = responders?.find(
-      (responder) => responder.id === emergency.responderId
-    );
+  const updatedData = emergencyHistory.map((emergency) => {
+    const user = users.find((user) => user?.id === emergency?.userId);
+    const responder = responders.find((responder) => responder?.id === emergency?.responderId);
+
     return {
       ...emergency,
-      userName: `${user?.firstname} ${user?.lastname}` || "",
-      responderName: responder
-        ? `${responder?.firstname} ${responder?.lastname}`
-        : "",
-      userID: user?.customId || "",
-      responderID: responder?.customId || "",
+      userName: formatFullName(user?.firstname, user?.lastname),
+      responderName: responder ? formatFullName(responder?.firstname, responder?.lastname) : "Waiting for responder",
+      userID: user?.customId || "N/A",
+      responderID: responder?.customId || "N/A",
       responderImage: responder?.img || "",
     };
   });
 
-  const recordDetails = updatedData?.find((item) => item.id === selectedId);
+  const recordDetails = updatedData.find((item) => item?.id === selectedId) || {};
 
   // search field to get the value with
   const searchFields = [
@@ -56,7 +82,7 @@ const Records = () => {
   ];
 
   // to updated the value of filteredData which is the searchQuery
-  const filteredData = useFilteredData(updatedData, searchQuery, searchFields); // used for searchQuery
+  const filteredData = useFilteredData(updatedData, searchQuery, searchFields);
 
   const {
     currentPage,
@@ -65,7 +91,7 @@ const Records = () => {
     indexOfFirstItem,
     currentItems,
     totalPages,
-  } = usePagination(filteredData); // pass the filtered data instead of default emergencyHistory
+  } = usePagination(filteredData);
 
   const HeaderData = [
     "emergency id",
@@ -78,41 +104,30 @@ const Records = () => {
   ];
 
   const renderRow = (emergency) => {
+    const recordDetails = updatedData.find((item) => item?.id === emergency?.id) || {};
 
-    const recordDetails = updatedData?.find((item) => item.id === emergency?.id);
-    
-    const color = {
-      resolved: "green",
-      "awaiting response": "yellow",
-      "ong-going": "blue",
-      expired: "red"
-    }
-
-    const statusStyle =
-      `flex items-center justify-center font-bold py-1 rounded-r-sm text-${color[recordDetails.status]}-500 bg-${color[recordDetails.status]}-100 border-l-2 border-l-${color[recordDetails.status]}-500`;
-      
     return (
       <>
-        <td className="px-6 py-4 whitespace-nowrap">{recordDetails?.emergencyId}</td>
-        <Tooltip title={recordDetails?.userID} placement="top" arrow>
-          <td className="px-6 py-4 whitespace-nowrap">{recordDetails?.userName}</td>
+        <td className="px-6 py-4 whitespace-nowrap">{recordDetails?.emergencyId || "N/A"}</td>
+        <Tooltip title={recordDetails?.userID || "N/A"} placement="top" arrow>
+          <td className="px-6 py-4 whitespace-nowrap">{recordDetails?.userName || "Anonymous"}</td>
         </Tooltip>
-        <Tooltip title={recordDetails?.location.address} placement="top" arrow>
+        <Tooltip title={recordDetails?.location?.address || "No address available"} placement="top" arrow>
           <td className="px-6 py-4 max-w-16 text-ellipsis overflow-hidden whitespace-nowrap">
-            {recordDetails?.location.address}
+            {recordDetails?.location?.address || "No address"}
           </td>
         </Tooltip>
         <td className="px-6 py-4 whitespace-normal text-wrap">
-          {formatDateWithTime(recordDetails?.date)}
+          {recordDetails?.date ? formatDateWithTime(recordDetails.date) : "N/A"}
         </td>
         <td>
-          <p className={`${statusStyle} whitespace-normal w-24 text-center`}>
-            {capitalizeFirstLetter(recordDetails.status)}
+          <p className={`text-center`}>
+          <StatusBadge status={recordDetails?.status} />
           </p>
         </td>
         <td className="px-6 py-4">
           <Tooltip
-            title={!recordDetails?.responderName ? "No value" : recordDetails.responderName}
+            title={recordDetails?.responderName || "No responder assigned"}
             placement="top"
             arrow
           >
@@ -137,7 +152,7 @@ const Records = () => {
               bgColor={"bg-blue-100"}
               onClick={() => {
                 setIsView(!isView);
-                setSelectedId(emergency.id);
+                setSelectedId(emergency?.id);
               }}
               tooltip={"Show more details"}
               fontSize={"small"}
@@ -149,7 +164,7 @@ const Records = () => {
   };
 
   const RenderDetails = ({ data, color }) => {
-    const filteredData = data.filter(({ value }) => value);
+    const filteredData = data.filter(({ value }) => value != null && value !== "");
     if (filteredData.length === 0) return null;
 
     return (
@@ -177,7 +192,7 @@ const Records = () => {
           />
           <Table
             headers={HeaderData}
-            data={currentItems} // pass the currentItems from usePagination
+            data={currentItems}
             renderRow={renderRow}
             emptyMessage={"No records found"}
           />
@@ -187,7 +202,7 @@ const Records = () => {
             setCurrentPage={setCurrentPage}
             indexOfFirstItem={indexOfFirstItem}
             indexOfLastItem={indexOfLastItem}
-            data={filteredData} // pass the filteredData instead of default emergencyHistory
+            data={filteredData}
           />
 
           {isView && (
@@ -199,22 +214,22 @@ const Records = () => {
                     data={[
                       {
                         label: "Emergency ID",
-                        value: recordDetails.emergencyId,
+                        value: recordDetails?.emergencyId || "N/A",
                       },
-                      { label: "User ID: ", value: recordDetails.userID },
+                      { label: "User ID: ", value: recordDetails?.userID || "N/A" },
                       {
                         label: "Responder ID: ",
-                        value: recordDetails.responderID,
+                        value: recordDetails?.responderID || "N/A",
                       },
                     ]}
                     color={"yellow"}
                   />
                   <RenderDetails
                     data={[
-                      { label: "User Name: ", value: recordDetails.userName },
+                      { label: "User Name: ", value: recordDetails?.userName || "Anonymous" },
                       {
                         label: "Responder Name: ",
-                        value: recordDetails.responderName,
+                        value: recordDetails?.responderName,
                       },
                     ]}
                     color={"gray"}
@@ -223,15 +238,15 @@ const Records = () => {
                     data={[
                       {
                         label: "Response Time: ",
-                        value: recordDetails.responseTime
+                        value: recordDetails?.responseTime
                           ? formatDateWithTime(recordDetails.responseTime)
-                          : "",
+                          : "N/A",
                       },
                       {
                         label: "Resolved Time: ",
-                        value: recordDetails.dateResolved
+                        value: recordDetails?.dateResolved
                           ? formatDateWithTime(recordDetails.dateResolved)
-                          : "",
+                          : "N/A",
                       },
                     ]}
                     color={"gray"}
@@ -240,22 +255,23 @@ const Records = () => {
                     data={[
                       {
                         label: "Geocode Location: ",
-                        value: recordDetails.location.address,
+                        value: recordDetails?.location?.address || "No address available",
                       },
                       {
                         label: "Latitude: ",
-                        value: recordDetails.location.latitude,
+                        value: recordDetails?.location?.latitude || "N/A",
                       },
                       {
                         label: "Longitude",
-                        value: recordDetails.location.longitude,
+                        value: recordDetails?.location?.longitude || "N/A",
                       },
                     ]}
                     color={"gray"}
                   />
                   <RenderDetails 
                     data={[{
-                      label: "Description", value: recordDetails.description
+                      label: "Description", 
+                      value: recordDetails?.description || "No description available"
                     }]}
                     color={"gray"}
                   />
