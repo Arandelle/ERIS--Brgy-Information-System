@@ -12,12 +12,14 @@ import IconButton from "../components/ReusableComponents/IconButton";
 import { toast } from "sonner";
 import icons from "../assets/icons/Icons";
 import { Tooltip } from "@mui/material";
+import Modal from "../components/ReusableComponents/Modal";
 
 const Records = () => {
   const { data: emergencyHistory } = useFetchData("emergencyRequest");
   const { data: users } = useFetchData("users");
   const { data: responders } = useFetchData("responders");
-
+  const [isView, setIsView] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   // updated data to include the name of users and responder which not included in original list of emergencyHistory
@@ -34,6 +36,12 @@ const Records = () => {
       responderID: responder?.customId || "",
     };
   });
+
+  const recordDetails = updatedData?.find((item) => item.id === selectedId);
+  const responderName = recordDetails?.responderName || "Waiting for responder";
+  const userName = recordDetails?.userName || "Waiting for responder";
+  const userID = recordDetails?.userID || "";
+  const responderID = recordDetails?.responderID || "";
 
   // search field to get the value with
   const searchFields = [
@@ -92,7 +100,9 @@ const Records = () => {
     return (
       <>
         <td className="px-6 py-4 whitespace-nowrap">{emergency.emergencyId}</td>
-        <Tooltip title={userDetails.customId} placement="top" arrow><td className="px-6 py-4 whitespace-nowrap">{userName}</td></Tooltip>
+        <Tooltip title={userDetails.customId} placement="top" arrow>
+          <td className="px-6 py-4 whitespace-nowrap">{userName}</td>
+        </Tooltip>
         <Tooltip title={emergency.location.address} placement="top" arrow>
           <td className="px-6 py-4 max-w-16 text-ellipsis overflow-hidden whitespace-nowrap">
             {emergency.location.address}
@@ -123,13 +133,31 @@ const Records = () => {
               icon={icons.view}
               color={"blue"}
               bgColor={"bg-blue-100"}
-              onClick={() => toast.info("Show more details clicked")}
+              onClick={() => {
+                setIsView(!isView);
+                setSelectedId(emergency.id);
+              }}
               tooltip={"Show more details"}
               fontSize={"small"}
             />
           </div>
         </td>
       </>
+    );
+  };
+
+  const RenderDetails = ({ data, color }) => {
+    return (
+      <div
+        className={`bg-${color}-100 p-2 text-sm text-${color}-500 border-l-2 border-l-${color}-500 rounded-r-md space-y-1`}
+      >
+        {data.map(({ label, value }, index) => (
+          <div key={index} className="flex flex-row">
+            <p className="w-1/2">{label}</p>
+            <p className="flex-1 font-bold">{value}</p>
+          </div>
+        ))}
+      </div>
     );
   };
 
@@ -156,6 +184,64 @@ const Records = () => {
             indexOfLastItem={indexOfLastItem}
             data={filteredData} // pass the filteredData instead of default emergencyHistory
           />
+
+          {isView && (
+            <Modal
+              closeButton={() => setIsView(!isView)}
+              children={
+                <div className="w-full space-y-4">
+                  <RenderDetails
+                    data={[
+                      {
+                        label: "Emergency ID",
+                        value: recordDetails.emergencyId,
+                      },
+                      { label: "User ID: ", value: userID },
+                      { label: "Responder ID: ", value: responderID },
+                    ]}
+                    color={"yellow"}
+                  />
+                   <RenderDetails
+                    data={[
+                      { label: "User Name: ", value: userName },
+                      { label: "Responder Name: ", value: responderName },
+                    ]}
+                    color={"gray"}
+                  />
+                  <RenderDetails
+                    data={[
+                      {
+                        label: "Response Time: ",
+                        value: formatDateWithTime(recordDetails.responseTime),
+                      },
+                      {
+                        label: "Resolved Time: ",
+                        value: formatDateWithTime(recordDetails.dateResolved),
+                      },
+                    ]}
+                    color={"gray"}
+                  />
+                  <RenderDetails
+                    data={[
+                      {
+                        label: "Geocode Location: ",
+                        value: recordDetails.location.address,
+                      },
+                      {
+                        label: "Latitude: ",
+                        value: recordDetails.location.latitude,
+                      },
+                      {
+                        label: "Longitude",
+                        value: recordDetails.location.longitude,
+                      },
+                    ]}
+                    color={"gray"}
+                  />
+                </div>
+              }
+            />
+          )}
         </>
       }
     />
