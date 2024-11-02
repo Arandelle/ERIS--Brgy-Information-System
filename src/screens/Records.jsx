@@ -31,17 +31,15 @@ const Records = () => {
     return {
       ...emergency,
       userName: `${user?.firstname} ${user?.lastname}` || "",
-      responderName: `${responder?.firstname} ${responder?.lastname}` || "",
+      responderName: responder
+        ? `${responder?.firstname} ${responder?.lastname}`
+        : "",
       userID: user?.customId || "",
       responderID: responder?.customId || "",
     };
   });
 
   const recordDetails = updatedData?.find((item) => item.id === selectedId);
-  const responderName = recordDetails?.responderName || "Waiting for responder";
-  const userName = recordDetails?.userName || "Waiting for responder";
-  const userID = recordDetails?.userID || "";
-  const responderID = recordDetails?.responderID || "";
 
   // search field to get the value with
   const searchFields = [
@@ -117,13 +115,21 @@ const Records = () => {
           </p>
         </td>
         <td className="px-6 py-4">
-          <Tooltip title={responderName} placement="top" arrow>
+          <Tooltip
+            title={!responderName ? "No value" : responderName}
+            placement="top"
+            arrow
+          >
             <div className="flex items-center justify-center">
-              <img
-                src={responderDetails?.img}
-                alt="responder"
-                className="h-8 w-8 p-0 bg-gray-600 rounded-full"
-              />
+              {responderDetails?.img ? (
+                <img
+                  src={responderDetails?.img}
+                  alt="responder"
+                  className="h-8 w-8 p-0 bg-gray-600 rounded-full"
+                />
+              ) : (
+                "Waiting for responder"
+              )}
             </div>
           </Tooltip>
         </td>
@@ -147,11 +153,14 @@ const Records = () => {
   };
 
   const RenderDetails = ({ data, color }) => {
+    const filteredData = data.filter(({ value }) => value);
+    if (filteredData.length === 0) return null;
+
     return (
       <div
         className={`bg-${color}-100 p-2 text-sm text-${color}-500 border-l-2 border-l-${color}-500 rounded-r-md space-y-1`}
       >
-        {data.map(({ label, value }, index) => (
+        {filteredData.map(({ label, value }, index) => (
           <div key={index} className="flex flex-row">
             <p className="w-1/2">{label}</p>
             <p className="flex-1 font-bold">{value}</p>
@@ -196,15 +205,21 @@ const Records = () => {
                         label: "Emergency ID",
                         value: recordDetails.emergencyId,
                       },
-                      { label: "User ID: ", value: userID },
-                      { label: "Responder ID: ", value: responderID },
+                      { label: "User ID: ", value: recordDetails.userID },
+                      {
+                        label: "Responder ID: ",
+                        value: recordDetails.responderID,
+                      },
                     ]}
                     color={"yellow"}
                   />
-                   <RenderDetails
+                  <RenderDetails
                     data={[
-                      { label: "User Name: ", value: userName },
-                      { label: "Responder Name: ", value: responderName },
+                      { label: "User Name: ", value: recordDetails.userName },
+                      {
+                        label: "Responder Name: ",
+                        value: recordDetails.responderName,
+                      },
                     ]}
                     color={"gray"}
                   />
@@ -212,11 +227,15 @@ const Records = () => {
                     data={[
                       {
                         label: "Response Time: ",
-                        value: formatDateWithTime(recordDetails.responseTime),
+                        value: recordDetails.responseTime
+                          ? formatDateWithTime(recordDetails.responseTime)
+                          : "",
                       },
                       {
                         label: "Resolved Time: ",
-                        value: formatDateWithTime(recordDetails.dateResolved),
+                        value: recordDetails.dateResolved
+                          ? formatDateWithTime(recordDetails.dateResolved)
+                          : "",
                       },
                     ]}
                     color={"gray"}
