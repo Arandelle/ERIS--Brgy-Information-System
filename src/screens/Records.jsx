@@ -36,6 +36,7 @@ const Records = () => {
         : "",
       userID: user?.customId || "",
       responderID: responder?.customId || "",
+      responderImage: responder?.img || "",
     };
   });
 
@@ -77,15 +78,8 @@ const Records = () => {
   ];
 
   const renderRow = (emergency) => {
-    const userDetails = users?.find((user) => user.id === emergency.userId);
-    const responderDetails = responders?.find(
-      (responder) => responder.id === emergency.responderId
-    );
 
-    const userName = `${userDetails?.firstname} ${userDetails?.lastname}` || "";
-    const responderName =
-      `${responderDetails?.firstname} ${responderDetails?.lastname}` ||
-      "Waiting for Responder";
+    const recordDetails = updatedData?.find((item) => item.id === emergency?.id);
 
     const statusStyle =
       "flex items-center justify-center font-bold py-1 rounded-r-sm";
@@ -95,35 +89,36 @@ const Records = () => {
       "on-going": `text-blue-500 bg-blue-100 ${statusStyle}`,
       expired: `text-red-500 bg-red-100 ${statusStyle}`,
     };
+
     return (
       <>
-        <td className="px-6 py-4 whitespace-nowrap">{emergency.emergencyId}</td>
-        <Tooltip title={userDetails.customId} placement="top" arrow>
-          <td className="px-6 py-4 whitespace-nowrap">{userName}</td>
+        <td className="px-6 py-4 whitespace-nowrap">{recordDetails?.emergencyId}</td>
+        <Tooltip title={recordDetails?.userID} placement="top" arrow>
+          <td className="px-6 py-4 whitespace-nowrap">{recordDetails?.userName}</td>
         </Tooltip>
-        <Tooltip title={emergency.location.address} placement="top" arrow>
+        <Tooltip title={recordDetails?.location.address} placement="top" arrow>
           <td className="px-6 py-4 max-w-16 text-ellipsis overflow-hidden whitespace-nowrap">
-            {emergency.location.address}
+            {recordDetails?.location.address}
           </td>
         </Tooltip>
         <td className="px-6 py-4 whitespace-normal text-wrap">
-          {formatDateWithTime(emergency.date)}
+          {formatDateWithTime(recordDetails?.date)}
         </td>
         <td>
-          <p className={`${statusColor[emergency.status]} whitespace-nowrap`}>
-            {capitalizeFirstLetter(emergency.status)}
+          <p className={`${statusColor[recordDetails?.status]} whitespace-nowrap`}>
+            {capitalizeFirstLetter(recordDetails.status)}
           </p>
         </td>
         <td className="px-6 py-4">
           <Tooltip
-            title={!responderName ? "No value" : responderName}
+            title={!recordDetails?.responderName ? "No value" : recordDetails.responderName}
             placement="top"
             arrow
           >
             <div className="flex items-center justify-center">
-              {responderDetails?.img ? (
+              {recordDetails?.responderImage ? (
                 <img
-                  src={responderDetails?.img}
+                  src={recordDetails.responderImage}
                   alt="responder"
                   className="h-8 w-8 p-0 bg-gray-600 rounded-full"
                 />
@@ -255,6 +250,12 @@ const Records = () => {
                         value: recordDetails.location.longitude,
                       },
                     ]}
+                    color={"gray"}
+                  />
+                  <RenderDetails 
+                    data={[{
+                      label: "Description", value: recordDetails.description
+                    }]}
                     color={"gray"}
                   />
                 </div>
