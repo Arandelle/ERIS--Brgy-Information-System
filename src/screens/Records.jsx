@@ -80,16 +80,17 @@ const Records = () => {
   const renderRow = (emergency) => {
 
     const recordDetails = updatedData?.find((item) => item.id === emergency?.id);
+    
+    const color = {
+      resolved: "green",
+      "awaiting response": "yellow",
+      "ong-going": "blue",
+      expired: "red"
+    }
 
     const statusStyle =
-      "flex items-center justify-center font-bold py-1 rounded-r-sm";
-    const statusColor = {
-      resolved: `text-green-500 bg-green-100 border-l-2 border-l-green-500 ${statusStyle}`,
-      "awaiting response": `text-yellow-500 bg-yellow-100 ${statusStyle}`,
-      "on-going": `text-blue-500 bg-blue-100 ${statusStyle}`,
-      expired: `text-red-500 bg-red-100 ${statusStyle}`,
-    };
-
+      `flex items-center justify-center font-bold py-1 rounded-r-sm text-${color[recordDetails.status]}-500 bg-${color[recordDetails.status]}-100 border-l-2 border-l-${color[recordDetails.status]}-500`;
+      
     return (
       <>
         <td className="px-6 py-4 whitespace-nowrap">{recordDetails?.emergencyId}</td>
@@ -105,7 +106,7 @@ const Records = () => {
           {formatDateWithTime(recordDetails?.date)}
         </td>
         <td>
-          <p className={`${statusColor[recordDetails?.status]} whitespace-nowrap`}>
+          <p className={`${statusStyle} whitespace-normal w-24 text-center`}>
             {capitalizeFirstLetter(recordDetails.status)}
           </p>
         </td>
