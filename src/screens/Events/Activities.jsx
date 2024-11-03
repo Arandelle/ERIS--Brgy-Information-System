@@ -23,6 +23,7 @@ const Activities = () => {
   const {data: activity, setData: setActivity} = useFetchData("announcement");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [links, setLinks] = useState("");
   const [date, setDate] = useState("");
   const [image, setImage] = useState("");
   const [modal, setModal] = useState(false);
@@ -34,7 +35,8 @@ const Activities = () => {
 
   const searchField = [
     "title",
-    "description"
+    "description",
+    "links"
   ]
 
   const filteredData = useFilteredData(activity,searchQuery, searchField)
@@ -61,6 +63,7 @@ const Activities = () => {
     setModal(!modal);
     setTitle("");
     setDescription("");
+    setLinks("");
     setImage("");
     setIsEdit(false); // Indicating that we are adding a new announcement
     setSelectedId(""); // Clear any selected id
@@ -78,6 +81,7 @@ const Activities = () => {
     const announcementData = {
       title,
       description,
+      links,
       image,
     };
 
@@ -85,6 +89,7 @@ const Activities = () => {
 
     setTitle("");
     setDescription("");
+    setLinks("")
     setDate("");
     setImage("");
     setModal(false);
@@ -94,6 +99,7 @@ const Activities = () => {
     setModal(true);
     setTitle(announcement.title);
     setDescription(announcement.description);
+    setLinks(announcement.links)
     setImage("");
     setIsEdit(true);
     setSelectedId(announcement.id);
@@ -104,11 +110,13 @@ const Activities = () => {
     const announcementData = {
       title,
       description,
+      links,
       image,
     };
     await handleEditData(id, announcementData, "announcement");
     setTitle("");
     setDescription("");
+    setLinks("")
     setImage("");
     setModal(false);
   };
@@ -235,6 +243,8 @@ const Activities = () => {
                 selectedId,
                 title,
                 setTitle,
+                links,
+                setLinks,
                 description,
                 setDescription,
                 isEdit,

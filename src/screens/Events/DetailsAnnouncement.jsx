@@ -33,6 +33,10 @@ const DetailsAnnouncement = ({ closeButton, selectedId, handleEditClick, handleD
         <p className="flex-1 font-bold">{announcementDetails?.description}</p>
       </div>
       <div className="flex flex-row">
+        <p className="w-1/3 text-gray-500">Links: </p>
+        <p className="flex-1 font-light w-1/6 overflow-hidden text-ellipsis text-blue-400">{announcementDetails?.links}</p>
+      </div>
+      <div className="flex flex-row">
         <p className="w-1/3 text-gray-500">Last Edit: </p>
         <p className="flex-1 font-bold">{getTimeDifference(announcementDetails?.timestamp)}</p>
       </div>

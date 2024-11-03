@@ -4,7 +4,7 @@ import { ref, serverTimestamp, update, get} from "firebase/database";
 import { toast } from "sonner";
 
 const handleEditData = async (id,data, type) => {
-    const {title, description, image, date, location, startDate, endDate, organizer} = data
+    const {title, description,links, image, date, location, startDate, endDate, organizer} = data
 
     if(type === "announcement"){
         if (!title || !description) {
@@ -55,6 +55,7 @@ const handleEditData = async (id,data, type) => {
         const updatedData = {
           title,
           description,
+          links,
           imageUrl,
           isEdited: true,
           timestamp: serverTimestamp(),

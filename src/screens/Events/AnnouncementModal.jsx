@@ -11,6 +11,8 @@ const AnnouncementModal = (
   selectedId,
   title,
   setTitle,
+  links,
+  setLinks,
   description,
   setDescription,
   isEdit
@@ -55,6 +57,15 @@ const AnnouncementModal = (
             placeholder="Description"
             onChange={(e) => setDescription(e.target.value)}
             onBlur={() => setDescription(capitalizeFirstLetter(description))}
+          />
+          <p className="text-gray-500">Links (optional)</p>
+          <InputReusable
+            type="text"
+            placeholder="Links"
+            value={links}
+            onChange={(e) => setLinks(e.target.value)}
+            onBlur={() => setLinks(links.toLowerCase())}
+            className={"w-full text-blue-400"}
           />
           <div className="flex flex-row">
             <InputReusable type="file" onChange={handleImageChange} />

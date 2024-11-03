@@ -34,7 +34,7 @@ const icons = {
     thunder: ThunderstormIcon,
     download: DownloadIcon,
     publish: PublishIcon,
-    addCircle: AddCircleOutlineIcon
+    addCircle: AddCircleOutlineIcon,
 }
 
 export default icons;

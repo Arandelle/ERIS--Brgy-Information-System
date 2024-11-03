@@ -5,7 +5,7 @@ import {ref as storageRef, uploadBytes, getDownloadURL} from "firebase/storage"
 
 const handleAddData = async (data ,type) => {
 
-    const {title, description, image, date, location, startDate, endDate, organizer} = data
+    const {title, description, image,links, date, location, startDate, endDate, organizer} = data
 
     if(type === "announcement"){
         if (!title || !description) {
@@ -37,6 +37,7 @@ const handleAddData = async (data ,type) => {
       const newData = {
         title,
         description,
+        links,
         imageUrl,
         date: date || new Date().toISOString(),
         isEdited: false,
