@@ -1,4 +1,3 @@
-import React from 'react'
 import { formatDate } from '../../helper/FormatDate';
 
 const TableBody = ({selectedUsers, data, handleCheckbox, handleViewUser, setUserToViewInfo, key}) => {
