@@ -24,13 +24,14 @@ import { get, getDatabase, ref } from "firebase/database";
 import Luncher from "./components/Launcher";
 import { useFetchData } from "./hooks/useFetchData";
 import ErrorBoundary from "./ErrorBoundary";
+import UserList from "./screens/UserList";
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
-  const {data: users} = useFetchData("users");
-  const {data: responders} = useFetchData("responders");
+  // const {data: users} = useFetchData("users");
+  // const {data: responders} = useFetchData("responders");
 
   useEffect(() => {
     const auth = getAuth();
@@ -81,7 +82,7 @@ const App = () => {
                 path="/accounts/users"
                 element={
                   user && isAdmin ? (
-                    <ResidentsList data={users} label="users" />
+                    <UserList data="users" />
                   ) : (
                     <Navigate to="/" />
                   )
@@ -91,7 +92,7 @@ const App = () => {
                 path="/accounts/responders"
                 element={
                   user && isAdmin ? (
-                    <ResidentsList data={responders} label="responders" />
+                    <UserList data="responders" />
                   ) : (
                     <Navigate to="/" />
                   )
