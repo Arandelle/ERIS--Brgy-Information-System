@@ -3,7 +3,7 @@ import {useState, useMemo} from 'react'
 const usePagination = (data) => {
 
     const sortedData = useMemo(() => {
-        return [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
+        return [...data].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
       }, [data]);
 
     const [currentPage, setCurrentPage] = useState(1);

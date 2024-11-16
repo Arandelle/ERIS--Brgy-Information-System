@@ -26,7 +26,11 @@ const UserList = ({ data }) => {
   } = usePagination(filteredData);
 
   const HeaderData = [
-    "",
+    <div className="flex items-center justify-between space-y-0">
+    <input
+      className="w-4 h-4 cursor-pointer text-primary-600 bg-white border-gray-400 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+    />
+  </div>,
     "Name",
     "Address",
     "Age",
