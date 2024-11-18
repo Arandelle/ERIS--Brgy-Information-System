@@ -7,6 +7,9 @@ import Toolbar from "../components/ToolBar";
 import Table from "../components/Table";
 import Pagination from "../components/Pagination";
 import { formatDate } from "../helper/FormatDate";
+import icons from "../assets/icons/Icons";
+import IconButton from "../components/ReusableComponents/IconButton";
+import ButtonStyle from "../components/ReusableComponents/Button";
 
 const UserList = ({ data }) => {
   const { data: userData = [] } = useFetchData(data);
@@ -27,13 +30,10 @@ const UserList = ({ data }) => {
 
   const HeaderData = [
     <div className="flex items-center justify-between space-y-0">
-    <input
-      className="w-4 h-4 cursor-pointer text-primary-600 bg-white border-gray-400 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-    />
-  </div>,
+      <input className="w-4 h-4 cursor-pointer text-primary-600 bg-white border-gray-400 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+    </div>,
     "Name",
     "Address",
-    "Age",
     "Gender",
     "Phone",
     "Created",
@@ -61,8 +61,10 @@ const UserList = ({ data }) => {
           />
           <div className="ps-2 sm:ps-3">
             {user.firstname && user.lastname ? (
-              <div className="text-sm sm:text-base flex flex-row font-semibold space-x-1 truncate max-w-[100px]">
-                <p>{user.firstname}</p>
+              <div className="text-sm sm:text-base flex flex-row font-semibold space-x-1 text-ellipsis truncate max-w-[100px]">
+                <p>
+                  {user.firstname}, {user.lastname}
+                </p>
               </div>
             ) : (
               notYetSet
@@ -77,9 +79,6 @@ const UserList = ({ data }) => {
             {user.address ? user.address : notYetSet}
           </div>
         </td>
-        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
-          {user.age ? user.age : notYetSet}
-        </td>
         <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden sm:table-cell">
           {user.gender ? user.gender : notYetSet}
         </td>
@@ -89,8 +88,8 @@ const UserList = ({ data }) => {
         <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden lg:table-cell">
           {formatDate(user.createdAt)}
         </td>
-        <td className="px-2 py-2 sm:px-4 sm:py-4">
-          <button
+        <td className="">
+          {/* <button
             onClick={(e) => {
               e.stopPropagation();
               handleViewUser(user);
@@ -98,7 +97,17 @@ const UserList = ({ data }) => {
             className="font-medium text-primary-600 dark:text-primary-500 hover:underline text-xs sm:text-sm"
           >
             View
-          </button>
+          </button> */}
+          <div className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden lg:flex  items-center justify-center">
+            <IconButton
+              icon={icons.view}
+              color={"blue"}
+              bgColor={"bg-blue-100"}
+              onClick={() => alert("Clicked")}
+              tooltip={"Show more details"}
+              fontSize={"small"}
+            />
+          </div>
         </td>
       </>
     );
@@ -109,6 +118,14 @@ const UserList = ({ data }) => {
       child={
         <>
           <Toolbar
+            buttons={
+              <ButtonStyle
+                icon={icons.addCircle}
+                color={"gray"}
+                label={`Add ${data}`}
+                fontSize={"small"}
+              />
+            }
             label={data}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
