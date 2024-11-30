@@ -46,10 +46,6 @@ export const useSidebarData = [
         title: "Responders",
         link: "/accounts/responders",
       },
-      // {
-      //   title: "Carissa",
-      //   link: "/residents/Carissa",
-      // },
     ],
   },
   {
@@ -95,7 +91,7 @@ export const useSidebarData = [
   //   link: "/calendar",
   // },
   {
-    title: "Announcement",
+    title: "Safety & Awareness",
     icon: (
       <svg
         class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"

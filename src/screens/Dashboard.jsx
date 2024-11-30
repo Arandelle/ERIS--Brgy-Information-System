@@ -140,7 +140,7 @@ const DashboardCard = ({
 
   return (
     <div className="relative">
-      <div className="flex h-full flex-col bg-white dark:bg-gray-800 shadow-md rounded-md p-4 w-full mb-3 md:mb-0">
+      <div className="flex h-full flex-col bg-white dark:bg-gray-800 shadow-md rounded-md p-4 w-full mb-3">
         <div className="flex justify-between items-center">
           <p className="text-xs text-wrap whitespace-normal w-20 font-bold uppercase text-gray-600 dark:text-gray-400">
             {title}
@@ -359,15 +359,16 @@ const Dashboard = () => {
               hasOption={false}
             />
           </div>
-          <div className="grid relative grid-cols-1 gap-3 md:gap-4 md:w-max-40 lg:grid-cols-4">
+
+          <div className="grid gap-3 md:gap-4 lg:grid-cols-4 grid-rows-2">
             <>
-              <div className="order-3 lg:order-1 col-span-1 lg:col-span-3 row-span-5">
-                <MapContent isFullscreen={false} />
+              <div className="order-3 lg:order-1 col-span-1 col-row-1 lg:col-span-3 row-span-5">
+                <MapContent/>
               </div>
-              <div className="my-2 md:my-0 order-2 md:order-2 col-span-1">
-                <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-6 mb-2 shadow-md rounded-md dark:bg-gray-800">
+              <div className="order-2 col-span-1 mt-2 md:mt-0">
+                <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-6 space-x-4 shadow-md rounded-md dark:bg-gray-800">
                   <icons.thunder style={{ color: "#FF5733" }} />
-                  <div className="flex flex-col ml-3 text-gray-700 dark:text-gray-100 text-md">
+                  <div className="flex flex-col text-gray-700 dark:text-gray-100 text-md">
                     26.5°C Bagtas Tanza, Cavite
                     <span className="font-thin text-sm text-gray-600 dark:text-gray-200">
                       It's a rainy day, bring your umbrella

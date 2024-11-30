@@ -12,10 +12,10 @@ export const AdminSettings = [
         title: "My Profile",
         link: "/myProfile"
     },
-    // {
-    //     title: "Account Settings",
-    //     link: "/settings",
-    // },
+    {
+        title: "Account Settings",
+        link: "/settings",
+    },
     // {
     //     title: "FAQS",
     //     link: "/FAQS"

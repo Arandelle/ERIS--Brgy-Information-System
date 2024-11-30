@@ -1,12 +1,14 @@
-import React from 'react'
+import { useState } from 'react'
 import HeadSide from '../../components/ReusableComponents/HeaderSidebar'
-import Maintenance from '../../components/ReusableComponents/Maintenance'
 
 const Setting = () => {
+  const [title, setTitle] = useState("");
+  const [logo, setLogo] = useState("");
+
   return (
     <HeadSide child={
         <div className='m-3'>
-            <Maintenance title={"Account Settings"} />
+          <button>Upload Logo</button>
         </div>
     }/>
   )
