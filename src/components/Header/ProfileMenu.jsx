@@ -4,9 +4,14 @@ import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
+import { useFetchData } from "../../hooks/useFetchData";
 
 const Profile = () => {
-  
+  const user = auth.currentUser;
+  const {data: admin} = useFetchData("admins");
+
+  const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
+
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -47,7 +52,7 @@ const Profile = () => {
         >
           <img
             className="w-8 h-8 rounded-full"
-            src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+            src={currentAdminDetails?.img}
             alt="user photo"
           />
         </Tooltip>
@@ -59,10 +64,10 @@ const Profile = () => {
         >
           <div className="py-3 px-4">
             <span className="block text-sm font-semibold text-gray-900 dark:text-white">
-              Admin Profile
+              {currentAdminDetails?.firstname} {currentAdminDetails?.lastname}
             </span>
             <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-              adminexample@gmail.com
+             {user?.email}
             </span>
           </div>
 
