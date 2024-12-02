@@ -1,8 +1,8 @@
 import { useState } from "react";
-import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
-import Logo from "../../assets/images/logo.png";
-import Iconbutton from "../../components/ReusableComponents/IconButton"
-import icons from "../../assets/icons/Icons";
+import HeadSide from "../components/ReusableComponents/HeaderSidebar";
+import Logo from "../assets/images/logo.png"
+import Iconbutton from "../components/ReusableComponents/IconButton"
+import icons from "../assets/icons/Icons";
 
 const Setting = () => {
   const [title, setTitle] = useState("");

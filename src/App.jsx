@@ -13,7 +13,7 @@ import Map from "./screens/Maps/Map";
 import Login from "./screens/Login";
 import Records from "./screens/Records";
 import Activities from "./screens/Events/Activities";
-import Setting from "./screens/Profile/Setting"
+import Setting from "./screens/Setting";
 import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";

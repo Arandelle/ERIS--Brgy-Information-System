@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Logout from "../../components/ReusableComponents/AskCard";
+import Logout from "../ReusableComponents/AskCard";
 import { Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
