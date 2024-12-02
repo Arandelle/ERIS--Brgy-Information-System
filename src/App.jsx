@@ -13,11 +13,7 @@ import Map from "./screens/Maps/Map";
 import Login from "./screens/Login";
 import Records from "./screens/Records";
 import Activities from "./screens/Events/Activities";
-import MyProfile from "./components/Header/MyProfile";
 import Setting from "./screens/Profile/Setting"
-import FAQS from "./screens/Profile/FAQS"
-import TermsConditions from "./screens/Profile/TermsConditions";
-import Archives from "./screens/Profile/Archives"
 import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";
@@ -111,26 +107,8 @@ const App = () => {
                 element={user && isAdmin ? <Records /> : <Navigate to="/" />}
               />
               <Route
-                path="/myProfile"
-                element={user && isAdmin ? <MyProfile /> : <Navigate to="/" />}
-              />
-              <Route
-                path="/settings"
+                path="/account-settings"
                 element={user && isAdmin ? <Setting /> : <Navigate to="/" />}
-              />
-              <Route
-                path="/FAQS"
-                element={user && isAdmin ? <FAQS /> : <Navigate to="/" />}
-              />
-              <Route
-                path="/Terms and Conditions"
-                element={
-                  user && isAdmin ? <TermsConditions /> : <Navigate to="/" />
-                }
-              />
-              <Route
-                path="/archives"
-                element={user && isAdmin ? <Archives /> : <Navigate to="/" />}
               />
             </Routes>
           </div>

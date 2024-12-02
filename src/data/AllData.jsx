@@ -31,16 +31,8 @@ export const AllData = [
     title: "Records",
     link: "/records",
   },
-  {
-    title: "My Profile",
-    link: "/myProfile"
-},
 {
     title: "Account Settings",
-    link: "/settings",
-},
-{
-    title: "Archives",
-    link: "/archives",
+    link: "/account-settings",
 },
 ];

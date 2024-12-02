@@ -360,9 +360,9 @@ const Dashboard = () => {
             />
           </div>
 
-          <div className="grid gap-3 md:gap-4 lg:grid-cols-4 grid-rows-2">
+          <div className="grid gap-3 md:gap-4 lg:grid-cols-4">
             <>
-              <div className="order-3 lg:order-1 col-span-1 col-row-1 lg:col-span-3 row-span-5">
+              <div className="order-3 lg:order-1 col-span-1 col-row-1 lg:col-span-3 row-span-5 h-svh">
                 <MapContent/>
               </div>
               <div className="order-2 col-span-1 mt-2 md:mt-0">
