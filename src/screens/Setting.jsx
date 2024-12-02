@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import Logo from "../assets/images/logo.png";
 import Iconbutton from "../components/ReusableComponents/IconButton";
@@ -10,6 +10,7 @@ const Setting = () => {
   const [title, setTitle] = useState("Bagtas");
   const [image, setImage] = useState("");
   const [preview, setPreview] = useState("");
+  const [isModified, setIsModified] = useState(false);
   const user = auth.currentUser;
   const { data: admin } = useFetchData("admins");
   const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
@@ -20,14 +21,23 @@ const Setting = () => {
     if (file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024) {
       setImage(file);
       setPreview(URL.createObjectURL(file));
+      setIsModified(true);
     } else {
       toast.error("Invalid file type or size. Please upload an image under 5MB.");
     }
     
   };
 
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+    setIsModified(true);
+  };
 
-  console.log(image)
+  useEffect(() => {
+    setIsModified(title !== "Bagtas" || preview !== "");
+  }, [title, preview]);
+
+
   return (
     <HeadSide
       child={
@@ -74,29 +84,20 @@ const Setting = () => {
                 Manage your system information
               </p>
               <div className="space-y-3 py-6 px-8">
-                <div className="flex flex-row items-center justify-between w-3/4">
+                <div className="flex flex-row items-center justify-between w-1/2">
                   <p className="font-medium text-gray-800 text-lg">Title</p>
                   <input
                     type="text"
-                    disabled
-                    value={"Bagtas"}
-                    className="rounded-lg shadow-sm border-2 border-gray-200 bg-gray-200 text-gray-800 text-sm"
+                    value={title}
+                    onChange={handleTitleChange}
+                    className="rounded-lg shadow-sm border-2 border-gray-200 text-gray-800 text-sm"
                   />
-                  <button className="bg-gray-100 font-medium text-sm py-1 px-2 border rounded-lg flex flex-row items-center">
-                    Edit Title
-                    <Iconbutton
-                      icon={icons.edit}
-                      color={"gray"}
-                      fontSize={"small"}
-                    />
-                  </button>
                 </div>
-                <div className="flex flex-row items-center justify-between w-3/4">
+                <div className="flex flex-row items-center justify-between w-1/2">
                   <p className="font-medium text-gray-800 text-lg">Barangay</p>
                   <select className="rounded-lg shadow-sm border-2 border-gray-200 text-sm">
                     <option>Bagtas</option>
                   </select>
-                  <p className="none p-2"></p>
                 </div>
               </div>
 
@@ -114,7 +115,8 @@ const Setting = () => {
 
             {/**Save button */}
             <div className="py-4 place-self-end">
-              <button className="bg-blue-500 py-2 px-4 rounded-md text-sm text-white">
+              <button className={`py-2 px-4 rounded-md text-sm text-white ${isModified ? "bg-blue-500" : "bg-gray-500"}`}
+              disabled={!isModified}>
                 Save update
               </button>
             </div>
