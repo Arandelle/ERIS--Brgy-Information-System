@@ -1,8 +1,8 @@
-import { formatDate } from "../helper/FormatDate";
-import ButtonStyle from "../components/ReusableComponents/Button";
-import icons from "../assets/icons/Icons";
-import Modal from "../components/ReusableComponents/Modal";
-import { getTimeDifference } from "../helper/TimeDiff";
+import { formatDate } from "../../helper/FormatDate";
+import ButtonStyle from "../../components/ReusableComponents/Button";
+import icons from "../../assets/icons/Icons";
+import Modal from "../../components/ReusableComponents/Modal";
+import { getTimeDifference } from "../../helper/TimeDiff";
 
 const ActivityDetails = ({
   handleCloseDetailModal,

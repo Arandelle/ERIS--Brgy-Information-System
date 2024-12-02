@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 import Dashboard from "./screens/Dashboard";
-import MyCalendar from "./screens/MyCalendar";
+import MyCalendar from "./screens/Calendar/MyCalendar";
 import {
   BrowserRouter as Router,
   Routes,
@@ -12,7 +12,7 @@ import ResidentsList from "./screens/AccountList/Residents";
 import Map from "./screens/Maps/Map";
 import Login from "./screens/Login";
 import Records from "./screens/Records";
-import Activities from "./screens/Events/Activities";
+import Activities from "./screens/Announcement/AnnouncementList";
 import Setting from "./screens/Setting";
 import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
