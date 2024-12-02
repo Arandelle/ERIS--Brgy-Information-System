@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import HeadSide from "../components/ReusableComponents/HeaderSidebar";
-import Logo from "../assets/images/logo.png";
 import Iconbutton from "../components/ReusableComponents/IconButton";
 import icons from "../assets/icons/Icons";
-import { auth } from "../services/firebaseConfig";
+import { auth, database, storage } from "../services/firebaseConfig";
+import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { useFetchData } from "../hooks/useFetchData";
+import { get, ref, update } from "firebase/database";
+import { toast } from "sonner";
 
 const Setting = () => {
-  const [title, setTitle] = useState("Bagtas");
+  const [originalTitle, setOriginalTitle] = useState("");
+  const [title, setTitle] = useState("");
   const [image, setImage] = useState("");
   const [preview, setPreview] = useState("");
+  const [originalImage, setOriginalImage] = useState("");
   const [isModified, setIsModified] = useState(false);
+
   const user = auth.currentUser;
   const { data: admin } = useFetchData("admins");
   const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
@@ -21,22 +26,93 @@ const Setting = () => {
     if (file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024) {
       setImage(file);
       setPreview(URL.createObjectURL(file));
-      setIsModified(true);
     } else {
       toast.error("Invalid file type or size. Please upload an image under 5MB.");
     }
-    
   };
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
-    setIsModified(true);
   };
 
   useEffect(() => {
-    setIsModified(title !== "Bagtas" || preview !== "");
-  }, [title, preview]);
+    const fetchSystemData = async () => {
+      const systemRef = ref(database, "systemData");
+      try {
+        const snapshot = await get(systemRef);
+        if (snapshot.exists()) {
+          const systemValue = snapshot.val();
+          setOriginalTitle(systemValue.title);
+          setTitle(systemValue.title);
+          setOriginalImage(systemValue.imageUrl);
+          setPreview(systemValue.imageUrl);
+          setIsModified(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchSystemData();
+  }, []);
 
+  useEffect(() => {
+    // Compare current values to original values to determine if modified
+    const hasChanges =
+      title !== originalTitle || (preview !== originalImage && image);
+    setIsModified(hasChanges);
+  }, [title, preview, originalTitle, originalImage, image]);
+
+  const handleUpdateData = async () => {
+    const systemRef = ref(database, "systemData");
+    try {
+      const snapshot = await get(systemRef);
+
+      if (snapshot.exists()) {
+        const announcementData = snapshot.val();
+        let imageUrl = announcementData.imageUrl; // retain the existing image url
+
+        // Check if a new image is selected
+        if (image) {
+          const imageFile = image;
+          const imageRef = storageRef(storage, `system-images/${imageFile.name}`);
+
+          // Upload the new image
+          try {
+            await uploadBytes(imageRef, imageFile);
+            imageUrl = await getDownloadURL(imageRef);
+
+            if (announcementData.imageUrl) {
+              const oldImageRef = storageRef(storage, announcementData.imageUrl);
+              await deleteObject(oldImageRef);
+            }
+          } catch (error) {
+            toast.error(`Error uploading new image: ${error}`);
+            return;
+          }
+        }
+
+        const updatedData = {
+          title,
+          imageUrl,
+        };
+        await update(systemRef, updatedData);
+
+        // Reset original values and isModified
+        setOriginalTitle(title);
+        setOriginalImage(imageUrl);
+        setPreview(imageUrl);
+        setImage("");
+        setIsModified(false);
+
+        toast.success("Update successfully");
+      } else {
+        toast.error("Not found");
+      }
+    } catch (error) {
+      toast.error(`Error: ${error}`);
+      console.error("Error", error);
+    }
+  };
 
   return (
     <HeadSide
@@ -49,7 +125,7 @@ const Setting = () => {
                 Real-time information of your account
               </p>
             </div>
-            {/**Profile Settings */}
+            {/* Profile Settings */}
             <div className="px-4 py-6 border-b">
               <div className="flex items-center justify-between w-3/4">
                 <div className="flex items-center space-x-4">
@@ -77,7 +153,7 @@ const Setting = () => {
                 </button>
               </div>
             </div>
-            {/**System Settings */}
+            {/* System Settings */}
             <div className="border-b py-2 space-y-1">
               <p className="font-medium text-lg">System Settings</p>
               <p className="text-gray-500 text-sm">
@@ -101,22 +177,32 @@ const Setting = () => {
                 </div>
               </div>
 
-              <div className="flex flex-row items-center  w-3/4">
-                <img src={preview || Logo} className="w-40 rounded-full" />
+              <div className="flex flex-row items-center w-3/4">
+                <img src={preview || originalImage} className="w-40 rounded-full" />
                 <label
-                  for="file-upload"
-                  class="bg-gray-100 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"
+                  htmlFor="file-upload"
+                  className="bg-gray-100 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"
                 >
                   Upload Photo
-                  <input id="file-upload" type="file" class="hidden" onChange={handleImageChange} />
+                  <input
+                    id="file-upload"
+                    type="file"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
                 </label>
               </div>
             </div>
 
-            {/**Save button */}
+            {/* Save button */}
             <div className="py-4 place-self-end">
-              <button className={`py-2 px-4 rounded-md text-sm text-white ${isModified ? "bg-blue-500" : "bg-gray-500"}`}
-              disabled={!isModified}>
+              <button
+                className={`py-2 px-4 rounded-md text-sm text-white ${
+                  isModified ? "bg-blue-500" : "bg-gray-500"
+                }`}
+                disabled={!isModified}
+                onClick={handleUpdateData}
+              >
                 Save update
               </button>
             </div>
