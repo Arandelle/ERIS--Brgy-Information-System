@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AllData } from "../../data/AllData";
+import { SectionLinks } from "../../data/SectionLinks";
 import Question from "../../assets/images/question.svg";
 import EmptyLogo from "../ReusableComponents/EmptyLogo";
 import icons from "../../assets/icons/Icons";
@@ -19,7 +19,7 @@ const SearchInput = ({ isOpen, className }) => {
     setSearchQuery(query);
     setInputValue(query);
 
-    const result = AllData.filter((item) =>
+    const result = SectionLinks.filter((item) =>
       item.title.toLowerCase().includes(query)
     ).sort((a, b) => a.title.localeCompare(b.title));
     setSearchResults(result);

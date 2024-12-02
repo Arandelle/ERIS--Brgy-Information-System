@@ -1,4 +1,4 @@
-export const AllData = [
+export const SectionLinks = [
   {
     title: "Dashboard",
     link: "/dashboard",
@@ -15,16 +15,12 @@ export const AllData = [
     title: "Map",
     link: "/maps",
   },
+  // {
+  //   title: "Calendar",
+  //   link: "/calendar",
+  // },
   {
-    title: "Calendar",
-    link: "/calendar",
-  },
-  {
-    title: "Activities",
-    link: "/events/activity",
-  },
-  {
-    title: "Announcement",
+    title: "Safety and Awareness",
     link: "/announcement",
   },
   {
