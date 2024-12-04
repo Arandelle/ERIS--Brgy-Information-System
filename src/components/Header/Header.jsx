@@ -76,7 +76,7 @@ const Header = ({ toggleSideBar, isOpen }) => {
                 className="mr-3 h-10 lg:h-12 p-0"
                 alt="Your Logo"
               />
-              <span className="self-center text-lg lg:text-2xl font-semibold text-gray-800 dark:text-gray-200">
+              <span className="self-center text-lg lg:text-2xl font-semibold text-gray-800 dark:text-gray-300">
                {systemData?.title}
               </span>
             </a>

@@ -8,7 +8,7 @@ const IconButton = ({ icon: Icon, color, bgColor, onClick, tooltip, fontSize }) 
       <p className={`${bgColor} p-1 rounded-full hover:bg-opacity-90 cursor-pointer`}>
         <Icon
           fontSize={fontSize}
-          className={`text-${color}-500 hover:text-${color}-600`}
+          className={`text-${color}-500 dark:text-${color}-200 hover:text-${color}-600`}
           onClick={onClick}
         />
       </p>

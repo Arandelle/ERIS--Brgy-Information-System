@@ -187,33 +187,34 @@ const Setting = () => {
   return (
     <HeadSide
       child={
-        <div className="">
-          <div className="bg-white h-svh p-4 rounded shadow-sm">
+        <div className="h-full">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded shadow-sm">
             <div className="border-b py-2 space-y-1">
-              <p className="font-medium text-lg">Profile Settings</p>
-              <p className="text-gray-500 text-sm">
+              <p className="font-medium text-lg dark:text-gray-200">Profile Settings</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
                 Real-time information of your account
               </p>
             </div>
-            <div className="px-4 py-6 border-b">
-              <div className="flex items-center justify-between w-3/4">
-                <div className="flex items-center space-x-4">
-                  <div className="border-4 border-gray-300 rounded-full">
+            {/**Profile Container */}
+            <div className="px-1 py-6 border-b flex flex-col lg:flex-row lg:justify-between">
+              <div className="flex flex-col lg:flex-row space-y-4 items-start lg:items-center lg:justify-between w-3/4">
+                <div className="flex flex-row justify-start items-center space-x-4">
+                  <div className="border-4 border-gray-300 rounded-full flex-shrink-0">
                     <img
                       src={currentAdminDetails?.img}
-                      className="w-28 h-28 rounded-full"
+                      className="w-16 h-16 lg:w-28 lg:h-28 rounded-full"
                       loading="lazy"
                     />
                   </div>
-                  <div className="flex flex-col">
-                    <p className="font-medium text-lg">
+                  <div className="flex flex-col flex-grow">
+                    <p className="font-medium text-sm lg:text-lg dark:text-gray-200">
                       {currentAdminDetails?.firstname}{" "}
                       {currentAdminDetails?.lastname}
                     </p>
-                    <p className="text-gray-500 text-sm">{user.email}</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">{user.email}</p>
                   </div>
                 </div>
-                <button className="bg-gray-100 font-medium text-sm border py-1 px-2 rounded-md flex flex-row space-x-4 items-center">
+                <button className="bg-gray-100 dark:bg-gray-700 dark:text-gray-200 font-medium text-sm border py-1 px-2 rounded-md flex flex-row space-x-4 items-center">
                   Edit Profile
                   <Iconbutton
                     icon={icons.edit}
@@ -223,24 +224,26 @@ const Setting = () => {
                 </button>
               </div>
             </div>
+          {/**System container */}
             <div className="border-b py-2 space-y-1">
-              <p className="font-medium text-lg">System Settings</p>
-              <p className="text-gray-500 text-sm">
+              <p className="font-medium text-lg dark:text-gray-200">System Settings</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
                 Manage your system information
               </p>
-              <div className="space-y-3 py-6 px-8">
-                <div className="flex flex-row items-center justify-between w-1/2">
-                  <p className="font-medium text-gray-800 text-lg">Title</p>
+              <div className="space-y-3 py-6 px-0 lg:px-8">
+                <div className="flex flex-row items-center space-x-4 justify-between w-1/2">
+                  <p className="font-medium text-gray-800 text-md lg:text-lg dark:text-gray-200">Title</p>
                   <input
                     type="text"
                     value={systemState.title}
                     onChange={handleTitleChange}
-                    className="rounded-lg shadow-sm border-2 border-gray-200 text-gray-800 text-sm"
+                    maxLength={10}
+                    className="rounded-lg shadow-sm border-2 border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm"
                   />
                 </div>
-                <div className="flex flex-row items-center justify-between w-1/2">
-                  <p className="font-medium text-gray-800 text-lg">Barangay</p>
-                  <select className="rounded-lg shadow-sm border-2 border-gray-200 text-sm">
+                <div className="flex flex-row items-center space-x-4 justify-between w-1/2">
+                  <p className="font-medium text-gray-800 dark:text-gray-200 text-md lg:text-lg">Barangay</p>
+                  <select className="rounded-lg shadow-sm border-2 border-gray-200 dark:bg-gray-700 dark:text-gray-200 text-sm">
                     <option>Bagtas</option>
                   </select>
                 </div>
@@ -249,12 +252,12 @@ const Setting = () => {
                 <img
                   src={systemState.previewImage || systemState.originalImageUrl}
                   alt="System"
-                  className="w-40 rounded-full"
+                  className="w-24 lg:w-40 rounded-full"
                   loading="lazy"
                 />
                 <label
                   htmlFor="file-upload"
-                  className="bg-gray-100 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"
+                  className="bg-gray-100 dark:text-gray-200 dark:bg-gray-700 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"
                 >
                   Upload Photo
                   <input
@@ -266,7 +269,7 @@ const Setting = () => {
                 </label>
               </div>
             </div>
-            <div className="py-4 place-self-end">
+            <div className="py-4">
               <button
                 className={`py-2 px-4 rounded-md text-sm text-white ${
                   systemState.isModified ? "bg-blue-500" : "bg-gray-500"
