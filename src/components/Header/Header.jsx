@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Notification from "../../screens/Notification";
 import CustomTheme from "../../hooks/useTheme";
 import Profile from "./ProfileMenu";
-import logo from "../../assets/images/logo.png";
 import SearchInput from "./SearchInput";
 import { Tooltip } from "@mui/material";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
