@@ -10,7 +10,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { useFetchData } from "../hooks/useFetchData";
-import { get, ref, update } from "firebase/database";
+import { update, ref } from "firebase/database";
 import { toast } from "sonner";
 import { useFetchSystemData } from "../hooks/useFetchSystemData";
 
@@ -31,20 +31,14 @@ const Setting = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (
-      file &&
-      file.type.startsWith("image/") &&
-      file.size <= 5 * 1024 * 1024
-    ) {
+    if (file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024) {
       setSystemState((prevState) => ({
         ...prevState,
         newImageFile: file,
         previewImage: URL.createObjectURL(file),
       }));
     } else {
-      toast.error(
-        "Invalid file type or size. Please upload an image under 5mb."
-      );
+      toast.error("Invalid file type or size. Please upload an image under 5MB.");
     }
   };
 
@@ -58,6 +52,7 @@ const Setting = () => {
 
   useEffect(() => {
     if (systemData) {
+      console.log("System Data Image URL:", systemData.imageUrl);
       setSystemState((prevState) => ({
         ...prevState,
         originalTitle: systemData.title,
@@ -87,33 +82,67 @@ const Setting = () => {
   const handleUpdateData = async () => {
     setLoading(true);
     const systemRef = ref(database, "systemData");
+  
     try {
       let imageUrl = systemState.originalImageUrl; // retain the existing image url
-
+  
       if (systemState.newImageFile) {
-        const imageRef = storageRef(
-          storage,
-          `system-images/${systemState.newImageFile.name}`
-        );
         try {
+          console.log("New Image File Details:", {
+            name: systemState.newImageFile.name,
+            type: systemState.newImageFile.type,
+            size: systemState.newImageFile.size
+          });
+      
+          const imageRef = storageRef(
+            storage,
+            `system-images/${Date.now()}_${systemState.newImageFile.name}`
+          );
+      
+          // Validate file before upload
+          if (!systemState.newImageFile.type.startsWith('image/')) {
+            toast.error("Invalid file type. Please upload an image.");
+            setLoading(false);
+            return;
+          }
+      
+          if (systemState.newImageFile.size > 5 * 1024 * 1024) {
+            toast.error("File is too large. Maximum size is 5MB.");
+            setLoading(false);
+            return;
+          }
+      
+          console.log("Uploading new image: ", systemState.newImageFile.name);
           await uploadBytes(imageRef, systemState.newImageFile);
           imageUrl = await getDownloadURL(imageRef);
-
+          console.log("New image uploaded, URL: ", imageUrl);
+      
+          // Delete old image if exists
           if (systemState.originalImageUrl) {
-            const oldImageRef = storageRef(
-              storage,
-              systemState.originalImageUrl
-            );
-            await deleteObject(oldImageRef);
+            try {
+              const oldImageRef = storageRef(
+                storage,
+                systemState.originalImageUrl
+              );
+              await deleteObject(oldImageRef);
+              console.log("Old image deleted: ", systemState.originalImageUrl);
+            } catch (deleteError) {
+              console.warn("Error deleting old image:", deleteError);
+              // Not a critical error, so we continue
+            }
           }
         } catch (error) {
-          toast.error(`Error uploading new image: ${error}`);
+          console.error("Detailed upload error:", error);
+          toast.error(`Error uploading new image: ${error.message}`);
+          setLoading(false);
           return;
         }
       }
-
+  
       const updatedData = { title: systemState.title, imageUrl };
       await update(systemRef, updatedData);
+      console.log("Data updated in database: ", updatedData);
+  
       setSystemState((prevState) => ({
         ...prevState,
         originalTitle: systemState.title,
@@ -126,8 +155,10 @@ const Setting = () => {
     } catch (error) {
       toast.error(`Error: ${error}`);
       console.error("Error", error);
+      setLoading(false);
     }
   };
+  
 
   if (loading) {
     return (
@@ -146,8 +177,7 @@ const Setting = () => {
       <HeadSide
         child={
           <div className="flex items-center justify-center h-svh">
-            {" "}
-            Error: {error.message}{" "}
+            Error: {error.message}
           </div>
         }
       />
@@ -218,6 +248,7 @@ const Setting = () => {
               <div className="flex flex-row items-center w-3/4">
                 <img
                   src={systemState.previewImage || systemState.originalImageUrl}
+                  alt="System"
                   className="w-40 rounded-full"
                   loading="lazy"
                 />

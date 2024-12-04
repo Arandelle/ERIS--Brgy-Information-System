@@ -5,8 +5,10 @@ import Profile from "./ProfileMenu";
 import logo from "../../assets/images/logo.png";
 import SearchInput from "./SearchInput";
 import { Tooltip } from "@mui/material";
+import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 
 const Header = ({ toggleSideBar, isOpen }) => {
+  const {systemData} = useFetchSystemData();
   const [theme, toggleTheme] = CustomTheme();
   const [isMdScreen, setIsMdScreen] = useState(window.innerWidth >= 768);
 
@@ -71,12 +73,12 @@ const Header = ({ toggleSideBar, isOpen }) => {
               className="flex mr-4"
             >
               <img
-                src={logo}
+                src={systemData?.imageUrl}
                 className="mr-3 h-10 lg:h-12 p-0"
-                alt="FlowBite Logo"
+                alt="Your Logo"
               />
               <span className="self-center text-lg lg:text-2xl font-semibold text-gray-800 dark:text-gray-200">
-                Bagtas
+               {systemData?.title}
               </span>
             </a>
         </div>
