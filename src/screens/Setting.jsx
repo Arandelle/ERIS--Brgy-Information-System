@@ -11,7 +11,7 @@ import { toast } from "sonner";
 const Setting = () => {
   const [systemState, setSystemState] = useState({
     originalTitle: "",
-    newTitle: "",
+    title: "",
     previewImage: "",
     originalImageUrl: "",
     newImageFile: null,
@@ -24,7 +24,7 @@ const Setting = () => {
   const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
 
   const handleImageChange = (e) => {
-    const file = e.target.file[0];
+    const file = e.target.files[0];
     if(file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024){
       setSystemState((prevState) => ({
         ...prevState,
@@ -40,7 +40,7 @@ const Setting = () => {
     const {value} = e.target;
     setSystemState((prevState) => ({
       ...prevState,
-      newTitle: value
+      title: value
     }))
   };
 
@@ -51,14 +51,14 @@ const Setting = () => {
         const snapshot = await get(systemRef);
         if(snapshot.exists()){
           const systemData = snapshot.val();
-          setSystemState((prevState) =>({
-            ...prevState,
-            originalTitle: systemData.newTitle,
-            newTitle: systemData.newTitle,
+          setSystemState({
+            ...systemState,
+            originalTitle: systemData.title,
+            title: systemData.title,
             originalImageUrl: systemData.imageUrl,
             previewImage: systemData.imageUrl,
             isModified: false,
-          }));
+          });
           setLoading(false)
         }
       }catch(error){
@@ -69,30 +69,27 @@ const Setting = () => {
   }, [])
 
   useEffect(() => {
-    const hasChanges = systemState.newTitle !== systemState.originalTitle || systemState.previewImage !== systemState.originalImageUrl;
+    const hasChanges = systemState.title !== systemState.originalTitle || systemState.previewImage !== systemState.originalImageUrl;
     setSystemState((prevState) => ({
       ...prevState,
       isModified: hasChanges
     }));
-  }, [systemState.newTitle, systemState.previewImage, systemState.originalTitle, systemState.originalImageUrl]);
+  }, [systemState.title, systemState.previewImage, systemState.originalTitle, systemState.originalImageUrl]);
 
   const handleUpdateData = async () => {
     setLoading(true);
     const systemRef = ref(database, "systemData");
     try {
-      const snapshot = await get(systemRef);
-      if (snapshot.exists()) {
-        const systemData = snapshot.val();
-        let imageUrl = systemData.imageUrl; // retain the existing image url
+        let imageUrl = systemState.imageUrl; // retain the existing image url
 
         if (systemState.newImageFile) {
-          const imageRef = storageRef(storage, `system-images/${newImageFile.name}`);
+          const imageRef = storageRef(storage, `system-images/${systemState.newImageFile.name}`);
           try {
-            await uploadBytes(imageRef, newImageFile);
+            await uploadBytes(imageRef, systemState.newImageFile);
             imageUrl = await getDownloadURL(imageRef);
 
-            if (systemData.imageUrl) {
-              const oldImageRef = storageRef(storage, systemData.imageUrl);
+            if (systemState.originalImageUrl) {
+              const oldImageRef = storageRef(storage, systemState.originalImageUrl);
               await deleteObject(oldImageRef);
             }
           } catch (error) {
@@ -101,20 +98,17 @@ const Setting = () => {
           }
         }
 
-        const updatedData = { newTitle: systemState.newTitle, imageUrl };
+        const updatedData = { title: systemState.title, imageUrl };
         await update(systemRef, updatedData);
         setSystemState((prevState) => ({
           ...prevState,
-          originalTitle: systemState.newTitle,
+          originalTitle: systemState.title,
           originalImageUrl: imageUrl,
           previewImage: imageUrl,
           isModified: false
         }));
         setLoading(false);
         toast.success("Update successfully");
-      } else {
-        toast.error("Not found");
-      }
     } catch (error) {
       toast.error(`Error: ${error}`);
       console.error("Error", error);
@@ -178,7 +172,7 @@ const Setting = () => {
                   <p className="font-medium text-gray-800 text-lg">Title</p>
                   <input
                     type="text"
-                    value={systemState.newTitle}
+                    value={systemState.title}
                     onChange={handleTitleChange}
                     className="rounded-lg shadow-sm border-2 border-gray-200 text-gray-800 text-sm"
                   />
