@@ -3,12 +3,19 @@ import HeadSide from "../components/ReusableComponents/HeaderSidebar";
 import Iconbutton from "../components/ReusableComponents/IconButton";
 import icons from "../assets/icons/Icons";
 import { auth, database, storage } from "../services/firebaseConfig";
-import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { useFetchData } from "../hooks/useFetchData";
 import { get, ref, update } from "firebase/database";
 import { toast } from "sonner";
+import { useFetchSystemData } from "../hooks/useFetchSystemData";
 
 const Setting = () => {
+  const { systemData, loading, error, setLoading } = useFetchSystemData();
   const [systemState, setSystemState] = useState({
     originalTitle: "",
     title: "",
@@ -17,7 +24,6 @@ const Setting = () => {
     newImageFile: null,
     isModified: false,
   });
-  const [loading, setLoading] = useState(true)
 
   const user = auth.currentUser;
   const { data: admin } = useFetchData("admins");
@@ -25,90 +31,98 @@ const Setting = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if(file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024){
+    if (
+      file &&
+      file.type.startsWith("image/") &&
+      file.size <= 5 * 1024 * 1024
+    ) {
       setSystemState((prevState) => ({
         ...prevState,
         newImageFile: file,
         previewImage: URL.createObjectURL(file),
       }));
     } else {
-      toast.error("Invalid file type or size. Please upload an image under 5mb.");
+      toast.error(
+        "Invalid file type or size. Please upload an image under 5mb."
+      );
     }
-  }
+  };
 
   const handleTitleChange = (e) => {
-    const {value} = e.target;
+    const { value } = e.target;
     setSystemState((prevState) => ({
       ...prevState,
-      title: value
-    }))
+      title: value,
+    }));
   };
 
   useEffect(() => {
-    const fetchSystemData = async () => {
-      const systemRef = ref(database, "systemData");
-      try{
-        const snapshot = await get(systemRef);
-        if(snapshot.exists()){
-          const systemData = snapshot.val();
-          setSystemState({
-            ...systemState,
-            originalTitle: systemData.title,
-            title: systemData.title,
-            originalImageUrl: systemData.imageUrl,
-            previewImage: systemData.imageUrl,
-            isModified: false,
-          });
-          setLoading(false)
-        }
-      }catch(error){
-        toast.error(`Error ${error}`)
-      }
-    };
-    fetchSystemData();
-  }, [])
+    if (systemData) {
+      setSystemState((prevState) => ({
+        ...prevState,
+        originalTitle: systemData.title,
+        title: systemData.title,
+        originalImageUrl: systemData.imageUrl,
+        previewImage: systemData.imageUrl,
+        isModified: false,
+      }));
+    }
+  }, [systemData]);
 
   useEffect(() => {
-    const hasChanges = systemState.title !== systemState.originalTitle || systemState.previewImage !== systemState.originalImageUrl;
+    const hasChanges =
+      systemState.title !== systemState.originalTitle ||
+      systemState.previewImage !== systemState.originalImageUrl;
     setSystemState((prevState) => ({
       ...prevState,
-      isModified: hasChanges
+      isModified: hasChanges,
     }));
-  }, [systemState.title, systemState.previewImage, systemState.originalTitle, systemState.originalImageUrl]);
+  }, [
+    systemState.title,
+    systemState.previewImage,
+    systemState.originalTitle,
+    systemState.originalImageUrl,
+  ]);
 
   const handleUpdateData = async () => {
     setLoading(true);
     const systemRef = ref(database, "systemData");
     try {
-        let imageUrl = systemState.imageUrl; // retain the existing image url
+      let imageUrl = systemState.originalImageUrl; // retain the existing image url
 
-        if (systemState.newImageFile) {
-          const imageRef = storageRef(storage, `system-images/${systemState.newImageFile.name}`);
-          try {
-            await uploadBytes(imageRef, systemState.newImageFile);
-            imageUrl = await getDownloadURL(imageRef);
+      if (systemState.newImageFile) {
+        const imageRef = storageRef(
+          storage,
+          `system-images/${systemState.newImageFile.name}`
+        );
+        try {
+          await uploadBytes(imageRef, systemState.newImageFile);
+          imageUrl = await getDownloadURL(imageRef);
 
-            if (systemState.originalImageUrl) {
-              const oldImageRef = storageRef(storage, systemState.originalImageUrl);
-              await deleteObject(oldImageRef);
-            }
-          } catch (error) {
-            toast.error(`Error uploading new image: ${error}`);
-            return;
+          if (systemState.originalImageUrl) {
+            const oldImageRef = storageRef(
+              storage,
+              systemState.originalImageUrl
+            );
+            await deleteObject(oldImageRef);
           }
+        } catch (error) {
+          toast.error(`Error uploading new image: ${error}`);
+          return;
         }
+      }
 
-        const updatedData = { title: systemState.title, imageUrl };
-        await update(systemRef, updatedData);
-        setSystemState((prevState) => ({
-          ...prevState,
-          originalTitle: systemState.title,
-          originalImageUrl: imageUrl,
-          previewImage: imageUrl,
-          isModified: false
-        }));
-        setLoading(false);
-        toast.success("Update successfully");
+      const updatedData = { title: systemState.title, imageUrl };
+      await update(systemRef, updatedData);
+      setSystemState((prevState) => ({
+        ...prevState,
+        originalTitle: systemState.title,
+        originalImageUrl: imageUrl,
+        previewImage: imageUrl,
+        isModified: false,
+      }));
+      setLoading(false);
+      toast.success("Update successfully");
     } catch (error) {
       toast.error(`Error: ${error}`);
       console.error("Error", error);
@@ -116,11 +130,28 @@ const Setting = () => {
   };
 
   if (loading) {
-    return <HeadSide child={
-      <div className="flex items-center justify-center h-svh">
-        loading...
-      </div>
-    } />
+    return (
+      <HeadSide
+        child={
+          <div className="flex items-center justify-center h-svh">
+            loading...
+          </div>
+        }
+      />
+    );
+  }
+
+  if (error) {
+    return (
+      <HeadSide
+        child={
+          <div className="flex items-center justify-center h-svh">
+            {" "}
+            Error: {error.message}{" "}
+          </div>
+        }
+      />
+    );
   }
 
   return (
@@ -185,7 +216,11 @@ const Setting = () => {
                 </div>
               </div>
               <div className="flex flex-row items-center w-3/4">
-                <img src={systemState.previewImage || systemState.originalImageUrl} className="w-40 rounded-full" loading="lazy" />
+                <img
+                  src={systemState.previewImage || systemState.originalImageUrl}
+                  className="w-40 rounded-full"
+                  loading="lazy"
+                />
                 <label
                   htmlFor="file-upload"
                   className="bg-gray-100 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"

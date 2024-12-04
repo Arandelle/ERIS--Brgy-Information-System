@@ -1,26 +1,32 @@
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react";
+import { database } from "../services/firebaseConfig"; // Adjust the import according to your project structure
+import { ref, get } from "firebase/database";
+import { toast } from "sonner";
 
-const useFetchSystemData = () => {
+export const useFetchSystemData = () => {
+  const [systemData, setSystemData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const [systemState, setSystemState] = useState({
-        originalTitle: "",
-        newTitle: "",
-        previewImage: "",
-        originalImageUrl: "",
-        newImageFile: null,
-        isModified: false,
-      });
-    const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchSystemData = async () => {
+      const systemRef = ref(database, "systemData");
+      try {
+        const snapshot = await get(systemRef);
+        if (snapshot.exists()) {
+          setSystemData(snapshot.val());
+        } else {
+          setSystemData(null);
+        }
+      } catch (error) {
+        toast.error(`Error fetching system data: ${error.message}`);
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSystemData();
+  }, []);
 
-    useEffect(() => {
-        
-    })
-
-  return (
-    <div>
-      
-    </div>
-  )
-}
-
-export default useFetchSystemData
+  return { systemData, loading, error,setLoading };
+};
