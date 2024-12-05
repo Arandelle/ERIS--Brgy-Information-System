@@ -11,11 +11,14 @@ import icons from "../assets/icons/Icons";
 import IconButton from "../components/ReusableComponents/IconButton";
 import ButtonStyle from "../components/ReusableComponents/Button";
 import AddUserModal from "./AccountList/AddUserModal";
+import ViewUserModal from "./AccountList/ViewUserModal";
 
 const UserList = ({ data }) => {
   const { data: userData = [] } = useFetchData(data);
   const [searchQuery, setSearchQuery] = useState("");
   const [addUser, setAddUser] = useState(null);
+  const [userToViewInfo, setUserToViewInfo] = useState(null);
+  const [viewUser, setViewUser] = useState(false);
 
   const searchField = [
     "firstname",
@@ -50,6 +53,16 @@ const UserList = ({ data }) => {
     "Created",
     "Action",
   ];
+
+  const handleAddingUser = () => {
+    setAddUser(!addUser);
+  };
+
+  // handle to view selected user
+  const handleViewUser = (user) => {
+    setViewUser(true);
+    setUserToViewInfo(user);
+  };
 
   const renderRow = (user) => {
     const anonymous = <p className="italic text-nowrap text-xs">not yet set</p>;
@@ -110,7 +123,10 @@ const UserList = ({ data }) => {
               icon={icons.view}
               color={"blue"}
               bgColor={"bg-blue-100"}
-              onClick={() => alert("Clicked")}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleViewUser(user);
+              }}
               tooltip={"Show more details"}
               fontSize={"small"}
             />
@@ -119,10 +135,6 @@ const UserList = ({ data }) => {
       </>
     );
   };
-
-  const handleAddingUser = () =>  {
-    setAddUser(!addUser);
-  }
 
   return (
     <HeadSide
@@ -142,9 +154,12 @@ const UserList = ({ data }) => {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
-
-          {addUser && (
-            <AddUserModal addUser={handleAddingUser} label={data} />
+          {addUser && <AddUserModal addUser={handleAddingUser} label={data} />}
+          {userToViewInfo && viewUser && (
+            <ViewUserModal
+              userToViewInfo={userToViewInfo}
+              setViewUser={setViewUser}
+            />
           )}
           <Table
             headers={HeaderData}
