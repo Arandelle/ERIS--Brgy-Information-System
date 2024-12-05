@@ -66,7 +66,6 @@ const App = () => {
           <Toaster richColors Headless position="top-right" expand="true" />
           <div className="flex">
             <Routes>
-              <Route path="/" element={loading && <Spinner loading={loading} />} />
               <Route path="*" element={<Navigate to="/" replace />} />
               <Route
                 path="/"
