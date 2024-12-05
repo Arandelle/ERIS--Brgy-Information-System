@@ -10,12 +10,22 @@ import { formatDate } from "../helper/FormatDate";
 import icons from "../assets/icons/Icons";
 import IconButton from "../components/ReusableComponents/IconButton";
 import ButtonStyle from "../components/ReusableComponents/Button";
+import AddUserModal from "./AccountList/AddUserModal";
 
 const UserList = ({ data }) => {
   const { data: userData = [] } = useFetchData(data);
   const [searchQuery, setSearchQuery] = useState("");
+  const [addUser, setAddUser] = useState(null);
 
-  const searchField = ["firstname", "lastname","mobileNum","gender","customId", "createdAt", "address"];
+  const searchField = [
+    "firstname",
+    "lastname",
+    "mobileNum",
+    "gender",
+    "customId",
+    "createdAt",
+    "address",
+  ];
 
   const filteredData = useFilteredData(userData, searchQuery, searchField);
 
@@ -110,6 +120,10 @@ const UserList = ({ data }) => {
     );
   };
 
+  const handleAddingUser = () =>  {
+    setAddUser(!addUser);
+  }
+
   return (
     <HeadSide
       child={
@@ -121,12 +135,17 @@ const UserList = ({ data }) => {
                 color={"gray"}
                 label={`Add ${data}`}
                 fontSize={"small"}
+                onClick={() => setAddUser(!addUser)}
               />
             }
             label={data}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
+
+          {addUser && (
+            <AddUserModal addUser={handleAddingUser} label={data} />
+          )}
           <Table
             headers={HeaderData}
             data={currentItems}

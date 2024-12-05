@@ -4,7 +4,7 @@ import Pagination from "../AccountList/buttons/Pagination";
 import Toolbar from "./Toolbar";
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
-import AddUserModal from "../AccountList/buttons/AddUserModal";
+import AddUserModal from "./AddUserModal";
 import { toast } from "sonner";
 import { handleImportFile, handleExport } from "../../helper/utils";
 import EmptyLogo from "../../components/ReusableComponents/EmptyLogo";
