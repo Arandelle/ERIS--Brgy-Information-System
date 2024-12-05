@@ -20,7 +20,7 @@ import { get, getDatabase, ref } from "firebase/database";
 import Luncher from "./components/Launcher";
 import { useFetchData } from "./hooks/useFetchData";
 import ErrorBoundary from "./ErrorBoundary";
-import UserList from "./screens/UserList";
+import UserList from "./screens/AccountList/UserList";
 import { Spinner } from "./components/ReusableComponents/Spinner";
 
 const App = () => {
@@ -66,6 +66,7 @@ const App = () => {
           <Toaster richColors Headless position="top-right" expand="true" />
           <div className="flex">
             <Routes>
+              <Route path="/" element={loading && <Spinner loading={loading} />} />
               <Route path="*" element={<Navigate to="/" replace />} />
               <Route
                 path="/"

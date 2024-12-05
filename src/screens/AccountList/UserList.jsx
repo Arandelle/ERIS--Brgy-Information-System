@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { useFetchData } from "../hooks/useFetchData";
-import useFilteredData from "../components/SearchQuery";
-import usePagination from "../hooks/usePagination";
-import HeadSide from "../components/ReusableComponents/HeaderSidebar";
-import Toolbar from "../components/ToolBar";
-import Table from "../components/Table";
-import Pagination from "../components/Pagination";
-import { formatDate } from "../helper/FormatDate";
-import icons from "../assets/icons/Icons";
-import IconButton from "../components/ReusableComponents/IconButton";
-import ButtonStyle from "../components/ReusableComponents/Button";
-import AddUserModal from "./AccountList/AddUserModal";
-import ViewUserModal from "./AccountList/ViewUserModal";
+import { useFetchData } from "../../hooks/useFetchData";
+import useFilteredData from "../../components/SearchQuery";
+import usePagination from "../../hooks/usePagination";
+import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
+import Toolbar from "../../components/ToolBar";
+import Table from "../../components/Table";
+import Pagination from "../../components/Pagination";
+import { formatDate } from "../../helper/FormatDate";
+import icons from "../../assets/icons/Icons";
+import IconButton from "../../components/ReusableComponents/IconButton";
+import ButtonStyle from "../../components/ReusableComponents/Button";
+import AddUserModal from "./AddUserModal";
+import ViewUserModal from "./ViewUserModal";
 
 const UserList = ({ data }) => {
   const { data: userData = [] } = useFetchData(data);

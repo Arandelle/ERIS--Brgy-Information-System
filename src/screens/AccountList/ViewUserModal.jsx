@@ -1,5 +1,8 @@
 import icons from "../../assets/icons/Icons";
 import Modal from "../../components/ReusableComponents/Modal";
+import {formatDateWithTime } from "../../helper/FormatDate";
+
+
 const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
   return (
     <Modal
@@ -30,7 +33,7 @@ const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
                 </p>
                 <div className="text-center text-gray-500 flex flex-row justify-evenly">
                   <p className="italic text-gray-900">
-                    {userToViewInfo.email}{" "}
+                    {userToViewInfo.email ?? "email not set"}
                   </p>
                   <p className="italic text-gray-900">
                     {userToViewInfo.mobileNum
@@ -45,13 +48,10 @@ const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
 
                 <div className="bg-gray-100 p-4 rounded-sm">
                   <p className="text-gray-900 text-lg">
-                    {userToViewInfo.address}
+                    {userToViewInfo.address ?? "address not set"}
                   </p>
-
                   <p className="text-gray-900 text-lg">
-                    {userToViewInfo?.age
-                      ? `${userToViewInfo.age} years old`
-                      : "user details"}
+                    {formatDateWithTime(userToViewInfo.createdAt) ?? "address not set"}
                   </p>
                 </div>
               </div>
