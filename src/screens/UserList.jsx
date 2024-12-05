@@ -15,7 +15,7 @@ const UserList = ({ data }) => {
   const { data: userData = [] } = useFetchData(data);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const searchField = ["firstname", "lastname", "createdAt", "address"];
+  const searchField = ["firstname", "lastname","mobileNum","gender","customId", "createdAt", "address"];
 
   const filteredData = useFilteredData(userData, searchQuery, searchField);
 
@@ -33,6 +33,7 @@ const UserList = ({ data }) => {
       <input className="w-4 h-4 cursor-pointer text-primary-600 bg-white border-gray-400 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
     </div>,
     "Name",
+    "ID",
     "Address",
     "Gender",
     "Phone",
@@ -41,7 +42,7 @@ const UserList = ({ data }) => {
   ];
 
   const renderRow = (user) => {
-    const notYetSet = <p className="italic text-nowrap text-xs">not yet set</p>;
+    const anonymous = <p className="italic text-nowrap text-xs">not yet set</p>;
     return (
       <>
         <td className="w-4 p-2 sm:p-4">
@@ -56,8 +57,8 @@ const UserList = ({ data }) => {
         <th className="flex items-center px-2 py-2 sm:px-4 sm:py-4 text-gray-900 whitespace-nowrap dark:text-white">
           <img
             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
-            src={user.img}
-            alt="notYetSet"
+            src={user?.img}
+            alt="anonymous"
           />
           <div className="ps-2 sm:ps-3">
             {user.firstname && user.lastname ? (
@@ -67,7 +68,7 @@ const UserList = ({ data }) => {
                 </p>
               </div>
             ) : (
-              notYetSet
+              anonymous
             )}
             <div className="font-normal text-gray-500 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[200px]">
               {user.email}
@@ -76,28 +77,24 @@ const UserList = ({ data }) => {
         </th>
         <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
           <div className="truncate max-w-[100px] sm:max-w-[200px]">
-            {user.address ? user.address : notYetSet}
+            {user.customId ?? anonymous}
+          </div>
+        </td>
+        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
+          <div className="truncate max-w-[100px] sm:max-w-[200px]">
+            {user.address ?? anonymous}
           </div>
         </td>
         <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden sm:table-cell">
-          {user.gender ? user.gender : notYetSet}
+          {user.gender ?? anonymous}
         </td>
         <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden md:table-cell">
-          {user.mobileNum ? user.mobileNum : notYetSet}
+          {user.mobileNum ?? anonymous}
         </td>
         <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden lg:table-cell">
           {formatDate(user.createdAt)}
         </td>
         <td className="">
-          {/* <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleViewUser(user);
-            }}
-            className="font-medium text-primary-600 dark:text-primary-500 hover:underline text-xs sm:text-sm"
-          >
-            View
-          </button> */}
           <div className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden lg:flex  items-center justify-center">
             <IconButton
               icon={icons.view}

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapContent from "./Maps/MapContent";
-import { Spinner } from "../components/ReusableComponents/Skeleton";
 import population from "../assets/images/population.svg";
 import Events from "../assets/images/events.svg";
 import emergency from "../assets/images/emergency.svg";
@@ -209,7 +208,6 @@ const DashboardCard = ({
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
   const { data: emergencyData } = useFetchData("emergencyRequest");
   const { data: events } = useFetchData("events");
   const { data: announcement } = useFetchData("announcement");
@@ -311,11 +309,7 @@ const Dashboard = () => {
             <DashboardCard
               title="Total Responses"
               value={
-                loading ? (
-                  <Spinner setLoading={setLoading} />
-                ) : (
                   counts[selectedOption]
-                )
               }
               img={population}
               onClick={() => handleNavigate("/records")}
@@ -326,13 +320,8 @@ const Dashboard = () => {
             />
              <DashboardCard
               title="Today's Emergency"
-              value={
-                loading ? (
-                  <Spinner setLoading={setLoading} />
-                ) : (
-                  counts.awaitingResponse.current
-                )
-              }
+              value={counts.awaitingResponse.current
+            }
               img={emergency}
               onClick={() => handleNavigate("/maps")}
               hasOption={false}
@@ -340,7 +329,7 @@ const Dashboard = () => {
             />
             <DashboardCard
               title="On-Going Emergency"
-              value={loading ? <Spinner setLoading={setLoading} /> : onGoing.length}
+              value={onGoing.length}
               img={navigator}
               onClick={() => handleNavigate("/maps")}
               hasOption={false}
@@ -348,11 +337,7 @@ const Dashboard = () => {
             <DashboardCard
               title="Total Announcement"
               value={
-                loading ? (
-                  <Spinner setLoading={setLoading} />
-                ) : (
                   activities.length
-                )
               }
               img={Events}
               onClick={() => handleNavigate("/announcement")}

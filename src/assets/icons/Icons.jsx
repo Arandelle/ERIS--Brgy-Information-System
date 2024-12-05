@@ -14,8 +14,8 @@ import MoreVert from "@mui/icons-material/MoreVert"
 import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import DownloadIcon from "@mui/icons-material/Download";
 import PublishIcon from "@mui/icons-material/Publish";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RotateRightIcon from '@mui/icons-material/RotateRight';
 
 const icons = {
     arrowRight: ArrowRightIcon,
@@ -35,6 +35,7 @@ const icons = {
     download: DownloadIcon,
     publish: PublishIcon,
     addCircle: AddCircleOutlineIcon,
+    spinner: RotateRightIcon
 }
 
 export default icons;

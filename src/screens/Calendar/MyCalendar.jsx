@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import { Spinner } from "../../components/ReusableComponents/Skeleton";
+import { Spinner } from "../../components/ReusableComponents/Spinner";
 import ContainerResizer from "../../helper/ContainerResizer";
 import InputReusable from "../../components/ReusableComponents/InputReusable";
 import ButtonStyle from "../../components/ReusableComponents/Button";

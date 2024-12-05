@@ -21,6 +21,7 @@ import Luncher from "./components/Launcher";
 import { useFetchData } from "./hooks/useFetchData";
 import ErrorBoundary from "./ErrorBoundary";
 import UserList from "./screens/UserList";
+import { Spinner } from "./components/ReusableComponents/Spinner";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -48,11 +49,17 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  if (loading) {
-    return <Luncher />
+  if(loading){
+    return (
+      <>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
+         <Spinner loading={loading} />
+       </div>    
+      </>
+     )
   }
+  
   return (
-
       <Router>
          <ErrorBoundary>
         <>

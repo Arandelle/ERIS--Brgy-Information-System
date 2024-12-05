@@ -269,7 +269,7 @@ const Setting = () => {
                 </label>
               </div>
             </div>
-            <div className="py-4">
+            <div className="py-4 place-self-end">
               <button
                 className={`py-2 px-4 rounded-md text-sm text-white ${
                   systemState.isModified ? "bg-blue-500" : "bg-gray-500"
