@@ -20,6 +20,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import CallIcon from '@mui/icons-material/Call';
 
 const icons = {
     arrowRight: ArrowRightIcon,
@@ -43,7 +44,8 @@ const icons = {
     search: SearchIcon,
     moon: BedtimeIcon,
     sun: LightModeIcon,
-    notifation: NotificationsIcon
+    notifation: NotificationsIcon,
+    call: CallIcon
 }
 
 export default icons;

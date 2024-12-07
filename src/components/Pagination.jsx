@@ -6,7 +6,7 @@ const Pagination = ({
   indexOfFirstItem,
   indexOfLastItem,
   totalPages,
-  data,
+  data = [],
 }) => {
   const [jumpToPage, setJumpToPage] = useState("");
   const isDisable = indexOfLastItem >= data.length;

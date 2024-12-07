@@ -1,12 +1,14 @@
 import React from "react";
+import icons from "../assets/icons/Icons";
 
+ const style = "w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
 export const useSidebarData = [
   {
     title: "Dashboard",
     icon: (
       <svg
         aria-hidden="true"
-        class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+        class={`${style}`}
         fill="currentColor"
         viewBox="0 0 20 20"
         xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +23,7 @@ export const useSidebarData = [
     title: "Accounts",
     icon: (
       <svg
-        class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+        class={`${style}`}
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -52,7 +54,7 @@ export const useSidebarData = [
     title: "Map",
     icon: (
       <svg
-        class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+        class={`${style}`}
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -73,7 +75,7 @@ export const useSidebarData = [
   //   title: "Calendar",
   //   icon: (
   //     <svg
-  //       class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+  //       class={`${style}`}
   //       aria-hidden="true"
   //       xmlns="http://www.w3.org/2000/svg"
   //       width="24"
@@ -94,7 +96,7 @@ export const useSidebarData = [
     title: "Safety & Awareness",
     icon: (
       <svg
-        class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+        class={`${style}`}
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -112,10 +114,17 @@ export const useSidebarData = [
     link: "/announcement",
   },
   {
+    title: "Hotlines",
+    icon : (
+      <icons.call className={`${style}`}/>
+    ),
+    link: "/hotlines",
+  },
+  {
     title: "Records",
     icon: (
       <svg
-        class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+        class={`${style}`}
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         width="24"

@@ -22,6 +22,7 @@ import { useFetchData } from "./hooks/useFetchData";
 import ErrorBoundary from "./ErrorBoundary";
 import UserList from "./screens/AccountList/UserList";
 import { Spinner } from "./components/ReusableComponents/Spinner";
+import Hotlines from "./screens/Hotlines";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -108,6 +109,10 @@ const App = () => {
               <Route
                 path="/announcement"
                 element={user && isAdmin ? <Activities /> : <Navigate to="/" />}
+              />
+              <Route 
+                path="/hotlines"
+                element={user && isAdmin ? <Hotlines/> : <Navigate to="/" />}
               />
               <Route
                 path="/records"

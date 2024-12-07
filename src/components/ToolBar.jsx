@@ -1,4 +1,4 @@
-const Toolbar = ({buttons, label, searchQuery, setSearchQuery}) => {
+const Toolbar = ({buttons, label = "", searchQuery, setSearchQuery}) => {
 
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white dark:bg-gray-800">
