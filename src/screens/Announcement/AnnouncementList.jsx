@@ -26,6 +26,7 @@ const Activities = () => {
   const [links, setLinks] = useState("");
   const [date, setDate] = useState("");
   const [image, setImage] = useState("");
+  const [prevImage, setPrevImage] = useState("");
   const [modal, setModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedId, setSelectedId] = useState("");
@@ -65,6 +66,7 @@ const Activities = () => {
     setDescription("");
     setLinks("");
     setImage("");
+    setPrevImage("");
     setIsEdit(false); // Indicating that we are adding a new announcement
     setSelectedId(""); // Clear any selected id
   };
@@ -72,8 +74,11 @@ const Activities = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
-    if (file) {
+    if (file && file.type.startsWith("image/") && file.size <= 5 *1024 *1024) {
       setImage(file);
+      setPrevImage(URL.createObjectURL(file))
+    } else{
+      toast.error("Invalid file type or size. Please try to upload an image under 5mb");
     }
   };
 
@@ -99,11 +104,12 @@ const Activities = () => {
     setModal(true);
     setTitle(announcement.title);
     setDescription(announcement.description);
-    setLinks(announcement.links)
+    setLinks(announcement.links);
     setImage("");
+    setPrevImage(announcement.imageUrl);
     setIsEdit(true);
     setSelectedId(announcement.id);
-    setShowDetails(false)
+    setShowDetails(false);
   };
 
   const handleEditAnnouncement = async (id) => {
@@ -243,6 +249,7 @@ const Activities = () => {
                 selectedId,
                 title,
                 setTitle,
+                prevImage,
                 links,
                 setLinks,
                 description,

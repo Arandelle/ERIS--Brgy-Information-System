@@ -13,6 +13,7 @@ const AnnouncementModal = ({
   selectedId,
   title,
   setTitle,
+  prevImage,
   links,
   setLinks,
   description,
@@ -61,9 +62,11 @@ const AnnouncementModal = ({
                 onChange={handleImageChange}
               />
             </label>
-
-            {}
-
+            {prevImage && (
+              <div className="flex items-center justify-center p-2 rounded-md w-full">
+              <img src={prevImage} className="h-40"/>
+           </div>
+            )}
             <p className="flex items-center">
               <ButtonStyle
                 label={`${
@@ -76,7 +79,7 @@ const AnnouncementModal = ({
                     : handleAddAnnouncement
                 }
                 icon={icons.publish}
-                fontSize={"small"}
+                fontSize={"medium"}
               />
             </p>
           </div>
