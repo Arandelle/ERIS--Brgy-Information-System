@@ -53,20 +53,48 @@ const AnnouncementModal = ({
             onBlur={() => setLinks(links.toLowerCase())}
             className={"w-full text-blue-400"}
           />
+          {/**Upload Photo */}
           <div className="flex flex-col space-y-4">
-            <label className={`cursor-pointer flex item-center justify-center p-3 rounded-md border-2 border-dashed ${isEdit ? "border-green-500" : "border-blue-500"}`}>
-              <p className={`font-bold text-sm ${isEdit ? "text-green-500" : "text-blue-500"}`}> Upload Photo</p>
-              <InputReusable
-                type="file"
-                className={"hidden"}
-                onChange={handleImageChange}
-              />
-            </label>
-            {prevImage && (
+            {!prevImage ? (
+              <label
+                className={`cursor-pointer flex item-center justify-center p-6 md:p-9 rounded-md border-2 border-dashed ${
+                  isEdit ? "border-green-500" : "border-gray-300"
+                }`}
+              >
+                <div className="flex flex-col items-center justify-center space-y-2">
+                  <icons.addPhoto
+                    fontSize="large"
+                    className={`${isEdit ? "text-green-500" : "text-gray-500"}`}
+                  />
+                  <p
+                    className={`font-bold text-sm ${
+                      isEdit ? "text-green-500" : "text-gray-500"
+                    }`}
+                  >
+                    Upload Photo
+                  </p>
+                </div>
+
+                <InputReusable
+                  type="file"
+                  className={"hidden"}
+                  onChange={handleImageChange}
+                />
+              </label>
+            ) : (
               <div className="flex items-center justify-center p-2 rounded-md w-full">
-              <img src={prevImage} className="h-24 md:h-40"/>
-           </div>
+                {/**Preview Image */}
+                <label className="cursor-pointer">
+                  <img src={prevImage} className="h-24 md:h-40" />
+                  <InputReusable
+                    type="file"
+                    className={"hidden"}
+                    onChange={handleImageChange}
+                  />
+                </label>
+              </div>
             )}
+
             <p className="flex items-center">
               <ButtonStyle
                 label={`${

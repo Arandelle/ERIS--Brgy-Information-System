@@ -21,6 +21,7 @@ import BedtimeIcon from '@mui/icons-material/Bedtime';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import CallIcon from '@mui/icons-material/Call';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 const icons = {
     arrowRight: ArrowRightIcon,
@@ -45,7 +46,8 @@ const icons = {
     moon: BedtimeIcon,
     sun: LightModeIcon,
     notifation: NotificationsIcon,
-    call: CallIcon
+    call: CallIcon,
+    addPhoto: AddPhotoAlternateIcon
 }
 
 export default icons;
