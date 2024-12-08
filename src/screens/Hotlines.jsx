@@ -8,6 +8,7 @@ import { useFetchData } from "../hooks/useFetchData";
 import { useState } from "react";
 import useFilteredData from "../components/SearchQuery";
 import usePagination from "../hooks/usePagination";
+import IconButton from "../components/ReusableComponents/IconButton";
 
 const Hotlines = () => {
   const { data: hotlines = [] } = useFetchData("hotlines");
@@ -44,7 +45,22 @@ const Hotlines = () => {
           {hotlines.description ?? anonymous}
         </td>
         <td className="">
-          <div className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden lg:flex  items-center justify-center"></div>
+           <div className="flex items-center justify-center space-x-4">
+              <IconButton 
+                icon={icons.delete}
+                color={"red"}
+                bgColor={"bg-red-100"}
+                fontSize={"small"}
+                tooltip={"Delete contact?"}
+              />
+              <IconButton 
+                icon={icons.edit}
+                color={"green"}
+                bgColor={"bg-green-100"}
+                fontSize={"small"}
+                tooltip={"Edit contact?"}
+              />
+           </div>
         </td>
       </>
     );

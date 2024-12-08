@@ -28,7 +28,7 @@ const AnnouncementModal = (
       <div className="flex flex-row items-center justify-between">
           
           <h3 className="ml-4 text-gray-600">
-                Add new announcement
+                {isEdit ? "Edit" : "Add new"} Announcement
               </h3>
             <button
               type="button"
