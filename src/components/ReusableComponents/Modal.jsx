@@ -5,24 +5,28 @@ const Modal = ({
   children
 }) => {
   return (
-    <div className="flex fixed items-center justify-center inset-0 z-50">
-      <div
-        className="fixed items-center justify-center h-full w-full bg-gray-600 bg-opacity-50"
-        onClick={closeButton}
-      ></div>
-      <div className="relative space-y-4 p-5 lg:w-1/3 bg-white rounded-md shadow-md">
+    <div className="fixed flex items-center justify-center inset-0 z-50 overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+    {/**Overlay for darker background */}
+    <div
+      className="fixed inset-0 z-40 bg-black bg-opacity-50"
+      onClick={closeButton}
+    ></div>
+    {/**Modal Content */}
+    <div className="relative z-50 w-full max-w-lg mx-4 my-6 md:mx-auto">
+      <div className="relative flex flex-col w-full bg-white rounded-lg shadow-lg max-h-[90vh] overflow-y-auto">
         <button
           type="button"
           onClick={closeButton}
-          className="text-gray-400 bg-transparent absolute top-0 right-0 hover:bg-red-400 hover:text-white text-sm w-7 h-7 md:w-8 md:h-8 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white"
+          className="absolute top-3 right-3 z-50 text-gray-400 bg-transparent rounded-md hover:bg-red-400 hover:text-white text-sm w-7 h-7 md:w-8 md:h-8 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white"
           data-modal-hide="popup-modal"
         >
           <icons.close fontSize="small" />
           <span className="sr-only">Close modal</span>
         </button>
-            {children}
+            <div className="relative p-6 flex-auto">{children}</div>
       </div>
     </div>
+  </div>
   );
 };
 

@@ -24,8 +24,8 @@ const AnnouncementModal = ({
     <Modal
       closeButton={handleModal}
       children={
-        <div className="w-full flex flex-col pt-4 space-y-4">
-          <h2 className="text-center text-lg font-extrabold text-gray-700">
+        <div className="w-full flex flex-col space-y-4">
+          <h2 className="text-center text-sm md:text-lg font-extrabold text-gray-700">
             {`${isEdit ? "Edit" : "Create new"}`} Announcement
           </h2>
           <InputReusable
@@ -37,14 +37,14 @@ const AnnouncementModal = ({
             className={"w-full"}
           />
           <textarea
-            className={`border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:ring-gray-400 focus:border-gray-400 dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600
+            className={`text-sm md:text-lg border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:ring-gray-400 focus:border-gray-400 dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600
         }`}
             value={description}
             placeholder="Description"
             onChange={(e) => setDescription(e.target.value)}
             onBlur={() => setDescription(capitalizeFirstLetter(description))}
           />
-          <p className="text-gray-500">Links (optional)</p>
+          <p className="text-gray-500 text-sm md:text-lg">Links (optional)</p>
           <InputReusable
             type="text"
             placeholder="Links"
@@ -64,7 +64,7 @@ const AnnouncementModal = ({
             </label>
             {prevImage && (
               <div className="flex items-center justify-center p-2 rounded-md w-full">
-              <img src={prevImage} className="h-40"/>
+              <img src={prevImage} className="h-24 md:h-40"/>
            </div>
             )}
             <p className="flex items-center">
