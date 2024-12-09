@@ -10,13 +10,20 @@ import useFilteredData from "../components/SearchQuery";
 import usePagination from "../hooks/usePagination";
 import IconButton from "../components/ReusableComponents/IconButton";
 import HotlinesModal from "./HotlinesModal";
+import handleAddData from "../hooks/handleAddData";
 
 const Hotlines = () => {
   const { data: hotlines = [] } = useFetchData("hotlines");
   const [hotlinesModal, setHotlinesModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [hotlineState, setHotlinesState] = useState({
+    types: "",
+    name : "",
+    contact: "",
+    description: ""
+  })
   const searchField = ["name", "contact", "description"];
-  const HotlineHeaders = ["Name", "Contact", "Description", "Action"];
+  const HotlineHeaders = ["Type","Name", "Contact", "Description", "Action"];
   
   const filteredData = useFilteredData(hotlines, searchQuery, searchField);
 
@@ -33,6 +40,11 @@ const Hotlines = () => {
     const anonymous = <p className="italic text-nowrap text-xs">not yet set</p>;
     return (
       <>
+      <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
+          <div className="truncate max-w-[100px] sm:max-w-[200px]">
+            {hotlines.types ?? anonymous}
+          </div>
+        </td>
         <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
           <div className="truncate max-w-[100px] sm:max-w-[200px]">
             {hotlines.name ?? anonymous}
@@ -70,6 +82,17 @@ const Hotlines = () => {
 
   const handleHotlinesModal = () => {
     setHotlinesModal(!hotlinesModal);
+  };
+
+  const handleAddHotlines = async () => {
+    const hotlineData = {
+      ...hotlineState
+    };
+
+    await handleAddData(hotlineData, "hotlines");
+
+    setHotlinesState({});
+    setHotlinesModal(false);
   }
 
   return (
@@ -92,7 +115,11 @@ const Hotlines = () => {
           />
 
           {hotlinesModal && (
-            <HotlinesModal handleHotlinesModal={handleHotlinesModal}/>
+            <HotlinesModal handleHotlinesModal={handleHotlinesModal}
+              handleAddHotlines={handleAddHotlines}
+              hotlineState={hotlineState}
+              setHotlinesState={setHotlinesState}
+            />
           )}
 
           <Table

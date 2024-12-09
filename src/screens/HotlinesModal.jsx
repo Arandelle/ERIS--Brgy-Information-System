@@ -1,23 +1,46 @@
 import Modal from "../components/ReusableComponents/Modal";
-import {InputField, TextArea } from "../components/ReusableComponents/InputField";
+import {
+  InputField,
+  TextArea,
+} from "../components/ReusableComponents/InputField";
 
-const HotlinesModal = ({ handleHotlinesModal }) => {
+const HotlinesModal = ({
+  handleHotlinesModal,
+  handleAddHotlines,
+  hotlineState,
+  setHotlinesState,
+}) => {
   return (
     <Modal
       closeButton={handleHotlinesModal}
       title={"Hotlines"}
       children={
         <div className="flex flex-col space-y-4">
-          <InputField type="text" placeholder="Name"/>
-          <InputField type="text" placeholder="Contact" />
-         <TextArea 
-          placeholder={"Description"}
-         />
+         <InputField
+            type="text"
+            placeholder="Type /Category /Office"
+            value={hotlineState.types}
+            onChange={(e) => setHotlinesState(prev => ({...prev, types: e.target.value}))}
+          />
+          <InputField
+            type="text"
+            placeholder="Name"
+            value={hotlineState.name}
+            onChange={(e) => setHotlinesState(prev => ({...prev, name: e.target.value}))}
+          />
+          <InputField type="text" placeholder="Contact" 
+            value={hotlineState.contact}
+            onChange={(e) => setHotlinesState(prev => ({...prev, contact: e.target.value}))}
+          />
+          <TextArea placeholder={"Description"} value={hotlineState.description}
+            onChange={(e) => setHotlinesState(prev => ({...prev, description: e.target.value}))}
+          />
           {/**Buttons */}
           <div className="flex items-center space-x-2 self-end">
             <button
               type="button"
               className={`text-sm text-white py-2 px-4 rounded-md bg-blue-500`}
+              onClick={handleAddHotlines}
             >
               Save
             </button>
