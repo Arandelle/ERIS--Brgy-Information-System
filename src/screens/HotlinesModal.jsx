@@ -1,5 +1,5 @@
 import Modal from "../components/ReusableComponents/Modal";
-import InputReusable from "../components/ReusableComponents/InputReusable";
+import {InputField, TextArea } from "../components/ReusableComponents/InputField";
 
 const HotlinesModal = ({ handleHotlinesModal }) => {
   return (
@@ -8,13 +8,11 @@ const HotlinesModal = ({ handleHotlinesModal }) => {
       title={"Hotlines"}
       children={
         <div className="flex flex-col space-y-4">
-          <InputReusable type="text" placeholder="Name" />
-          <InputReusable type="text" placeholder="Contact" />
-          <textarea
-            className={`text-sm md:text-lg border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:ring-gray-400 focus:border-gray-400 dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600
-        }`}
-            placeholder="Description"
-          />
+          <InputField type="text" placeholder="Name"/>
+          <InputField type="text" placeholder="Contact" />
+         <TextArea 
+          placeholder={"Description"}
+         />
           {/**Buttons */}
           <div className="flex items-center space-x-2 self-end">
             <button

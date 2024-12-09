@@ -1,9 +1,10 @@
 import icons from "../../assets/icons/Icons";
-import InputReusable from "../../components/ReusableComponents/InputReusable";
-import ButtonStyle from "../../components/ReusableComponents/Button";
+import {
+  TextArea,
+  InputField,
+} from "../../components/ReusableComponents/InputField";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import Modal from "../../components/ReusableComponents/Modal";
-import { useState } from "react";
 
 const AnnouncementModal = ({
   handleModal,
@@ -26,7 +27,7 @@ const AnnouncementModal = ({
       title={`${isEdit ? "Edit" : "Create new"} Announcement`}
       children={
         <div className="w-full flex flex-col space-y-4">
-          <InputReusable
+          <InputField
             type="text"
             placeholder="Title"
             value={title}
@@ -34,16 +35,15 @@ const AnnouncementModal = ({
             onBlur={() => setTitle(capitalizeFirstLetter(title))}
             className={"w-full"}
           />
-          <textarea
-            className={`text-sm md:text-lg border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:ring-gray-400 focus:border-gray-400 dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600
-        }`}
+          <TextArea
             value={description}
-            placeholder="Description"
+            placeholder={"Description"}
             onChange={(e) => setDescription(e.target.value)}
             onBlur={() => setDescription(capitalizeFirstLetter(description))}
           />
-          <p className="text-gray-500 text-sm md:text-lg">Links (optional)</p>
-          <InputReusable
+
+          <label className="text-gray-500 text-sm">Links (optional)</label>
+          <InputField
             type="text"
             placeholder="Links"
             value={links}
@@ -73,7 +73,7 @@ const AnnouncementModal = ({
                   </p>
                 </div>
 
-                <InputReusable
+                <InputField
                   type="file"
                   className={"hidden"}
                   onChange={handleImageChange}
@@ -84,7 +84,7 @@ const AnnouncementModal = ({
                 {/**Preview Image */}
                 <label className="cursor-pointer">
                   <img src={prevImage} className="h-24 md:h-40" />
-                  <InputReusable
+                  <InputField
                     type="file"
                     className={"hidden"}
                     onChange={handleImageChange}
@@ -94,10 +94,11 @@ const AnnouncementModal = ({
             )}
             {/**Buttons */}
             <div className="flex items-center space-x-2 self-end">
-
               <button
                 type="button"
-                className={`text-sm text-white py-2 px-4 rounded-md ${isEdit ? "bg-green-500" : "bg-blue-500"}`}
+                className={`text-sm text-white py-2 px-4 rounded-md ${
+                  isEdit ? "bg-green-500" : "bg-blue-500"
+                }`}
                 onClick={
                   isEdit
                     ? () => handleEditAnnouncement(selectedId)

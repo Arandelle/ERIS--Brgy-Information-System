@@ -4,7 +4,7 @@ import moment from "moment";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import { Spinner } from "../../components/ReusableComponents/Spinner";
 import ContainerResizer from "../../helper/ContainerResizer";
-import InputReusable from "../../components/ReusableComponents/InputReusable";
+import {InputField} from "../../components/ReusableComponents/InputField";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import QuestionModal from "../../components/ReusableComponents/AskCard";
@@ -248,14 +248,14 @@ const MyCalendar = () => {
                   </button>
                   <div className="flex flex-col justify-between space-y-2">
                     <div className="grid justify-start grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <InputReusable
+                      <InputField
                         type="text"
                         placeholder="Event Title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         onBlur={() => setTitle(capitalizeFirstLetter(title))}
                       />
-                      <InputReusable
+                      <InputField
                         type="text"
                         onFocus={(e) => (e.target.type = "datetime-local")}
                         onBlur={(e) => (e.target.type = "text")}
@@ -263,7 +263,7 @@ const MyCalendar = () => {
                         value={startDate}
                         onChange={(e) => setStartDate(e.target.value)}
                       />
-                      <InputReusable
+                      <InputField
                         type="text"
                         placeholder="End Date"
                         value={endDate}
@@ -271,7 +271,7 @@ const MyCalendar = () => {
                         onBlur={(e) => (e.target.type = "text")}
                         onChange={(e) => setEndDate(e.target.value)}
                       />
-                      <InputReusable
+                      <InputField
                         type="text"
                         placeholder="Location"
                         value={location}
@@ -280,7 +280,7 @@ const MyCalendar = () => {
                           setLocation(capitalizeFirstLetter(location))
                         }
                       />
-                      <InputReusable
+                      <InputField
                         type="text"
                         placeholder="Organizer"
                         value={organizer}
@@ -289,7 +289,7 @@ const MyCalendar = () => {
                           setOrganizer(capitalizeFirstLetter(organizer))
                         }
                       />
-                      <InputReusable
+                      <InputField
                         type="text"
                         placeholder="Details"
                         value={details}
@@ -298,7 +298,7 @@ const MyCalendar = () => {
                           setDetails(capitalizeFirstLetter(details))
                         }
                       />
-                      <InputReusable type="file" onChange={handleImageChange} />
+                      <InputField type="file" onChange={handleImageChange} />
                       <ButtonStyle
                         onClick={handleAddOrUpdateEvent}
                         label={selectedEvent ? "Update Event" : "Add Event"}

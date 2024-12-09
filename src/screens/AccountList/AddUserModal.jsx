@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
-import InputReusable from "../../components/ReusableComponents/InputReusable";
+import {InputField} from "../../components/ReusableComponents/InputField";
 import { auth, app } from "../../services/firebaseConfig";
 import {
   createUserWithEmailAndPassword,
@@ -114,14 +114,14 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
         children={
           <form  onSubmit={handleAddUser}>
             <div className="flex flex-col space-y-4">
-              <InputReusable
+              <InputField
                 className={"border"}
                 type={"email"}
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 placeholder={"Enter Email"}
               />
-              <InputReusable
+              <InputField
                 className={"border"}
                 type={"password"}
                 onChange={(e) => setPassword(e.target.value)}
