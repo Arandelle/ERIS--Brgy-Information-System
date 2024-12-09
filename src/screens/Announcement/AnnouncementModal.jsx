@@ -95,21 +95,28 @@ const AnnouncementModal = ({
               </div>
             )}
 
-            <p className="flex items-center">
-              <ButtonStyle
-                label={`${
-                  isEdit ? "Update Announcement" : "Create Announcement"
-                }`}
-                color={`${isEdit ? "green" : "blue"}`}
+            <div className="flex items-center space-x-2 self-end">
+
+              <button
+                type="button"
+                className={`text-sm text-white py-2 px-4 rounded-md ${isEdit ? "bg-green-500" : "bg-blue-500"}`}
                 onClick={
                   isEdit
                     ? () => handleEditAnnouncement(selectedId)
                     : handleAddAnnouncement
                 }
-                icon={icons.publish}
-                fontSize={"medium"}
-              />
-            </p>
+              >
+                Save
+              </button>
+
+              <button
+                type="button"
+                className="text-sm text-gray-500 py-2 px-4 border border-gray-400 rounded-md"
+                onClick={handleModal}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       }
