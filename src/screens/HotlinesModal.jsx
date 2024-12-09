@@ -7,6 +7,9 @@ import {
 const HotlinesModal = ({
   handleHotlinesModal,
   handleAddHotlines,
+  handleUpdateHotlines,
+  isEdit,
+  selectedId,
   hotlineState,
   setHotlinesState,
 }) => {
@@ -39,8 +42,8 @@ const HotlinesModal = ({
           <div className="flex items-center space-x-2 self-end">
             <button
               type="button"
-              className={`text-sm text-white py-2 px-4 rounded-md bg-blue-500`}
-              onClick={handleAddHotlines}
+              className={`text-sm text-white py-2 px-4 rounded-md ${isEdit ? "bg-green-500" : "bg-blue-500"}`}
+              onClick={isEdit ? () => handleUpdateHotlines(selectedId) : handleAddHotlines}
             >
               Save
             </button>

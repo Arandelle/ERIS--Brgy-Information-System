@@ -4,19 +4,19 @@ import { ref, serverTimestamp, update, get} from "firebase/database";
 import { toast } from "sonner";
 
 const handleEditData = async (id,data, type) => {
-    const {title, description,links, image, date, location, startDate, endDate, organizer} = data
+    const {title, description,links, image,types,name,contact} = data
 
     if(type === "announcement"){
         if (!title || !description) {
-            toast.info("Please complete the form");
+            toast.warning("Please complete the form");
             return;
           }
-    } else{
-        if (!location || !startDate || !endDate || !organizer) {
-            toast.info("Please complete the form");
-            return;
-          }
+    } else if(type === "hotlines"){
+      if(!types || !name || !contact){
+        toast.warning("Please complete the form");
+      }
     }
+
     const dataRef = ref(database, `${type}/${id}`);
 
     try {
@@ -52,23 +52,26 @@ const handleEditData = async (id,data, type) => {
           }
         }
 
-        const updatedData = {
-          title,
-          description,
-          links,
-          imageUrl,
-          isEdited: true,
-          timestamp: serverTimestamp(),
-        };
-
-        if(type === "events"){
-            updatedData.location = location,
-            updatedData.startDate = startDate,
-            updatedData.endDate = endDate,
-            updatedData.organizer = organizer
+        const dataBasedOnType = {
+          announcement : {
+            title,
+            description,
+            links,
+            imageUrl,
+            isEdited: true,
+            timestamp: serverTimestamp(),
+          },
+          hotlines : {
+            types,
+            name,
+            contact,
+            description,
+            isEdited: true,
+            timestamp: serverTimestamp()
           }
+        }
 
-        await update(dataRef, updatedData);
+        await update(dataRef, dataBasedOnType[type]);
 
         toast.success(`${type} update successfully`);
 

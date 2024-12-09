@@ -14,6 +14,7 @@ import handleAddData from "../hooks/handleAddData";
 import AskCard from "../components/ReusableComponents/AskCard";
 import handleDeleteData from "../hooks/handleDeleteData";
 import { toast } from "sonner";
+import handleEditData from "../hooks/handleEditData";
 
 const Hotlines = () => {
   const { data: hotlines = [] } = useFetchData("hotlines");
@@ -21,16 +22,17 @@ const Hotlines = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [hotlineState, setHotlinesState] = useState({
     types: "",
-    name : "",
+    name: "",
     contact: "",
-    description: ""
+    description: "",
   });
   const [selectedId, setSelectedId] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const searchField = ["name", "contact", "description"];
-  const HotlineHeaders = ["Type","Name", "Contact", "Description", "Action"];
-  
+  const HotlineHeaders = ["Type", "Name", "Contact", "Description", "Action"];
+
   const filteredData = useFilteredData(hotlines, searchQuery, searchField);
 
   const {
@@ -46,7 +48,7 @@ const Hotlines = () => {
     const anonymous = <p className="italic text-nowrap text-xs">null</p>;
     return (
       <>
-      <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
+        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
           <div className="truncate max-w-[100px] sm:max-w-[200px]">
             {hotlines.types || anonymous}
           </div>
@@ -65,23 +67,24 @@ const Hotlines = () => {
           {hotlines.description || anonymous}
         </td>
         <td className="">
-           <div className="flex items-center justify-center space-x-4">
-              <IconButton 
-                icon={icons.delete}
-                color={"red"}
-                bgColor={"bg-red-100"}
-                fontSize={"small"}
-                tooltip={"Delete contact?"}
-                onClick={() => handleDeleteModal(hotlines.id)}
-              />
-              <IconButton 
-                icon={icons.edit}
-                color={"green"}
-                bgColor={"bg-green-100"}
-                fontSize={"small"}
-                tooltip={"Edit contact?"}
-              />
-           </div>
+          <div className="flex items-center justify-center space-x-4">
+            <IconButton
+              icon={icons.delete}
+              color={"red"}
+              bgColor={"bg-red-100"}
+              fontSize={"small"}
+              tooltip={"Delete contact?"}
+              onClick={() => handleDeleteModal(hotlines.id)}
+            />
+            <IconButton
+              icon={icons.edit}
+              color={"green"}
+              bgColor={"bg-green-100"}
+              fontSize={"small"}
+              tooltip={"Edit contact?"}
+              onClick={() => handleEditClick(hotlines)}
+            />
+          </div>
         </td>
       </>
     );
@@ -89,11 +92,13 @@ const Hotlines = () => {
 
   const handleHotlinesModal = () => {
     setHotlinesModal(!hotlinesModal);
+    setIsEdit(false);
+    setHotlinesState({})
   };
 
   const handleAddHotlines = async () => {
     const hotlineData = {
-      ...hotlineState
+      ...hotlineState,
     };
 
     await handleAddData(hotlineData, "hotlines");
@@ -108,14 +113,38 @@ const Hotlines = () => {
   };
 
   const handleConfirmDelete = async () => {
-    try{
+    try {
       await handleDeleteData(selectedId, "hotlines");
-    }catch(error){
-      toast.error(`Error deleting ${error}`)
-    };
+    } catch (error) {
+      toast.error(`Error deleting ${error}`);
+    }
 
     setShowDeleteModal(false);
-  }
+  };
+
+  const handleEditClick = (hotlines) => {
+    setHotlinesModal(true);
+    setHotlinesState((prev) => ({
+      ...prev,
+      types: hotlines.types,
+      name: hotlines.name,
+      contact: hotlines.contact,
+      description: hotlines.description,
+    }));
+    setSelectedId(hotlines.id);
+    setIsEdit(true);
+    console.log(selectedId)
+  };
+
+  const handleUpdateHotlines = async (id) => {
+    const hotlinesData = {
+      ...hotlineState,
+    };
+
+    await handleEditData(id, hotlinesData, "hotlines");
+    setHotlinesState({});
+    setHotlinesModal(false)
+  };
 
   return (
     <HeaderAndSideBar
@@ -137,29 +166,34 @@ const Hotlines = () => {
           />
 
           {hotlinesModal && (
-            <HotlinesModal handleHotlinesModal={handleHotlinesModal}
+            <HotlinesModal
+              handleHotlinesModal={handleHotlinesModal}
               handleAddHotlines={handleAddHotlines}
+              handleUpdateHotlines={handleUpdateHotlines}
+              isEdit={isEdit}
+              selectedId={selectedId}
               hotlineState={hotlineState}
               setHotlinesState={setHotlinesState}
             />
           )}
-          
+
           {showDeleteModal && (
-            <AskCard 
+            <AskCard
               toggleModal={() => setShowDeleteModal(!showDeleteModal)}
-              question={ <span>
-                    Do you want to delete
-                    <span className="text-primary-500 text-bold">
-                      {" "}
-                      {hotlines.find((item) => item.id === selectedId)?.types}
-                    </span>{" "}
-                    ?{" "}
-                  </span>}
+              question={
+                <span>
+                  Do you want to delete
+                  <span className="text-primary-500 text-bold">
+                    {" "}
+                    {hotlines.find((item) => item.id === selectedId)?.types}
+                  </span>{" "}
+                  ?{" "}
+                </span>
+              }
               confirmText={"Delete"}
               onConfirm={handleConfirmDelete}
             />
           )}
-
 
           <Table
             headers={HotlineHeaders}
@@ -167,7 +201,7 @@ const Hotlines = () => {
             renderRow={renderRow}
             emptyMessage="No hotlines contact found"
           />
-          <Pagination 
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             setCurrentPage={setCurrentPage}
