@@ -9,13 +9,15 @@ import { useState } from "react";
 import useFilteredData from "../components/SearchQuery";
 import usePagination from "../hooks/usePagination";
 import IconButton from "../components/ReusableComponents/IconButton";
+import HotlinesModal from "./HotlinesModal";
 
 const Hotlines = () => {
   const { data: hotlines = [] } = useFetchData("hotlines");
+  const [hotlinesModal, setHotlinesModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchField = ["name", "contact", "description"];
   const HotlineHeaders = ["Name", "Contact", "Description", "Action"];
-
+  
   const filteredData = useFilteredData(hotlines, searchQuery, searchField);
 
   const {
@@ -66,6 +68,10 @@ const Hotlines = () => {
     );
   };
 
+  const handleHotlinesModal = () => {
+    setHotlinesModal(!hotlinesModal);
+  }
+
   return (
     <HeaderAndSideBar
       content={
@@ -77,12 +83,17 @@ const Hotlines = () => {
                 color={"gray"}
                 label={"New hotlines"}
                 fontSize={"small"}
+                onClick={handleHotlinesModal}
               />
             }
             label="Hotlines Number"
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
+
+          {hotlinesModal && (
+            <HotlinesModal handleHotlinesModal={handleHotlinesModal}/>
+          )}
 
           <Table
             headers={HotlineHeaders}

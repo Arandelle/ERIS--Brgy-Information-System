@@ -110,11 +110,9 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
     <div>
       <Modal
         closeButton={addUser}
+        title={`Add new ${label}`}
         children={
           <form  onSubmit={handleAddUser}>
-            <h2 className="text-center text-lg font-extrabold text-gray-700">
-              Create new {`${label}`}
-            </h2>
             <div className="flex flex-col space-y-4">
               <InputReusable
                 className={"border"}

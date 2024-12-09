@@ -23,11 +23,9 @@ const AnnouncementModal = ({
   return (
     <Modal
       closeButton={handleModal}
+      title={`${isEdit ? "Edit" : "Create new"} Announcement`}
       children={
         <div className="w-full flex flex-col space-y-4">
-          <h2 className="text-center text-sm md:text-lg font-extrabold text-gray-700">
-            {`${isEdit ? "Edit" : "Create new"}`} Announcement
-          </h2>
           <InputReusable
             type="text"
             placeholder="Title"
@@ -94,7 +92,7 @@ const AnnouncementModal = ({
                 </label>
               </div>
             )}
-
+            {/**Buttons */}
             <div className="flex items-center space-x-2 self-end">
 
               <button
