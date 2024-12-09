@@ -271,7 +271,7 @@ const Activities = () => {
                     ?{" "}
                   </span>
                 }
-                yesText={"Delete"}
+                confirmText={"Delete"}
                 onConfirm={handleConfirmDelete}
               />
             )}

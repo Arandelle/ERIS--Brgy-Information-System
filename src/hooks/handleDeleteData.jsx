@@ -25,7 +25,7 @@ const handleDeleteData = async (id, type) => {
           await deleteObject(imageRef); // Delete the image from Firebase Storage
         }
 
-        toast.success(`${type} and image successfully removed`);
+        toast.success(`${type} item successfully removed`);
       }
     }
   } catch (error) {

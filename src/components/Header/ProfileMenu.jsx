@@ -95,8 +95,8 @@ const Profile = () => {
       {showLogout && (
         <Logout
           toggleModal={() => setShowLogout(false)}
-          question="Are you do you want to Logout?"
-          yesText="Logout"
+          question="Do you want to Logout?"
+          confirmText="Logout"
           onConfirm={handleLogout}
         />
       )}

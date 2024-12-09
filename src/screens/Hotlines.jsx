@@ -11,6 +11,9 @@ import usePagination from "../hooks/usePagination";
 import IconButton from "../components/ReusableComponents/IconButton";
 import HotlinesModal from "./HotlinesModal";
 import handleAddData from "../hooks/handleAddData";
+import AskCard from "../components/ReusableComponents/AskCard";
+import handleDeleteData from "../hooks/handleDeleteData";
+import { toast } from "sonner";
 
 const Hotlines = () => {
   const { data: hotlines = [] } = useFetchData("hotlines");
@@ -21,7 +24,10 @@ const Hotlines = () => {
     name : "",
     contact: "",
     description: ""
-  })
+  });
+  const [selectedId, setSelectedId] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const searchField = ["name", "contact", "description"];
   const HotlineHeaders = ["Type","Name", "Contact", "Description", "Action"];
   
@@ -37,26 +43,26 @@ const Hotlines = () => {
   } = usePagination(filteredData);
 
   const renderRow = (hotlines) => {
-    const anonymous = <p className="italic text-nowrap text-xs">not yet set</p>;
+    const anonymous = <p className="italic text-nowrap text-xs">null</p>;
     return (
       <>
       <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
           <div className="truncate max-w-[100px] sm:max-w-[200px]">
-            {hotlines.types ?? anonymous}
+            {hotlines.types || anonymous}
           </div>
         </td>
         <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
           <div className="truncate max-w-[100px] sm:max-w-[200px]">
-            {hotlines.name ?? anonymous}
+            {hotlines.name || anonymous}
           </div>
         </td>
         <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
           <div className="truncate max-w-[100px] sm:max-w-[200px]">
-            {hotlines.contact ?? anonymous}
+            {hotlines.contact || anonymous}
           </div>
         </td>
         <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden sm:table-cell">
-          {hotlines.description ?? anonymous}
+          {hotlines.description || anonymous}
         </td>
         <td className="">
            <div className="flex items-center justify-center space-x-4">
@@ -66,6 +72,7 @@ const Hotlines = () => {
                 bgColor={"bg-red-100"}
                 fontSize={"small"}
                 tooltip={"Delete contact?"}
+                onClick={() => handleDeleteModal(hotlines.id)}
               />
               <IconButton 
                 icon={icons.edit}
@@ -93,6 +100,21 @@ const Hotlines = () => {
 
     setHotlinesState({});
     setHotlinesModal(false);
+  };
+
+  const handleDeleteModal = (id) => {
+    setSelectedId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try{
+      await handleDeleteData(selectedId, "hotlines");
+    }catch(error){
+      toast.error(`Error deleting ${error}`)
+    };
+
+    setShowDeleteModal(false);
   }
 
   return (
@@ -121,6 +143,23 @@ const Hotlines = () => {
               setHotlinesState={setHotlinesState}
             />
           )}
+          
+          {showDeleteModal && (
+            <AskCard 
+              toggleModal={() => setShowDeleteModal(!showDeleteModal)}
+              question={ <span>
+                    Do you want to delete
+                    <span className="text-primary-500 text-bold">
+                      {" "}
+                      {hotlines.find((item) => item.id === selectedId)?.types}
+                    </span>{" "}
+                    ?{" "}
+                  </span>}
+              confirmText={"Delete"}
+              onConfirm={handleConfirmDelete}
+            />
+          )}
+
 
           <Table
             headers={HotlineHeaders}
