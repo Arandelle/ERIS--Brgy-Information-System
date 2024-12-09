@@ -14,13 +14,13 @@ import handleAddData from "../../hooks/handleAddData";
 import handleDeleteData from "../../hooks/handleDeleteData";
 import handleEditData from "../../hooks/handleEditData";
 import AnnouncementModal from "./AnnouncementModal";
-import QuestionModal from "../../components/ReusableComponents/AskCard"
+import QuestionModal from "../../components/ReusableComponents/AskCard";
 import DetailsAnnouncement from "./DetailsAnnouncement";
 import usePagination from "../../hooks/usePagination";
 import useFilteredData from "../../components/SearchQuery";
 
 const Activities = () => {
-  const {data: activity, setData: setActivity} = useFetchData("announcement");
+  const { data: activity, setData: setActivity } = useFetchData("announcement");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [links, setLinks] = useState("");
@@ -34,13 +34,9 @@ const Activities = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const searchField = [
-    "title",
-    "description",
-    "links"
-  ]
+  const searchField = ["title", "description", "links"];
 
-  const filteredData = useFilteredData(activity,searchQuery, searchField)
+  const filteredData = useFilteredData(activity, searchQuery, searchField);
 
   const {
     currentPage,
@@ -48,7 +44,7 @@ const Activities = () => {
     indexOfLastItem,
     indexOfFirstItem,
     currentItems,
-    totalPages
+    totalPages,
   } = usePagination(filteredData);
 
   const headerData = [
@@ -74,11 +70,17 @@ const Activities = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
-    if (file && file.type.startsWith("image/") && file.size <= 5 *1024 *1024) {
+    if (
+      file &&
+      file.type.startsWith("image/") &&
+      file.size <= 5 * 1024 * 1024
+    ) {
       setImage(file);
-      setPrevImage(URL.createObjectURL(file))
-    } else{
-      toast.error("Invalid file type or size. Please try to upload an image under 5mb");
+      setPrevImage(URL.createObjectURL(file));
+    } else {
+      toast.error(
+        "Invalid file type or size. Please try to upload an image under 5mb"
+      );
     }
   };
 
@@ -94,7 +96,7 @@ const Activities = () => {
 
     setTitle("");
     setDescription("");
-    setLinks("")
+    setLinks("");
     setDate("");
     setImage("");
     setModal(false);
@@ -122,30 +124,30 @@ const Activities = () => {
     await handleEditData(id, announcementData, "announcement");
     setTitle("");
     setDescription("");
-    setLinks("")
+    setLinks("");
     setImage("");
     setModal(false);
   };
 
   const handleDeleteClick = (id) => {
-    setSelectedId(id)
-    setIsDelete(!isDelete)
-    setShowDetails(false)
-  } 
+    setSelectedId(id);
+    setIsDelete(!isDelete);
+    setShowDetails(false);
+  };
 
   const handleConfirmDelete = async () => {
     const itemToDelete = activity.find((item) => item.id === selectedId);
-    
+
     // Optimistically remove the item from local state
-    setActivity(prevActivity => 
-      prevActivity.filter(item => item.id !== selectedId)
+    setActivity((prevActivity) =>
+      prevActivity.filter((item) => item.id !== selectedId)
     );
-    
+
     try {
       await handleDeleteData(selectedId, "announcement");
     } catch (error) {
       // If deletion fails, restore the item to the list
-      setActivity(prevActivity => [...prevActivity, itemToDelete]);
+      setActivity((prevActivity) => [...prevActivity, itemToDelete]);
       toast.error("Failed to delete item");
     }
     setIsDelete(false);
@@ -176,11 +178,14 @@ const Activities = () => {
         <td>
           <div className="flex px-2 space-x-2 flex-row items-center justify-evenly">
             <IconButton
-              icon={icons.delete}
-              color={"red"}
-              bgColor={"bg-red-100"}
-              onClick={() => handleDeleteClick(announcement.id)}
-              tooltip={"Delete"}
+              icon={icons.view}
+              color={"blue"}
+              bgColor={"bg-blue-100"}
+              onClick={() => {
+                setShowDetails(!showDetails);
+                setSelectedId(announcement.id);
+              }}
+              tooltip={"View"}
               fontSize={"small"}
             />
             <IconButton
@@ -192,11 +197,11 @@ const Activities = () => {
               fontSize={"small"}
             />
             <IconButton
-              icon={icons.view}
-              color={"blue"}
-              bgColor={"bg-blue-100"}
-              onClick={() => {setShowDetails(!showDetails); setSelectedId(announcement.id)}}
-              tooltip={"View"}
+              icon={icons.delete}
+              color={"red"}
+              bgColor={"bg-red-100"}
+              onClick={() => handleDeleteClick(announcement.id)}
+              tooltip={"Delete"}
               fontSize={"small"}
             />
           </div>
@@ -231,8 +236,8 @@ const Activities = () => {
             renderRow={renderRow}
             emptyMessage="No announcement found"
           />
-          <Pagination 
-             currentPage={currentPage}
+          <Pagination
+            currentPage={currentPage}
             totalPages={totalPages}
             setCurrentPage={setCurrentPage}
             indexOfFirstItem={indexOfFirstItem}
@@ -259,30 +264,30 @@ const Activities = () => {
             />
           )}
           {isDelete && (
-              <QuestionModal
+            <QuestionModal
               toggleModal={() => setIsDelete(!isDelete)}
-                question={
-                  <span>
-                    Do you want to delete
-                    <span className="text-primary-500 text-bold">
-                      {" "}
-                      {activity.find((item) => item.id === selectedId)?.title}
-                    </span>{" "}
-                    ?{" "}
-                  </span>
-                }
-                confirmText={"Delete"}
-                onConfirm={handleConfirmDelete}
-              />
-            )}
-            {showDetails && (
-              <DetailsAnnouncement
-              closeButton={() => setShowDetails(!showDetails)} 
+              question={
+                <span>
+                  Do you want to delete
+                  <span className="text-primary-500 text-bold">
+                    {" "}
+                    {activity.find((item) => item.id === selectedId)?.title}
+                  </span>{" "}
+                  ?{" "}
+                </span>
+              }
+              confirmText={"Delete"}
+              onConfirm={handleConfirmDelete}
+            />
+          )}
+          {showDetails && (
+            <DetailsAnnouncement
+              closeButton={() => setShowDetails(!showDetails)}
               handleEditClick={handleEditClick}
               handleDeleteClick={handleDeleteClick}
               selectedId={selectedId}
-              />
-            )}
+            />
+          )}
         </>
       }
     />

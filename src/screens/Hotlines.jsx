@@ -69,20 +69,20 @@ const Hotlines = () => {
         <td className="">
           <div className="flex items-center justify-center space-x-4">
             <IconButton
-              icon={icons.delete}
-              color={"red"}
-              bgColor={"bg-red-100"}
-              fontSize={"small"}
-              tooltip={"Delete contact?"}
-              onClick={() => handleDeleteModal(hotlines.id)}
-            />
-            <IconButton
               icon={icons.edit}
               color={"green"}
               bgColor={"bg-green-100"}
               fontSize={"small"}
               tooltip={"Edit contact?"}
               onClick={() => handleEditClick(hotlines)}
+            />
+            <IconButton
+              icon={icons.delete}
+              color={"red"}
+              bgColor={"bg-red-100"}
+              fontSize={"small"}
+              tooltip={"Delete contact?"}
+              onClick={() => handleDeleteModal(hotlines.id)}
             />
           </div>
         </td>
@@ -93,7 +93,7 @@ const Hotlines = () => {
   const handleHotlinesModal = () => {
     setHotlinesModal(!hotlinesModal);
     setIsEdit(false);
-    setHotlinesState({})
+    setHotlinesState({});
   };
 
   const handleAddHotlines = async () => {
@@ -133,7 +133,7 @@ const Hotlines = () => {
     }));
     setSelectedId(hotlines.id);
     setIsEdit(true);
-    console.log(selectedId)
+    console.log(selectedId);
   };
 
   const handleUpdateHotlines = async (id) => {
@@ -143,7 +143,7 @@ const Hotlines = () => {
 
     await handleEditData(id, hotlinesData, "hotlines");
     setHotlinesState({});
-    setHotlinesModal(false)
+    setHotlinesModal(false);
   };
 
   return (
