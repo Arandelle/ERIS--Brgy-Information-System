@@ -17,7 +17,6 @@ import Setting from "./screens/Setting";
 import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";
-import Luncher from "./components/Launcher";
 import { useFetchData } from "./hooks/useFetchData";
 import ErrorBoundary from "./ErrorBoundary";
 import UserList from "./screens/AccountList/UserList";
@@ -64,7 +63,7 @@ const App = () => {
       <Router>
          <ErrorBoundary>
         <>
-          <Toaster richColors Headless position="top-right" expand="true" />
+          <Toaster richColors Headless position="top-center" expand="true" />
           <div className="flex">
             <Routes>
               <Route path="*" element={<Navigate to="/" replace />} />

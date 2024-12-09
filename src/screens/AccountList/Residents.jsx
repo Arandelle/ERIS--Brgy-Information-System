@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
+import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import Pagination from "../AccountList/buttons/Pagination";
 import Toolbar from "./Toolbar";
 import TableHeader from "./TableHeader";
@@ -114,8 +114,8 @@ const ResidentsList = ({ label, data }) => {
   };
 
   return (
-    <HeadSide
-      child={
+    <HeaderAndSideBar
+      content={
         <div className="flex flex-col justify-center">
           <Toolbar
             label={label}

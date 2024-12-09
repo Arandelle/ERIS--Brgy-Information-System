@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SectionLinks } from "../../data/SectionLinks";
-import Question from "../../assets/images/question.svg";
 import EmptyLogo from "../ReusableComponents/EmptyLogo";
 import icons from "../../assets/icons/Icons";
 

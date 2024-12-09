@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import HeadSide from "../components/ReusableComponents/HeaderSidebar";
+import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import Iconbutton from "../components/ReusableComponents/IconButton";
 import icons from "../assets/icons/Icons";
 import { auth, database, storage } from "../services/firebaseConfig";
@@ -162,8 +162,8 @@ const Setting = () => {
 
   if (loading) {
     return (
-      <HeadSide
-        child={
+      <HeaderAndSideBar
+        content={
           <div className="flex items-center justify-center h-svh">
             loading...
           </div>
@@ -174,8 +174,8 @@ const Setting = () => {
 
   if (error) {
     return (
-      <HeadSide
-        child={
+      <HeaderAndSideBar
+        content={
           <div className="flex items-center justify-center h-svh">
             Error: {error.message}
           </div>
@@ -185,8 +185,8 @@ const Setting = () => {
   }
 
   return (
-    <HeadSide
-      child={
+    <HeaderAndSideBar
+      content={
         <div className="h-full">
           <div className="bg-white dark:bg-gray-800 p-4 rounded shadow-sm">
             <div className="border-b py-2 space-y-1">

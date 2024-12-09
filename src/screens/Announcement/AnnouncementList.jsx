@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
+import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import Table from "../../components/Table";
 import { formatDateWithTime } from "../../helper/FormatDate";
 import { getTimeDifference } from "../../helper/TimeDiff";
@@ -206,8 +206,8 @@ const Activities = () => {
   };
 
   return (
-    <HeadSide
-      child={
+    <HeaderAndSideBar
+      content={
         <>
           <Toolbar
             buttons={

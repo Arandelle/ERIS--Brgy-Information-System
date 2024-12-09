@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useFetchData } from "../../hooks/useFetchData";
 import useFilteredData from "../../components/SearchQuery";
 import usePagination from "../../hooks/usePagination";
-import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
+import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import Toolbar from "../../components/ToolBar";
 import Table from "../../components/Table";
 import Pagination from "../../components/Pagination";
@@ -137,8 +137,8 @@ const UserList = ({ data }) => {
   };
 
   return (
-    <HeadSide
-      child={
+    <HeaderAndSideBar
+      content={
         <>
           <Toolbar
             buttons={

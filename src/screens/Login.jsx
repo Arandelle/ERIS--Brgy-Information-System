@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Launcher from "../components/Launcher";
 import { toast } from "sonner";
 import emailjs from "emailjs-com";
 import OTP from "../assets/images/otp.svg";

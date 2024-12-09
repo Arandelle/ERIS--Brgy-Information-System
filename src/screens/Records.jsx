@@ -1,4 +1,4 @@
-import HeadSide from "../components/ReusableComponents/HeaderSidebar";
+import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import Table from "../components/Table";
 import { useFetchData } from "../hooks/useFetchData";
 import { capitalizeFirstLetter } from "../helper/CapitalizeFirstLetter";
@@ -182,8 +182,8 @@ const Records = () => {
   };
 
   return (
-    <HeadSide
-      child={
+    <HeaderAndSideBar
+      content={
         <>
           <Toolbar
             label={"Emergency Records"}

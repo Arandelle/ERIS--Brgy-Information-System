@@ -5,7 +5,7 @@ import population from "../assets/images/population.svg";
 import Events from "../assets/images/events.svg";
 import emergency from "../assets/images/emergency.svg";
 import navigator from "../assets/images/direction.svg"
-import HeadSide from "../components/ReusableComponents/HeaderSidebar";
+import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../helper/DateToday";
 import { useFetchData } from "../hooks/useFetchData";
 import icons from "../assets/icons/Icons";
@@ -300,8 +300,8 @@ const Dashboard = () => {
   const now = new Date();
   
   return (
-    <HeadSide
-      child={
+    <HeaderAndSideBar
+      content={
         <>
           <DateToday />
 

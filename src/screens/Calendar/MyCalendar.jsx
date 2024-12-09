@@ -6,7 +6,7 @@ import { Spinner } from "../../components/ReusableComponents/Spinner";
 import ContainerResizer from "../../helper/ContainerResizer";
 import InputReusable from "../../components/ReusableComponents/InputReusable";
 import ButtonStyle from "../../components/ReusableComponents/Button";
-import HeadSide from "../../components/ReusableComponents/HeaderSidebar";
+import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import QuestionModal from "../../components/ReusableComponents/AskCard";
 import { toast } from "sonner";
 import { formatDate, formatTime } from "../../helper/FormatDate";
@@ -199,8 +199,8 @@ const MyCalendar = () => {
   );
 
   return (
-    <HeadSide
-      child={
+    <HeaderAndSideBar
+      content={
         <>
           <div className="grid grid-cols-1 md:grid-cols-4">
             <div className="col-span-3 border-t-[3px] border-primary-500 text-gray-600 dark:text-gray-200 mt-2 bg-gray-200 dark:bg-gray-800">

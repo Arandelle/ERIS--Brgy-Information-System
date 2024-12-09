@@ -1,5 +1,5 @@
 import ButtonStyle from "../components/ReusableComponents/Button";
-import HeadSide from "../components/ReusableComponents/HeaderSidebar";
+import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import Toolbar from "../components/ToolBar";
 import icons from "../assets/icons/Icons";
 import Table from "../components/Table";
@@ -67,8 +67,8 @@ const Hotlines = () => {
   };
 
   return (
-    <HeadSide
-      child={
+    <HeaderAndSideBar
+      content={
         <>
           <Toolbar
             buttons={
