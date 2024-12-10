@@ -16,14 +16,16 @@ const HotlinesModal = ({
   return (
     <Modal
       closeButton={handleHotlinesModal}
-      title={"Hotlines"}
+      title={"Hotlines Number and Contact"}
       children={
         <div className="flex flex-col space-y-4">
+        <p className="text-sm text-gray-600 italic">Regularly review and update contact information to ensure its accuracy.
+        Ensure that any personal information added complies with relevant privacy policies and regulations.</p>
          <InputField
             type="text"
-            placeholder="Type /Category /Office"
-            value={hotlineState.types}
-            onChange={(e) => setHotlinesState(prev => ({...prev, types: e.target.value}))}
+            placeholder="Organizations"
+            value={hotlineState.organization}
+            onChange={(e) => setHotlinesState(prev => ({...prev, organization: e.target.value}))}
           />
           <InputField
             type="text"
@@ -31,9 +33,13 @@ const HotlinesModal = ({
             value={hotlineState.name}
             onChange={(e) => setHotlinesState(prev => ({...prev, name: e.target.value}))}
           />
-          <InputField type="text" placeholder="Contact" 
+          <InputField type="number" placeholder="Contact" 
             value={hotlineState.contact}
             onChange={(e) => setHotlinesState(prev => ({...prev, contact: e.target.value}))}
+          />
+          <InputField type="email" placeholder="Email (Optional)  " 
+            value={hotlineState.email}
+            onChange={(e) => setHotlinesState(prev => ({...prev, email: e.target.value}))}
           />
           <TextArea placeholder={"Description"} value={hotlineState.description}
             onChange={(e) => setHotlinesState(prev => ({...prev, description: e.target.value}))}

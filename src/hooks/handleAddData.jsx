@@ -8,7 +8,7 @@ import {
 } from "firebase/storage";
 
 const handleAddData = async (data, type) => {
-  const { title, description, image, links, date, types, name, contact } = data;
+  const { title, description, image, links, date, organization, name, contact,email } = data;
 
   if (type === "announcement") {
     if (!title || !description) {
@@ -16,7 +16,7 @@ const handleAddData = async (data, type) => {
       return;
     }
   } else if (type === "hotlines") {
-    if (!types || !name || !contact) {
+    if (!organization || !name || (!contact && !email)) {
       toast.warning("Please complete the form");
       return;
     }
@@ -49,10 +49,11 @@ const handleAddData = async (data, type) => {
       timestamp: serverTimestamp(),
     },
     hotlines: {
-      types,
+      organization,
       name,
-      contact,
-      description: "",
+      contact: contact || "",
+      email: email || "",
+      description: description ||"",
       date: new Date().toISOString(),
       timestamp: serverTimestamp(),
     },

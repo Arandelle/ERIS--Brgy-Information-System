@@ -4,7 +4,7 @@ import { ref, serverTimestamp, update, get} from "firebase/database";
 import { toast } from "sonner";
 
 const handleEditData = async (id,data, type) => {
-    const {title, description,links, image,types,name,contact} = data
+    const {title, description,links, image,organization,name,contact,email} = data
 
     if(type === "announcement"){
         if (!title || !description) {
@@ -12,7 +12,7 @@ const handleEditData = async (id,data, type) => {
             return;
           }
     } else if(type === "hotlines"){
-      if(!types || !name || !contact){
+      if(!organization || !name || (!contact && !email)){
         toast.warning("Please complete the form");
       }
     }
@@ -62,9 +62,10 @@ const handleEditData = async (id,data, type) => {
             timestamp: serverTimestamp(),
           },
           hotlines : {
-            types,
+            organization,
             name,
             contact,
+            email,
             description,
             isEdited: true,
             timestamp: serverTimestamp()

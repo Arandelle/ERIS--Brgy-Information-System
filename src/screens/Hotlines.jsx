@@ -21,17 +21,18 @@ const Hotlines = () => {
   const [hotlinesModal, setHotlinesModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [hotlineState, setHotlinesState] = useState({
-    types: "",
+    organization: "",
     name: "",
     contact: "",
+    email: "",
     description: "",
   });
   const [selectedId, setSelectedId] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const searchField = ["name", "contact", "description"];
-  const HotlineHeaders = ["Type", "Name", "Contact", "Description", "Action"];
+  const searchField = ["organization","name", "contact","email", "description"];
+  const HotlineHeaders = ["Ornizations", "Name", "PhoneNumber","Email", "Description", "Action"];
 
   const filteredData = useFilteredData(hotlines, searchQuery, searchField);
 
@@ -58,9 +59,10 @@ const Hotlines = () => {
   const renderRow = (hotlines) => {
     return (
       <>
-        <TableData data={hotlines.types}/>
+        <TableData data={hotlines.organization}/>
         <TableData data={hotlines.name} />
         <TableData data={hotlines.contact}/>
+        <TableData data={hotlines.email}/>
         <TableData data={hotlines.description} />
         <td className="">
           <div className="flex items-center justify-center space-x-4">
@@ -122,9 +124,10 @@ const Hotlines = () => {
     setHotlinesModal(true);
     setHotlinesState((prev) => ({
       ...prev,
-      types: hotlines.types,
+      organization: hotlines.organization,
       name: hotlines.name,
       contact: hotlines.contact,
+      email: hotlines.email,
       description: hotlines.description,
     }));
     setSelectedId(hotlines.id);
@@ -181,7 +184,7 @@ const Hotlines = () => {
                   Do you want to delete
                   <span className="text-primary-500 text-bold">
                     {" "}
-                    {hotlines.find((item) => item.id === selectedId)?.types}
+                    {hotlines.find((item) => item.id === selectedId)?.organization}
                   </span>{" "}
                   ?{" "}
                 </span>
