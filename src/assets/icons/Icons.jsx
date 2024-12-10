@@ -22,6 +22,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import CallIcon from '@mui/icons-material/Call';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 const icons = {
     arrowRight: ArrowRightIcon,
@@ -47,7 +48,8 @@ const icons = {
     sun: LightModeIcon,
     notifation: NotificationsIcon,
     call: CallIcon,
-    addPhoto: AddPhotoAlternateIcon
+    addPhoto: AddPhotoAlternateIcon,
+    document: DescriptionIcon
 }
 
 export default icons;

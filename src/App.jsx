@@ -22,6 +22,7 @@ import ErrorBoundary from "./ErrorBoundary";
 import UserList from "./screens/AccountList/UserList";
 import { Spinner } from "./components/ReusableComponents/Spinner";
 import Hotlines from "./screens/Hotlines";
+import Certificates from "./screens/Certificates";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -112,6 +113,10 @@ const App = () => {
               <Route 
                 path="/hotlines"
                 element={user && isAdmin ? <Hotlines/> : <Navigate to="/" />}
+              />
+              <Route 
+                path="/certificates"
+                element={user && isAdmin ? <Certificates /> : <Navigate to="/" /> }
               />
               <Route
                 path="/records"
