@@ -64,6 +64,18 @@ const UserList = ({ data }) => {
     setUserToViewInfo(user);
   };
 
+  const TableData = ({data}) => {
+    const nullValue = <p className="italic text-nowrap text-xs">not yet set</p>;
+
+    return (
+      <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
+          <div className="truncate max-w-[100px] sm:max-w-[200px]">
+            {data ||  nullValue}
+          </div>
+      </td>
+    )
+  }
+
   const renderRow = (user) => {
     const anonymous = <p className="italic text-nowrap text-xs">not yet set</p>;
     return (
@@ -98,39 +110,25 @@ const UserList = ({ data }) => {
             </div>
           </div>
         </th>
-        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
-          <div className="truncate max-w-[100px] sm:max-w-[200px]">
-            {user.customId ?? anonymous}
-          </div>
-        </td>
-        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
-          <div className="truncate max-w-[100px] sm:max-w-[200px]">
-            {user.address ?? anonymous}
-          </div>
-        </td>
-        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden sm:table-cell">
-          {user.gender ?? anonymous}
-        </td>
-        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden md:table-cell">
-          {user.mobileNum ?? anonymous}
-        </td>
-        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden lg:table-cell">
-          {formatDate(user.createdAt)}
-        </td>
-        <td className="">
-          <div className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden lg:flex  items-center justify-center">
-            <IconButton
-              icon={icons.view}
-              color={"blue"}
-              bgColor={"bg-blue-100"}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleViewUser(user);
-              }}
-              tooltip={"Show more details"}
-              fontSize={"small"}
-            />
-          </div>
+        <TableData data={user.customId} />
+        <TableData data={user.address} />
+        <TableData data={user.gender} />
+        <TableData data={user.mobileNum} />
+        <TableData data={formatDate(user.createdAt)}/>
+        <td className="flex-1">
+            <div className="flex items-center justify-center">
+              <IconButton
+                icon={icons.view}
+                color={"blue"}
+                bgColor={"bg-blue-100"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleViewUser(user);
+                }}
+                tooltip={"Show more details"}
+                fontSize={"small"}
+              />
+            </div>
         </td>
       </>
     );

@@ -44,28 +44,24 @@ const Hotlines = () => {
     totalPages,
   } = usePagination(filteredData);
 
+  const TableData = ({data}) => {
+    const nullValue = <p className="italic text-nowrap text-xs">null</p>;
+    return (
+      <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
+      <div className="truncate max-w-[100px] sm:max-w-[200px]">
+        {data || nullValue}
+      </div>
+    </td>
+    )
+  }
+
   const renderRow = (hotlines) => {
-    const anonymous = <p className="italic text-nowrap text-xs">null</p>;
     return (
       <>
-        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
-          <div className="truncate max-w-[100px] sm:max-w-[200px]">
-            {hotlines.types || anonymous}
-          </div>
-        </td>
-        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
-          <div className="truncate max-w-[100px] sm:max-w-[200px]">
-            {hotlines.name || anonymous}
-          </div>
-        </td>
-        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
-          <div className="truncate max-w-[100px] sm:max-w-[200px]">
-            {hotlines.contact || anonymous}
-          </div>
-        </td>
-        <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm hidden sm:table-cell">
-          {hotlines.description || anonymous}
-        </td>
+        <TableData data={hotlines.types}/>
+        <TableData data={hotlines.name} />
+        <TableData data={hotlines.contact}/>
+        <TableData data={hotlines.description} />
         <td className="">
           <div className="flex items-center justify-center space-x-4">
             <IconButton

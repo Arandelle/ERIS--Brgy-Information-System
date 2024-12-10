@@ -153,30 +153,32 @@ const Activities = () => {
     setIsDelete(false);
   };
 
+  const TableData = ({ data }) => {
+    return (
+      <td className="px-6 py-4 max-w-32 whitespace-nowrap overflow-hidden text-ellipsis">
+        {data}
+      </td>
+    );
+  };
+
   const renderRow = (announcement) => {
     return (
       <>
-        <td className="px-6 py-4">
-          <img
-            src={announcement.imageUrl}
-            alt="image"
-            className="h-12 w-12 rounded-full"
-          />
+        <td className="px-6 py-4 flex">
+         <div className="flex-shrink-0">
+            <img
+              src={announcement.imageUrl}
+              alt="image"
+              className="h-8 w-8 md:h-12 md:w-12 rounded-full "
+            />
+         </div>
         </td>
-        <td className="px-6 py-4 max-w-32 whitespace-nowrap overflow-hidden text-ellipsis">
-          {announcement.title}
-        </td>
-        <td className="px-6 py-4 max-w-32 whitespace-nowrap overflow-hidden text-ellipsis">
-          {formatDateWithTime(announcement.date)}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
-          {announcement.description}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs">
-          {getTimeDifference(announcement.timestamp)}
-        </td>
+        <TableData data={announcement.title} />
+        <TableData data={formatDateWithTime(announcement.date)} />
+        <TableData data={announcement.description} />
+        <TableData data={getTimeDifference(announcement.timestamp)} />
         <td>
-          <div className="flex px-2 space-x-2 flex-row items-center justify-evenly">
+          <div className="flex px-2 space-x-4 flex-row items-center justify-center">
             <IconButton
               icon={icons.view}
               color={"blue"}
