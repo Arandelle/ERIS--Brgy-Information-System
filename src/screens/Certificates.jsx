@@ -9,45 +9,46 @@ const Certificates = () => {
     "First.Name": "John",
     Email: "john.doe@example.com",
   });
+  const [templateSample,setTemplateSample] = useState("");
 
-  const saveTemplate = () => {
-    if (editorRef.current) {
-      let content = editorRef.current.getContent();
+  // const saveTemplate = () => {
+  //   if (editorRef.current) {
+  //     let content = editorRef.current.getContent();
 
-      // Replace placeholders with dynamic data
-      Object.entries(templateData).forEach(([key, value]) => {
-        const placeholder = `{{${key}}}`;
-        content = content.replace(new RegExp(placeholder, "g"), value);
-      });
+  //     // Replace placeholders with dynamic data
+  //     Object.entries(templateData).forEach(([key, value]) => {
+  //       const placeholder = `{{${key}}}`;
+  //       content = content.replace(new RegExp(placeholder, "g"), value);
+  //     });
 
-      toast.success("Template saved successfully!");
-      console.log("Updated Content: ", content);
+  //     toast.success("Template saved successfully!");
+  //     console.log("Updated Content: ", content);
 
-      // Render printable content
-      const printWindow = window.open("", "_blank");
-      printWindow.document.open();
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Printable Certificate</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-                padding: 1in;
-                width: 8.5in;
-                height: 11in;
-                background-color: #fff;
-                border: 1px solid #ccc;
-              }
-            </style>
-          </head>
-          <body>${content}</body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-    }
-  };
+  //     // Render printable content
+  //     const printWindow = window.open("", "_blank");
+  //     printWindow.document.open();
+  //     printWindow.document.write(`
+  //       <html>
+  //         <head>
+  //           <title>Printable Certificate</title>
+  //           <style>
+  //             body {
+  //               font-family: Arial, sans-serif;
+  //               padding: 1in;
+  //               width: 8.5in;
+  //               height: 11in;
+  //               background-color: #fff;
+  //               border: 1px solid #ccc;
+  //             }
+  //           </style>
+  //         </head>
+  //         <body>${content}</body>
+  //       </html>
+  //     `);
+  //     printWindow.document.close();
+  //     printWindow.print();
+  //   }
+  // };
 
   return (
     <HeaderAndSideBar
@@ -80,11 +81,12 @@ const Certificates = () => {
                 "code",
                 "help",
                 "wordcount",
+                "lineheight"
               ],
               toolbar:
                 "undo redo | blocks | " +
                 "bold italic forecolor | alignleft aligncenter " +
-                "alignright alignjustify | bullist numlist outdent indent | " +
+                "alignright alignjustify | bullist numlist outdent indent | " + "lineheight |" +
                 "removeformat | help",
               content_style: `
                     body {
@@ -107,9 +109,10 @@ const Certificates = () => {
             initialValue={`Welcome to TinyMCE! Your name is {{First.Name}} and your email is {{Email}}.`}
           />
           <div className="place-self-end py-4">
-            <button className="bg-blue-500 p-2 rounded-md" onClick={saveTemplate}>
+            {/* <button className="bg-blue-500 p-2 rounded-md" onClick={saveTemplate}>
               Save & Print Template
-            </button>
+            </button> */}
+            <button>Save Template</button>
           </div>
         </div>
       }
