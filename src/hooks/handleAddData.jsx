@@ -8,7 +8,7 @@ import {
 } from "firebase/storage";
 
 const handleAddData = async (data, type) => {
-  const { title, description, image, links, date, organization, name, contact,email } = data;
+  const { title, description, image, links, date, organization, name, contact,email,content } = data;
 
   if (type === "announcement") {
     if (!title || !description) {
@@ -57,6 +57,10 @@ const handleAddData = async (data, type) => {
       date: new Date().toISOString(),
       timestamp: serverTimestamp(),
     },
+    templates: {
+      title,
+      content
+    }
   };
 
   const dataRef = ref(database, `${type}`);

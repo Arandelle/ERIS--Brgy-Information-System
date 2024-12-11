@@ -1,54 +1,40 @@
 import { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
+import handleAddData from "../hooks/handleAddData";
 import { toast } from "sonner";
 
 const Certificates = () => {
   const editorRef = useRef(null);
-  const [templateData, setTemplateData] = useState({
-    "First.Name": "John",
-    Email: "john.doe@example.com",
-  });
-  const [templateSample,setTemplateSample] = useState("");
+  const [templateTitle, setTemplateTitle] = useState("");
+  const [templates, setTemplates] = useState([]); // For displaying templates
 
-  // const saveTemplate = () => {
-  //   if (editorRef.current) {
-  //     let content = editorRef.current.getContent();
+  const saveTemplate = async () => {
+    if (!templateTitle.trim()) {
+      toast.error("Template title is required!");
+      return;
+    }
 
-  //     // Replace placeholders with dynamic data
-  //     Object.entries(templateData).forEach(([key, value]) => {
-  //       const placeholder = `{{${key}}}`;
-  //       content = content.replace(new RegExp(placeholder, "g"), value);
-  //     });
+    if (editorRef.current) {
+      const content = editorRef.current.getContent();
 
-  //     toast.success("Template saved successfully!");
-  //     console.log("Updated Content: ", content);
+      const templateData = {
+        title: templateTitle,
+        content,
+      };
 
-  //     // Render printable content
-  //     const printWindow = window.open("", "_blank");
-  //     printWindow.document.open();
-  //     printWindow.document.write(`
-  //       <html>
-  //         <head>
-  //           <title>Printable Certificate</title>
-  //           <style>
-  //             body {
-  //               font-family: Arial, sans-serif;
-  //               padding: 1in;
-  //               width: 8.5in;
-  //               height: 11in;
-  //               background-color: #fff;
-  //               border: 1px solid #ccc;
-  //             }
-  //           </style>
-  //         </head>
-  //         <body>${content}</body>
-  //       </html>
-  //     `);
-  //     printWindow.document.close();
-  //     printWindow.print();
-  //   }
-  // };
+      await handleAddData(templateData, "templates");
+      toast.success("Template saved successfully!");
+
+      // Optional: Update templates list after saving
+      setTemplates((prevTemplates) => [...prevTemplates, templateData]);
+
+      // Reset the title input
+      setTemplateTitle("");
+    } else {
+      toast.error("Editor content is empty!");
+    }
+  };
 
   return (
     <HeaderAndSideBar
@@ -57,6 +43,18 @@ const Certificates = () => {
           <h2 className="text-center p-4 bg-white rounded-lg">
             Barangay Certificates Template
           </h2>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-bold mb-2">
+              Template Title:
+            </label>
+            <input
+              type="text"
+              value={templateTitle}
+              onChange={(e) => setTemplateTitle(e.target.value)}
+              placeholder="Enter template title"
+              className="w-full border p-2 rounded-md"
+            />
+          </div>
           <Editor
             apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
             onInit={(_evt, editor) => (editorRef.current = editor)}
@@ -81,13 +79,13 @@ const Certificates = () => {
                 "code",
                 "help",
                 "wordcount",
-                "lineheight"
+                "lineheight",
               ],
               toolbar:
                 "undo redo | blocks | " +
                 "bold italic forecolor | alignleft aligncenter " +
-                "alignright alignjustify | bullist numlist outdent indent | " + "lineheight |" +
-                "removeformat | help",
+                "alignright alignjustify | bullist numlist outdent indent | " +
+                "lineheight | removeformat | help",
               content_style: `
                     body {
                     font-family: Arial, sans-serif;
@@ -101,18 +99,39 @@ const Certificates = () => {
                     }`,
               tinycomments_mode: "embedded",
               tinycomments_author: "Author name",
-              mergetags_list: [
-                { value: "First.Name", title: "First Name" },
-                { value: "Email", title: "Email" },
-              ],
             }}
-            initialValue={`Welcome to TinyMCE! Your name is {{First.Name}} and your email is {{Email}}.`}
+            initialValue="<p>Welcome to TinyMCE! Customize your template here.</p>"
           />
           <div className="place-self-end py-4">
-            {/* <button className="bg-blue-500 p-2 rounded-md" onClick={saveTemplate}>
-              Save & Print Template
-            </button> */}
-            <button>Save Template</button>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              onClick={saveTemplate}
+            >
+              Save Template
+            </button>
+          </div>
+
+          {/* Render Saved Templates */}
+          <div className="mt-8">
+            <h3 className="text-xl font-bold">Saved Templates</h3>
+            {templates.length > 0 ? (
+              <ul className="mt-4 space-y-4">
+                {templates.map((template, index) => (
+                  <li
+                    key={index}
+                    className="bg-gray-100 p-4 rounded-lg shadow-md"
+                  >
+                    <h4 className="font-bold">{template.title}</h4>
+                    <div
+                      className="mt-2"
+                      dangerouslySetInnerHTML={{ __html: template.content }}
+                    ></div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No templates saved yet.</p>
+            )}
           </div>
         </div>
       }
