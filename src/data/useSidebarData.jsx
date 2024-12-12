@@ -128,6 +128,13 @@ export const useSidebarData = [
     link: "/certificates",
   },
   {
+    title: "Certification",
+    icon : (
+      <icons.document className={`${style}`}/>
+    ),
+    link: "/certification",
+  },
+  {
     title: "Records",
     icon: (
       <svg

@@ -39,11 +39,11 @@ const Certificates = () => {
   return (
     <HeaderAndSideBar
       content={
-        <div>
-          <h2 className="text-center p-4 bg-white rounded-lg">
-            Barangay Certificates Template
+        <div className="space-y-2">
+          <h2 className="text-center text-xl p-4 bg-white">
+            Create Barangay Certificates Template
           </h2>
-          <div className="mb-4">
+          <div className="">
             <label className="block text-gray-700 font-bold mb-2">
               Template Title:
             </label>
@@ -80,9 +80,10 @@ const Certificates = () => {
                 "help",
                 "wordcount",
                 "lineheight",
+                'dragdrop image link media',
               ],
               toolbar:
-                "undo redo | blocks | " +
+                "undo redo | blocks | image link media |" +
                 "bold italic forecolor | alignleft aligncenter " +
                 "alignright alignjustify | bullist numlist outdent indent | " +
                 "lineheight | removeformat | help",
