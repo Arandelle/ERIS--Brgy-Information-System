@@ -8,21 +8,16 @@ import icons from "../assets/icons/Icons";
 import useFilteredData from "../components/SearchQuery";
 import usePagination from "../hooks/usePagination";
 import IconButton from "../components/ReusableComponents/IconButton";
+import { useFetchData } from "../hooks/useFetchData";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const sampleData = 
-   [{
-      firstname: "John",
-      lastname: "Doe",
-      address: "Barangay Bagtas Tanza Cavite",
-      age: "26"
-    }]
+  const {data: clearance} = useFetchData("requestClearance");
   
   const searchFields = ["firstname", "lastname", "address", "age"];
   const Headers = ["Firstname", "Lastname", "Address","Age", "Action"];
 
-  const filteredData = useFilteredData(sampleData, searchQuery, searchFields);
+  const filteredData = useFilteredData(clearance, searchQuery, searchFields);
   const {
     currentPage,
     setCurrentPage,
@@ -53,18 +48,18 @@ const Certification = () => {
         <td className="">
           <div className="flex items-center justify-center space-x-4">
             <IconButton
-              icon={icons.edit}
-              color={"green"}
-              bgColor={"bg-green-100"}
+              icon={icons.print}
+              color={"gray"}
+              bgColor={"bg-gray-100"}
               fontSize={"small"}
-              tooltip={"Edit contact?"}
+              tooltip={"Accept and Print"}
             />
             <IconButton
-              icon={icons.delete}
+              icon={icons.cancel}
               color={"red"}
               bgColor={"bg-red-100"}
               fontSize={"small"}
-              tooltip={"Delete contact?"}
+              tooltip={"Reject"}
             />
           </div>
         </td>

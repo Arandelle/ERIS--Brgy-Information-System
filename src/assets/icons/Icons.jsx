@@ -23,6 +23,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import CallIcon from '@mui/icons-material/Call';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import DescriptionIcon from '@mui/icons-material/Description';
+import PrintIcon from '@mui/icons-material/Print';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const icons = {
     arrowRight: ArrowRightIcon,
@@ -49,7 +51,9 @@ const icons = {
     notifation: NotificationsIcon,
     call: CallIcon,
     addPhoto: AddPhotoAlternateIcon,
-    document: DescriptionIcon
+    document: DescriptionIcon,
+    print: PrintIcon,
+    cancel: CancelIcon
 }
 
 export default icons;
