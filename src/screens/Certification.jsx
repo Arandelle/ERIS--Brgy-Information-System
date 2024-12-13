@@ -113,6 +113,8 @@ const Certification = () => {
               .bg-blue-100 { background-color: #ebf8ff; }
               .whitespace-nowrap {white-space: nowrap;}
               .border-r-2 {border-right: 1px solid black}
+              .font-medium	{font-weight: 500;}
+              .font-thin	{font-weight: 100;}
 
                ul {
                   list-style-type: none !important;
@@ -174,11 +176,11 @@ const Certification = () => {
       
               <div class="flex justify-center">
                 <div class="flex-1 bg-blue-100 p-4 text-center border-r-2" style="flex: 1 1 25%">
-                 <ul class="list-none text-sm whitespace-nowrap leading-none">
+                 <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
                     <li class="p-2">Manuel Clemente T. Mintu Jr. </br>
-                    <span class="text-xs">Barangay Chairman</span>
+                    <span class="text-xs font-thin">Barangay Chairman</span>
                     </li>
-                    <p class="text-xs p-2">Barangay Counsilors</p>
+                    <p class="text-xs p-2 font-thin">Barangay Counsilors</p>
                    <p>
                       <li>Ryan G. Mintu</li>
                       <li>Emmanuel T. Salvador Jr.</li>
@@ -191,18 +193,18 @@ const Certification = () => {
 
                    <p>
                       <li class="p-2">Maria Angela A. Capuz </br>
-                      <span class="text-xs">SK Chairperson</span>
+                      <span class="text-xs font-thin">SK Chairperson</span>
                       </li>
                    </p>
 
                     <p>
                       <li class="p-2">Maria Leonilla B. Castillo </br>
-                      <span class="text-xs">Barangay Secretary</span>
+                      <span class="text-xs font-thin">Barangay Secretary</span>
                       </li>
                     </p>
                    <p>
                       <li class="p-2">Dominga T. Molina </br>
-                      <span class="text-xs" >Barangay Treasurer</span>
+                      <span class="text-xs font-thin" >Barangay Treasurer</span>
                       </li>
                    </p>
 
@@ -332,38 +334,6 @@ const Certification = () => {
               }
             />
           )}
-          <div class="flex justify-center">
-                <div class="flex-1 bg-blue-100 p-4 text-center border-r-2 border-r-black" >
-                  <ul class="list-none text-sm whitespace-nowrap">
-                    <li className="p-2">Manuel Clemente T. Mintu Jr.
-                    <span className="text-xs">Barangay Chairman</span>
-                    </li>
-                    <p className="text-xs p-2">Barangay Counsilors</p>
-                    <li>Ryan G. Mintu</li>
-                    <li>Emmanuel T. Salvador Jr.</li>
-                    <li>Luis G. Mercado</li>
-                    <li>Yolanda T. Romana</li>
-                    <li>Jenina T. Paminter</li>
-                    <li>Emmanuel G. Mercado</li>
-                    <li>Christopher I. Aron</li>
-
-                    <li className="p-2">Maria Angela A. Capuz
-                    <span>SK Chairperson</span>
-                    </li>
-
-                    <li className="p-2">Maria Leonilla B. Castillo
-                    <span>Barangay Secretary</span>
-                    </li>
-                    <li className="p-2">Dominga T. Molina
-                    <span>Barangay Treasurer</span>
-                    </li>
-
-                  </ul>
-                </div>
-                <div class="flex-1 bg-white p-4">
-          
-                </div>
-              </div>
           <Table headers={Headers} data={currentItems} renderRow={renderRow} />
           <Pagination
             currentPage={currentPage}
