@@ -26,7 +26,8 @@ const AnnouncementModal = ({
       closeButton={handleModal}
       title={`${isEdit ? "Edit" : "Create new"} Announcement`}
       children={
-        <div className="w-full flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 max-w-lg">
+           <p className="text-sm text-gray-600 italic">Post accurate emergency response tips to ensure community safety and preparedness. Post awareness updates and news regularly to keep everyone informed about potential hazards and safety protocols.</p>
           <InputField
             type="text"
             placeholder="Title"

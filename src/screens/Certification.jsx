@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import Modal from "../components/ReusableComponents/Modal";
 import Logo from "../assets/images/logo.png";
 import { useFetchSystemData } from "../hooks/useFetchSystemData";
+import CreateTemplate from "./CreateTemplate";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,7 +22,6 @@ const Certification = () => {
   const { data: template } = useFetchData("templates");
   const { systemData } = useFetchSystemData();
   const [showAddTemplate, setShowAddTemplate] = useState(false);
-  const editorRef = useRef(null);
 
   const searchFields = ["firstname", "lastname", "address", "age"];
   const Headers = ["Firstname", "Lastname", "Address", "Age", "Action"];
@@ -54,7 +54,7 @@ const Certification = () => {
     }
 
     const selectedTemplate = Object.values(template).find(
-      (temp) => temp.type === rowData.type
+      (temp) => temp.docsType === rowData.type
     );
 
     if (!selectedTemplate) {
@@ -276,63 +276,9 @@ const Certification = () => {
             setSearchQuery={setSearchQuery}
           />
           {showAddTemplate && (
-            <Modal
-              closeButton={() => setShowAddTemplate(false)}
-              children={
-                <Editor
-                  apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
-                  onInit={(_evt, editor) => (editorRef.current = editor)}
-                  init={{
-                    width: "10in",
-                    height: "5in",
-                    plugins: [
-                      "advlist",
-                      "autolink",
-                      "lists",
-                      "link",
-                      "image",
-                      "charmap",
-                      "preview",
-                      "anchor",
-                      "searchreplace",
-                      "visualblocks",
-                      "code",
-                      "fullscreen",
-                      "insertdatetime",
-                      "media",
-                      "table",
-                      "code",
-                      "help",
-                      "wordcount",
-                      "lineheight",
-                      "dragdrop image link media",
-                      "mergetags",
-                    ],
-                    toolbar:
-                      "undo redo | blocks | image link media |" +
-                      "bold italic forecolor | mergetags | alignleft aligncenter " +
-                      "alignright alignjustify | bullist numlist outdent indent | " +
-                      "lineheight | removeformat | help",
-                    content_style: `
-                        body {
-                        font-family: Arial, sans-serif;
-                        background-color: #fff;
-                        cursor: auto;
-                        }`,
-                    tinycomments_mode: "embedded",
-                    tinycomments_author: "Author name",
-                    mergetags_list: [
-                      { value: "firstname", title: "First Name" },
-                      { value: "lastname", title: "Last Name" },
-                      { value: "age", title: "Age" },
-                      { value: "address", title: "Address" },
-                      { value: "gender", title: "Gender" },
-                    ],
-                  }}
-                  initialValue={`<p>This is to certify that {{firstname}}, {{lastname}} is residents of Bagtas </p>`}
-                />
-              }
-            />
+           <CreateTemplate 
+            setShowAddTemplate={setShowAddTemplate}
+           />
           )}
           <Table headers={Headers} data={currentItems} renderRow={renderRow} />
           <Pagination

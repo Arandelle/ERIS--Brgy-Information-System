@@ -18,7 +18,7 @@ const HotlinesModal = ({
       closeButton={handleHotlinesModal}
       title={"Hotlines Number and Contact"}
       children={
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 max-w-lg">
         <p className="text-sm text-gray-600 italic">Regularly review and update contact information to ensure its accuracy.
         Ensure that any personal information added complies with relevant privacy policies and regulations.</p>
          <InputField
