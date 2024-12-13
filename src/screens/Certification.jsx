@@ -11,12 +11,15 @@ import IconButton from "../components/ReusableComponents/IconButton";
 import { useFetchData } from "../hooks/useFetchData";
 import { Editor } from "@tinymce/tinymce-react";
 import { toast } from "sonner";
-import Modal from "../components/ReusableComponents/Modal"
+import Modal from "../components/ReusableComponents/Modal";
+import Logo from "../assets/images/logo.png";
+import { useFetchSystemData } from "../hooks/useFetchSystemData";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { data: clearance } = useFetchData("requestClearance");
-  const { data: template} = useFetchData("templates");
+  const { data: template } = useFetchData("templates");
+  const { systemData } = useFetchSystemData();
   const [showAddTemplate, setShowAddTemplate] = useState(false);
   const editorRef = useRef(null);
 
@@ -49,26 +52,25 @@ const Certification = () => {
       toast.error("No templates found. Please add a template first.");
       return;
     }
-  
-    // Find the template matching the rowData type
+
     const selectedTemplate = Object.values(template).find(
       (temp) => temp.type === rowData.type
     );
-  
+
     if (!selectedTemplate) {
       toast.error(`No template found for document type: ${rowData.type}`);
       return;
     }
-  
-    let content = selectedTemplate.content; // HTML content stored in the template
-  
+
+    let content = selectedTemplate.content;
+
     if (content) {
       // Replace placeholders with rowData
       Object.entries(rowData).forEach(([key, value]) => {
         const placeholder = `{{${key}}}`;
         content = content.replace(new RegExp(placeholder, "g"), value || "N/A");
       });
-  
+
       // Render printable content
       const printWindow = window.open("", "_blank");
       printWindow.document.open();
@@ -77,28 +79,152 @@ const Certification = () => {
           <head>
             <title>${selectedTemplate.title}</title>
             <style>
-              body {
-                font-family: Arial, sans-serif;
-                padding: 1in;
-                width: 8.5in;
-                height: 11in;
-                background-color: #fff;
-                border: 1px solid #ccc;
+              /* Tailwind-like utility classes */
+              .bg-white { background-color: white; }
+              .p-10 { padding: 2.5rem; }
+              .flex { display: flex; }
+              .flex-row { flex-direction: row; }
+              .items-center { align-items: center; }
+              .justify-center { justify-content: center; }
+              .text-center { text-align: center; }
+              .font-bold { font-weight: 700; }
+              .uppercase { text-transform: uppercase; }
+              .h-32 { height: 8rem; }
+              .w-32 { width: 8rem; }
+              .rounded-full { border-radius: 9999px; }
+              .mr-4 { margin-right: 1rem; }
+              .mb-8 { margin-bottom: 2rem; }
+              .bg-gray-100 { background-color: #f3f4f6; }
+              .bg-gray-200 { background-color: #e5e7eb; }
+              .p-4 { padding: 1rem; }
+              .font-semibold { font-weight: 600; }
+              .flex-1 { flex: 1 1 0%; }
+              .basis-1/4 {flex-basis: 25%;}
+              .basis-1/2 {flex-basis: 50%;}
+              .basis-3/4 {flex-basis: 75%;}
+              .gap-4 { gap: 1rem; }
+              .leading-none { line-height: 1; }
+              .text-xs {font-size: 0.75rem;
+                        line-height: 1rem;}
+              .text-3xl { font-size: 1.875rem; }
+              .text-sm {font-size: 0.875rem;
+                        line-height: 1.25rem;}
+              .font-bold { font-weight: 700; }
+              .bg-blue-100 { background-color: #ebf8ff; }
+              .whitespace-nowrap {white-space: nowrap;}
+              .border-r-2 {border-right: 1px solid black}
+
+               ul {
+                  list-style-type: none !important;
+                  padding-left: 0 !important;
+                  }
+              li {
+                  margin-left: 0 !important;
+                  }
+            </style>
+            <style>
+              @media print {
+                body {
+                  margin: 0;
+                  padding: 0;
+                }
+                /* Ensure all content is visible */
+                @page {
+                  size: auto;
+                  margin: 5mm;
+                }
               }
             </style>
           </head>
-          <body>${content}</body>
+          <body class="bg-white">
+            <div class="p-10">
+              <div class="flex justify-center gap-4">
+                <div class="flex-1 flex items-center justify-end basis-1/4">
+                  <div>
+                    <img
+                      src="${systemData?.imageUrl}"
+                      alt="Logo"
+                      class="h-32 w-32 rounded-full mr-4"
+                    />
+                  </div>
+                </div>
+                <div class="flex-1 basis-1/2 flex items-center justify-center text-center bg-white p-4">
+                  <p class="text-sm">
+                    Republic of the Philippines</br>
+                    Province of Cavite </br>
+                    Municipality of Tanza </br>
+                    <span class="font-bold uppercase">Barangay Bagtas</span> </br>
+                    <span class="font-bold uppercase whitespace-nowrap">Office of the Barangay Chairman</span>
+                  </p>
+                </div>
+                <div class="flex-1 basis-1/4 p-4 text-center">
+                  <div>
+                    <img
+                      src="${systemData?.imageUrl}"
+                      alt="Logo"
+                      class="h-32 w-32 rounded-full mr-4"
+                    />
+                  </div>
+                </div>
+              </div>
+      
+              <p class="text-center font-bold uppercase text-3xl p-12">
+                Barangay Certification
+              </p>
+      
+              <div class="flex justify-center">
+                <div class="flex-1 bg-blue-100 p-4 text-center border-r-2" style="flex: 1 1 25%">
+                 <ul class="list-none text-sm whitespace-nowrap leading-none">
+                    <li class="p-2">Manuel Clemente T. Mintu Jr. </br>
+                    <span class="text-xs">Barangay Chairman</span>
+                    </li>
+                    <p class="text-xs p-2">Barangay Counsilors</p>
+                   <p>
+                      <li>Ryan G. Mintu</li>
+                      <li>Emmanuel T. Salvador Jr.</li>
+                      <li>Luis G. Mercado</li>
+                      <li>Yolanda T. Romana</li>
+                      <li>Jenina T. Paminter</li>
+                      <li>Emmanuel G. Mercado</li>
+                      <li>Christopher I. Aron</li>
+                   </p>
+
+                   <p>
+                      <li class="p-2">Maria Angela A. Capuz </br>
+                      <span class="text-xs">SK Chairperson</span>
+                      </li>
+                   </p>
+
+                    <p>
+                      <li class="p-2">Maria Leonilla B. Castillo </br>
+                      <span class="text-xs">Barangay Secretary</span>
+                      </li>
+                    </p>
+                   <p>
+                      <li class="p-2">Dominga T. Molina </br>
+                      <span class="text-xs" >Barangay Treasurer</span>
+                      </li>
+                   </p>
+
+                  </ul>
+                </div>
+                <div class="flex-1 bg-white p-4" style="flex: 1 1 75%">
+                  ${content}
+                </div>
+              </div>
+            </div>
+          </body>
         </html>
       `);
+      
       printWindow.document.close();
       printWindow.print();
-  
       toast.success(`${selectedTemplate.title} rendered successfully!`);
     } else {
       toast.error("Template content is empty.");
     }
   };
-  
+
   const renderRow = (userData) => {
     return (
       <>
@@ -148,64 +274,96 @@ const Certification = () => {
             setSearchQuery={setSearchQuery}
           />
           {showAddTemplate && (
-            <Modal 
+            <Modal
               closeButton={() => setShowAddTemplate(false)}
               children={
-              <Editor
-                apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
-                onInit={(_evt, editor) => (editorRef.current = editor)}
-                init={{
-                  width: "10in",
-                  height: "5in",
-                  plugins: [
-                    "advlist",
-                    "autolink",
-                    "lists",
-                    "link",
-                    "image",
-                    "charmap",
-                    "preview",
-                    "anchor",
-                    "searchreplace",
-                    "visualblocks",
-                    "code",
-                    "fullscreen",
-                    "insertdatetime",
-                    "media",
-                    "table",
-                    "code",
-                    "help",
-                    "wordcount",
-                    "lineheight",
-                    "dragdrop image link media",
-                    "mergetags",
-                  ],
-                  toolbar:
-                    "undo redo | blocks | image link media |" +
-                    "bold italic forecolor | mergetags | alignleft aligncenter " +
-                    "alignright alignjustify | bullist numlist outdent indent | " +
-                    "lineheight | removeformat | help",
-                  content_style: `
+                <Editor
+                  apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+                  onInit={(_evt, editor) => (editorRef.current = editor)}
+                  init={{
+                    width: "10in",
+                    height: "5in",
+                    plugins: [
+                      "advlist",
+                      "autolink",
+                      "lists",
+                      "link",
+                      "image",
+                      "charmap",
+                      "preview",
+                      "anchor",
+                      "searchreplace",
+                      "visualblocks",
+                      "code",
+                      "fullscreen",
+                      "insertdatetime",
+                      "media",
+                      "table",
+                      "code",
+                      "help",
+                      "wordcount",
+                      "lineheight",
+                      "dragdrop image link media",
+                      "mergetags",
+                    ],
+                    toolbar:
+                      "undo redo | blocks | image link media |" +
+                      "bold italic forecolor | mergetags | alignleft aligncenter " +
+                      "alignright alignjustify | bullist numlist outdent indent | " +
+                      "lineheight | removeformat | help",
+                    content_style: `
                         body {
                         font-family: Arial, sans-serif;
                         background-color: #fff;
                         cursor: auto;
                         }`,
-                  tinycomments_mode: "embedded",
-                  tinycomments_author: "Author name",
-                  mergetags_list: [
-                    { value: "firstname", title: "First Name" },
-                    { value: "lastname", title: "Last Name" },
-                    { value: "age", title: "Age" },
-                    { value: "address", title: "Address" },
-                    { value: "gender", title: "Gender" },
-                  ],
-                }}
-                initialValue={`<p>This is to certify that {{firstname}}, {{lastname}} is residents of Bagtas </p>`}
-              />
+                    tinycomments_mode: "embedded",
+                    tinycomments_author: "Author name",
+                    mergetags_list: [
+                      { value: "firstname", title: "First Name" },
+                      { value: "lastname", title: "Last Name" },
+                      { value: "age", title: "Age" },
+                      { value: "address", title: "Address" },
+                      { value: "gender", title: "Gender" },
+                    ],
+                  }}
+                  initialValue={`<p>This is to certify that {{firstname}}, {{lastname}} is residents of Bagtas </p>`}
+                />
               }
             />
           )}
+          <div class="flex justify-center">
+                <div class="flex-1 bg-blue-100 p-4 text-center border-r-2 border-r-black" >
+                  <ul class="list-none text-sm whitespace-nowrap">
+                    <li className="p-2">Manuel Clemente T. Mintu Jr.
+                    <span className="text-xs">Barangay Chairman</span>
+                    </li>
+                    <p className="text-xs p-2">Barangay Counsilors</p>
+                    <li>Ryan G. Mintu</li>
+                    <li>Emmanuel T. Salvador Jr.</li>
+                    <li>Luis G. Mercado</li>
+                    <li>Yolanda T. Romana</li>
+                    <li>Jenina T. Paminter</li>
+                    <li>Emmanuel G. Mercado</li>
+                    <li>Christopher I. Aron</li>
+
+                    <li className="p-2">Maria Angela A. Capuz
+                    <span>SK Chairperson</span>
+                    </li>
+
+                    <li className="p-2">Maria Leonilla B. Castillo
+                    <span>Barangay Secretary</span>
+                    </li>
+                    <li className="p-2">Dominga T. Molina
+                    <span>Barangay Treasurer</span>
+                    </li>
+
+                  </ul>
+                </div>
+                <div class="flex-1 bg-white p-4">
+          
+                </div>
+              </div>
           <Table headers={Headers} data={currentItems} renderRow={renderRow} />
           <Pagination
             currentPage={currentPage}
