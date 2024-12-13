@@ -122,7 +122,7 @@ const CreateTemplate = ({ setShowAddTemplate }) => {
                   { value: "address", title: "Address" },
                   { value: "gender", title: "Gender" },
                   { value: "civilStatus", title: "civil status" },
-                  { value: "move-inYear", title: "move-in year" },
+                  { value: "moveInYear", title: "move-in year" },
                 ],
               }}
             />

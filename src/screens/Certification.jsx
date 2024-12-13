@@ -24,7 +24,7 @@ const Certification = () => {
   const [showAddTemplate, setShowAddTemplate] = useState(false);
 
   const searchFields = ["firstname", "lastname", "address", "age"];
-  const Headers = ["Firstname", "Lastname", "Address", "Age", "Action"];
+  const Headers = ["Firstname", "Lastname", "Address", "Age","Civil Status","Move-in Year", "Action"];
 
   const filteredData = useFilteredData(clearance, searchQuery, searchFields);
   const {
@@ -234,6 +234,8 @@ const Certification = () => {
         <TableData data={userData.lastname} />
         <TableData data={userData.address} />
         <TableData data={userData.age} />
+        <TableData data={userData.civilStatus} />
+        <TableData data={userData.moveInYear} />
         <td className="">
           <div className="flex items-center justify-center space-x-4">
             <IconButton
