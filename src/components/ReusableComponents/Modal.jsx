@@ -9,7 +9,7 @@ const Modal = ({ closeButton, children, title }) => {
         onClick={closeButton}
       ></div>
       {/**Modal Content */}
-      <div className="relative z-50 w-full max-w-lg mx-4 my-6 md:mx-auto">
+      <div className="relative z-50 mx-4 my-6 md:mx-auto">
         <div className="relative flex flex-col w-full bg-white rounded-md shadow-md max-h-[90vh] overflow-y-auto">
           <button
             type="button"
