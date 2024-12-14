@@ -5,6 +5,7 @@ import {
 } from "../../components/ReusableComponents/InputField";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import Modal from "../../components/ReusableComponents/Modal";
+import { useEffect, useState } from "react";
 
 const AnnouncementModal = ({
   handleModal,
@@ -21,6 +22,12 @@ const AnnouncementModal = ({
   setDescription,
   isEdit,
 }) => {
+  const [isComplete, setIsComplete] = useState(false);
+  useEffect(() => {
+    const completeData = title && description;
+    setIsComplete(completeData);
+  }, [title, description]);
+
   return (
     <Modal
       closeButton={handleModal}
@@ -97,7 +104,7 @@ const AnnouncementModal = ({
             <div className="flex items-center space-x-2 self-end">
               <button
                 type="button"
-                className={`text-sm text-white py-2 px-4 rounded-md ${
+                className={`text-sm text-white py-2 px-4 rounded-md ${!isComplete ? "bg-gray-500" :
                   isEdit ? "bg-green-500" : "bg-blue-500"
                 }`}
                 onClick={
@@ -105,6 +112,7 @@ const AnnouncementModal = ({
                     ? () => handleEditAnnouncement(selectedId)
                     : handleAddAnnouncement
                 }
+                disabled={!isComplete}
               >
                 Save
               </button>
