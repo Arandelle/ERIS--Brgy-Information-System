@@ -23,6 +23,7 @@ import UserList from "./screens/AccountList/UserList";
 import { Spinner } from "./components/ReusableComponents/Spinner";
 import Hotlines from "./screens/Hotlines";
 import Certification from "./screens/Certification";
+import ListOfTemplates from "./screens/ListOfTemplates";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -117,6 +118,10 @@ const App = () => {
                <Route 
                 path="/certification"
                 element={user && isAdmin ? <Certification /> : <Navigate to="/" /> }
+              />
+               <Route 
+                path="/templates"
+                element={user && isAdmin ? <ListOfTemplates /> : <Navigate to="/" /> }
               />
               <Route
                 path="/records"

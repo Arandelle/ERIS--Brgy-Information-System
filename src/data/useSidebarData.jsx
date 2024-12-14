@@ -123,9 +123,16 @@ export const useSidebarData = [
   {
     title: "Certification",
     icon : (
-      <icons.document className={`${style}`}/>
+      <icons.print className={`${style}`}/>
     ),
     link: "/certification",
+  },
+  {
+    title: "Templates",
+    icon : (
+      <icons.document className={`${style}`}/>
+    ),
+    link: "/templates",
   },
   {
     title: "Records",
