@@ -16,6 +16,7 @@ import Logo from "../assets/images/logo.png";
 import { useFetchSystemData } from "../hooks/useFetchSystemData";
 import CreateTemplate from "./CreateTemplate";
 import ClearanceModal from "./ClearanceModal";
+import { formatDate } from "../helper/FormatDate";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -64,18 +65,21 @@ const Certification = () => {
     }
 
     const selectedTemplate = Object.values(template).find(
-      (temp) => temp.docsType === rowData.type
+      (temp) => temp.docsType === rowData.docsType
     );
 
     if (!selectedTemplate) {
-      toast.error(`No template found for document type: ${rowData.type}`);
+      toast.error(`No template found for document type: ${rowData.docsType}`);
       return;
     }
-
+    
     let content = selectedTemplate.content;
 
     if (content) {
       // Replace placeholders with rowData
+      const today = new Date();
+      content = content.replace(/{{todayDate}}/g, formatDate(today));
+
       Object.entries(rowData).forEach(([key, value]) => {
         const placeholder = `{{${key}}}`;
         content = content.replace(new RegExp(placeholder, "g"), value || "N/A");

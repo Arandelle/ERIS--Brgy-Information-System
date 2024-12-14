@@ -30,6 +30,12 @@ const CreateTemplate = ({ setShowAddTemplate }) => {
     }
   };
 
+  const getCurrentDate = () => {
+    const today = new Date();
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return today.toLocaleDateString(undefined, options); // Localized date format
+  };
+
   return (
     <Modal
       closeButton={() => setShowAddTemplate(false)}
@@ -122,7 +128,20 @@ const CreateTemplate = ({ setShowAddTemplate }) => {
                   { value: "gender", title: "Gender" },
                   { value: "civilStatus", title: "civil status" },
                   { value: "moveInYear", title: "move-in year" },
+                  { value: "todayDate", title: "Date issued" },
                 ],
+                setup: (editor) => {
+          editor.on("ExecCommand", (e) => {
+            if (e.command === "InsertContent") {
+              const content = editor.getContent();
+              const updatedContent = content.replace(
+                "{{todayDate}}",
+                getCurrentDate()
+              );
+              editor.setContent(updatedContent);
+            }
+          });
+        },
               }}
             />
           </div>
