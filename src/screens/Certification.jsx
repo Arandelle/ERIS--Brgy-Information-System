@@ -24,14 +24,15 @@ const Certification = () => {
   const { systemData } = useFetchSystemData();
   const [showRequestCert, setShowRequestCert] = useState(false);
 
-  const searchFields = ["firstname", "lastname", "address", "age"];
+  const searchFields = ["fullname","docsType","age", "address","gender","civilStatus","moveInYear"];
   const Headers = [
-    "Firstname",
-    "Lastname",
-    "Address",
+    "Type",
+    "Fullname",
     "Age",
-    "Civil Status",
+    "Gender",
+    "Address",
     "Move-in Year",
+    "Status",
     "Action",
   ];
 
@@ -255,14 +256,15 @@ const Certification = () => {
   const renderRow = (userData) => {
     return (
       <>
-        <TableData data={userData.firstname} />
-        <TableData data={userData.lastname} />
-        <TableData data={userData.address} />
+        <TableData data={userData.docsType} />
+        <TableData data={userData.fullname} />
         <TableData data={userData.age} />
-        <TableData data={userData.civilStatus} />
+        <TableData data={userData.gender} />
+        <TableData data={userData.address} />
         <TableData data={userData.moveInYear} />
+        <TableData data={userData.status} />
         <td className="">
-          <div className="flex items-center justify-center space-x-4">
+          <div className="flex items-center justify-center space-x-2">
             <IconButton
               icon={icons.print}
               color={"gray"}
@@ -270,6 +272,20 @@ const Certification = () => {
               fontSize={"small"}
               tooltip={"Accept and Print"}
               onClick={() => printCertificate(userData)}
+            />
+             <IconButton
+              icon={icons.view}
+              color={"blue"}
+              bgColor={"bg-blue-100"}
+              fontSize={"small"}
+              tooltip={"View"}
+            />
+            <IconButton
+              icon={icons.edit}
+              color={"green"}
+              bgColor={"bg-green-100"}
+              fontSize={"small"}
+              tooltip={"Edit"}
             />
             <IconButton
               icon={icons.cancel}
