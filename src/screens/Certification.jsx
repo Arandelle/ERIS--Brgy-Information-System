@@ -24,7 +24,15 @@ const Certification = () => {
   const [showAddTemplate, setShowAddTemplate] = useState(false);
 
   const searchFields = ["firstname", "lastname", "address", "age"];
-  const Headers = ["Firstname", "Lastname", "Address", "Age","Civil Status","Move-in Year", "Action"];
+  const Headers = [
+    "Firstname",
+    "Lastname",
+    "Address",
+    "Age",
+    "Civil Status",
+    "Move-in Year",
+    "Action",
+  ];
 
   const filteredData = useFilteredData(clearance, searchQuery, searchFields);
   const {
@@ -138,7 +146,7 @@ const Certification = () => {
               }
             </style>
           </head>
-          <body class="bg-white">
+          <body class="">
             <div class="p-10">
               <div class="flex justify-center gap-4">
                 <div class="flex-1 flex items-center justify-end basis-1/4">
@@ -210,15 +218,31 @@ const Certification = () => {
 
                   </ul>
                 </div>
-                <div class="flex-1 bg-white p-4" style="flex: 1 1 75%">
-                  ${content}
-                </div>
+              <div class="flex-1 p-4"
+              style=" flex: 1 1 75%;
+              position: relative;
+              height: 200px; "
+              >
+              <div style="position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-image: url('${systemData?.tanzaLogoUrl}');
+              background-size: contain;
+              background-position: center;
+              background-repeat: no-repeat;
+              opacity: 0.3
+              "></div>
+             <div style="position: relative"> 
+             ${content}</div>
+              </div>
               </div>
             </div>
           </body>
         </html>
       `);
-      
+
       printWindow.document.close();
       printWindow.print();
       toast.success(`${selectedTemplate.title} rendered successfully!`);
@@ -278,10 +302,9 @@ const Certification = () => {
             setSearchQuery={setSearchQuery}
           />
           {showAddTemplate && (
-           <CreateTemplate 
-            setShowAddTemplate={setShowAddTemplate}
-           />
+            <CreateTemplate setShowAddTemplate={setShowAddTemplate} />
           )}
+
           <Table headers={Headers} data={currentItems} renderRow={renderRow} />
           <Pagination
             currentPage={currentPage}
