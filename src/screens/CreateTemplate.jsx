@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import handleAddData from "../hooks/handleAddData";
 import { toast } from "sonner";
@@ -7,6 +7,7 @@ import { InputField } from "../components/ReusableComponents/InputField";
 
 const CreateTemplate = ({ setShowAddTemplate }) => {
   const editorRef = useRef(null);
+  const [isComplete, setIsComplete] = useState(false);
   const [templateData, setTemplateData] = useState({
     title: "",
     docsType: "",
@@ -30,11 +31,11 @@ const CreateTemplate = ({ setShowAddTemplate }) => {
     }
   };
 
-  const getCurrentDate = () => {
-    const today = new Date();
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return today.toLocaleDateString(undefined, options); // Localized date format
-  };
+  useEffect(() => {
+    const {title, docsType} = templateData;
+    const completeData = title && docsType;
+    setIsComplete(completeData);
+  },[templateData.title, templateData.docsType]);
 
   return (
     <Modal
@@ -130,25 +131,14 @@ const CreateTemplate = ({ setShowAddTemplate }) => {
                   { value: "moveInYear", title: "move-in year" },
                   { value: "todayDate", title: "Date issued" },
                 ],
-                setup: (editor) => {
-          editor.on("ExecCommand", (e) => {
-            if (e.command === "InsertContent") {
-              const content = editor.getContent();
-              const updatedContent = content.replace(
-                "{{todayDate}}",
-                getCurrentDate()
-              );
-              editor.setContent(updatedContent);
-            }
-          });
-        },
               }}
             />
           </div>
           <div className="place-self-end py-4">
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              className={` text-white px-4 py-2 rounded-md ${isComplete ? "bg-blue-500" : "bg-gray-500 cursor-not-allowed"}`}
               onClick={saveTemplate}
+              disabled={!isComplete}
             >
               Save Template
             </button>

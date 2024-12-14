@@ -104,7 +104,7 @@ const AnnouncementModal = ({
             <div className="flex items-center space-x-2 self-end">
               <button
                 type="button"
-                className={`text-sm text-white py-2 px-4 rounded-md ${!isComplete ? "bg-gray-500" :
+                className={`text-sm text-white py-2 px-4 rounded-md ${!isComplete ? "bg-gray-500 cursor-not-allowed" :
                   isEdit ? "bg-green-500" : "bg-blue-500"
                 }`}
                 onClick={
