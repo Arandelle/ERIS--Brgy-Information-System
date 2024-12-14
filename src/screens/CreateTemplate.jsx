@@ -116,8 +116,7 @@ const CreateTemplate = ({ setShowAddTemplate }) => {
                 tinycomments_mode: "embedded",
                 tinycomments_author: "Author name",
                 mergetags_list: [
-                  { value: "firstname", title: "First Name" },
-                  { value: "lastname", title: "Last Name" },
+                  { value: "fullname", title: "Full Name" },
                   { value: "age", title: "Age" },
                   { value: "address", title: "Address" },
                   { value: "gender", title: "Gender" },

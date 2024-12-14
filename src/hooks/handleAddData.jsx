@@ -8,29 +8,11 @@ import {
 } from "firebase/storage";
 
 const handleAddData = async (data, type) => {
-  const { title, description, image, links, date, organization, name, contact,email,content,docsType } = data;
-
-  if (type === "announcement") {
-    if (!title || !description) {
-      toast.warning("Please complete the form");
-      return;
-    }
-  } else if (type === "hotlines") {
-    if (!organization || !name || (!contact && !email)) {
-      toast.warning("Please complete the form");
-      return;
-    }
-  } else if (type === "templates"){
-    if(!title || !docsType){
-      toast.warning("Please complete the form");
-      return;
-    }
-  }
 
   let imageUrl = "";
 
-  if (image) {
-    const imageFile = image;
+  if (data?.image) {
+    const imageFile = data.image;
     const imageRef = storageRef(storage, `${type}-images/${imageFile.name}`);
 
     try {
@@ -43,29 +25,25 @@ const handleAddData = async (data, type) => {
     }
   }
 
+  const dataWithDateAndTimestamp = {
+    ...data,
+    date: data.date || new Date().toISOString(),
+    timestamp: serverTimestamp(),
+  };
+
   const dataBasedOnType = {
     announcement: {
-      title,
-      description,
-      links,
-      imageUrl,
-      date: date || new Date().toISOString(),
+      ...dataWithDateAndTimestamp,
       isEdited: false,
-      timestamp: serverTimestamp(),
     },
     hotlines: {
-      organization,
-      name,
-      contact: contact || "",
-      email: email || "",
-      description: description ||"",
-      date: new Date().toISOString(),
-      timestamp: serverTimestamp(),
+      ...dataWithDateAndTimestamp,
     },
     templates: {
-      title,
-      docsType,
-      content
+      ...dataWithDateAndTimestamp,
+    },
+    requestClearance: {
+      ...dataWithDateAndTimestamp,
     }
   };
 

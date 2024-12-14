@@ -3,6 +3,7 @@ import {
   InputField,
   TextArea,
 } from "../components/ReusableComponents/InputField";
+import { useEffect, useState } from "react";
 
 const HotlinesModal = ({
   handleHotlinesModal,
@@ -13,6 +14,15 @@ const HotlinesModal = ({
   hotlineState,
   setHotlinesState,
 }) => {
+
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    const {organization, name, contact, email, description} = hotlineState;
+    const completeData = organization && name && (contact || email) && description;
+    setIsComplete(completeData);
+  }, [hotlineState.description, hotlineState.name, hotlineState.contact, hotlineState.email, hotlineState.description]);
+
   return (
     <Modal
       closeButton={handleHotlinesModal}
@@ -48,8 +58,9 @@ const HotlinesModal = ({
           <div className="flex items-center space-x-2 self-end">
             <button
               type="button"
-              className={`text-sm text-white py-2 px-4 rounded-md ${isEdit ? "bg-green-500" : "bg-blue-500"}`}
+              className={`text-sm text-white py-2 px-4 rounded-md ${!isComplete ? "bg-gray-500" : isEdit ?  "bg-green-500" : "bg-blue-500" }`}
               onClick={isEdit ? () => handleUpdateHotlines(selectedId) : handleAddHotlines}
+              disabled={!isComplete}
             >
               Save
             </button>

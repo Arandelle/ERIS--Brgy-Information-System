@@ -15,13 +15,14 @@ import Modal from "../components/ReusableComponents/Modal";
 import Logo from "../assets/images/logo.png";
 import { useFetchSystemData } from "../hooks/useFetchSystemData";
 import CreateTemplate from "./CreateTemplate";
+import ClearanceModal from "./ClearanceModal";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { data: clearance } = useFetchData("requestClearance");
   const { data: template } = useFetchData("templates");
   const { systemData } = useFetchSystemData();
-  const [showAddTemplate, setShowAddTemplate] = useState(false);
+  const [showRequestCert, setShowRequestCert] = useState(false);
 
   const searchFields = ["firstname", "lastname", "address", "age"];
   const Headers = [
@@ -292,17 +293,17 @@ const Certification = () => {
               <ButtonStyle
                 icon={icons.addCircle}
                 color={"gray"}
-                label={"Add Template"}
+                label={"Create Request"}
                 fontSize={"small"}
-                onClick={() => setShowAddTemplate(true)}
+                onClick={() => setShowRequestCert(true)}
               />
             }
             label="List of Certification Request"
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
-          {showAddTemplate && (
-            <CreateTemplate setShowAddTemplate={setShowAddTemplate} />
+          {showRequestCert && (
+            <ClearanceModal setShowRequestCert={setShowRequestCert} />
           )}
 
           <Table headers={Headers} data={currentItems} renderRow={renderRow} />
