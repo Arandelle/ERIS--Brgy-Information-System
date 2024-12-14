@@ -21,7 +21,10 @@ const Setting = () => {
     title: "",
     previewImage: "",
     originalImageUrl: "",
-    newImageFile: null,
+    tanzaLogoUrl: "",
+    tanzaLogoPreview: "",
+    logoImageFile: null,
+    tanzaLogoImageFile: null,
     isModified: false,
   });
 
@@ -29,14 +32,24 @@ const Setting = () => {
   const { data: admin } = useFetchData("admins");
   const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e, type) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024) {
-      setSystemState((prevState) => ({
-        ...prevState,
-        newImageFile: file,
-        previewImage: URL.createObjectURL(file),
-      }));
+
+      if(type === "logo"){
+        setSystemState((prevState) => ({
+          ...prevState,
+          logoImageFile: file,
+          previewImage: URL.createObjectURL(file),
+        }));
+      } else if (type === "tanzaLogo"){
+        setSystemState((prevState) => ({
+          ...prevState,
+          tanzaLogoImageFile: file,
+          tanzaLogoPreview: URL.createObjectURL(file),
+        }));
+      }
+
     } else {
       toast.error("Invalid file type or size. Please upload an image under 5MB.");
     }
@@ -59,6 +72,8 @@ const Setting = () => {
         title: systemData.title,
         originalImageUrl: systemData.imageUrl,
         previewImage: systemData.imageUrl,
+        tanzaLogoPreview: systemData.tanzaLogoPreview,
+        tanzaLogoUrl: systemData.tanzaLogoUrl,
         isModified: false,
       }));
     }
@@ -66,9 +81,8 @@ const Setting = () => {
 
   
   useEffect(() => {
-    const hasChanges =
-      systemState.title !== systemState.originalTitle ||
-      systemState.previewImage !== systemState.originalImageUrl;
+    const {title, originalTitle, previewImage, originalImageUrl, tanzaLogoPreview, tanzaLogoUrl} = systemState;
+    const hasChanges = title !== originalTitle || previewImage !== originalImageUrl || tanzaLogoPreview !== tanzaLogoUrl;
     setSystemState((prevState) => ({
       ...prevState,
       isModified: hasChanges,
@@ -78,6 +92,8 @@ const Setting = () => {
     systemState.previewImage,
     systemState.originalTitle,
     systemState.originalImageUrl,
+    systemState.tanzaLogoPreview,
+    systemState.tanzaLogoUrl
   ]);
 
   const handleUpdateData = async () => {
@@ -86,37 +102,17 @@ const Setting = () => {
   
     try {
       let imageUrl = systemState.originalImageUrl; // retain the existing image url
+      let tanzaLogoUrl = systemState.tanzaLogoUrl;
   
-      if (systemState.newImageFile) {
+      if (systemState.logoImageFile) {
         try {
-          console.log("New Image File Details:", {
-            name: systemState.newImageFile.name,
-            type: systemState.newImageFile.type,
-            size: systemState.newImageFile.size
-          });
-      
           const imageRef = storageRef(
             storage,
-            `system-images/${Date.now()}_${systemState.newImageFile.name}`
+            `system-images/${Date.now()}_${systemState.logoImageFile.name}`
           );
       
-          // Validate file before upload
-          if (!systemState.newImageFile.type.startsWith('image/')) {
-            toast.error("Invalid file type. Please upload an image.");
-            setLoading(false);
-            return;
-          }
-      
-          if (systemState.newImageFile.size > 5 * 1024 * 1024) {
-            toast.error("File is too large. Maximum size is 5MB.");
-            setLoading(false);
-            return;
-          }
-      
-          console.log("Uploading new image: ", systemState.newImageFile.name);
-          await uploadBytes(imageRef, systemState.newImageFile);
+          await uploadBytes(imageRef, systemState.logoImageFile);
           imageUrl = await getDownloadURL(imageRef);
-          console.log("New image uploaded, URL: ", imageUrl);
       
           // Delete old image if exists
           if (systemState.originalImageUrl) {
@@ -139,8 +135,40 @@ const Setting = () => {
           return;
         }
       }
+
+      if (systemState.tanzaLogoImageFile) {
+        try {
+          const tanzaLogoRef = storageRef(
+            storage,
+            `system-images/${Date.now()}_${systemState.tanzaLogoImageFile.name}`
+          );
+      
+          await uploadBytes(tanzaLogoRef, systemState.tanzaLogoImageFile);
+          tanzaLogoUrl = await getDownloadURL(tanzaLogoRef);
+      
+          // Delete old image if exists
+          if (systemState.tanzaLogoUrl) {
+            try {
+              const oldTanzaLogoRef = storageRef(
+                storage,
+                systemState.tanzaLogoUrl
+              );
+              await deleteObject(oldTanzaLogoRef);
+              console.log("Old image deleted: ", systemState.tanzaLogoUrl);
+            } catch (deleteError) {
+              console.warn("Error deleting old image:", deleteError);
+              // Not a critical error, so we continue
+            }
+          }
+        } catch (error) {
+          console.error("Detailed upload error:", error);
+          toast.error(`Error uploading new image: ${error.message}`);
+          setLoading(false);
+          return;
+        }
+      }
   
-      const updatedData = { title: systemState.title, imageUrl };
+      const updatedData = { title: systemState.title, imageUrl, tanzaLogoUrl };
       await update(systemRef, updatedData);
       console.log("Data updated in database: ", updatedData);
   
@@ -149,6 +177,8 @@ const Setting = () => {
         originalTitle: systemState.title,
         originalImageUrl: imageUrl,
         previewImage: imageUrl,
+        tanzaLogoUrl: tanzaLogoUrl,
+        tanzaLogoPreview: tanzaLogoUrl,
         isModified: false,
       }));
       setLoading(false);
@@ -249,7 +279,9 @@ const Setting = () => {
                   </select>
                 </div>
               </div>
-              <div className="flex flex-row items-center w-3/4">
+
+            {/**Logo */}
+              <div className="flex flex-row items-center justify-between w-1/2">
                 <img
                   src={systemState.previewImage || systemState.originalImageUrl}
                   alt="System"
@@ -260,12 +292,33 @@ const Setting = () => {
                   htmlFor="file-upload"
                   className="bg-gray-100 dark:text-gray-200 dark:bg-gray-700 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"
                 >
-                  Upload Photo
+                  Upload Photo for Bagtas Logo
                   <input
                     id="file-upload"
                     type="file"
                     className="hidden"
-                    onChange={handleImageChange}
+                    onChange={(e) => handleImageChange(e, "logo")}
+                  />
+                </label>
+              </div>
+
+              <div className="flex flex-row items-center justify-between w-1/2">
+                <img
+                  src={systemState.tanzaLogoPreview || systemState.tanzaLogoUrl}
+                  alt="System"
+                  className="w-24 lg:w-40 rounded-full"
+                  loading="lazy"
+                />
+                <label
+                  htmlFor="file-upload-tanza"
+                  className="bg-gray-100 dark:text-gray-200 dark:bg-gray-700 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"
+                >
+                  Upload Photo for Tanza logo
+                  <input
+                    id="file-upload-tanza"
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => handleImageChange(e, "tanzaLogo")}
                   />
                 </label>
               </div>

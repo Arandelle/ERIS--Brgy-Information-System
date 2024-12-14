@@ -162,7 +162,7 @@ const Certification = () => {
                 <div class="flex-1 basis-1/4 p-4 text-center">
                   <div>
                     <img
-                      src="${systemData?.imageUrl}"
+                      src="${systemData?.tanzaLogoUrl}"
                       alt="Logo"
                       class="h-32 w-32 rounded-full mr-4"
                     />
