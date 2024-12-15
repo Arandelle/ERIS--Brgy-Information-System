@@ -51,13 +51,13 @@ const Templates = () => {
 
           <>
 
-          <div className="flex flex-row space-x-2 py-4">
+          <div className="flex flex-row space-x-2 p-4 bg-white">
             {templates?.map((template) => (
             
                 <button
                 key={template.id}
                 onClick={() => handleShowTemplate(template.id)}
-                className={`border border-gray-300 p-2 rounded-md ${selectedTemplateId === template.id ? "bg-blue-500 text-white" : "bg-white"}`}
+                className={`border-r-2 p-2 hover:text-blue-600 ${selectedTemplateId === template.id ? "text-blue-500" : "text-gray-500"}`}
                 >
                   {template.title}
                 </button>
@@ -65,19 +65,30 @@ const Templates = () => {
             </div>
 
             {renderTemplate ? (
-              <div
-                style={{
-                  width: "210mm",
-                  height: "297mm",
-                  margin: "0 auto",
-                  padding: "2mm",
-                  background: "#fff",
-                  border: "1px solid #ddd",
-                  boxShadow: "0 0 5px rgba(0,0,0,0.1)",
-                  overflow: "auto",
-                }}
-                dangerouslySetInnerHTML={{ __html: renderTemplate }}
-              ></div>
+              <>
+                <div className="flex flex-row space-x-2 bg-white p-4 mb-4 text-gray-500">
+                  <button className="px-4 text-green-500"
+                  onClick={() => setShowAddTemplate(true)}>
+                    Edit
+                  </button>
+                  <button className="px-4 text-red-500">
+                    Delete
+                  </button>
+                </div>
+                <div
+                  style={{
+                    width: "210mm",
+                    height: "297mm",
+                    margin: "0 auto",
+                    padding: "2mm",
+                    background: "#fff",
+                    border: "1px solid #ddd",
+                    boxShadow: "0 0 5px rgba(0,0,0,0.1)",
+                    overflow: "auto",
+                  }}
+                  dangerouslySetInnerHTML={{ __html: renderTemplate }}
+                ></div>
+              </>
             ) : (
               <div className="text-center text-xl flex items-center justify-center">
               <EmptyLogo message={"Select template button to view its content"} />

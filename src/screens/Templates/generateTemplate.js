@@ -98,7 +98,7 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content) => (
       >
         <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
           <li class="p-2">
-            Manuel Clemente T. Mintu Jr.
+            Manuel Clemente T. Mintu Jr. </br>
             <span class="text-xs font-thin">Barangay Chairman</span>
           </li>
           <p class="text-xs p-2 font-thin">Barangay Counsilors</p>
@@ -114,20 +114,20 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content) => (
 
           <p>
             <li class="p-2">
-              Maria Angela A. Capuz
+              Maria Angela A. Capuz </br>
               <span class="text-xs font-thin">SK Chairperson</span>
             </li>
           </p>
 
           <p>
             <li class="p-2">
-              Maria Leonilla B. Castillo
+              Maria Leonilla B. Castillo </br>
               <span class="text-xs font-thin">Barangay Secretary</span>
             </li>
           </p>
           <p>
             <li class="p-2">
-              Dominga T. Molina
+              Dominga T. Molina </br>
               <span class="text-xs font-thin">Barangay Treasurer</span>
             </li>
           </p>
