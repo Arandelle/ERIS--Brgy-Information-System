@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import handleAddData from "../hooks/handleAddData";
+import handleAddData from "../../hooks/handleAddData";
 import { toast } from "sonner";
-import Modal from "../components/ReusableComponents/Modal";
-import { InputField } from "../components/ReusableComponents/InputField";
+import Modal from "../../components/ReusableComponents/Modal";
+import { InputField } from "../../components/ReusableComponents/InputField";
 
 const CreateTemplate = ({ setShowAddTemplate }) => {
   const editorRef = useRef(null);

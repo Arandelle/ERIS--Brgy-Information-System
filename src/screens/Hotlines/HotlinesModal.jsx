@@ -1,8 +1,8 @@
-import Modal from "../components/ReusableComponents/Modal";
+import Modal from "../../components/ReusableComponents/Modal";
 import {
   InputField,
   TextArea,
-} from "../components/ReusableComponents/InputField";
+} from "../../components/ReusableComponents/InputField";
 import { useEffect, useState } from "react";
 
 const HotlinesModal = ({

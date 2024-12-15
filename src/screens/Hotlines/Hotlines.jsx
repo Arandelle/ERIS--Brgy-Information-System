@@ -1,20 +1,20 @@
-import ButtonStyle from "../components/ReusableComponents/Button";
-import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
-import Toolbar from "../components/ToolBar";
-import icons from "../assets/icons/Icons";
-import Table from "../components/Table";
-import Pagination from "../components/Pagination";
-import { useFetchData } from "../hooks/useFetchData";
+import ButtonStyle from "../../components/ReusableComponents/Button";
+import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
+import Toolbar from "../../components/ToolBar";
+import icons from "../../assets/icons/Icons";
+import Table from "../../components/Table";
+import Pagination from "../../components/Pagination";
+import { useFetchData } from "../../hooks/useFetchData";
 import { useState } from "react";
-import useFilteredData from "../components/SearchQuery";
-import usePagination from "../hooks/usePagination";
-import IconButton from "../components/ReusableComponents/IconButton";
+import useFilteredData from "../../components/SearchQuery";
+import usePagination from "../../hooks/usePagination";
+import IconButton from "../../components/ReusableComponents/IconButton";
 import HotlinesModal from "./HotlinesModal";
-import handleAddData from "../hooks/handleAddData";
-import AskCard from "../components/ReusableComponents/AskCard";
-import handleDeleteData from "../hooks/handleDeleteData";
+import handleAddData from "../../hooks/handleAddData";
+import AskCard from "../../components/ReusableComponents/AskCard";
+import handleDeleteData from "../../hooks/handleDeleteData";
 import { toast } from "sonner";
-import handleEditData from "../hooks/handleEditData";
+import handleEditData from "../../hooks/handleEditData";
 
 const Hotlines = () => {
   const { data: hotlines = [] } = useFetchData("hotlines");

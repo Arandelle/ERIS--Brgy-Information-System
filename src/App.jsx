@@ -21,9 +21,9 @@ import { useFetchData } from "./hooks/useFetchData";
 import ErrorBoundary from "./ErrorBoundary";
 import UserList from "./screens/AccountList/UserList";
 import { Spinner } from "./components/ReusableComponents/Spinner";
-import Hotlines from "./screens/Hotlines";
-import Certification from "./screens/Certification";
-import ListOfTemplates from "./screens/ListOfTemplates";
+import Hotlines from "./screens/Hotlines/Hotlines";
+import Certification from "./screens/Certification/Certification";
+import Templates from "./screens/Templates/Templates";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -121,7 +121,7 @@ const App = () => {
               />
                <Route 
                 path="/templates"
-                element={user && isAdmin ? <ListOfTemplates /> : <Navigate to="/" /> }
+                element={user && isAdmin ? <Templates /> : <Navigate to="/" /> }
               />
               <Route
                 path="/records"

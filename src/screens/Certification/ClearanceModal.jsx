@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Modal from "../components/ReusableComponents/Modal";
-import { InputField } from "../components/ReusableComponents/InputField";
+import Modal from "../../components/ReusableComponents/Modal";
+import { InputField } from "../../components/ReusableComponents/InputField";
 import { serverTimestamp } from "firebase/database";
-import handleAddData from "../hooks/handleAddData";
+import handleAddData from "../../hooks/handleAddData";
 import { toast } from "sonner";
 
 const ClearanceModal = ({ setShowRequestCert }) => {
