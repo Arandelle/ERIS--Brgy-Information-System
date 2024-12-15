@@ -5,8 +5,9 @@ import { toast } from "sonner";
 import Modal from "../../components/ReusableComponents/Modal";
 import { InputField } from "../../components/ReusableComponents/InputField";
 import { useFetchData } from "../../hooks/useFetchData";
+import handleEditData from "../../hooks/handleEditData";
 
-const CreateTemplate = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateId}) => {
+const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateId}) => {
   const editorRef = useRef(null);
   const {data: templates} = useFetchData("templates");
   const [isComplete, setIsComplete] = useState(false);
@@ -38,6 +39,26 @@ const CreateTemplate = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplate
     }
   };
 
+  const handleUpdateTemplate = async (id) => {
+
+    if(editorRef.current){
+      const content = editorRef.current.getContent();
+      const updatedTemplate = {
+        ...templateData,
+        content
+      };
+  
+      await handleEditData(id, updatedTemplate, "templates");
+      setTemplateData({});
+      setShowAddTemplate(false);
+      setIsEdit(false);
+      console.log(id);
+    } else{
+      toast.error("Editor content is empty");
+    }
+   
+  }
+
 
   useEffect(() => {
     const {title, docsType} = templateData;
@@ -57,7 +78,7 @@ const CreateTemplate = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplate
   return (
     <Modal
       closeButton={() => setShowAddTemplate(false)}
-      title={"Create Certificate Template"}
+      title={`${isEdit ? "Edit Template" : "Create Template"}`}
       children={
         <div className="space-y-2">
           <div className="space-y-4 w-full lg:w-[10in]">
@@ -156,7 +177,7 @@ const CreateTemplate = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplate
           <div className="place-self-end py-4">
             <button
               className={` text-white px-4 py-2 rounded-md ${!isComplete ? "bg-gray-500 cursor-not-allowed" : isEdit ? "bg-green-500" : "bg-blue-500"}`}
-              onClick={saveTemplate}
+              onClick={isEdit ? () => handleUpdateTemplate(selectedTemplateId) : saveTemplate}
               disabled={!isComplete}
             >
               {isEdit ? "Update Template" : "Save Template"}
@@ -168,4 +189,4 @@ const CreateTemplate = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplate
   );
 };
 
-export default CreateTemplate;
+export default TemplateModal;

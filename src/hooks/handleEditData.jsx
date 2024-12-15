@@ -4,19 +4,7 @@ import { ref, serverTimestamp, update, get} from "firebase/database";
 import { toast } from "sonner";
 
 const handleEditData = async (id,data, type) => {
-    const {title, description,links, image,organization,name,contact,email} = data
-
-    if(type === "announcement"){
-        if (!title || !description) {
-            toast.warning("Please complete the form");
-            return;
-          }
-    } else if(type === "hotlines"){
-      if(!organization || !name || (!contact && !email)){
-        toast.warning("Please complete the form");
-      }
-    }
-
+ 
     const dataRef = ref(database, `${type}/${id}`);
 
     try {
@@ -27,8 +15,8 @@ const handleEditData = async (id,data, type) => {
         let imageUrl = announcementData.imageUrl; // retain the existing image url
 
         //check if new image is selected
-        if (image) {
-          const imageFile = image;
+        if (data?.image) {
+          const imageFile = data.image;
           const imageRef = storageRef(
             storage,
             `${type}-images/${imageFile.name}`
@@ -50,27 +38,29 @@ const handleEditData = async (id,data, type) => {
             toast.error(`Error uploading new image: ${error}`);
             return;
           }
-        }
+        };
 
+        const dataWithDateAndTimestamp = {
+          ...data,
+          date: data.date || new Date().toISOString(),
+          timestamp: serverTimestamp(),
+        };
+      
         const dataBasedOnType = {
-          announcement : {
-            title,
-            description,
-            links,
-            imageUrl,
-            isEdited: true,
-            timestamp: serverTimestamp(),
+          announcement: {
+            ...dataWithDateAndTimestamp,
+            isEdited: false,
           },
-          hotlines : {
-            organization,
-            name,
-            contact,
-            email,
-            description,
-            isEdited: true,
-            timestamp: serverTimestamp()
+          hotlines: {
+            ...dataWithDateAndTimestamp,
+          },
+          templates: {
+            ...dataWithDateAndTimestamp,
+          },
+          requestClearance: {
+            ...dataWithDateAndTimestamp,
           }
-        }
+        };
 
         await update(dataRef, dataBasedOnType[type]);
 

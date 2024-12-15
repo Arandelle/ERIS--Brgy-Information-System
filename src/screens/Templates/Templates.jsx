@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import icons from "../../assets/icons/Icons";
-import CreateTemplate from "./CreateTemplate";
+import TemplateModal from "./TemplateModal";
 import Toolbar from "../../components/ToolBar";
 import { useFetchData } from "../../hooks/useFetchData";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
@@ -61,7 +61,7 @@ const Templates = () => {
           />
 
           {showAddTemplate && (
-            <CreateTemplate
+            <TemplateModal
               setShowAddTemplate={setShowAddTemplate}
               isEdit={isEdit}
               setIsEdit={setIsEdit}
