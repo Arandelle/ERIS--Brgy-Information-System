@@ -8,10 +8,13 @@ import { useFetchData } from "../../hooks/useFetchData";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import { generateBodyTemplate } from "./generateTemplate";
 import EmptyLogo from "../../components/ReusableComponents/EmptyLogo";
+import AskCard from "../../components/ReusableComponents/AskCard";
+import handleDeleteData from "../../hooks/handleDeleteData";
 
 const Templates = () => {
   const [showAddTemplate, setShowAddTemplate] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
   const { data: templates } = useFetchData("templates");
   const { systemData } = useFetchSystemData();
@@ -41,7 +44,22 @@ const Templates = () => {
     setShowAddTemplate(true);
     setIsEdit(true);
     setSelectedTemplateId(templateId);
-  }
+  };
+
+  const handleDeleteModal = (id) => {
+    setSelectedTemplateId(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await handleDeleteData(selectedTemplateId, "templates");
+    } catch (error) {
+      toast.error(`Error deleting ${error}`);
+    }
+
+    setShowDeleteModal(false);
+  };
 
   return (
     <HeaderAndSideBar
@@ -59,7 +77,7 @@ const Templates = () => {
             }
             label="List of Templates"
           />
-
+          {/**Modal for creating template */}
           {showAddTemplate && (
             <TemplateModal
               setShowAddTemplate={setShowAddTemplate}
@@ -68,6 +86,7 @@ const Templates = () => {
               selectedTemplateId={selectedTemplateId}
             />
           )}
+
           <>
             <div className="flex flex-row space-x-2 p-4 bg-white">
               {templates?.map((template) => (
@@ -94,7 +113,7 @@ const Templates = () => {
                   >
                     Edit
                   </button>
-                  <button className="px-4 text-red-500">Delete</button>
+                  <button className="px-4 text-red-500" onClick={()=>handleDeleteModal(selectedTemplate.id)}>Delete</button>
                 </div>
                 <div
                   style={{
@@ -116,6 +135,24 @@ const Templates = () => {
                   message={"Select template button to view its content"}
                 />
               </div>
+            )}
+
+            {showDeleteModal && (
+              <AskCard
+              toggleModal={() => setShowDeleteModal(!showDeleteModal)}
+              question={
+                <span>
+                  Do you want to delete
+                  <span className="text-primary-500 text-bold">
+                    {" "}
+                    {templates.find((item) => item.id === selectedTemplateId)?.title}
+                  </span>{" "}
+                  ?{" "}
+                </span>
+              }
+              confirmText={"Delete"}
+              onConfirm={handleConfirmDelete}
+            />
             )}
           </>
         </>
