@@ -4,14 +4,20 @@ import handleAddData from "../../hooks/handleAddData";
 import { toast } from "sonner";
 import Modal from "../../components/ReusableComponents/Modal";
 import { InputField } from "../../components/ReusableComponents/InputField";
+import { useFetchData } from "../../hooks/useFetchData";
 
-const CreateTemplate = ({ setShowAddTemplate }) => {
+const CreateTemplate = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateId}) => {
   const editorRef = useRef(null);
+  const {data: templates} = useFetchData("templates");
   const [isComplete, setIsComplete] = useState(false);
   const [templateData, setTemplateData] = useState({
     title: "",
     docsType: "",
   });
+
+  const selectedTemplate = templates?.find(
+    (template) => template.id === selectedTemplateId
+  );
 
   const saveTemplate = async () => {
     if (editorRef.current) {
@@ -26,10 +32,12 @@ const CreateTemplate = ({ setShowAddTemplate }) => {
   
       setTemplateData({});
       setShowAddTemplate(false);
+      setIsEdit(false);
     } else {
       toast.error("Editor content is empty!");
     }
   };
+
 
   useEffect(() => {
     const {title, docsType} = templateData;
@@ -37,13 +45,22 @@ const CreateTemplate = ({ setShowAddTemplate }) => {
     setIsComplete(completeData);
   },[templateData.title, templateData.docsType]);
 
+  useEffect(() => {
+    if(isEdit && selectedTemplate){
+      setTemplateData({
+        title: selectedTemplate?.title || "",
+        docsType: selectedTemplate?.docsType || ""
+      });
+    };
+  }, [isEdit,selectedTemplate]);
+
   return (
     <Modal
       closeButton={() => setShowAddTemplate(false)}
       title={"Create Certificate Template"}
       children={
         <div className="space-y-2">
-          <div className="space-y-4">
+          <div className="space-y-4 w-full lg:w-[10in]">
             <label className="block text-gray-700 font-bold">
               Template Title:
             </label>
@@ -81,8 +98,9 @@ const CreateTemplate = ({ setShowAddTemplate }) => {
             <Editor
               apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
               onInit={(_evt, editor) => (editorRef.current = editor)}
+              initialValue={isEdit ? selectedTemplate?.content : ""}
               init={{
-                width: "10in",
+                width: "100%",
                 height: "5in",
                 placeholder:
                   "Write the main content of the certificate here. This excludes the header, footer, and other fixed details",
@@ -131,16 +149,17 @@ const CreateTemplate = ({ setShowAddTemplate }) => {
                   { value: "moveInYear", title: "move-in year" },
                   { value: "todayDate", title: "Date issued" },
                 ],
-              }}
+              }
+              }
             />
           </div>
           <div className="place-self-end py-4">
             <button
-              className={` text-white px-4 py-2 rounded-md ${isComplete ? "bg-blue-500" : "bg-gray-500 cursor-not-allowed"}`}
+              className={` text-white px-4 py-2 rounded-md ${!isComplete ? "bg-gray-500 cursor-not-allowed" : isEdit ? "bg-green-500" : "bg-blue-500"}`}
               onClick={saveTemplate}
               disabled={!isComplete}
             >
-              Save Template
+              {isEdit ? "Update Template" : "Save Template"}
             </button>
           </div>
         </div>
