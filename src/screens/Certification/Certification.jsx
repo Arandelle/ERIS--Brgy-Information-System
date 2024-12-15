@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import ClearanceModal from "./ClearanceModal";
 import { formatDate } from "../../helper/FormatDate";
-import { generateTemplate } from "../Templates/generateTemplate";
+import { generateFullTemplate } from "../Templates/generateTemplate";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -82,7 +82,7 @@ const Certification = () => {
         content = content.replace(new RegExp(placeholder, "g"), value || "N/A");
       });
 
-      const renderTemplate = generateTemplate(selectedTemplate.title, systemData?.imageUrl, systemData?.tanzaLogoUrl, content)
+      const renderTemplate = generateFullTemplate(selectedTemplate.title, systemData?.imageUrl, systemData?.tanzaLogoUrl, content)
       // Render printable content
       const printWindow = window.open("", "_blank");
       printWindow.document.open();

@@ -6,7 +6,7 @@ import CreateTemplate from "./CreateTemplate";
 import Toolbar from "../../components/ToolBar";
 import { useFetchData } from "../../hooks/useFetchData";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
-import { generateTemplate } from "./generateTemplate";
+import { generateBodyTemplate } from "./generateTemplate";
 import EmptyLogo from "../../components/ReusableComponents/EmptyLogo";
 
 const Templates = () => {
@@ -17,8 +17,7 @@ const Templates = () => {
   
   const selectedTemplate = templates?.find((template) => template.id === selectedTemplateId);
 
-  const renderTemplate = selectedTemplate ? generateTemplate(
-    systemData?.title,
+  const renderTemplate = selectedTemplate ? generateBodyTemplate(
     systemData?.imageUrl,
     systemData?.tanzaLogoUrl,
     selectedTemplate?.content

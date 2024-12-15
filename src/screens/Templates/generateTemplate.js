@@ -1,9 +1,14 @@
-export const generateTemplate = (templateTitle, systemLogo, tanzaLogo, content) => `
+export const generateFullTemplate = (
+  templateTitle,
+  systemLogo,
+  tanzaLogo,
+  content
+) => `
   <html>
     <head>
       <title>${templateTitle}</title>
       <style>
-        /* Tailwind-like utility classes */
+         /* Tailwind-like utility classes */
         .bg-white { background-color: white; }
         .p-10 { padding: 2.5rem; }
         .flex { display: flex; }
@@ -45,68 +50,96 @@ export const generateTemplate = (templateTitle, systemLogo, tanzaLogo, content) 
         }
       </style>
     </head>
-    <body class="">
-      <div class="p-10">
-        <div class="flex justify-center gap-4">
-          <div class="flex-1 flex items-center justify-end" style="flex: 1 1 25%">
-            <img src="${systemLogo}" alt="Logo" class="h-32 w-32 rounded-full mr-4" />
-          </div>
-          <div class="flex-1 flex items-center justify-center text-center bg-white p-4" style="flex: 1 1 50%">
-            <p class="text-sm">
-              Republic of the Philippines<br />
-              Province of Cavite<br />
-              Municipality of Tanza<br />
-              <span class="font-bold uppercase">Barangay Bagtas</span><br />
-              <span class="font-bold uppercase whitespace-nowrap">Office of the Barangay Chairman</span>
-            </p>
-          </div>
-          <div class="flex-1" style="flex: 1 1 25%">
-            <img src="${tanzaLogo}" alt="Logo" class="h-32 w-32 rounded-full" />
-          </div>
-        </div>
-        <p class="text-center font-bold uppercase text-3xl p-12">Barangay Certification</p>
-        <div class="flex justify-center">
-          <div class="flex-1 bg-blue-100 p-4 text-center border-r-2" style="flex: 1 1 25%">
-            <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
-                    <li class="p-2">Manuel Clemente T. Mintu Jr. </br>
-                    <span class="text-xs font-thin">Barangay Chairman</span>
-                    </li>
-                    <p class="text-xs p-2 font-thin">Barangay Counsilors</p>
-                   <p>
-                      <li>Ryan G. Mintu</li>
-                      <li>Emmanuel T. Salvador Jr.</li>
-                      <li>Luis G. Mercado</li>
-                      <li>Yolanda T. Romana</li>
-                      <li>Jenina T. Paminter</li>
-                      <li>Emmanuel G. Mercado</li>
-                      <li>Christopher I. Aron</li>
-                   </p>
-
-                   <p>
-                      <li class="p-2">Maria Angela A. Capuz </br>
-                      <span class="text-xs font-thin">SK Chairperson</span>
-                      </li>
-                   </p>
-
-                    <p>
-                      <li class="p-2">Maria Leonilla B. Castillo </br>
-                      <span class="text-xs font-thin">Barangay Secretary</span>
-                      </li>
-                    </p>
-                   <p>
-                      <li class="p-2">Dominga T. Molina </br>
-                      <span class="text-xs font-thin" >Barangay Treasurer</span>
-                      </li>
-                   </p>
-
-                  </ul>
-          </div>
-          <div class="flex-1 p-4" style="flex: 1 1 75%; position: relative; height: 200px;">
-            <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 100%; background-image: url('${tanzaLogo}'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.3;"></div>
-            <div style="position: relative;">${content}</div>
-          </div>
-        </div>
-      </div>
+    <body>
+      ${generateBodyTemplate(systemLogo, tanzaLogo, content)}
     </body>
   </html>
 `;
+
+export const generateBodyTemplate = (systemLogo, tanzaLogo, content) => (
+`  <div class="p-10">
+    <div class="flex justify-center gap-4">
+      <div class="flex-1 flex items-center justify-end" style="flex: 1 1 25%">
+        <img
+          src="${systemLogo}"
+          alt="Logo"
+          class="h-32 w-32 rounded-full mr-4"
+        />
+      </div>
+      <div
+        class="flex-1 flex items-center justify-center text-center bg-white p-4"
+        style="flex: 1 1 50%"
+      >
+        <p class="text-sm">
+          Republic of the Philippines
+          <br />
+          Province of Cavite
+          <br />
+          Municipality of Tanza
+          <br />
+          <span class="font-bold uppercase">Barangay Bagtas</span>
+          <br />
+          <span class="font-bold uppercase whitespace-nowrap">
+            Office of the Barangay Chairman
+          </span>
+        </p>
+      </div>
+      <div class="flex-1" style="flex: 1 1 25%">
+        <img src="${tanzaLogo}" alt="Logo" class="h-32 w-32 rounded-full" />
+      </div>
+    </div>
+    <p class="text-center font-bold uppercase text-3xl p-12">
+      Barangay Certification
+    </p>
+    <div class="flex justify-center">
+      <div
+        class="flex-1 bg-blue-100 p-4 text-center border-r-2"
+        style="flex: 1 1 25%"
+      >
+        <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
+          <li class="p-2">
+            Manuel Clemente T. Mintu Jr.
+            <span class="text-xs font-thin">Barangay Chairman</span>
+          </li>
+          <p class="text-xs p-2 font-thin">Barangay Counsilors</p>
+          <p>
+            <li>Ryan G. Mintu</li>
+            <li>Emmanuel T. Salvador Jr.</li>
+            <li>Luis G. Mercado</li>
+            <li>Yolanda T. Romana</li>
+            <li>Jenina T. Paminter</li>
+            <li>Emmanuel G. Mercado</li>
+            <li>Christopher I. Aron</li>
+          </p>
+
+          <p>
+            <li class="p-2">
+              Maria Angela A. Capuz
+              <span class="text-xs font-thin">SK Chairperson</span>
+            </li>
+          </p>
+
+          <p>
+            <li class="p-2">
+              Maria Leonilla B. Castillo
+              <span class="text-xs font-thin">Barangay Secretary</span>
+            </li>
+          </p>
+          <p>
+            <li class="p-2">
+              Dominga T. Molina
+              <span class="text-xs font-thin">Barangay Treasurer</span>
+            </li>
+          </p>
+        </ul>
+      </div>
+      <div
+        class="flex-1 p-4"
+        style="flex: 1 1 75%; position: relative; height: 200px;"
+      >
+        <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 100%; background-image: url('${tanzaLogo}'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.3;"></div>
+        <div style="position: relative;">${content}</div>
+      </div>
+    </div>
+  </div>`
+);
