@@ -14,6 +14,10 @@ import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import ClearanceModal from "./ClearanceModal";
 import { formatDate } from "../../helper/FormatDate";
 import { generateFullTemplate } from "../Templates/generateTemplate";
+import handleDeleteData from "../../hooks/handleDeleteData"
+import AskCard from "../../components/ReusableComponents/AskCard";
+import { ref, update } from "firebase/database";
+import { database } from "../../services/firebaseConfig";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,8 +25,20 @@ const Certification = () => {
   const { data: template } = useFetchData("templates");
   const { systemData } = useFetchSystemData();
   const [showRequestCert, setShowRequestCert] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
+  const [userData, setUserData] = useState(null);
 
-  const searchFields = ["fullname","docsType","age", "address","gender","civilStatus","moveInYear"];
+  const searchFields = [
+    "fullname",
+    "docsType",
+    "age",
+    "address",
+    "gender",
+    "civilStatus",
+    "moveInYear",
+  ];
   const Headers = [
     "Type",
     "Fullname",
@@ -48,7 +64,7 @@ const Certification = () => {
     const nullValue = <p className="italic text-nowrap text-xs">null</p>;
     return (
       <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
-        <div className="truncate max-w-[100px] sm:max-w-[200px]">
+        <div className={`truncate max-w-[100px] sm:max-w-[200px] ${data === "rejected" ? "text-red-500" : ""}`}>
           {data || nullValue}
         </div>
       </td>
@@ -69,7 +85,7 @@ const Certification = () => {
       toast.error(`No template found for document type: ${rowData.docsType}`);
       return;
     }
-    
+
     let content = selectedTemplate.content;
 
     if (content) {
@@ -82,7 +98,12 @@ const Certification = () => {
         content = content.replace(new RegExp(placeholder, "g"), value || "N/A");
       });
 
-      const renderTemplate = generateFullTemplate(selectedTemplate.title, systemData?.imageUrl, systemData?.tanzaLogoUrl, content)
+      const renderTemplate = generateFullTemplate(
+        selectedTemplate.title,
+        systemData?.imageUrl,
+        systemData?.tanzaLogoUrl,
+        content
+      );
       // Render printable content
       const printWindow = window.open("", "_blank");
       printWindow.document.open();
@@ -96,6 +117,45 @@ const Certification = () => {
     }
   };
 
+  const handleEditClick = (userData) => {
+    setShowRequestCert(true);
+    setSelectedId(userData.id);
+    setUserData(userData);
+    setIsEdit(true);
+    console.log(isEdit, userData.docsType);
+  };
+
+  const handleRejectClick = (userData) => {
+    setUserData(userData);
+    setSelectedId(userData.id);
+    setShowRejectModal(true);
+  }
+
+  const handleRejectClearance = async () =>{
+
+    try{
+      const dataRef = ref(database, `requestClearance/${selectedId}`);
+      const clearanceData = {
+        ...userData,
+        status: "rejected"
+      };
+
+      await update(dataRef, clearanceData);
+      toast.info("Clearance request rejected")
+
+    }catch(error){
+      toast.error(`Error updating: ${error}`)
+    }
+
+    setShowRejectModal(false);
+  }
+
+  const handleCloseModal = () => {
+    setShowRequestCert(!showRequestCert);
+    setIsEdit(!isEdit);
+  }
+
+
   const renderRow = (userData) => {
     return (
       <>
@@ -108,35 +168,48 @@ const Certification = () => {
         <TableData data={userData.status} />
         <td className="">
           <div className="flex items-center justify-center space-x-2">
-            <IconButton
-              icon={icons.print}
-              color={"gray"}
-              bgColor={"bg-gray-100"}
-              fontSize={"small"}
-              tooltip={"Accept and Print"}
-              onClick={() => printCertificate(userData)}
-            />
-             <IconButton
-              icon={icons.view}
-              color={"blue"}
-              bgColor={"bg-blue-100"}
-              fontSize={"small"}
-              tooltip={"View"}
-            />
-            <IconButton
-              icon={icons.edit}
-              color={"green"}
-              bgColor={"bg-green-100"}
-              fontSize={"small"}
-              tooltip={"Edit"}
-            />
-            <IconButton
-              icon={icons.cancel}
-              color={"red"}
-              bgColor={"bg-red-100"}
-              fontSize={"small"}
-              tooltip={"Reject"}
-            />
+            { userData.status !== "rejected" ?
+            ( <>
+                <IconButton
+                icon={icons.print}
+                color={"gray"}
+                bgColor={"bg-gray-100"}
+                fontSize={"small"}
+                tooltip={"Accept and Print"}
+                onClick={() => printCertificate(userData)}
+              />
+              <IconButton
+                icon={icons.view}
+                color={"blue"}
+                bgColor={"bg-blue-100"}
+                fontSize={"small"}
+                tooltip={"View"}
+              />
+              <IconButton
+                icon={icons.edit}
+                color={"green"}
+                bgColor={"bg-green-100"}
+                fontSize={"small"}
+                tooltip={"Edit"}
+                onClick={() => handleEditClick(userData)}
+              />
+              <IconButton
+                icon={icons.cancel}
+                color={"red"}
+                bgColor={"bg-red-100"}
+                fontSize={"small"}
+                tooltip={"Reject"}
+                onClick={() => handleRejectClick(userData)}
+              />
+             </>) : (
+              <IconButton
+                icon={icons.view}
+                color={"blue"}
+                bgColor={"bg-blue-100"}
+                fontSize={"small"}
+                tooltip={"View"}
+              />
+             )}
           </div>
         </td>
       </>
@@ -162,7 +235,30 @@ const Certification = () => {
             setSearchQuery={setSearchQuery}
           />
           {showRequestCert && (
-            <ClearanceModal setShowRequestCert={setShowRequestCert} />
+            <ClearanceModal
+              handleCloseModal={handleCloseModal}
+              isEdit={isEdit}
+              selectedId={selectedId}
+              userData={userData}
+            />
+          )}
+
+          {showRejectModal && (
+            <AskCard 
+              toggleModal={() => setShowRejectModal(false)}
+              question={
+                <span>
+                  Do you want to reject
+                  <span className="text-primary-500 text-bold">
+                    {" "}
+                    {clearance.find((item) => item.id === selectedId)?.fullname}
+                  </span>{" "}
+                 request ?{" "}
+                </span>
+              }
+              confirmText={"Reject"}
+              onConfirm={handleRejectClearance}
+            />
           )}
 
           <Table headers={Headers} data={currentItems} renderRow={renderRow} />

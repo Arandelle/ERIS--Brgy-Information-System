@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Modal from "../../components/ReusableComponents/Modal";
 import { InputField } from "../../components/ReusableComponents/InputField";
-import { serverTimestamp } from "firebase/database";
 import handleAddData from "../../hooks/handleAddData";
-import { toast } from "sonner";
+import handleEditData from "../../hooks/handleEditData"
 
-const ClearanceModal = ({ setShowRequestCert }) => {
+const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
   const [clearanceData, setClearanceData] = useState({
     docsType: "",
     fullname: "",
@@ -37,6 +36,21 @@ const ClearanceModal = ({ setShowRequestCert }) => {
   };
 
   useEffect(() => {
+    if (isEdit && userData) {
+      setClearanceData({
+        ...clearanceData,
+        docsType: userData.docsType,
+        fullname: userData.fullname,
+        age: userData.age,
+        address: userData.address,
+        gender: userData.gender,
+        civilStatus: userData.civilStatus,
+        moveInYear: userData.moveInYear,
+      });
+    };
+  }, [isEdit, userData]);
+
+  useEffect(() => {
     const {
       docsType,
       fullname,
@@ -65,9 +79,18 @@ const ClearanceModal = ({ setShowRequestCert }) => {
     clearanceData.moveInYear,
   ]);
 
+  const handleUpdateClearance = async () => {
+    const updatedData = {
+      ...clearanceData
+    };
+
+    await handleEditData(selectedId, updatedData, "requestClearance");
+    handleCloseModal();
+  };
+
   return (
     <Modal
-      closeButton={() => setShowRequestCert(false)}
+      closeButton={handleCloseModal}
       title={"Create Request"}
       children={
         <div className=" max-w-2xl space-y-6">
@@ -188,7 +211,7 @@ const ClearanceModal = ({ setShowRequestCert }) => {
             className={`w-full text-white px-4 py-2 rounded-md ${
               complete ? "bg-blue-500" : "bg-gray-500"
             }`}
-            onClick={handleRequestClearance}
+            onClick={isEdit ? () => handleUpdateClearance(selectedId) : handleRequestClearance}
             disabled={!complete}
           >
             Save Data
