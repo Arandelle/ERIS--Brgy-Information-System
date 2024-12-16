@@ -18,6 +18,7 @@ import handleDeleteData from "../../hooks/handleDeleteData";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import { ref, update } from "firebase/database";
 import { database } from "../../services/firebaseConfig";
+import ClearanceViewModal from "./ClearanceViewModal";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,6 +28,7 @@ const Certification = () => {
   const [showRequestCert, setShowRequestCert] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [userData, setUserData] = useState(null);
 
@@ -127,6 +129,11 @@ const Certification = () => {
     }
   };
 
+  const handleViewClick = (userData) => {
+    setUserData(userData);
+    setViewModal(!viewModal);
+  }
+
   const handleEditClick = (userData) => {
     setShowRequestCert(true);
     setSelectedId(userData.id);
@@ -163,6 +170,7 @@ const Certification = () => {
     setIsEdit(!isEdit);
   };
 
+
   const renderRow = (userData) => {
     const { status } = userData;
     const rejected = status === "rejected";
@@ -191,6 +199,7 @@ const Certification = () => {
               color={"blue"}
               fontSize={"small"}
               tooltip={"View"}
+              onClick={() => handleViewClick(userData)}
             />
             <IconButton
               icon={icons.edit}
@@ -239,6 +248,13 @@ const Certification = () => {
               selectedId={selectedId}
               userData={userData}
             />
+          )}
+
+          {viewModal && (
+            <ClearanceViewModal
+              handleViewClick={handleViewClick}
+              userData={userData}
+             />
           )}
 
           {showRejectModal && (
