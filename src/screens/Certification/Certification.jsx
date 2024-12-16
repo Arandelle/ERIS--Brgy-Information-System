@@ -14,7 +14,7 @@ import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import ClearanceModal from "./ClearanceModal";
 import { formatDate } from "../../helper/FormatDate";
 import { generateFullTemplate } from "../Templates/generateTemplate";
-import handleDeleteData from "../../hooks/handleDeleteData"
+import handleDeleteData from "../../hooks/handleDeleteData";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import { ref, update } from "firebase/database";
 import { database } from "../../services/firebaseConfig";
@@ -60,11 +60,21 @@ const Certification = () => {
     totalPages,
   } = usePagination(filteredData);
 
+  const sortedData = currentItems.sort((a, b) => {
+    if (a.status === "rejected" && b.status !== "rejected") return 1;
+    if (a.status !== "rejected" && b.status === "rejected") return -1;
+    return 0;
+  });
+
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">null</p>;
     return (
       <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
-        <div className={`truncate max-w-[100px] sm:max-w-[200px] ${data === "rejected" ? "text-red-500" : ""}`}>
+        <div
+          className={`truncate max-w-[100px] sm:max-w-[200px] ${
+            data === "rejected" ? "text-red-500" : ""
+          }`}
+        >
           {data || nullValue}
         </div>
       </td>
@@ -129,34 +139,34 @@ const Certification = () => {
     setUserData(userData);
     setSelectedId(userData.id);
     setShowRejectModal(true);
-  }
+  };
 
-  const handleRejectClearance = async () =>{
-
-    try{
+  const handleRejectClearance = async () => {
+    try {
       const dataRef = ref(database, `requestClearance/${selectedId}`);
       const clearanceData = {
         ...userData,
-        status: "rejected"
+        status: "rejected",
       };
 
       await update(dataRef, clearanceData);
-      toast.info("Clearance request rejected")
-
-    }catch(error){
-      toast.error(`Error updating: ${error}`)
+      toast.info("Clearance request rejected");
+    } catch (error) {
+      toast.error(`Error updating: ${error}`);
     }
 
     setShowRejectModal(false);
-  }
+  };
 
   const handleCloseModal = () => {
     setShowRequestCert(!showRequestCert);
     setIsEdit(!isEdit);
-  }
-
+  };
 
   const renderRow = (userData) => {
+    const { status } = userData;
+    const rejected = status === "rejected";
+
     return (
       <>
         <TableData data={userData.docsType} />
@@ -168,48 +178,36 @@ const Certification = () => {
         <TableData data={userData.status} />
         <td className="">
           <div className="flex items-center justify-center space-x-2">
-            { userData.status !== "rejected" ?
-            ( <>
-                <IconButton
-                icon={icons.print}
-                color={"gray"}
-                bgColor={"bg-gray-100"}
-                fontSize={"small"}
-                tooltip={"Accept and Print"}
-                onClick={() => printCertificate(userData)}
-              />
-              <IconButton
-                icon={icons.view}
-                color={"blue"}
-                bgColor={"bg-blue-100"}
-                fontSize={"small"}
-                tooltip={"View"}
-              />
-              <IconButton
-                icon={icons.edit}
-                color={"green"}
-                bgColor={"bg-green-100"}
-                fontSize={"small"}
-                tooltip={"Edit"}
-                onClick={() => handleEditClick(userData)}
-              />
-              <IconButton
-                icon={icons.cancel}
-                color={"red"}
-                bgColor={"bg-red-100"}
-                fontSize={"small"}
-                tooltip={"Reject"}
-                onClick={() => handleRejectClick(userData)}
-              />
-             </>) : (
-              <IconButton
-                icon={icons.view}
-                color={"blue"}
-                bgColor={"bg-blue-100"}
-                fontSize={"small"}
-                tooltip={"View"}
-              />
-             )}
+            <IconButton
+              icon={icons.print}
+              color={"gray"}
+              fontSize={"small"}
+              tooltip={"Accept and Print"}
+              className={rejected && "cursor-not-allowed opacity-35"}
+              onClick={rejected ? "" : () => printCertificate(userData)}
+            />
+            <IconButton
+              icon={icons.view}
+              color={"blue"}
+              fontSize={"small"}
+              tooltip={"View"}
+            />
+            <IconButton
+              icon={icons.edit}
+              color={"green"}
+              fontSize={"small"}
+              tooltip={"Edit"}
+              className={rejected && "cursor-not-allowed opacity-50"}
+              onClick={rejected ? "" : () => handleEditClick(userData)}
+            />
+            <IconButton
+              icon={icons.cancel}
+              color={"red"}
+              fontSize={"small"}
+              tooltip={"Reject"}
+              className={rejected && "cursor-not-allowed opacity-50"}
+              onClick={rejected ? "" : () => handleRejectClick(userData)}
+            />
           </div>
         </td>
       </>
@@ -244,7 +242,7 @@ const Certification = () => {
           )}
 
           {showRejectModal && (
-            <AskCard 
+            <AskCard
               toggleModal={() => setShowRejectModal(false)}
               question={
                 <span>
@@ -253,7 +251,7 @@ const Certification = () => {
                     {" "}
                     {clearance.find((item) => item.id === selectedId)?.fullname}
                   </span>{" "}
-                 request ?{" "}
+                  request ?{" "}
                 </span>
               }
               confirmText={"Reject"}
@@ -261,7 +259,7 @@ const Certification = () => {
             />
           )}
 
-          <Table headers={Headers} data={currentItems} renderRow={renderRow} />
+          <Table headers={Headers} data={sortedData} renderRow={renderRow} />
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

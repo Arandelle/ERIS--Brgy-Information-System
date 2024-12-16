@@ -9,7 +9,7 @@ const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
       closeButton={() => setViewUser(!true)}
       children={
         <>
-          <div className="flex flex-col justify-between space-y-2">
+          <div className="flex flex-col justify-between space-y-2 min-w-[20rem] lg:min-w-[32rem]">
             <p className="flex items-center justify-center p-2">
               <img
                 src={userToViewInfo.img}

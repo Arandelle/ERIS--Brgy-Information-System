@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
-import {InputField} from "../../components/ReusableComponents/InputField";
+import { InputField } from "../../components/ReusableComponents/InputField";
 import { auth, app } from "../../services/firebaseConfig";
 import {
   createUserWithEmailAndPassword,
@@ -112,8 +112,13 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
         closeButton={addUser}
         title={`Add new ${label}`}
         children={
-          <form  onSubmit={handleAddUser}>
-            <div className="flex flex-col space-y-4">
+          <form onSubmit={handleAddUser}>
+            <div className="flex flex-col space-y-4 max-w-lg">
+              <p className="text-sm text-gray-600 italic">
+                Ensure that the user information is accurately entered to
+                facilitate smooth account creation.
+              </p>
+
               <InputField
                 className={"border"}
                 type={"email"}

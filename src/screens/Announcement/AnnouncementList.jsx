@@ -182,7 +182,6 @@ const Activities = () => {
             <IconButton
               icon={icons.view}
               color={"blue"}
-              bgColor={"bg-blue-100"}
               onClick={() => {
                 setShowDetails(!showDetails);
                 setSelectedId(announcement.id);
@@ -193,7 +192,6 @@ const Activities = () => {
             <IconButton
               icon={icons.edit}
               color={"green"}
-              bgColor={"bg-green-100"}
               onClick={() => handleEditClick(announcement)}
               tooltip={"Edit"}
               fontSize={"small"}
@@ -201,7 +199,6 @@ const Activities = () => {
             <IconButton
               icon={icons.delete}
               color={"red"}
-              bgColor={"bg-red-100"}
               onClick={() => handleDeleteClick(announcement.id)}
               tooltip={"Delete"}
               fontSize={"small"}

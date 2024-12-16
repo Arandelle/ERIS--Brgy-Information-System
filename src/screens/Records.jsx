@@ -149,7 +149,6 @@ const Records = () => {
             <IconButton
               icon={icons.view}
               color={"blue"}
-              bgColor={"bg-blue-100"}
               onClick={() => {
                 setIsView(!isView);
                 setSelectedId(emergency?.id);

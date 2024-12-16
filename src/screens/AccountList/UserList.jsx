@@ -120,7 +120,6 @@ const UserList = ({ data }) => {
               <IconButton
                 icon={icons.view}
                 color={"blue"}
-                bgColor={"bg-blue-100"}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleViewUser(user);

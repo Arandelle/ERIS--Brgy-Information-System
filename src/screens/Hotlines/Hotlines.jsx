@@ -69,7 +69,6 @@ const Hotlines = () => {
             <IconButton
               icon={icons.edit}
               color={"green"}
-              bgColor={"bg-green-100"}
               fontSize={"small"}
               tooltip={"Edit contact?"}
               onClick={() => handleEditClick(hotlines)}
@@ -77,7 +76,6 @@ const Hotlines = () => {
             <IconButton
               icon={icons.delete}
               color={"red"}
-              bgColor={"bg-red-100"}
               fontSize={"small"}
               tooltip={"Delete contact?"}
               onClick={() => handleDeleteModal(hotlines.id)}
