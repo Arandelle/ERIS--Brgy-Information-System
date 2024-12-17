@@ -19,6 +19,7 @@ import AskCard from "../../components/ReusableComponents/AskCard";
 import { ref, update } from "firebase/database";
 import { database } from "../../services/firebaseConfig";
 import ClearanceViewModal from "./ClearanceViewModal";
+import {capitalizeFirstLetter} from "../../helper/CapitalizeFirstLetter"
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -73,11 +74,16 @@ const Certification = () => {
 
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">null</p>;
+    const statusColor = {
+      "rejected" : "text-red-500",
+      "pending" : "text-yellow-500",
+      "done" : "text-blue-500"
+    } 
     return (
       <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
         <div
           className={`truncate max-w-[100px] sm:max-w-[200px] ${
-            data === "rejected" ? "text-red-500" : ""
+           statusColor[data]
           }`}
         >
           {data || nullValue}
@@ -159,7 +165,7 @@ const Certification = () => {
     setSelectedId(userData.id);
     setShowUpdateStatus({
       visible: true,
-      status: "rejected"
+      status: userData.status === "rejected" ? "Delete" : "rejected"
     });
   };
 
@@ -183,6 +189,15 @@ const Certification = () => {
     });
   };
 
+  const handleDeleteConfirm = async () => {
+    await handleDeleteData(selectedId, "requestClearance");
+    setUserData({});
+    setShowUpdateStatus({
+      visible: false,
+      status: "",
+    })
+  }
+
   const handleCloseModal = () => {
     setShowRequestCert(!showRequestCert);
     setIsEdit(!isEdit);
@@ -192,7 +207,7 @@ const Certification = () => {
   const renderRow = (userData) => {
     const { status } = userData;
     const rejected = status === "rejected";
-
+    const done = status.toLowerCase() === "done";
     return (
       <>
         <TableData data={userData.docsType} />
@@ -208,7 +223,7 @@ const Certification = () => {
               icon={icons.print}
               color={"gray"}
               fontSize={"small"}
-              tooltip={"Accept and Print"}
+              tooltip={done ? "Reprint" : "Print"}
               className={rejected && "cursor-not-allowed opacity-35"}
               onClick={rejected ? "" : () => printCertificate(userData)}
             />
@@ -228,12 +243,11 @@ const Certification = () => {
               onClick={rejected ? "" : () => handleEditClick(userData)}
             />
             <IconButton
-              icon={icons.cancel}
+              icon={rejected ? icons.delete : icons.cancel}
               color={"red"}
               fontSize={"small"}
-              tooltip={"Reject"}
-              className={rejected && "cursor-not-allowed opacity-50"}
-              onClick={rejected ? "" : () => handleRejectClick(userData)}
+              tooltip={"Delete"}
+              onClick={() => handleRejectClick(userData)}
             />
           </div>
         </td>
@@ -290,8 +304,9 @@ const Certification = () => {
                   request {showUpdateStatus.status} ?
                 </span>
               }
-              confirmText={showUpdateStatus.status}
-              onConfirm={() => handleUpdateClearanceStatus(showUpdateStatus.status)}
+              confirmText={capitalizeFirstLetter(showUpdateStatus.status)}
+              onConfirm={userData.status === "rejected" ? () => handleDeleteConfirm() :
+              () => handleUpdateClearanceStatus(showUpdateStatus.status)}
             />
           )}
  
