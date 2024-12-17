@@ -32,7 +32,7 @@ const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
 
     await handleAddData(requestData, "requestClearance");
     setClearanceData({});
-    setShowRequestCert(false);
+    handleCloseModal();
   };
 
   useEffect(() => {

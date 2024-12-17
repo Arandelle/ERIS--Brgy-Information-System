@@ -27,7 +27,10 @@ const Certification = () => {
   const { systemData } = useFetchSystemData();
   const [showRequestCert, setShowRequestCert] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [showUpdateStatus, setShowUpdateStatus] = useState({
+    visible: false,
+    status: ""
+  });
   const [viewModal, setViewModal] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [userData, setUserData] = useState(null);
@@ -84,50 +87,59 @@ const Certification = () => {
   };
 
   const printCertificate = (rowData) => {
-    if (!template || Object.keys(template).length === 0) {
-      toast.error("No templates found. Please add a template first.");
-      return;
-    }
+  if (!template || Object.keys(template).length === 0) {
+    toast.error("No templates found. Please add a template first.");
+    return;
+  }
 
-    const selectedTemplate = Object.values(template).find(
-      (temp) => temp.docsType === rowData.docsType
+  const selectedTemplate = Object.values(template).find(
+    (temp) => temp.docsType === rowData.docsType
+  );
+
+  if (!selectedTemplate) {
+    toast.error(`No template found for document type: ${rowData.docsType}`);
+    return;
+  }
+
+  let content = selectedTemplate.content;
+
+  if (content) {
+    // Replace placeholders with rowData
+    const today = new Date();
+    content = content.replace(/{{todayDate}}/g, formatDate(today));
+
+    Object.entries(rowData).forEach(([key, value]) => {
+      const placeholder = `{{${key}}}`;
+      content = content.replace(new RegExp(placeholder, "g"), value || "N/A");
+    });
+
+    const renderTemplate = generateFullTemplate(
+      selectedTemplate.title,
+      systemData?.imageUrl,
+      systemData?.tanzaLogoUrl,
+      content
     );
 
-    if (!selectedTemplate) {
-      toast.error(`No template found for document type: ${rowData.docsType}`);
-      return;
-    }
-
-    let content = selectedTemplate.content;
-
-    if (content) {
-      // Replace placeholders with rowData
-      const today = new Date();
-      content = content.replace(/{{todayDate}}/g, formatDate(today));
-
-      Object.entries(rowData).forEach(([key, value]) => {
-        const placeholder = `{{${key}}}`;
-        content = content.replace(new RegExp(placeholder, "g"), value || "N/A");
+    // Render printable content
+    const printWindow = window.open("", "_blank");
+    printWindow.document.open();
+    printWindow.document.write(renderTemplate);
+    printWindow.document.close();
+    printWindow.onafterprint = () =>{
+      setUserData(rowData);
+      setShowUpdateStatus({
+        visible: true,
+        status: "done"
       });
+      printWindow.close();
+    } 
+  
+    printWindow.print();
+  } else {
+    toast.error("Template content is empty.");
+  }
+};
 
-      const renderTemplate = generateFullTemplate(
-        selectedTemplate.title,
-        systemData?.imageUrl,
-        systemData?.tanzaLogoUrl,
-        content
-      );
-      // Render printable content
-      const printWindow = window.open("", "_blank");
-      printWindow.document.open();
-      printWindow.document.write(renderTemplate);
-
-      printWindow.document.close();
-      printWindow.print();
-      toast.success(`${selectedTemplate.title} rendered successfully!`);
-    } else {
-      toast.error("Template content is empty.");
-    }
-  };
 
   const handleViewClick = (userData) => {
     setUserData(userData);
@@ -145,24 +157,30 @@ const Certification = () => {
   const handleRejectClick = (userData) => {
     setUserData(userData);
     setSelectedId(userData.id);
-    setShowRejectModal(true);
+    setShowUpdateStatus({
+      visible: true,
+      status: "rejected"
+    });
   };
 
-  const handleRejectClearance = async () => {
+  const handleUpdateClearanceStatus = async (status) => {
     try {
       const dataRef = ref(database, `requestClearance/${selectedId}`);
       const clearanceData = {
         ...userData,
-        status: "rejected",
+        status
       };
 
       await update(dataRef, clearanceData);
-      toast.info("Clearance request rejected");
+      toast.info(`Clearance request ${status}`);
     } catch (error) {
       toast.error(`Error updating: ${error}`);
     }
 
-    setShowRejectModal(false);
+    setShowUpdateStatus({
+      visible: false,
+      status: ""
+    });
   };
 
   const handleCloseModal = () => {
@@ -257,24 +275,26 @@ const Certification = () => {
              />
           )}
 
-          {showRejectModal && (
+          {showUpdateStatus.visible && (
             <AskCard
-              toggleModal={() => setShowRejectModal(false)}
+              toggleModal={() => setShowUpdateStatus({
+                visible: false,
+                status: "",
+              }, setUserData({}))}
               question={
                 <span>
-                  Do you want to reject
+                  Is {""}
                   <span className="text-primary-500 text-bold">
-                    {" "}
-                    {clearance.find((item) => item.id === selectedId)?.fullname}
-                  </span>{" "}
-                  request ?{" "}
+                   {userData.fullname} {""}
+                  </span>
+                  request {showUpdateStatus.status} ?
                 </span>
               }
-              confirmText={"Reject"}
-              onConfirm={handleRejectClearance}
+              confirmText={showUpdateStatus.status}
+              onConfirm={() => handleUpdateClearanceStatus(showUpdateStatus.status)}
             />
           )}
-
+ 
           <Table headers={Headers} data={sortedData} renderRow={renderRow} />
           <Pagination
             currentPage={currentPage}
