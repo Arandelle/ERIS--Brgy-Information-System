@@ -66,11 +66,11 @@ const Certification = () => {
     totalPages,
   } = usePagination(filteredData);
 
-  const sortedData = currentItems.sort((a, b) => {
-    if (a.status === "rejected" && b.status !== "rejected") return 1;
-    if (a.status !== "rejected" && b.status === "rejected") return -1;
-    return 0;
-  });
+ const sortedData = currentItems.sort((a, b) => {
+  const statusOrder = {"pending" : 1, "done" : 2, "rejected": 3};
+  return statusOrder[a.status] - statusOrder[b.status];
+});
+
 
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">null</p>;
@@ -133,6 +133,7 @@ const Certification = () => {
     printWindow.document.close();
     printWindow.onafterprint = () =>{
       setUserData(rowData);
+      setSelectedId(rowData.id)
       setShowUpdateStatus({
         visible: true,
         status: "done"
@@ -207,7 +208,7 @@ const Certification = () => {
   const renderRow = (userData) => {
     const { status } = userData;
     const rejected = status === "rejected";
-    const done = status.toLowerCase() === "done";
+    const done = status === "done";
     return (
       <>
         <TableData data={userData.docsType} />
@@ -216,7 +217,7 @@ const Certification = () => {
         <TableData data={userData.gender} />
         <TableData data={userData.address} />
         <TableData data={userData.moveInYear} />
-        <TableData data={userData.status} />
+        <TableData data={status} />
         <td className="">
           <div className="flex items-center justify-center space-x-2">
             <IconButton
@@ -246,7 +247,7 @@ const Certification = () => {
               icon={rejected ? icons.delete : icons.cancel}
               color={"red"}
               fontSize={"small"}
-              tooltip={"Delete"}
+              tooltip={rejected ? "Delete" : "Reject"}
               onClick={() => handleRejectClick(userData)}
             />
           </div>
