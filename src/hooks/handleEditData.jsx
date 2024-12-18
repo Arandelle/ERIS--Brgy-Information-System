@@ -47,6 +47,9 @@ const handleEditData = async (id,data, type) => {
         };
       
         const dataBasedOnType = {
+          admins: {
+            ...dataWithDateAndTimestamp,
+          },
           announcement: {
             ...dataWithDateAndTimestamp,
             isEdited: false,

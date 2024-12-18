@@ -1,5 +1,5 @@
 export const InputField = ({
-  type,
+  type = "text",
   placeholder,
   value,
   onChange,

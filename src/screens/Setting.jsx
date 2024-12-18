@@ -13,6 +13,9 @@ import { useFetchData } from "../hooks/useFetchData";
 import { update, ref } from "firebase/database";
 import { toast } from "sonner";
 import { useFetchSystemData } from "../hooks/useFetchSystemData";
+import ButtonStyle from "../components/ReusableComponents/Button";
+import Profile from "../components/Header/ProfileMenu";
+import ProfileModal from "./ProfileModal";
 
 const Setting = () => {
   const { systemData, loading, error, setLoading } = useFetchSystemData();
@@ -27,10 +30,21 @@ const Setting = () => {
     tanzaLogoImageFile: null,
     isModified: false,
   });
+  const [adminData, setAdminData] = useState({
+    image: "",
+    prevImage: "",
+    fullname: "",
+    imageFile: null
+  });
 
   const user = auth.currentUser;
   const { data: admin } = useFetchData("admins");
   const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+
+  const handleEditProfile =() => {
+    setShowProfileModal(!showProfileModal);
+  }
 
   const handleImageChange = (e, type) => {
     const file = e.target.files[0];
@@ -48,6 +62,12 @@ const Setting = () => {
           tanzaLogoImageFile: file,
           tanzaLogoPreview: URL.createObjectURL(file),
         }));
+      } else if (type === "profile"){
+        setAdminData({
+          ...adminData,
+          imageFile: file,
+          prevImage: URL.createObjectURL(file)
+        })
       }
 
     } else {
@@ -203,18 +223,6 @@ const Setting = () => {
     );
   }
 
-  if (error) {
-    return (
-      <HeaderAndSideBar
-        content={
-          <div className="flex items-center justify-center h-svh">
-            Error: {error.message}
-          </div>
-        }
-      />
-    );
-  }
-
   return (
     <HeaderAndSideBar
       content={
@@ -230,29 +238,25 @@ const Setting = () => {
             <div className="px-1 py-6 border-b flex flex-col lg:flex-row lg:justify-between">
               <div className="flex flex-col lg:flex-row space-y-4 items-start lg:items-center lg:justify-between w-3/4">
                 <div className="flex flex-row justify-start items-center space-x-4">
-                  <div className="border-4 border-gray-300 rounded-full flex-shrink-0">
                     <img
-                      src={currentAdminDetails?.img}
+                      src={currentAdminDetails?.imageUrl}
                       className="w-16 h-16 lg:w-28 lg:h-28 rounded-full"
                       loading="lazy"
                     />
-                  </div>
                   <div className="flex flex-col flex-grow">
                     <p className="font-medium text-sm lg:text-lg dark:text-gray-200">
-                      {currentAdminDetails?.firstname}{" "}
-                      {currentAdminDetails?.lastname}
+                      {currentAdminDetails?.fullname}
                     </p>
                     <p className="text-gray-500 dark:text-gray-400 text-sm">{user.email}</p>
                   </div>
                 </div>
-                <button className="bg-gray-100 dark:bg-gray-700 dark:text-gray-200 font-medium text-sm border py-1 px-2 rounded-md flex flex-row space-x-4 items-center">
-                  Edit Profile
-                  <Iconbutton
-                    icon={icons.edit}
-                    color={"gray"}
-                    fontSize={"small"}
-                  />
-                </button>
+                <ButtonStyle 
+                icon={icons.edit}
+                color={"gray"}
+                fontSize={"small"}
+                label={"Edit Profile"}
+                onClick={handleEditProfile}
+               />
               </div>
             </div>
           {/**System container */}
@@ -335,6 +339,17 @@ const Setting = () => {
               </button>
             </div>
           </div>
+
+          {showProfileModal && (
+            <ProfileModal 
+              handleEditProfile={handleEditProfile}
+              currentAdminDetails={currentAdminDetails}
+              adminData={adminData}
+              setAdminData={setAdminData}
+              handleImageChange={handleImageChange}
+              setLoading={setLoading}
+            />
+          )}
         </div>
       }
     />
