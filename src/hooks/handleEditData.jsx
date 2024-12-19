@@ -27,12 +27,18 @@ const handleEditData = async (id,data, type) => {
             await uploadBytes(imageRef, imageFile);
             imageUrl = await getDownloadURL(imageRef);
 
+            //Delete the current image if it exists
             if (announcementData.imageUrl) {
               const oldImageRef = storageRef(
                 storage,
                 announcementData.imageUrl
               );
-              await deleteObject(oldImageRef);
+              try{
+                await deleteObject(oldImageRef);
+              }catch(error){
+                toast.error(`Old image deletion failed : ${error}`)
+              }
+             
             }
           } catch (error) {
             toast.error(`Error uploading new image: ${error}`);
@@ -49,9 +55,11 @@ const handleEditData = async (id,data, type) => {
         const dataBasedOnType = {
           admins: {
             ...dataWithDateAndTimestamp,
+            imageUrl
           },
           announcement: {
             ...dataWithDateAndTimestamp,
+            imageUrl,
             isEdited: false,
           },
           hotlines: {

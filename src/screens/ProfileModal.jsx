@@ -20,6 +20,7 @@ const ProfileModal = ({
     if (currentAdminDetails) {
       setAdminData({
         ...adminData,
+        imageUrl: currentAdminDetails.imageUrl,
         fullname: currentAdminDetails.fullname,
       });
     }
@@ -27,8 +28,9 @@ const ProfileModal = ({
 
   const hanldeUpdateProfile = async (id) => {
     const updatedData = {
-      ...adminData,
-      imageUrl: adminData.prevImage
+      imageUrl: adminData.imageUrl,
+      image: adminData.imageFile,
+      fullname: adminData.fullname,
     };
     await handleEditData(id, updatedData, "admins");
     setAdminData({});
