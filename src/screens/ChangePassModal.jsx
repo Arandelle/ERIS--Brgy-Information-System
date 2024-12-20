@@ -1,42 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ProfileModalStyle } from "./ProfileModal";
 import { InputField } from "../components/ReusableComponents/InputField";
 import { auth } from "../services/firebaseConfig";
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth";
 import { toast } from "sonner";
 
-const ChangePassModal = () => {
+const ChangePassModal = ({handlePasswordModal}) => {
   const user = auth.currentUser;
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [reEnterPassword, setReEnterPassword] = useState("");
+  const [isComplete, setIsComplete] = useState(false);
 
-  const handleChangePassword = () => {
-    if (user) {
-      const newPass = newPassword;
+  const handleChangePassword = async () => {
 
-      const credential = EmailAuthProvider.credential(user.email, oldPassword);
-    
-      reauthenticateWithCredential(user, credential).then(() => {
-        if(newPassword === reEnterPassword){
-        updatePassword(user, newPass)
-        .then(() => {
-          toast.success("Successfully update the password!");
-        })
-        .catch((error) => {
-          toast.error(`Error updating password ${error}`);
-        });
+    if(!user){
+        toast.warning("No user logged in");
+        return;
+    }
+    try{
+        const credential = EmailAuthProvider.credential(user.email, oldPassword);
+        await reauthenticateWithCredential(user, credential);
+
+        if(newPassword === oldPassword){
+            toast.warning("New password cannot be same as oldpassword!");
+        }else if (newPassword !== reEnterPassword){
+            toast.warning("New password do not match");
         } else{
-            toast.error("New password do not match");
+            await updatePassword(user, newPassword);
+            toast.success("Successfully changed password");
+            handlePasswordModal();
         }
-      }).catch((error) => {
-        toast.error(`Error re-authenticating: ${error.message}`)
-      })
-      
-    } else {
-      toast.error("No user is logged in");
+       
+    }catch(error){
+        if(error.code === "auth/invalid-credential"){
+            toast.warning("Old password is incorrect")
+        }else {
+            toast.error(`${error}`);
+        }
     }
   };
+
+  useEffect(() => {
+    const completed = oldPassword && newPassword && reEnterPassword;
+    setIsComplete(completed);
+  }, [oldPassword, newPassword, reEnterPassword]);
+
   return (
     <ProfileModalStyle
       inputsArea={
@@ -63,7 +72,8 @@ const ChangePassModal = () => {
       }
       submitButton={
         <button
-          className="bg-green-500 w-full py-2 text-white text-sm rounded-md"
+          className={`${isComplete ? "bg-green-500" : "bg-gray-500"} w-full py-2 text-white text-sm rounded-md`}
+          disabled={!isComplete}
           onClick={handleChangePassword}
         >
           Change Password

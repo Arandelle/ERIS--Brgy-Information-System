@@ -95,7 +95,7 @@ const ProfileModal = ({
                   />
                   <button
                     onClick={handlePasswordModal}
-                    className="w-full border px-4 py-2 text-sm rounded-md text-start"
+                    className="w-full border px-4 py-2 text-sm rounded-md text-start text-gray-500"
                   >
                     Change Password
                   </button>
@@ -103,7 +103,7 @@ const ProfileModal = ({
               }
               submitButton={
                 <button
-                  className="bg-green-500 w-full py-2 text-white text-sm rounded-md"
+                  className="bg-green-500 w-full py-2 text-white text-sm rounded-md shadow-md"
                   onClick={() => hanldeUpdateProfile(user.uid)}
                 >
                   Update Profile
@@ -118,7 +118,8 @@ const ProfileModal = ({
         <Modal
           closeButton={handlePasswordModal}
           title={"Change Password"}
-          children={<ChangePassModal />}
+          children={<ChangePassModal 
+            handlePasswordModal={handlePasswordModal} />}
         />
       )}
     </>
