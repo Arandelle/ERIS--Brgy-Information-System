@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
-import Iconbutton from "../components/ReusableComponents/IconButton";
 import icons from "../assets/icons/Icons";
 import { auth, database, storage } from "../services/firebaseConfig";
 import {
@@ -14,10 +13,12 @@ import { update, ref } from "firebase/database";
 import { toast } from "sonner";
 import { useFetchSystemData } from "../hooks/useFetchSystemData";
 import ButtonStyle from "../components/ReusableComponents/Button";
-import Profile from "../components/Header/ProfileMenu";
 import ProfileModal from "./ProfileModal";
+import useImageView from "../hooks/useImageView";
+import ViewImage from "./ViewImage";
 
 const Setting = () => {
+  const {isModalOpen, currentImage, openModal, closeModal} = useImageView();
   const { systemData, loading, error, setLoading } = useFetchSystemData();
   const [systemState, setSystemState] = useState({
     originalTitle: "",
@@ -235,9 +236,8 @@ const Setting = () => {
     );
   }
 
-  const DetailsStyle = ({ label }) => {
+  const LabelStyle = ({ label }) => {
     return (
-      
         <p className="flex-1 basis-1/2 font-medium text-gray-800 text-md lg:text-lg dark:text-gray-200">
           {label}
         </p>
@@ -263,8 +263,9 @@ const Setting = () => {
                 <div className="flex-1 basis-1/2 flex flex-row justify-start items-center space-x-4">
                   <img
                     src={currentAdminDetails?.imageUrl}
-                    className="w-16 h-16 lg:w-28 lg:h-28 rounded-full"
+                    className="w-16 h-16 lg:w-28 lg:h-28 rounded-full cursor-pointer"
                     loading="lazy"
+                    onClick={() => openModal(currentAdminDetails.imageUrl)}
                   />
                   <div className="flex flex-col flex-grow">
                     <p className="font-medium text-sm lg:text-lg dark:text-gray-200">
@@ -296,7 +297,7 @@ const Setting = () => {
               </p>
               <div className="space-y-3 py-6 px-0 lg:px-8">
                 <div className="flex flex-row items-center">
-                  <DetailsStyle label={"Title"} />
+                  <LabelStyle label={"Title"} />
                 <div className="flex-1 basis-1/2">
                     <input
                       type="text"
@@ -308,7 +309,7 @@ const Setting = () => {
                 </div>
                 </div>
                 <div className="flex flex-row items-center">
-                  <DetailsStyle label={"Barangay"}/>
+                  <LabelStyle label={"Barangay"}/>
                  <div className="flex-1 basis-1/2">
                     <select className="rounded-lg shadow-sm border-2 border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm">
                       <option>Bagtas</option>
@@ -323,8 +324,9 @@ const Setting = () => {
                   <img
                     src={systemState.previewImage || systemState.originalImageUrl}
                     alt="System"
-                    className="w-24 lg:w-40 rounded-full"
+                    className="w-24 lg:w-40 rounded-full cursor-pointer"
                     loading="lazy"
+                    onClick={() => openModal(systemState.previewImage)}
                   />
                 </div>
                <div className="flex-1 basis-1/2">
@@ -348,8 +350,9 @@ const Setting = () => {
                   <img
                     src={systemState.tanzaLogoPreview || systemState.tanzaLogoUrl}
                     alt="System"
-                    className="w-24 lg:w-40 rounded-full"
+                    className="w-24 lg:w-40 rounded-full cursor-pointer"
                     loading="lazy"
+                    onClick={() => openModal(systemState.tanzaLogoUrl)}
                   />
                </div>
               <div className="flex-1 basis-1/2">
@@ -390,6 +393,13 @@ const Setting = () => {
               setAdminData={setAdminData}
               handleImageChange={handleImageChange}
               setLoading={setLoading}
+            />
+          )}
+
+          {isModalOpen && (
+            <ViewImage 
+              currentImage={currentImage}
+              closeModal={closeModal}
             />
           )}
         </div>
