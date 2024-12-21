@@ -12,6 +12,8 @@ import IconButton from "../../components/ReusableComponents/IconButton";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import AddUserModal from "./AddUserModal";
 import ViewUserModal from "./ViewUserModal";
+import useImageView from "../../hooks/useImageView";
+import ViewImage from "../ViewImage";
 
 const UserList = ({ data }) => {
   const { data: userData = [] } = useFetchData(data);
@@ -19,6 +21,7 @@ const UserList = ({ data }) => {
   const [addUser, setAddUser] = useState(null);
   const [userToViewInfo, setUserToViewInfo] = useState(null);
   const [viewUser, setViewUser] = useState(false);
+  const {isModalOpen, currentImage, openModal, closeModal} = useImageView();
 
   const searchField = [
     "firstname",
@@ -91,9 +94,10 @@ const UserList = ({ data }) => {
         </td>
         <th className="flex items-center px-2 py-2 sm:px-4 sm:py-4 text-gray-900 whitespace-nowrap dark:text-white">
           <img
-            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full cursor-pointer"
             src={user?.img}
             alt="anonymous"
+            onClick={() => openModal(user.img)}
           />
           <div className="ps-2 sm:ps-3">
             {user.firstname && user.lastname ? (
@@ -156,6 +160,13 @@ const UserList = ({ data }) => {
             <ViewUserModal
               userToViewInfo={userToViewInfo}
               setViewUser={setViewUser}
+            />
+          )}
+
+          {isModalOpen && (
+            <ViewImage 
+              currentImage={currentImage}
+              closeModal={closeModal}
             />
           )}
           <Table

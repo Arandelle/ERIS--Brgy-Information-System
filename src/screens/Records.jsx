@@ -1,3 +1,4 @@
+import { useState } from "react";
 import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import Table from "../components/Table";
 import { useFetchData } from "../hooks/useFetchData";
@@ -5,14 +6,14 @@ import { capitalizeFirstLetter } from "../helper/CapitalizeFirstLetter";
 import Toolbar from "../components/ToolBar";
 import Pagination from "../components/Pagination";
 import usePagination from "../hooks/usePagination";
-import { useState, useEffect } from "react";
 import useFilteredData from "../components/SearchQuery";
 import { formatDateWithTime } from "../helper/FormatDate";
 import IconButton from "../components/ReusableComponents/IconButton";
-import { toast } from "sonner";
 import icons from "../assets/icons/Icons";
 import { Tooltip } from "@mui/material";
 import Modal from "../components/ReusableComponents/Modal";
+import useImageView from "../hooks/useImageView";
+import ViewImage from "./ViewImage";
 
 const StatusBadge = ({ status }) => {
   const getStatusStyles = (status) => {
@@ -41,6 +42,7 @@ const Records = () => {
   const { data: emergencyHistory = [] } = useFetchData("emergencyRequest");
   const { data: users = [] } = useFetchData("users");
   const { data: responders = [] } = useFetchData("responders");
+  const {currentImage, isModalOpen, openModal, closeModal} = useImageView();
   const [isView, setIsView] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -136,7 +138,8 @@ const Records = () => {
                 <img
                   src={recordDetails.responderImage}
                   alt="responder"
-                  className="h-8 w-8 p-0 bg-gray-600 rounded-full"
+                  className="h-8 w-8 p-0 bg-gray-600 rounded-full cursor-pointer"
+                  onClick={() => openModal(recordDetails.responderImage)}
                 />
               ) : (
                 "Waiting for responder"
@@ -203,7 +206,12 @@ const Records = () => {
             indexOfLastItem={indexOfLastItem}
             data={filteredData}
           />
-
+          {isModalOpen && (
+            <ViewImage 
+              currentImage={currentImage}
+              closeModal={closeModal}
+            />
+          )}
           {isView && (
             <Modal
               closeButton={() => setIsView(!isView)}

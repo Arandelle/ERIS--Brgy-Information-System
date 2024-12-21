@@ -18,9 +18,12 @@ import QuestionModal from "../../components/ReusableComponents/AskCard";
 import DetailsAnnouncement from "./DetailsAnnouncement";
 import usePagination from "../../hooks/usePagination";
 import useFilteredData from "../../components/SearchQuery";
+import useImageView from "../../hooks/useImageView";
+import ViewImage from "../ViewImage";
 
 const Activities = () => {
   const { data: activity, setData: setActivity } = useFetchData("announcement");
+  const {isModalOpen, currentImage, openModal, closeModal, } = useImageView();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [links, setLinks] = useState("");
@@ -169,7 +172,8 @@ const Activities = () => {
             <img
               src={announcement.imageUrl}
               alt="image"
-              className="h-8 w-8 md:h-12 md:w-12 rounded-full "
+              className="h-8 w-8 md:h-12 md:w-12 rounded-full cursor-pointer"
+              onClick={() => openModal(announcement.imageUrl)}
             />
          </div>
         </td>
@@ -262,6 +266,14 @@ const Activities = () => {
               }}
             />
           )}
+
+          {isModalOpen && (
+            <ViewImage 
+              currentImage={currentImage}
+              closeModal={closeModal}
+            />
+          )}
+
           {isDelete && (
             <QuestionModal
               toggleModal={() => setIsDelete(!isDelete)}
