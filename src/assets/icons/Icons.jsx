@@ -25,8 +25,15 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PrintIcon from '@mui/icons-material/Print';
 import CancelIcon from '@mui/icons-material/Cancel';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+import LoginIcon from '@mui/icons-material/Login';
 
 const icons = {
+    email: EmailIcon,
+    lock: LockIcon,
+    login: LoginIcon,
     arrowRight: ArrowRightIcon,
     arrowDropDown: ArrowDropDown,
     filter: FilterAltIcon,
@@ -38,6 +45,7 @@ const icons = {
     delete: DeleteForeverIcon,
     edit: EditIcon,
     view: VisibilityIcon,
+    closeEye: VisibilityOffIcon,
     moreHoriz: MoreHorizIcon,
     moreVert: MoreVert,
     thunder: ThunderstormIcon,

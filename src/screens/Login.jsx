@@ -8,9 +8,14 @@ import { getAuth, signInWithEmailAndPassword,sendPasswordResetEmail } from "fire
 import { get, getDatabase, ref, } from "firebase/database";
 import {auth} from "../services/firebaseConfig"
 import Modal from "../components/ReusableComponents/Modal";
+import {InputField} from "../components/ReusableComponents/InputField";
+import icons from "../assets/icons/Icons";
+import { useFetchSystemData } from "../hooks/useFetchSystemData";
 
 export default function Login({ setAuth }) {
   const navigate = useNavigate();
+
+  const {systemData} = useFetchSystemData();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState('');
   const [password, setPass] = useState("");
@@ -152,17 +157,8 @@ export default function Login({ setAuth }) {
                 Email:
               </label>
               <div class="relative">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                  <svg
-                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 16"
-                  >
-                    <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z" />
-                    <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
-                  </svg>
+                <div class="absolute text-gray-500 inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                  <icons.email fontSize="small"/>
                 </div>
                 <input
                   type="email"
@@ -189,19 +185,8 @@ export default function Login({ setAuth }) {
                 </a>
               </div>
               <div class="relative">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
+                <div class="absolute text-gray-500 inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                  <icons.lock fontSize="small"/>
                 </div>
                 <input
                   type={showPass ? "text" : "password"}
@@ -217,36 +202,13 @@ export default function Login({ setAuth }) {
                 >
                   {!showPass ? (
                     <Tooltip title="Show Password" placement="right" arrow>
-                      <p>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          class="w-4 h-4 text-gray-500 dark:text-gray-400 cursor-pointer"
-                        >
-                          <path d="M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 0 1.06-1.06l-18-18ZM22.676 12.553a11.249 11.249 0 0 1-2.631 4.31l-3.099-3.099a5.25 5.25 0 0 0-6.71-6.71L7.759 4.577a11.217 11.217 0 0 1 4.242-.827c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113Z" />
-                          <path d="M15.75 12c0 .18-.013.357-.037.53l-4.244-4.243A3.75 3.75 0 0 1 15.75 12ZM12.53 15.713l-4.243-4.244a3.75 3.75 0 0 0 4.244 4.243Z" />
-                          <path d="M6.75 12c0-.619.107-1.213.304-1.764l-3.1-3.1a11.25 11.25 0 0 0-2.63 4.31c-.12.362-.12.752 0 1.114 1.489 4.467 5.704 7.69 10.675 7.69 1.5 0 2.933-.294 4.242-.827l-2.477-2.477A5.25 5.25 0 0 1 6.75 12Z" />
-                        </svg>
-                      </p>
+                     <div className="text-gray-500 cursor-pointer"><icons.closeEye fontSize="small"/></div>
                     </Tooltip>
                   ) : (
                     <Tooltip title="Hide Password" placement="right" arrow>
-                      <p>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          class="w-4 h-4 text-gray-500 dark:text-gray-400 cursor-pointer"
-                        >
-                          <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                          <path
-                            fill-rule="evenodd"
-                            d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      </p>
+                      <div className="text-gray-500 cursor-pointer">
+                        <icons.view fontSize="small"/>
+                      </div>
                     </Tooltip>
                   )}
                 </div>
@@ -254,14 +216,17 @@ export default function Login({ setAuth }) {
             </div>
             <div>
               <button
-                className="w-full bg-primary-500 text-white text-bold p-2 rounded"
+                className="flex flex-row space-x-2 items-center justify-center w-full bg-primary-500 text-white text-bold p-2 rounded"
                 type="submit"
-              >
-                Login
+              > 
+               <icons.login fontSize="small" />
+                <p>Login</p>
               </button>
             </div>
           </form>
         </div>
+
+
         {/*Input for verfication  */}
         <div
           className={`flex flex-col ${
@@ -287,41 +252,40 @@ export default function Login({ setAuth }) {
           </div>
         </div>
       </main>
+
+
       {forgotPass && (
         <Modal
           closeButton={handleForgotPass}
+          title={"Reset Password"}
           children={
-              <div className="rounded-md space-y-4">
-                  <p className="font-bold text-lg">Reset Password</p>
-
-                  <div>
-                    <p className="font-thin text-[16px]">
+              <div className="space-y-4 sm:w-auto md:min-w-[32rem]">
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-800">
                       Enter your email address: 
                     </p>
-                  <input
-                    className="w-full p-2 border border-gray-400 rounded-md"
-                    placeholder="Email"
-                    onChange={(e)=>handleEmailChange(e.target.value)}
-                    value={email}
-                    autoCapitalize="none"
-                    type="email"
-                  />
+                    <InputField
+                      type="email"
+                      placeholder={"Enter you email"}
+                      value={email}
+                      onChange={(e)=>handleEmailChange(e.target.value)}
+                    />
                   </div>
 
                 {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
 
-                <div className="flex flex-row justify-between w-100">
+                <div className="flex flex-row space-x-2 place-content-end">
                   <button
-                    className="flex-1 p-2.5 rounded-md items-center bg-gray-400 mr-2.5"
+                    className="border border-gray-400 px-4 text-sm p-2 rounded-sm text-gray-800"
                     onClick={handleForgotPass}
                   >
-                    <p className="text-white font-bold">Cancel</p>
+                Cancel
                   </button>
                   <button
-                    className="flex-1 p-2.5 rounded-md items-center bg-blue-600"
+                    className="bg-blue-500 text-sm p-2 rounded-sm text-white shadow-md"
                     onClick={handleSubmit}
                   >
-                    <p className="font-bold text-white">Submit</p>
+                  Send reset password
                   </button>
                 </div>
               </div>
