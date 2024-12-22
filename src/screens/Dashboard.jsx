@@ -209,12 +209,11 @@ const DashboardCard = ({
 const Dashboard = () => {
   const navigate = useNavigate();
   const { data: emergencyData } = useFetchData("emergencyRequest");
-  const { data: events } = useFetchData("events");
-  const { data: announcement } = useFetchData("announcement");
+  const { data: clearanceData } = useFetchData("requestClearance");
   const [selectedOption, setSelectedOption] = useState("monthly");
 
-  const activities = [...events, ...announcement];
-  const onGoing = emergencyData.filter((item) => item.status === "on-going")
+  const onGoing = emergencyData.filter((item) => item.status === "on-going");
+  const pending = clearanceData.filter((item) => item.status === "pending")
 
   const calculateCounts = (emergencyData) => {
     const now = new Date();
@@ -335,12 +334,12 @@ const Dashboard = () => {
               hasOption={false}
             />
             <DashboardCard
-              title="Total Announcement"
+              title="Total Certification"
               value={
-                  activities.length
+                  pending.length
               }
               img={Events}
-              onClick={() => handleNavigate("/announcement")}
+              onClick={() => handleNavigate("/certification")}
               hasOption={false}
             />
           </div>
