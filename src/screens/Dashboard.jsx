@@ -4,12 +4,13 @@ import MapContent from "./Maps/MapContent";
 import population from "../assets/images/population.svg";
 import Events from "../assets/images/events.svg";
 import emergency from "../assets/images/emergency.svg";
-import navigator from "../assets/images/direction.svg"
+import navigator from "../assets/images/direction.svg";
 import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../helper/DateToday";
 import { useFetchData } from "../hooks/useFetchData";
 import icons from "../assets/icons/Icons";
 import { Tooltip } from "@mui/material";
+import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 
 const DashboardCard = ({
   title,
@@ -38,7 +39,9 @@ const DashboardCard = ({
         return currentValue > 0 ? 100 : 0;
       }
 
-      return (((currentValue - previousValue) / previousValue) * 100).toFixed(1);
+      return (((currentValue - previousValue) / previousValue) * 100).toFixed(
+        1
+      );
     }
 
     if (!hasOption && !counts) return 0;
@@ -91,11 +94,11 @@ const DashboardCard = ({
 
   const percentage = getPercentageChange();
   const isIncrease = percentage > 0;
-  
+
   // Get the display value based on the selected period
   const getDisplayValue = () => {
     if (!hasOption) return counts ? counts.current : value;
-    
+
     switch (selectedOption) {
       case "daily":
         return counts.daily;
@@ -115,8 +118,7 @@ const DashboardCard = ({
   };
 
   const tooltipTitle = () => {
-
-    switch(selectedOption){
+    switch (selectedOption) {
       case "daily":
         return "Compared to yesterday";
       case "previousDay":
@@ -132,9 +134,9 @@ const DashboardCard = ({
       default:
         return "Compared to yesterday's data";
     }
-  }
+  };
 
-  const titleToolTip = tooltipTitle()
+  const titleToolTip = tooltipTitle();
   const displayValue = getDisplayValue();
 
   return (
@@ -171,8 +173,14 @@ const DashboardCard = ({
             />
           </div>
 
-          <div className={`flex flex-row md:flex-col justify-between w-full
-          ${(hasOption || title === "Today's Emergency") ? "items-end" : "items-center"}`}>
+          <div
+            className={`flex flex-row md:flex-col justify-between w-full
+          ${
+            hasOption || title === "Today's Emergency"
+              ? "items-end"
+              : "items-center"
+          }`}
+          >
             <p
               onClick={onClick}
               className="text-2xl cursor-pointer text-center font-bold text-primary-500 dark:text-primary-400"
@@ -192,12 +200,18 @@ const DashboardCard = ({
                   : ""
               }`}
             >
-             <Tooltip title={titleToolTip} placement="top" arrow>
-                {(title === "Total Responses" || title === "Today's Emergency") ?
-                  (percentage !== 0
-                    ? `${Math.abs(percentage)}% ${isIncrease ? "↑" : "↓"}`
-                    : "0%") : (<span className="invisible">extra space</span>)}
-             </Tooltip>
+              <Tooltip title={titleToolTip} placement="top" arrow>
+                {title === "Total Responses" ||
+                title === "Today's Emergency" ? (
+                  percentage !== 0 ? (
+                    `${Math.abs(percentage)}% ${isIncrease ? "↑" : "↓"}`
+                  ) : (
+                    "0%"
+                  )
+                ) : (
+                  <span className="invisible">extra space</span>
+                )}
+              </Tooltip>
             </p>
           </div>
         </div>
@@ -213,7 +227,7 @@ const Dashboard = () => {
   const [selectedOption, setSelectedOption] = useState("monthly");
 
   const onGoing = emergencyData.filter((item) => item.status === "on-going");
-  const pending = clearanceData.filter((item) => item.status === "pending")
+  const pending = clearanceData.filter((item) => item.status === "pending");
 
   const calculateCounts = (emergencyData) => {
     const now = new Date();
@@ -297,7 +311,7 @@ const Dashboard = () => {
     navigate(path);
   };
   const now = new Date();
-  
+
   return (
     <HeaderAndSideBar
       content={
@@ -307,9 +321,7 @@ const Dashboard = () => {
           <div className="grid sm:grid-cols-1 gap-0 md:grid-cols-2 md:gap-4 md:w-max-40 xl:grid-cols-4 md:my-3 text-wrap space-y-2 md:space-y-0">
             <DashboardCard
               title="Total Responses"
-              value={
-                  counts[selectedOption]
-              }
+              value={counts[selectedOption]}
               img={population}
               onClick={() => handleNavigate("/records")}
               selectedOption={selectedOption}
@@ -317,10 +329,9 @@ const Dashboard = () => {
               counts={counts}
               hasOption={true}
             />
-             <DashboardCard
+            <DashboardCard
               title="Today's Emergency"
-              value={counts.awaitingResponse.current
-            }
+              value={counts.awaitingResponse.current}
               img={emergency}
               onClick={() => handleNavigate("/maps")}
               hasOption={false}
@@ -335,9 +346,7 @@ const Dashboard = () => {
             />
             <DashboardCard
               title="Total Certification"
-              value={
-                  pending.length
-              }
+              value={pending.length}
               img={Events}
               onClick={() => handleNavigate("/certification")}
               hasOption={false}
@@ -347,17 +356,31 @@ const Dashboard = () => {
           <div className="grid gap-3 md:gap-4 lg:grid-cols-4">
             <>
               <div className="order-3 lg:order-1 col-span-1 col-row-1 lg:col-span-3 row-span-5 h-svh">
-                <MapContent/>
+                <MapContent />
               </div>
               <div className="order-2 col-span-1 mt-2 md:mt-0">
-                <div className="bg-white w-full border-t-4 border-t-orange-500 dark:border-t-orange-400 px-4 flex flex-row items-center py-6 space-x-4 shadow-md rounded-md dark:bg-gray-800">
-                  <icons.thunder style={{ color: "#FF5733" }} />
-                  <div className="flex flex-col text-gray-700 dark:text-gray-100 text-md">
-                    26.5°C Bagtas Tanza, Cavite
-                    <span className="font-thin text-sm text-gray-600 dark:text-gray-200">
-                      It's a rainy day, bring your umbrella
-                    </span>
-                  </div>
+                <div className="bg-white w-full border-t-4 border-t-blue-800 dark:border-t-blue-400 shadow-md dark:bg-gray-800">
+                  <p className="text-center p-2">Request Documents</p>
+                  {pending.length === 0 ? (
+                    <EmptyLogo message={"No request documents"}/>
+                  ) : (
+                    pending
+                      ?.map((data, index) => (
+                        <ul key={index} className="space-y-2">
+                          <li className="flex flex-row items-center justify-between p-2 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded">
+                            <div className="flex flex-col">
+                              <p className="font-bold"> {data.fullname}</p>
+                              <p className="text-sm text-gray-500 ">
+                                {" "}
+                                {data.docsType}
+                              </p>
+                            </div>
+                            <icons.arrowRight />
+                          </li>
+                        </ul>
+                      ))
+                      .slice(0, 10)
+                  )}
                 </div>
               </div>
             </>
