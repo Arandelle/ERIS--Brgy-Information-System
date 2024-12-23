@@ -2,20 +2,24 @@ import React, { useState } from "react";
 import { useSidebarData } from "../data/useSidebarData";
 import SearchInput from "./Header/SearchInput";
 import icons from "../assets/icons/Icons";
+import { useNavigate } from "react-router-dom";
 
 function Sidebar({ isOpen, toggleSidebar }) {
+  const navigate = useNavigate();
   const [openSubMenu, setOpenSubMenu] = useState(null);
 
   const handleMenuItemClick = (val) => {
     if (!val.items) {
-      window.location.pathname = val.link;
+      navigate(val.link)
+      // window.location.pathname = val.link;
     } else {
       setOpenSubMenu(openSubMenu === val.title ? null : val.title);
     }
   };
 
   const handleSubMenuClick = (link) => {
-    window.location.pathname = link;
+    navigate(link)
+    // window.location.pathname = link;
   };
 
   return (

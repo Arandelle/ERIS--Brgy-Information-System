@@ -6,8 +6,10 @@ import SearchInput from "./SearchInput";
 import { Tooltip } from "@mui/material";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import icons from "../../assets/icons/Icons";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ toggleSideBar, isOpen }) => {
+  const navigate = useNavigate();
   const {systemData} = useFetchSystemData();
   const [theme, toggleTheme] = CustomTheme();
   const [isMdScreen, setIsMdScreen] = useState(window.innerWidth >= 768);
@@ -66,8 +68,9 @@ const Header = ({ toggleSideBar, isOpen }) => {
             </div>
           </Tooltip>
             <a
-              href="https://eris-brgy-information-system.vercel.app/dashboard"
-              className="flex mr-4"
+              // href="https://eris-brgy-information-system.vercel.app/dashboard"
+              onClick={() => navigate("/dashboard")}
+              className="flex mr-4 cursor-pointer"
             >
               <img
                 src={systemData?.imageUrl}

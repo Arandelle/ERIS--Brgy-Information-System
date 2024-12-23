@@ -31,7 +31,8 @@ const Profile = () => {
   };
 
   const handleMenuItemClick = (adminVal) => {
-    window.location.pathname = adminVal;
+    navigate(adminVal);
+    // window.location.pathname = adminVal;
   };
 
   return (
@@ -73,7 +74,6 @@ const Profile = () => {
 
           <ul>
             <li
-              href="#"
               className="block py-2 text-gray-500 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white cursor-pointer"
               onClick={() => handleMenuItemClick("/account-settings")}
             >

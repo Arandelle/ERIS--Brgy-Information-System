@@ -88,12 +88,12 @@ const Templates = () => {
           )}
 
           <>
-            <div className="flex flex-row space-x-2 p-4 bg-white">
+            <div className="flex flex-row space-x-2 p-4 bg-white dark:bg-gray-800">
               {templates?.map((template) => (
                 <button
                   key={template.id}
                   onClick={() => handleShowTemplate(template.id)}
-                  className={`border-r-2 p-2 hover:text-blue-600 ${
+                  className={`border-r-2 dark:border-r-gray-300 p-2 hover:text-blue-600 ${
                     selectedTemplateId === template.id
                       ? "text-blue-500"
                       : "text-gray-500"
@@ -106,14 +106,14 @@ const Templates = () => {
 
             {renderTemplate ? (
               <>
-                <div className="flex flex-row space-x-2 bg-white p-4 mb-4 text-gray-500">
+                <div className="flex flex-row space-x-2 bg-white dark:bg-gray-800 p-4 mb-4 text-gray-500">
                   <button
-                    className="px-4 text-green-500"
+                    className="px-4 text-green-500 dark:text-green-700"
                     onClick={() => handleEditClick(selectedTemplate.id)}
                   >
                     Edit
                   </button>
-                  <button className="px-4 text-red-500" onClick={()=>handleDeleteModal(selectedTemplate.id)}>Delete</button>
+                  <button className="px-4 text-red-500 dark:text-red-700" onClick={()=>handleDeleteModal(selectedTemplate.id)}>Delete</button>
                 </div>
                 <div
                   style={{
