@@ -29,9 +29,11 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import LoginIcon from '@mui/icons-material/Login';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 
 const icons = {
     email: EmailIcon,
+    clock: AccessTimeFilledIcon,
     lock: LockIcon,
     login: LoginIcon,
     arrowRight: ArrowRightIcon,

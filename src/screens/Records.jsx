@@ -15,34 +15,11 @@ import Modal from "../components/ReusableComponents/Modal";
 import useImageView from "../hooks/useImageView";
 import ViewImage from "./ViewImage";
 
-const StatusBadge = ({ status }) => {
-  const getStatusStyles = (status) => {
-    switch (status?.toLowerCase()) {
-      case 'resolved':
-        return 'text-green-500 bg-green-100 border-l-green-500';
-      case 'awaiting response':
-        return 'text-yellow-500 bg-yellow-100 border-l-yellow-500';
-      case 'on-going':
-        return 'text-blue-500 bg-blue-100 border-l-blue-500';
-      case 'expired':
-        return 'text-red-500 bg-red-100 border-l-red-500';
-      default:
-        return 'text-gray-500 bg-gray-100 border-l-gray-500';
-    }
-  };
-
-  return (
-    <p className={`flex items-center justify-center font-bold py-1 rounded-r-sm border-l-2 ${getStatusStyles(status)}`}>
-      {capitalizeFirstLetter(status || 'unknown')}
-    </p>
-  );
-};
-
 const Records = () => {
   const { data: emergencyHistory = [] } = useFetchData("emergencyRequest");
   const { data: users = [] } = useFetchData("users");
   const { data: responders = [] } = useFetchData("responders");
-  const {currentImage, isModalOpen, openModal, closeModal} = useImageView();
+  const { currentImage, isModalOpen, openModal, closeModal } = useImageView();
   const [isView, setIsView] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,19 +33,24 @@ const Records = () => {
   // updated data to include the name of users and responder which not included in original list of emergencyHistory
   const updatedData = emergencyHistory.map((emergency) => {
     const user = users.find((user) => user?.id === emergency?.userId);
-    const responder = responders.find((responder) => responder?.id === emergency?.responderId);
+    const responder = responders.find(
+      (responder) => responder?.id === emergency?.responderId
+    );
 
     return {
       ...emergency,
       userName: formatFullName(user?.firstname, user?.lastname),
-      responderName: responder ? formatFullName(responder?.firstname, responder?.lastname) : "Waiting for responder",
+      responderName: responder
+        ? formatFullName(responder?.firstname, responder?.lastname)
+        : "Waiting for responder",
       userID: user?.customId || "N/A",
       responderID: responder?.customId || "N/A",
       responderImage: responder?.img || "",
     };
   });
 
-  const recordDetails = updatedData.find((item) => item?.id === selectedId) || {};
+  const recordDetails =
+    updatedData.find((item) => item?.id === selectedId) || {};
 
   // search field to get the value with
   const searchFields = [
@@ -93,7 +75,19 @@ const Records = () => {
     indexOfFirstItem,
     currentItems,
     totalPages,
-  } = usePagination(filteredData);
+  } = usePagination(filteredData); // Pass filteredData to ensure pagination is applied to the filtered dataset
+
+  const sortedData = currentItems.sort((a,b) => {
+
+    const sortedStatus = {
+      "resolved" : 1,
+      "awaiting response" : 3,
+      "on-going" : 2,
+      "expired" : 0,
+    }
+
+    return sortedStatus[b.status] - sortedStatus[a.status];
+  })
 
   const HeaderData = [
     "emergency id",
@@ -105,28 +99,42 @@ const Records = () => {
     "Action",
   ];
 
+
+  //  List of all emergency data 
   const renderRow = (emergency) => {
     const recordDetails = updatedData.find((item) => item?.id === emergency?.id) || {};
 
+    const getStatusStyles = {
+      "resolved" : "text-green-500",
+      "awaiting response" : "text-yellow-500",
+      "on-going" : "text-blue-500",
+      "expired" : "text-red-500",
+    }
+
+    const defaultStyle = "text-gray-500"
+
+    const RowDataStyle = ({ data, status }) => {
+
+      const statusStyle = getStatusStyles[data] || defaultStyle;
+
+      return status ? (
+        <td className={`text-center font-bold ${statusStyle}`}>
+        {capitalizeFirstLetter(data)}
+        </td>
+      ) : (
+        <td className="px-6 py-4 max-w-16 text-ellipsis overflow-hidden whitespace-nowrap">
+          {data || "N/A"}
+        </td>
+      );
+    };
+
     return (
       <>
-        <td className="px-6 py-4 whitespace-nowrap">{recordDetails?.emergencyId || "N/A"}</td>
-        <Tooltip title={recordDetails?.userID || "N/A"} placement="top" arrow>
-          <td className="px-6 py-4 whitespace-nowrap">{recordDetails?.userName || "Anonymous"}</td>
-        </Tooltip>
-        <Tooltip title={recordDetails?.location?.address || "No address available"} placement="top" arrow>
-          <td className="px-6 py-4 max-w-16 text-ellipsis overflow-hidden whitespace-nowrap">
-            {recordDetails?.location?.address || "No address"}
-          </td>
-        </Tooltip>
-        <td className="px-6 py-4 whitespace-normal text-wrap">
-          {recordDetails?.date ? formatDateWithTime(recordDetails.date) : "N/A"}
-        </td>
-        <td>
-          <p className={`text-center`}>
-          <StatusBadge status={recordDetails?.status} />
-          </p>
-        </td>
+        <RowDataStyle data={recordDetails?.emergencyId} />
+        <RowDataStyle data={recordDetails?.userName} />
+        <RowDataStyle data={recordDetails?.location?.address} />
+        <RowDataStyle data={formatDateWithTime(recordDetails?.date)} />
+        <RowDataStyle data={recordDetails?.status} status />
         <td className="px-6 py-4">
           <Tooltip
             title={recordDetails?.responderName || "No responder assigned"}
@@ -165,8 +173,13 @@ const Records = () => {
     );
   };
 
+  {
+    /**Modal for emergency details */
+  }
   const RenderDetails = ({ data, color }) => {
-    const filteredData = data.filter(({ value }) => value != null && value !== "");
+    const filteredData = data.filter(
+      ({ value }) => value != null && value !== ""
+    );
     if (filteredData.length === 0) return null;
 
     return (
@@ -194,7 +207,7 @@ const Records = () => {
           />
           <Table
             headers={HeaderData}
-            data={currentItems}
+            data={sortedData}
             renderRow={renderRow}
             emptyMessage={"No records found"}
           />
@@ -207,14 +220,12 @@ const Records = () => {
             data={filteredData}
           />
           {isModalOpen && (
-            <ViewImage 
-              currentImage={currentImage}
-              closeModal={closeModal}
-            />
+            <ViewImage currentImage={currentImage} closeModal={closeModal} />
           )}
           {isView && (
             <Modal
               closeButton={() => setIsView(!isView)}
+              title={"Emergency Details"}
               children={
                 <div className="w-full space-y-4">
                   <RenderDetails
@@ -223,7 +234,10 @@ const Records = () => {
                         label: "Emergency ID",
                         value: recordDetails?.emergencyId || "N/A",
                       },
-                      { label: "User ID: ", value: recordDetails?.userID || "N/A" },
+                      {
+                        label: "User ID: ",
+                        value: recordDetails?.userID || "N/A",
+                      },
                       {
                         label: "Responder ID: ",
                         value: recordDetails?.responderID || "N/A",
@@ -233,7 +247,10 @@ const Records = () => {
                   />
                   <RenderDetails
                     data={[
-                      { label: "User Name: ", value: recordDetails?.userName || "Anonymous" },
+                      {
+                        label: "User Name: ",
+                        value: recordDetails?.userName || "Anonymous",
+                      },
                       {
                         label: "Responder Name: ",
                         value: recordDetails?.responderName,
@@ -262,7 +279,9 @@ const Records = () => {
                     data={[
                       {
                         label: "Geocode Location: ",
-                        value: recordDetails?.location?.address || "No address available",
+                        value:
+                          recordDetails?.location?.address ||
+                          "No address available",
                       },
                       {
                         label: "Latitude: ",
@@ -275,11 +294,15 @@ const Records = () => {
                     ]}
                     color={"gray"}
                   />
-                  <RenderDetails 
-                    data={[{
-                      label: "Description", 
-                      value: recordDetails?.description || "No description available"
-                    }]}
+                  <RenderDetails
+                    data={[
+                      {
+                        label: "Description",
+                        value:
+                          recordDetails?.description ||
+                          "No description available",
+                      },
+                    ]}
                     color={"gray"}
                   />
                 </div>

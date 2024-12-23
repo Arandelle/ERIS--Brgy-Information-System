@@ -7,6 +7,8 @@ const useImageView = () => {
     const openModal = (image) => {
         setCurrentImage(image);
         setIsModalOpen(true);
+
+        console.log(image)
     };
     const closeModal = () =>{
         setIsModalOpen(false);

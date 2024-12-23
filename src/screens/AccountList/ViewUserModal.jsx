@@ -7,6 +7,7 @@ const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
   return (
     <Modal
       closeButton={() => setViewUser(!true)}
+      title={"User Profile"}
       children={
         <>
           <div className="flex flex-col justify-between space-y-2 min-w-[20rem] lg:min-w-[32rem]">
@@ -14,8 +15,9 @@ const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
               <img
                 src={userToViewInfo.img}
                 alt="Profile"
-                className="h-24 w-24 rounded-full"
+                className="h-24 w-24"
               />
+              
             </p>
             <div className="flex flex-col space-y-2">
               <div className="space-y-2">
