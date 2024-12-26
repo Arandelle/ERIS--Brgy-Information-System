@@ -43,10 +43,12 @@ const Setting = () => {
   const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
+  // Handle edit profile
   const handleEditProfile = () => {
     setShowProfileModal(!showProfileModal);
   };
 
+  // Handle image change
   const handleImageChange = (e, type) => {
     const file = e.target.files[0];
     if (
@@ -80,6 +82,7 @@ const Setting = () => {
     }
   };
 
+  // Handle title change
   const handleTitleChange = (e) => {
     const { value } = e.target;
     setSystemState((prevState) => ({
@@ -88,6 +91,7 @@ const Setting = () => {
     }));
   };
 
+  // Set the system data to the state
   useEffect(() => {
     if (systemData) {
       console.log("System Data Image URL:", systemData.imageUrl);
@@ -104,47 +108,42 @@ const Setting = () => {
     }
   }, [systemData]);
 
+  // Check if the system data has been modified
   useEffect(() => {
-    const {
-      title,
-      originalTitle,
-      previewImage,
-      originalImageUrl,
-      tanzaLogoPreview,
-      tanzaLogoUrl,
-    } = systemState;
-    const hasChanges =
-      title !== originalTitle ||
-      previewImage !== originalImageUrl ||
-      tanzaLogoPreview !== tanzaLogoUrl;
-    setSystemState((prevState) => ({
-      ...prevState,
-      isModified: hasChanges,
-    }));
-  }, [
-    systemState.title,
-    systemState.previewImage,
-    systemState.originalTitle,
-    systemState.originalImageUrl,
-    systemState.tanzaLogoPreview,
-    systemState.tanzaLogoUrl,
-  ]);
+    const { title, logoImageFile, tanzaLogoImageFile } = systemState;
+    if (
+      title !== systemState.originalTitle || logoImageFile || tanzaLogoImageFile
+    ) {
+      setSystemState((prevState) => ({
+        ...prevState,
+        isModified: true,
+      }));
+    } else {
+      setSystemState((prevState) => ({
+        ...prevState,
+        isModified: false,
+      }));
+    }
+  }, [systemState]);
 
+  // Update the system data
   const handleUpdateData = async () => {
     setLoading(true);
     const systemRef = ref(database, "systemData");
 
+    // Upload the image to the storage
     try {
       let imageUrl = systemState.originalImageUrl; // retain the existing image url
       let tanzaLogoUrl = systemState.tanzaLogoUrl;
 
+      // Upload the new image if it exists
       if (systemState.logoImageFile) {
         try {
           const imageRef = storageRef(
             storage,
             `system-images/${Date.now()}_${systemState.logoImageFile.name}`
           );
-
+        
           await uploadBytes(imageRef, systemState.logoImageFile);
           imageUrl = await getDownloadURL(imageRef);
 
@@ -169,7 +168,7 @@ const Setting = () => {
           return;
         }
       }
-
+    
       if (systemState.tanzaLogoImageFile) {
         try {
           const tanzaLogoRef = storageRef(
