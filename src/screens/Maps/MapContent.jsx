@@ -44,7 +44,7 @@ function MyMapComponents() {
   const routingControlRef = useRef(null);
   const mapRef = useRef(null);
 
-  const detailsOfUser = user?.filter((user) => user.id === userDetails);
+  const detailsOfUser = user?.find((user) => user.id === userDetails);
 
   useEffect(() => {
     // Get the user's current position
@@ -173,7 +173,7 @@ function MyMapComponents() {
                 icon={redIcon}
               >
                 <Popup>
-               {detailsOfUser.firstname || userDetails || "User Location"}
+               {detailsOfUser?.firstname || "User Location"}
                 </Popup>
               </Marker>
 
