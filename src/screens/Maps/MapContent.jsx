@@ -7,7 +7,7 @@ import {
   Popup,
   LayerGroup,
 } from "react-leaflet";
-import L from 'leaflet';
+import L from "leaflet";
 import { CustomScrollZoomHandler } from "../../helper/scrollUtils";
 import { blueIcon, redIcon, greenIcon } from "../../helper/iconUtils";
 import "leaflet/dist/leaflet.css";
@@ -36,7 +36,8 @@ function AutoOpenPopup({ position }) {
 }
 
 function MyMapComponents() {
-  const {data: user } = useFetchData("users");
+  const { data: user } = useFetchData("users");
+  const { data: responder } = useFetchData("responders");
   const [userDetails, setUserDetails] = useState([]);
   const [position, setPosition] = useState(null);
   const [userLocation, setUserLocation] = useState(null); // Only holds a single location object
@@ -44,7 +45,10 @@ function MyMapComponents() {
   const routingControlRef = useRef(null);
   const mapRef = useRef(null);
 
-  const detailsOfUser = user?.find((user) => user.id === userDetails);
+  const detailsOfUser = user?.find((user) => user.id === userDetails); // users details
+  const detailsOfResponder = responder?.find(
+    (responder) => responder.id === detailsOfUser?.activeRequest?.responderId
+  ); // responder details
 
   useEffect(() => {
     // Get the user's current position
@@ -58,7 +62,7 @@ function MyMapComponents() {
       }
     );
   }, []);
-  
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -81,18 +85,18 @@ function MyMapComponents() {
                 id: user.key,
                 location: [
                   userData.activeRequest.locationCoords.latitude,
-                  userData.activeRequest.locationCoords.longitude
+                  userData.activeRequest.locationCoords.longitude,
                 ],
                 locationOfResponder: [
                   userData.activeRequest.locationOfResponder.latitude,
-                  userData.activeRequest.locationOfResponder.longitude
+                  userData.activeRequest.locationOfResponder.longitude,
                 ],
               };
 
               setUserDetails(latestActiveRequest.id);
             }
           });
-          
+
           setUserLocation(latestActiveRequest); // Only set the latest valid request
           setLoading(false);
           console.log(latestActiveRequest);
@@ -112,16 +116,23 @@ function MyMapComponents() {
   const MapEvents = () => {
     const map = useMap();
     mapRef.current = map;
-  
+
     useEffect(() => {
-      if (userLocation && userLocation.location && userLocation.locationOfResponder) {
+      if (
+        userLocation &&
+        userLocation.location &&
+        userLocation.locationOfResponder
+      ) {
         if (routingControlRef.current) {
           map.removeControl(routingControlRef.current);
         }
 
         const waypoints = [
-          L.latLng(userLocation.locationOfResponder[0], userLocation.locationOfResponder[1]),
-          L.latLng(userLocation.location[0], userLocation.location[1])
+          L.latLng(
+            userLocation.locationOfResponder[0],
+            userLocation.locationOfResponder[1]
+          ),
+          L.latLng(userLocation.location[0], userLocation.location[1]),
         ];
 
         const newRoutingControl = L.Routing.control({
@@ -130,12 +141,14 @@ function MyMapComponents() {
           showAlternatives: true,
           fitSelectedRoutes: true,
           lineOptions: {
-            styles: [{ color: '#6FA1EC', weight: 4 }]
+            styles: [{ color: "#6FA1EC", weight: 4 }],
           },
           altLineOptions: {
-            styles: [{ color: '#ED7B7B', weight: 4 }]
+            styles: [{ color: "#ED7B7B", weight: 4 }],
           },
-          createMarker: function() { return null; } // Prevent creation of new markers
+          createMarker: function () {
+            return null;
+          }, // Prevent creation of new markers
         }).addTo(map);
 
         routingControlRef.current = newRoutingControl;
@@ -145,7 +158,7 @@ function MyMapComponents() {
         map.fitBounds(bounds, { padding: [50, 50] });
       }
     }, [map, userLocation, position]);
-  
+
     return null;
   };
 
@@ -167,23 +180,29 @@ function MyMapComponents() {
 
           {userLocation && (
             <>
-              <Marker 
+              <Marker
                 key={userLocation.id}
                 position={userLocation.location}
                 icon={redIcon}
               >
                 <Popup>
-               {detailsOfUser?.firstname || "User Location"}
+                  <div>
+                    <h2 className="font-bold"> User Details</h2>
+                    {detailsOfUser?.firstname || "User Location"}
+                  </div>
                 </Popup>
               </Marker>
 
-              <Marker 
+              <Marker
                 key={`responder-${userLocation.id}`}
                 position={userLocation.locationOfResponder}
                 icon={greenIcon}
               >
                 <Popup>
-                  This is the responder
+                  <div>
+                    <h2 className="font-bold"> Responder Details</h2>
+                    {detailsOfResponder?.fullname || "Responder Location"}
+                  </div>
                 </Popup>
               </Marker>
             </>
