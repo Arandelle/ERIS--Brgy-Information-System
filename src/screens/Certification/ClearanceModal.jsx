@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import Modal from "../../components/ReusableComponents/Modal";
 import { InputField } from "../../components/ReusableComponents/InputField";
 import handleAddData from "../../hooks/handleAddData";
-import handleEditData from "../../hooks/handleEditData"
+import handleEditData from "../../hooks/handleEditData";
+import {useNavigate} from "react-router-dom";
 
 const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
+  const navigate = useNavigate();
   const [clearanceData, setClearanceData] = useState({
     docsType: "",
     fullname: "",
@@ -143,10 +145,7 @@ const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
                 placeholder={"Enter Address"}
                 value={clearanceData.address}
                 onChange={(e) =>
-                  setClearanceData({
-                    ...clearanceData,
-                    address: e.target.value,
-                  })
+                  setClearanceData({ ...clearanceData, address: e.target.value })
                 }
               />
             </div>

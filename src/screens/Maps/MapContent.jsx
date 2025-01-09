@@ -14,8 +14,9 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
 import "leaflet-control-geocoder";
-import { ref, get } from "firebase/database";
+import { ref, get, set } from "firebase/database";
 import { database } from "../../services/firebaseConfig";
+import { useFetchData } from "../../hooks/useFetchData";
 
 function AutoOpenPopup({ position }) {
   const map = useMap();
@@ -35,11 +36,15 @@ function AutoOpenPopup({ position }) {
 }
 
 function MyMapComponents() {
+  const {data: user } = useFetchData("users");
+  const [userDetails, setUserDetails] = useState([]);
   const [position, setPosition] = useState(null);
   const [userLocation, setUserLocation] = useState(null); // Only holds a single location object
   const [loading, setLoading] = useState(true);
   const routingControlRef = useRef(null);
   const mapRef = useRef(null);
+
+  const detailsOfUser = user?.filter((user) => user.id === userDetails);
 
   useEffect(() => {
     // Get the user's current position
@@ -83,12 +88,14 @@ function MyMapComponents() {
                   userData.activeRequest.locationOfResponder.longitude
                 ],
               };
+
+              setUserDetails(latestActiveRequest.id);
             }
           });
-
+          
           setUserLocation(latestActiveRequest); // Only set the latest valid request
           setLoading(false);
-          console.log(latestActiveRequest)
+          console.log(latestActiveRequest);
         } else {
           console.log("No data available");
           setLoading(false);
@@ -166,7 +173,7 @@ function MyMapComponents() {
                 icon={redIcon}
               >
                 <Popup>
-                  User with active request
+               {detailsOfUser.firstname || userDetails || "User Location"}
                 </Popup>
               </Marker>
 
@@ -183,6 +190,7 @@ function MyMapComponents() {
           )}
         </LayerGroup>
         <CustomScrollZoomHandler />
+        // Add the MapEvents component to the map
         <MapEvents />
       </MapContainer>
     </div>

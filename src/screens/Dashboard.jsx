@@ -367,7 +367,7 @@ const Dashboard = () => {
                     pending
                       ?.map((data, index) => (
                         <ul key={index} className="space-y-2">
-                          <li className="flex flex-row items-center justify-between p-2 cursor-pointer bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 rounded"
+                          <li className="flex flex-row items-center justify-between p-2 cursor-pointer bg-gray-100 dark:bg-gray-800 hover:bg-gray-200"
                           onClick={() => navigate("/certification")}>
                             <div className="flex flex-col">
                               <p className="font-bold dark:text-gray-400"> {data.fullname}</p>
@@ -382,6 +382,8 @@ const Dashboard = () => {
                       ))
                       .slice(0, 10)
                   )}
+                  <div>
+              </div>
                 </div>
               </div>
             </>
