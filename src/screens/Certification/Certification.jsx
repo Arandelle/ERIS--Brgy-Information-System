@@ -19,7 +19,8 @@ import AskCard from "../../components/ReusableComponents/AskCard";
 import { ref, update } from "firebase/database";
 import { database } from "../../services/firebaseConfig";
 import ClearanceViewModal from "./ClearanceViewModal";
-import {capitalizeFirstLetter} from "../../helper/CapitalizeFirstLetter"
+import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
+import { read } from "@popperjs/core";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,7 +31,7 @@ const Certification = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [showUpdateStatus, setShowUpdateStatus] = useState({
     visible: false,
-    status: ""
+    status: "",
   });
   const [viewModal, setViewModal] = useState(false);
   const [selectedId, setSelectedId] = useState("");
@@ -66,25 +67,22 @@ const Certification = () => {
     totalPages,
   } = usePagination(filteredData);
 
- const sortedData = currentItems.sort((a, b) => {
-  const statusOrder = {"pending" : 1, "done" : 2, "rejected": 3};
-  return statusOrder[a.status] - statusOrder[b.status];
-});
-
+  const sortedData = currentItems.sort((a, b) => {
+    const statusOrder = { pending: 1, done: 2, rejected: 3 };
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
 
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">null</p>;
     const statusColor = {
-      "rejected" : "text-red-500",
-      "pending" : "text-yellow-500",
-      "done" : "text-blue-500"
-    } 
+      rejected: "text-red-500",
+      pending: "text-yellow-500",
+      done: "text-blue-500",
+    };
     return (
       <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
         <div
-          className={`truncate max-w-[100px] sm:max-w-[200px] ${
-           statusColor[data]
-          }`}
+          className={`truncate max-w-[100px] sm:max-w-[200px] ${statusColor[data]}`}
         >
           {data || nullValue}
         </div>
@@ -93,65 +91,68 @@ const Certification = () => {
   };
 
   const printCertificate = (rowData) => {
-  if (!template || Object.keys(template).length === 0) {
-    toast.error("No templates found. Please add a template first.");
-    return;
-  }
+    if (!template || Object.keys(template).length === 0) {
+      toast.error("No templates found. Please add a template first.");
+      return;
+    }
 
-  const selectedTemplate = Object.values(template).find(
-    (temp) => temp.docsType === rowData.docsType
-  );
-
-  if (!selectedTemplate) {
-    toast.error(`No template found for document type: ${rowData.docsType}`);
-    return;
-  }
-
-  let content = selectedTemplate.content;
-
-  if (content) {
-    // Replace placeholders with rowData
-    const today = new Date();
-    content = content.replace(/{{todayDate}}/g, formatDate(today));
-
-    Object.entries(rowData).forEach(([key, value]) => {
-      const placeholder = `{{${key}}}`;
-      content = content.replace(new RegExp(placeholder, "g"), value || "N/A");
-    });
-
-    const renderTemplate = generateFullTemplate(
-      selectedTemplate.title,
-      systemData?.imageUrl,
-      systemData?.tanzaLogoUrl,
-      content
+    const selectedTemplate = Object.values(template).find(
+      (temp) => temp.docsType === rowData.docsType
     );
 
-    // Render printable content
-    const printWindow = window.open("", "_blank");
-    printWindow.document.open();
-    printWindow.document.write(renderTemplate);
-    printWindow.document.close();
-    printWindow.onafterprint = () =>{
-      setUserData(rowData);
-      setSelectedId(rowData.id)
-      setShowUpdateStatus({
-        visible: true,
-        status: "done"
-      });
-      printWindow.close();
-    } 
-  
-    printWindow.print();
-  } else {
-    toast.error("Template content is empty.");
-  }
-};
+    if (!selectedTemplate) {
+      toast.error(`No template found for document type: ${rowData.docsType}`);
+      return;
+    }
 
+    let content = selectedTemplate.content;
+
+    if (content) {
+      // Replace placeholders with rowData
+      const today = new Date();
+      content = content.replace(/{{todayDate}}/g, formatDate(today));
+
+      Object.entries(rowData).forEach(([key, value]) => {
+        const placeholder = `{{${key}}}`;
+        content = content.replace(new RegExp(placeholder, "g"), value || "N/A");
+      });
+
+      const renderTemplate = generateFullTemplate(
+        selectedTemplate.title,
+        systemData?.imageUrl,
+        systemData?.tanzaLogoUrl,
+        content
+      );
+
+      // Render printable content
+      const printWindow = window.open("", "_blank");
+      printWindow.document.open();
+      printWindow.document.write(renderTemplate);
+      printWindow.document.close();
+      printWindow.onafterprint = () => {
+        setUserData(rowData);
+        setSelectedId(rowData.id);
+        setShowUpdateStatus({
+          visible: true,
+          status: "done",
+        });
+        printWindow.close();
+      };
+
+      printWindow.print();
+    } else {
+      toast.error("Template content is empty.");
+    }
+  };
+
+  const handleChangeStatusClick = (userData) => {
+    setSelectedId(userData.id);
+  };
 
   const handleViewClick = (userData) => {
     setUserData(userData);
     setViewModal(!viewModal);
-  }
+  };
 
   const handleEditClick = (userData) => {
     setShowRequestCert(true);
@@ -166,7 +167,7 @@ const Certification = () => {
     setSelectedId(userData.id);
     setShowUpdateStatus({
       visible: true,
-      status: userData.status === "rejected" ? "Delete" : "rejected"
+      status: userData.status === "rejected" ? "Delete" : "rejected",
     });
   };
 
@@ -175,7 +176,7 @@ const Certification = () => {
       const dataRef = ref(database, `requestClearance/${selectedId}`);
       const clearanceData = {
         ...userData,
-        status
+        status,
       };
 
       await update(dataRef, clearanceData);
@@ -186,7 +187,7 @@ const Certification = () => {
 
     setShowUpdateStatus({
       visible: false,
-      status: ""
+      status: "",
     });
   };
 
@@ -196,62 +197,91 @@ const Certification = () => {
     setShowUpdateStatus({
       visible: false,
       status: "",
-    })
-  }
+    });
+  };
 
   const handleCloseModal = () => {
     setShowRequestCert(!showRequestCert);
     setIsEdit(!isEdit);
   };
 
-
   const renderRow = (userData) => {
     const { status } = userData;
     const rejected = status === "rejected";
     const done = status === "done";
+
+    const textColor = {
+      rejected: "text-red-500",
+      pending: "text-yellow-500",
+      done: "text-blue-500",
+      "ready for pickup": "text-green-500",
+    };
     return (
       <>
-        <TableData data={userData.docsType} />
-        <TableData data={userData.fullname} />
-        <TableData data={userData.age} />
-        <TableData data={userData.gender} />
-        <TableData data={userData.address} />
-        <TableData data={userData.moveInYear} />
-        <TableData data={status} />
-        <td className="">
-          <div className="flex items-center justify-center space-x-2">
-            <IconButton
-              icon={icons.print}
-              color={"gray"}
-              fontSize={"small"}
-              tooltip={done ? "Reprint" : "Print"}
-              className={rejected && "cursor-not-allowed opacity-35"}
-              onClick={rejected ? "" : () => printCertificate(userData)}
-            />
-            <IconButton
-              icon={icons.view}
-              color={"blue"}
-              fontSize={"small"}
-              tooltip={"View"}
-              onClick={() => handleViewClick(userData)}
-            />
-            <IconButton
-              icon={icons.edit}
-              color={"green"}
-              fontSize={"small"}
-              tooltip={"Edit"}
-              className={rejected && "cursor-not-allowed opacity-50"}
-              onClick={rejected ? "" : () => handleEditClick(userData)}
-            />
-            <IconButton
-              icon={rejected ? icons.delete : icons.cancel}
-              color={"red"}
-              fontSize={"small"}
-              tooltip={rejected ? "Delete" : "Reject"}
-              onClick={() => handleRejectClick(userData)}
-            />
-          </div>
-        </td>
+      <TableData data={userData.docsType} />
+      <TableData data={userData.fullname} />
+      <TableData data={userData.age} />
+      <TableData data={userData.gender} />
+      <TableData data={userData.address} />
+      <TableData data={userData.moveInYear} />
+      <TableData
+        data={
+        <select
+          className={`text-xs sm:text-sm ${textColor[userData.status]} bg-transparent border-none cursor-pointer`}
+          value={userData.status}
+          onClick={() => handleChangeStatusClick(userData)}
+          onChange={(e) => handleUpdateClearanceStatus(e.target.value)}
+        >
+          <option value="pending" className="text-yellow-500">
+          Pending
+          </option>
+          <option value="done" className="text-blue-500">
+          Done
+          </option>
+          <option value="rejected" className="text-red-500">
+          Rejected
+          </option>
+          <option value="ready for pickup" className="text-green-500">
+          Ready for Pickup
+          </option>
+        </select>
+        }
+      />
+      <td className="">
+        <div className="flex items-center justify-center space-x-2">
+        <IconButton
+          icon={icons.print}
+          color={"gray"}
+          fontSize={"small"}
+          tooltip={done ? "Reprint" : "Print"}
+          className={rejected && "cursor-not-allowed opacity-35"}
+          onClick={rejected ? "" : () => printCertificate(userData)}
+        />
+        <IconButton
+          icon={icons.view}
+          color={"blue"}
+          fontSize={"small"}
+          tooltip={"View"}
+          onClick={() => handleViewClick(userData)}
+        />
+        <IconButton
+          icon={icons.edit}
+          color={"green"}
+          fontSize={"small"}
+          tooltip={"Edit"}
+          className={rejected && "cursor-not-allowed opacity-50"}
+          onClick={rejected ? "" : () => handleEditClick(userData)}
+        />
+        <IconButton
+          icon={rejected ? icons.delete : icons.cancel}
+          color={"red"}
+          fontSize={"small"}
+          tooltip={rejected ? "Delete" : "Reject"}
+          onClick={() => handleRejectClick(userData)}
+        />
+        </div>
+      </td>
+      <td className="hidden">{userData.id}</td>
       </>
     );
   };
@@ -287,30 +317,38 @@ const Certification = () => {
             <ClearanceViewModal
               handleViewClick={handleViewClick}
               userData={userData}
-             />
+            />
           )}
 
           {showUpdateStatus.visible && (
             <AskCard
-              toggleModal={() => setShowUpdateStatus({
-                visible: false,
-                status: "",
-              }, setUserData({}))}
+              toggleModal={() =>
+                setShowUpdateStatus(
+                  {
+                    visible: false,
+                    status: "",
+                  },
+                  setUserData({})
+                )
+              }
               question={
                 <span>
                   Is {""}
                   <span className="text-primary-500 text-bold">
-                   {userData.fullname} {""}
+                    {userData.fullname} {""}
                   </span>
                   request {showUpdateStatus.status} ?
                 </span>
               }
               confirmText={capitalizeFirstLetter(showUpdateStatus.status)}
-              onConfirm={userData.status === "rejected" ? () => handleDeleteConfirm() :
-              () => handleUpdateClearanceStatus(showUpdateStatus.status)}
+              onConfirm={
+                userData.status === "rejected"
+                  ? () => handleDeleteConfirm()
+                  : () => handleUpdateClearanceStatus(showUpdateStatus.status)
+              }
             />
           )}
- 
+
           <Table headers={Headers} data={sortedData} renderRow={renderRow} />
           <Pagination
             currentPage={currentPage}
