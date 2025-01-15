@@ -8,8 +8,9 @@ export const generateFullTemplate = (
     <head>
       <title>${templateTitle}</title>
       <style>
-         /* Tailwind-like utility classes */
+        /* Tailwind-like utility classes */
         .bg-white { background-color: white; }
+        .border-dashed { border: 2px dashed #000; }
         .p-10 { padding: 2.5rem; }
         .flex { display: flex; }
         .flex-row { flex-direction: row; }
@@ -56,90 +57,106 @@ export const generateFullTemplate = (
   </html>
 `;
 
-export const generateBodyTemplate = (systemLogo, tanzaLogo, content) => (
-`  <div class="p-10">
-    <div class="flex justify-center gap-4">
-      <div class="flex-1 flex items-center justify-end" style="flex: 1 1 25%">
-        <img
-          src="${systemLogo}"
-          alt="Logo"
-          class="h-32 w-32 rounded-full mr-4"
-        />
-      </div>
-      <div
-        class="flex-1 flex items-center justify-center text-center bg-white p-4"
-        style="flex: 1 1 50%"
-      >
-        <p class="text-sm">
-          Republic of the Philippines
-          <br />
-          Province of Cavite
-          <br />
-          Municipality of Tanza
-          <br />
-          <span class="font-bold uppercase">Barangay Bagtas</span>
-          <br />
-          <span class="font-bold uppercase whitespace-nowrap">
-            Office of the Barangay Chairman
-          </span>
-        </p>
-      </div>
-      <div class="flex-1" style="flex: 1 1 25%">
-        <img src="${tanzaLogo}" alt="Logo" class="h-32 w-32 rounded-full" />
-      </div>
-    </div>
-    <p class="text-center font-bold uppercase text-3xl p-12">
-      Barangay Certification
-    </p>
-    <div class="flex justify-center">
-      <div
-        class="flex-1 bg-blue-100 p-4 text-center border-r-2"
-        style="flex: 1 1 25%"
-      >
-        <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
-          <li class="p-2">
-            Manuel Clemente T. Mintu Jr. </br>
-            <span class="text-xs font-thin">Barangay Chairman</span>
-          </li>
-          <p class="text-xs p-2 font-thin">Barangay Counsilors</p>
-          <p>
-            <li>Ryan G. Mintu</li>
-            <li>Emmanuel T. Salvador Jr.</li>
-            <li>Luis G. Mercado</li>
-            <li>Yolanda T. Romana</li>
-            <li>Jenina T. Paminter</li>
-            <li>Emmanuel G. Mercado</li>
-            <li>Christopher I. Aron</li>
-          </p>
+export const generateBodyTemplate = (systemLogo, tanzaLogo, content, isEdit = false) => {
+  const editableStyle = isEdit ? ' style="border: 1px dashed #000; padding: 4px;"' : '';
+  const imageStyle = isEdit ? ' style="border: 1px dashed #000; cursor: pointer;"' : '';
+  const generateEditableImageInput = (imageId, imageSrc) => isEdit ? `
+    <label style="position: relative; display: inline-block; cursor: pointer;">
+      <input type="file" 
+        onchange="document.getElementById('${imageId}').src = URL.createObjectURL(this.files[0])" 
+        style="display: none;" 
+      />
+      <img 
+        id="${imageId}" 
+        src="${imageSrc}" 
+        alt="Editable Logo" 
+        class="h-32 w-32 rounded-full"
+        ${imageStyle}
+      />
+    </label>
+  ` : `<img src="${imageSrc}" alt="Logo" class="h-32 w-32 rounded-full" />`;
 
-          <p>
-            <li class="p-2">
-              Maria Angela A. Capuz </br>
-              <span class="text-xs font-thin">SK Chairperson</span>
-            </li>
+  return `
+    <div class="p-10">
+      <div class="flex justify-center gap-4">
+        <div class="flex-1 flex items-center justify-end" style="flex: 1 1 25%">
+          ${generateEditableImageInput('systemLogo', systemLogo)}
+        </div>
+        <div
+          class="flex-1 flex items-center justify-center text-center bg-white p-4"
+          style="flex: 1 1 50%"
+        >
+          <p class="text-sm"${editableStyle}>
+            Republic of the Philippines
+            <br />
+            Province of Cavite
+            <br />
+            Municipality of Tanza
+            <br />
+            <span class="font-bold uppercase">Barangay Bagtas</span>
+            <br />
+            <span class="font-bold uppercase whitespace-nowrap">
+              Office of the Barangay Chairman
+            </span>
           </p>
+        </div>
+        <div class="flex-1" style="flex: 1 1 25%">
+          ${generateEditableImageInput('tanzaLogo', tanzaLogo)}
+        </div>
+      </div>
+      <p class="text-center font-bold uppercase text-3xl p-12"${editableStyle}>
+        Barangay Certification
+      </p>
+      <div class="flex justify-center">
+        <div
+          class="flex-1 bg-blue-100 p-4 text-center border-r-2"
+          style="flex: 1 1 25%"
+        >
+          <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
+            <li class="p-2"${editableStyle}>
+              Manuel Clemente T. Mintu Jr. </br>
+              <span class="text-xs font-thin">Barangay Chairman</span>
+            </li>
+            <p class="text-xs p-2 font-thin"${editableStyle}>
+              Barangay Counsilors
+            </p>
+            <p${editableStyle}>
+              <li ${editableStyle}>Ryan G. Mintu</li>
+              <li ${editableStyle}>Emmanuel T. Salvador Jr.</li>
+              <li ${editableStyle}>Luis G. Mercado</li>
+              <li ${editableStyle}>Yolanda T. Romana</li>
+              <li ${editableStyle}>Jenina T. Paminter</li>
+              <li ${editableStyle}>Emmanuel G. Mercado</li>
+              <li ${editableStyle}>Christopher I. Aron</li>
+            </p>
+            <p>
+              <li class="p-2"${editableStyle}>
+                Maria Angela A. Capuz </br>
+                <span class="text-xs font-thin">SK Chairperson</span>
+              </li>
+            </p>
+            <p>
+              <li class="p-2"${editableStyle}>
+                Maria Leonilla B. Castillo </br>
+                <span class="text-xs font-thin">Barangay Secretary</span>
+              </li>
+            </p>
+            <p>
+              <li class="p-2"${editableStyle}>
+                Dominga T. Molina </br>
+                <span class="text-xs font-thin">Barangay Treasurer</span>
+              </li>
+            </p>
+          </ul>
+        </div>
+        <div
+          class="flex-1 p-4"
+          style="flex: 1 1 75%; position: relative; height: 200px;"
+        >
+          <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 100%; background-image: url('${tanzaLogo}'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.3;"></div>
+          <div style="position: relative;"${editableStyle}>${content}</div>
+        </div>
+      </div>
+    </div>`;
+};
 
-          <p>
-            <li class="p-2">
-              Maria Leonilla B. Castillo </br>
-              <span class="text-xs font-thin">Barangay Secretary</span>
-            </li>
-          </p>
-          <p>
-            <li class="p-2">
-              Dominga T. Molina </br>
-              <span class="text-xs font-thin">Barangay Treasurer</span>
-            </li>
-          </p>
-        </ul>
-      </div>
-      <div
-        class="flex-1 p-4"
-        style="flex: 1 1 75%; position: relative; height: 200px;"
-      >
-        <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 100%; background-image: url('${tanzaLogo}'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.3;"></div>
-        <div style="position: relative;">${content}</div>
-      </div>
-    </div>
-  </div>`
-);

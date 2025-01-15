@@ -14,6 +14,7 @@ import handleDeleteData from "../../hooks/handleDeleteData";
 const Templates = () => {
   const [showAddTemplate, setShowAddTemplate] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [isTemplateEdit, setIsTemplateEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
   const { data: templates } = useFetchData("templates");
@@ -23,11 +24,13 @@ const Templates = () => {
     (template) => template.id === selectedTemplateId
   );
 
+  // Generate the template body content based on the selected template
   const renderTemplate = selectedTemplate
     ? generateBodyTemplate(
         systemData?.imageUrl,
         systemData?.tanzaLogoUrl,
-        selectedTemplate?.content
+        selectedTemplate?.content,
+        isTemplateEdit
       )
     : null;
 
@@ -59,6 +62,10 @@ const Templates = () => {
     }
 
     setShowDeleteModal(false);
+  };
+
+  const handleTemplateIsEdit = () => {
+    setIsTemplateEdit(!isTemplateEdit);
   };
 
   return (
@@ -108,12 +115,20 @@ const Templates = () => {
               <>
                 <div className="flex flex-row space-x-2 bg-white dark:bg-gray-800 p-4 mb-4 text-gray-500">
                   <button
-                    className="px-4 text-green-500 dark:text-green-700"
+                    className={`px-4 text-green-500 dark:text-green-400 ${isTemplateEdit ? "hidden" : ""}`}
                     onClick={() => handleEditClick(selectedTemplate.id)}
                   >
-                    Edit
+                    Edit Content
                   </button>
-                  <button className="px-4 text-red-500 dark:text-red-700" onClick={()=>handleDeleteModal(selectedTemplate.id)}>Delete</button>
+                  <button className="px-4 text-blue-500 dark:text-blue-400" onClick={handleTemplateIsEdit}>
+                    {isTemplateEdit ? "Save Changes" : "Edit Template"}
+                  </button>
+                  {isTemplateEdit && (
+                    <button className="px-4 text-gray-500 dark:text-gray-400" onClick={handleTemplateIsEdit}>
+                    {"Cancel"}
+                  </button>
+                  )}
+                  <button className={`px-4 text-red-500 dark:text-red-400 ${isTemplateEdit ? "hidden" : ""}`} onClick={()=>handleDeleteModal(selectedTemplate.id)}>Delete Template</button>
                 </div>
                 <div
                   style={{
