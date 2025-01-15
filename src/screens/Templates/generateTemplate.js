@@ -57,7 +57,7 @@ export const generateFullTemplate = (
   </html>
 `;
 
-export const generateBodyTemplate = (systemLogo, tanzaLogo, content, isEdit = false) => {
+export const generateBodyTemplate = (systemLogo, tanzaLogo, content,templateData, isEdit = false) => {
   const editableStyle = isEdit ? ' style="border: 1px dashed #000; padding: 4px;"' : '';
   const editableAttribute = isEdit ? ' contenteditable="true"' : '';
   const imageStyle = isEdit ? ' style="border: 1px dashed #000; cursor: pointer;"' : '';
@@ -115,36 +115,36 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content, isEdit = fa
         >
           <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
             <li class="p-2"${editableStyle} ${editableAttribute}>
-              Manuel Clemente T. Mintu Jr. </br>
+              ${templateData.chairman} </br>
               <span class="text-xs font-thin">Barangay Chairman</span>
             </li>
             <p${editableStyle}>
               <li ${editableStyle} ${editableAttribute}>
               <span class="text-xs font-thin">Barangay Counsilors</span> </br>
-              Ryan G. Mintu
+              ${templateData.counsilors.counsilor1}
               </li>
-              <li ${editableStyle} ${editableAttribute}>Emmanuel T. Salvador Jr.</li>
-              <li ${editableStyle} ${editableAttribute}>Luis G. Mercado</li>
-              <li ${editableStyle} ${editableAttribute}>Yolanda T. Romana</li>
-              <li ${editableStyle} ${editableAttribute}>Jenina T. Paminter</li>
-              <li ${editableStyle} ${editableAttribute}>Emmanuel G. Mercado</li>
-              <li ${editableStyle} ${editableAttribute}>Christopher I. Aron</li>
+              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor2}</li>
+              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor3}</li>
+              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor4}</li>
+              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor5}</li>
+              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor6}</li>
+              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor7}</li>
             </p>
             <p>
               <li class="p-2"${editableStyle} ${editableAttribute}>
-                Maria Angela A. Capuz </br>
+                ${templateData.skChairperson}</br>
                 <span class="text-xs font-thin">SK Chairperson</span>
               </li>
             </p>
             <p>
               <li class="p-2"${editableStyle} ${editableAttribute}>
-                Maria Leonilla B. Castillo </br>
+                ${templateData.secretary} </br>
                 <span class="text-xs font-thin">Barangay Secretary</span>
               </li>
             </p>
             <p>
               <li class="p-2"${editableStyle} ${editableAttribute}>
-                Dominga T. Molina </br>
+               ${templateData.treasurer} </br>
                 <span class="text-xs font-thin">Barangay Treasurer</span>
               </li>
             </p>

@@ -270,8 +270,8 @@ const Certification = () => {
           color={"green"}
           fontSize={"small"}
           tooltip={"Edit"}
-          className={rejected && "cursor-not-allowed opacity-50"}
-          onClick={rejected ? "" : () => handleEditClick(userData)}
+          className={(rejected || done ) && "cursor-not-allowed opacity-50"}
+          onClick={(rejected || done) ? "" : () => handleEditClick(userData)}
         />
         <IconButton
           icon={icons.delete}

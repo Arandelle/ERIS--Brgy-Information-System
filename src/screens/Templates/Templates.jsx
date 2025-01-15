@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import icons from "../../assets/icons/Icons";
@@ -17,8 +17,51 @@ const Templates = () => {
   const [isTemplateEdit, setIsTemplateEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
-  const { data: templates } = useFetchData("templates");
+  const { data: templates } = useFetchData("templateContent");
+  const {data: documentsData} = useFetchData("templates");
   const { systemData } = useFetchSystemData();
+  const [templateData, setTemplateData] = useState({
+    chairman: "",
+    counsilors: {
+      counsilor1: "",
+      counsilor2: "",
+      counsilor3: "",
+      counsilor4: "",
+      counsilor5: "",
+      counsilor6: "",
+      counsilor7: "",
+    },
+    skChairperson: "",
+    secretary: "",
+    treasurer: ""
+  });
+
+  useEffect(() => {
+    if (documentsData && documentsData.length > 0) {
+      // Find the document with the specific ID (e.g., "document1")
+      const document1Data = documentsData.find((doc) => doc.id === "document1");
+  
+      if (document1Data) {
+        // Update the templateData state with the values from document1
+        setTemplateData({
+          chairman: document1Data.chairman || "",
+          counsilors: {
+            counsilor1: document1Data.counsilors?.counsilor1 || "",
+            counsilor2: document1Data.counsilors?.counsilor2 || "",
+            counsilor3: document1Data.counsilors?.counsilor3 || "",
+            counsilor4: document1Data.counsilors?.counsilor4 || "",
+            counsilor5: document1Data.counsilors?.counsilor5 || "",
+            counsilor6: document1Data.counsilors?.counsilor6 || "",
+            counsilor7: document1Data.counsilors?.counsilor7 || "",
+          },
+          skChairperson: document1Data.skChairperson || "",
+          secretary: document1Data.secretary || "",
+          treasurer: document1Data.treasurer || "",
+        });
+      }
+    }
+  }, [documentsData]);
+  
 
   const selectedTemplate = templates?.find(
     (template) => template.id === selectedTemplateId
@@ -30,10 +73,12 @@ const Templates = () => {
         systemData?.imageUrl,
         systemData?.tanzaLogoUrl,
         selectedTemplate?.content,
+        templateData,
         isTemplateEdit
       )
     : null;
-
+  
+    // show the specefic template based on templateId
   const handleShowTemplate = (templateId) => {
     setSelectedTemplateId(templateId);
   };
