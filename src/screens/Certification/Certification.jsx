@@ -20,7 +20,6 @@ import { ref, update } from "firebase/database";
 import { database } from "../../services/firebaseConfig";
 import ClearanceViewModal from "./ClearanceViewModal";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
-import { read } from "@popperjs/core";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -78,6 +77,7 @@ const Certification = () => {
       rejected: "text-red-500",
       pending: "text-yellow-500",
       done: "text-blue-500",
+      "ready for pickup": "text-green-500",
     };
     return (
       <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
@@ -167,7 +167,7 @@ const Certification = () => {
     setSelectedId(userData.id);
     setShowUpdateStatus({
       visible: true,
-      status: userData.status === "rejected" ? "Delete" : "rejected",
+      status: "Delete",
     });
   };
 
@@ -231,6 +231,7 @@ const Certification = () => {
           value={userData.status}
           onClick={() => handleChangeStatusClick(userData)}
           onChange={(e) => handleUpdateClearanceStatus(e.target.value)}
+          disabled={rejected || done}
         >
           <option value="pending" className="text-yellow-500">
           Pending
@@ -273,10 +274,10 @@ const Certification = () => {
           onClick={rejected ? "" : () => handleEditClick(userData)}
         />
         <IconButton
-          icon={rejected ? icons.delete : icons.cancel}
+          icon={icons.delete}
           color={"red"}
           fontSize={"small"}
-          tooltip={rejected ? "Delete" : "Reject"}
+          tooltip={"Delete"}
           onClick={() => handleRejectClick(userData)}
         />
         </div>
