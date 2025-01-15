@@ -59,6 +59,7 @@ export const generateFullTemplate = (
 
 export const generateBodyTemplate = (systemLogo, tanzaLogo, content, isEdit = false) => {
   const editableStyle = isEdit ? ' style="border: 1px dashed #000; padding: 4px;"' : '';
+  const editableAttribute = isEdit ? ' contenteditable="true"' : '';
   const imageStyle = isEdit ? ' style="border: 1px dashed #000; cursor: pointer;"' : '';
   const generateEditableImageInput = (imageId, imageSrc) => isEdit ? `
     <label style="position: relative; display: inline-block; cursor: pointer;">
@@ -86,7 +87,7 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content, isEdit = fa
           class="flex-1 flex items-center justify-center text-center bg-white p-4"
           style="flex: 1 1 50%"
         >
-          <p class="text-sm"${editableStyle}>
+          <p class="text-sm"${editableStyle} ${editableAttribute}>
             Republic of the Philippines
             <br />
             Province of Cavite
@@ -104,7 +105,7 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content, isEdit = fa
           ${generateEditableImageInput('tanzaLogo', tanzaLogo)}
         </div>
       </div>
-      <p class="text-center font-bold uppercase text-3xl p-12"${editableStyle}>
+      <p class="text-center font-bold uppercase text-3xl p-12"${editableStyle} ${editableAttribute}>
         Barangay Certification
       </p>
       <div class="flex justify-center">
@@ -113,36 +114,36 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content, isEdit = fa
           style="flex: 1 1 25%"
         >
           <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
-            <li class="p-2"${editableStyle}>
+            <li class="p-2"${editableStyle} ${editableAttribute}>
               Manuel Clemente T. Mintu Jr. </br>
               <span class="text-xs font-thin">Barangay Chairman</span>
             </li>
-            <p class="text-xs p-2 font-thin"${editableStyle}>
-              Barangay Counsilors
-            </p>
             <p${editableStyle}>
-              <li ${editableStyle}>Ryan G. Mintu</li>
-              <li ${editableStyle}>Emmanuel T. Salvador Jr.</li>
-              <li ${editableStyle}>Luis G. Mercado</li>
-              <li ${editableStyle}>Yolanda T. Romana</li>
-              <li ${editableStyle}>Jenina T. Paminter</li>
-              <li ${editableStyle}>Emmanuel G. Mercado</li>
-              <li ${editableStyle}>Christopher I. Aron</li>
+              <li ${editableStyle} ${editableAttribute}>
+              <span class="text-xs font-thin">Barangay Counsilors</span> </br>
+              Ryan G. Mintu
+              </li>
+              <li ${editableStyle} ${editableAttribute}>Emmanuel T. Salvador Jr.</li>
+              <li ${editableStyle} ${editableAttribute}>Luis G. Mercado</li>
+              <li ${editableStyle} ${editableAttribute}>Yolanda T. Romana</li>
+              <li ${editableStyle} ${editableAttribute}>Jenina T. Paminter</li>
+              <li ${editableStyle} ${editableAttribute}>Emmanuel G. Mercado</li>
+              <li ${editableStyle} ${editableAttribute}>Christopher I. Aron</li>
             </p>
             <p>
-              <li class="p-2"${editableStyle}>
+              <li class="p-2"${editableStyle} ${editableAttribute}>
                 Maria Angela A. Capuz </br>
                 <span class="text-xs font-thin">SK Chairperson</span>
               </li>
             </p>
             <p>
-              <li class="p-2"${editableStyle}>
+              <li class="p-2"${editableStyle} ${editableAttribute}>
                 Maria Leonilla B. Castillo </br>
                 <span class="text-xs font-thin">Barangay Secretary</span>
               </li>
             </p>
             <p>
-              <li class="p-2"${editableStyle}>
+              <li class="p-2"${editableStyle} ${editableAttribute}>
                 Dominga T. Molina </br>
                 <span class="text-xs font-thin">Barangay Treasurer</span>
               </li>
@@ -154,7 +155,7 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content, isEdit = fa
           style="flex: 1 1 75%; position: relative; height: 200px;"
         >
           <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 100%; background-image: url('${tanzaLogo}'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.3;"></div>
-          <div style="position: relative;"${editableStyle}>${content}</div>
+          <div style="position: relative;">${content}</div>
         </div>
       </div>
     </div>`;
