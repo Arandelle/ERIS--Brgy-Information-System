@@ -211,10 +211,10 @@ const Certification = () => {
     const done = status === "done";
 
     const textColor = {
-      rejected: "text-red-500",
-      pending: "text-yellow-500",
-      done: "text-blue-500",
-      "ready for pickup": "text-green-500",
+      rejected: "text-red-500 cursor-not-allowed",
+      pending: "text-yellow-500 cursor-pointer",
+      done: "text-blue-500  cursor-not-allowed",
+      "ready for pickup": "text-green-500 cursor-pointer",
     };
     return (
       <>
@@ -227,7 +227,7 @@ const Certification = () => {
       <TableData
         data={
         <select
-          className={`text-xs sm:text-sm ${textColor[userData.status]} bg-transparent border-none cursor-pointer`}
+          className={`text-xs sm:text-sm ${textColor[userData.status]} bg-transparent border-none`}
           value={userData.status}
           onClick={() => handleChangeStatusClick(userData)}
           onChange={(e) => handleUpdateClearanceStatus(e.target.value)}
