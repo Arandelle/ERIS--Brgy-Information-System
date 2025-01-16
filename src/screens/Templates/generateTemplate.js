@@ -87,16 +87,16 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content,templateData
           class="flex-1 flex items-center justify-center text-center bg-white p-4"
           style="flex: 1 1 50%"
         >
-          <p class="text-sm"${editableStyle} ${editableAttribute}>
-            Republic of the Philippines
+          <p class="text-sm">
+           <span id="republic" ${editableStyle} ${editableAttribute}> Republic of the Philippines</span>
             <br />
-            Province of Cavite
+            <span id="province" ${editableStyle} ${editableAttribute}>Province of Cavite</span>
             <br />
-            Municipality of Tanza
+           <span id="municipality" ${editableStyle} ${editableAttribute}> Municipality of Tanza</span>
             <br />
-            <span class="font-bold uppercase">Barangay Bagtas</span>
+            <span id="barangay" class="font-bold uppercase" ${editableStyle} ${editableAttribute}>Barangay Bagtas</span>
             <br />
-            <span class="font-bold uppercase whitespace-nowrap">
+            <span id="office" class="font-bold uppercase whitespace-nowrap" ${editableStyle} ${editableAttribute}>
               Office of the Barangay Chairman
             </span>
           </p>
@@ -114,37 +114,37 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content,templateData
           style="flex: 1 1 25%"
         >
           <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
-            <li class="p-2"${editableStyle} ${editableAttribute}>
-              ${templateData.chairman} </br>
+            <li class="p-2">
+             <span id="chairman" ${editableStyle} ${editableAttribute}> ${templateData.chairman}</span> </br>
               <span class="text-xs font-thin">Barangay Chairman</span>
             </li>
-            <p${editableStyle}>
-              <li ${editableStyle} ${editableAttribute}>
+            <p>
+              <li>
               <span class="text-xs font-thin">Barangay Counsilors</span> </br>
-              ${templateData.counsilors.counsilor1}
+              <span id="counsilor1" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor1}</span>
               </li>
-              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor2}</li>
-              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor3}</li>
-              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor4}</li>
-              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor5}</li>
-              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor6}</li>
-              <li ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor7}</li>
+              <li id="counsilor2" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor2}</li>
+              <li id="counsilor3" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor3}</li>
+              <li id="counsilor4" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor4}</li>
+              <li id="counsilor5" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor5}</li>
+              <li id="counsilor6" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor6}</li>
+              <li id="counsilor7" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor7}</li>
             </p>
             <p>
-              <li class="p-2"${editableStyle} ${editableAttribute}>
-                ${templateData.skChairperson}</br>
+              <li class="p-2">
+               <span id="skChairperson" ${editableStyle} ${editableAttribute}> ${templateData.skChairperson}</span></br>
                 <span class="text-xs font-thin">SK Chairperson</span>
               </li>
             </p>
             <p>
-              <li class="p-2"${editableStyle} ${editableAttribute}>
-                ${templateData.secretary} </br>
+              <li class="p-2">
+              <span id="secretary" ${editableStyle} ${editableAttribute}> ${templateData.secretary}</span> </br>
                 <span class="text-xs font-thin">Barangay Secretary</span>
               </li>
             </p>
             <p>
-              <li class="p-2"${editableStyle} ${editableAttribute}>
-               ${templateData.treasurer} </br>
+              <li class="p-2">
+              <span id="treasurer" ${editableStyle} ${editableAttribute}> ${templateData.treasurer}</span> </br>
                 <span class="text-xs font-thin">Barangay Treasurer</span>
               </li>
             </p>

@@ -10,6 +10,8 @@ import { generateBodyTemplate } from "./generateTemplate";
 import EmptyLogo from "../../components/ReusableComponents/EmptyLogo";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import handleDeleteData from "../../hooks/handleDeleteData";
+import { toast } from "sonner";
+import handleEditData from "../../hooks/handleEditData";
 
 const Templates = () => {
   const [showAddTemplate, setShowAddTemplate] = useState(false);
@@ -20,21 +22,8 @@ const Templates = () => {
   const { data: templates } = useFetchData("templateContent");
   const {data: documentsData} = useFetchData("templates");
   const { systemData } = useFetchSystemData();
-  const [templateData, setTemplateData] = useState({
-    chairman: "",
-    counsilors: {
-      counsilor1: "",
-      counsilor2: "",
-      counsilor3: "",
-      counsilor4: "",
-      counsilor5: "",
-      counsilor6: "",
-      counsilor7: "",
-    },
-    skChairperson: "",
-    secretary: "",
-    treasurer: ""
-  });
+  const [templateData, setTemplateData] = useState({});
+  
 
   useEffect(() => {
     if (documentsData && documentsData.length > 0) {
@@ -44,25 +33,12 @@ const Templates = () => {
       if (document1Data) {
         // Update the templateData state with the values from document1
         setTemplateData({
-          chairman: document1Data.chairman || "",
-          counsilors: {
-            counsilor1: document1Data.counsilors?.counsilor1 || "",
-            counsilor2: document1Data.counsilors?.counsilor2 || "",
-            counsilor3: document1Data.counsilors?.counsilor3 || "",
-            counsilor4: document1Data.counsilors?.counsilor4 || "",
-            counsilor5: document1Data.counsilors?.counsilor5 || "",
-            counsilor6: document1Data.counsilors?.counsilor6 || "",
-            counsilor7: document1Data.counsilors?.counsilor7 || "",
-          },
-          skChairperson: document1Data.skChairperson || "",
-          secretary: document1Data.secretary || "",
-          treasurer: document1Data.treasurer || "",
+         ...document1Data
         });
       }
     }
   }, [documentsData]);
   
-
   const selectedTemplate = templates?.find(
     (template) => template.id === selectedTemplateId
   );
@@ -101,7 +77,7 @@ const Templates = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await handleDeleteData(selectedTemplateId, "templates");
+      await handleDeleteData(selectedTemplateId, "templateContent");
     } catch (error) {
       toast.error(`Error deleting ${error}`);
     }
@@ -111,6 +87,31 @@ const Templates = () => {
 
   const handleTemplateIsEdit = () => {
     setIsTemplateEdit(!isTemplateEdit);
+  };
+
+  const handleSaveTemplate = async () => {
+    try{
+      const updatedTemplateData = {
+        chairman: document.querySelector('#chairman')?.innerText || templateData.chairman,
+        counsilors: {
+          counsilor1: document.querySelector('#counsilor1')?.innerText || templateData.counsilors.counsilor1,
+          counsilor2: document.querySelector('#counsilor2')?.innerText || templateData.counsilors.counsilor2,
+          counsilor3: document.querySelector('#counsilor3')?.innerText || templateData.counsilors.counsilor3,
+          counsilor4: document.querySelector('#counsilor4')?.innerText || templateData.counsilors.counsilor4,
+          counsilor5: document.querySelector('#counsilor5')?.innerText || templateData.counsilors.counsilor5,
+          counsilor6: document.querySelector('#counsilor6')?.innerText || templateData.counsilors.counsilor6,
+          counsilor7: document.querySelector('#counsilor7')?.innerText || templateData.counsilors.counsilor7,
+        },
+        skChairperson: document.querySelector('#skChairperson')?.innerText || templateData.skChairperson,
+        secretary: document.querySelector('#secretary')?.innerText || templateData.secretary,
+        treasurer: document.querySelector('#treasurer')?.innerText || templateData.treasurer,
+      };
+
+      await handleEditData("document1", updatedTemplateData, "templates");
+      setIsTemplateEdit(false);
+    }catch(error){
+      toast.error(error);
+    }
   };
 
   return (
@@ -165,7 +166,8 @@ const Templates = () => {
                   >
                     Edit Content
                   </button>
-                  <button className="px-4 text-blue-500 dark:text-blue-400" onClick={handleTemplateIsEdit}>
+                  <button className="px-4 text-blue-500 dark:text-blue-400" onClick={isTemplateEdit ? 
+                  () => handleSaveTemplate() : handleTemplateIsEdit}>
                     {isTemplateEdit ? "Save Changes" : "Edit Template"}
                   </button>
                   {isTemplateEdit && (

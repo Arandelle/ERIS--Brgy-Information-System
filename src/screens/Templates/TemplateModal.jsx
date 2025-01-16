@@ -9,7 +9,7 @@ import handleEditData from "../../hooks/handleEditData";
 
 const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateId}) => {
   const editorRef = useRef(null);
-  const {data: templates} = useFetchData("templates");
+  const {data: templates} = useFetchData("templateContent");
   const [isComplete, setIsComplete] = useState(false);
   const [templateData, setTemplateData] = useState({
     title: "",
@@ -29,7 +29,7 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
         content,
       };
 
-      await handleAddData(certData, "templates");
+      await handleAddData(certData, "templateContent");
   
       setTemplateData({});
       setShowAddTemplate(false);
@@ -48,7 +48,7 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
         content
       };
   
-      await handleEditData(id, updatedTemplate, "templates");
+      await handleEditData(id, updatedTemplate, "templateContent");
       setTemplateData({});
       setShowAddTemplate(false);
       setIsEdit(false);

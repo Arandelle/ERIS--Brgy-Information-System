@@ -39,6 +39,9 @@ const handleAddData = async (data, type) => {
     hotlines: {
       ...dataWithDateAndTimestamp,
     },
+    templateContent: {
+      ...dataWithDateAndTimestamp,
+    },
     templates: {
       ...dataWithDateAndTimestamp,
     },
