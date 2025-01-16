@@ -2,6 +2,7 @@ export const generateFullTemplate = (
   templateTitle,
   systemLogo,
   tanzaLogo,
+  templateData,
   content
 ) => `
   <html>
@@ -52,7 +53,7 @@ export const generateFullTemplate = (
       </style>
     </head>
     <body>
-      ${generateBodyTemplate(systemLogo, tanzaLogo, content)}
+      ${generateBodyTemplate(systemLogo, tanzaLogo, content,templateData)}
     </body>
   </html>
 `;

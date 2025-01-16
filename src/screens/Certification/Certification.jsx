@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import Toolbar from "../../components/ToolBar";
 import Table from "../../components/Table";
@@ -24,7 +24,9 @@ import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { data: clearance } = useFetchData("requestClearance");
-  const { data: template } = useFetchData("templates");
+  const { data: template } = useFetchData("templateContent");
+  const { data: documentsData } = useFetchData("templates");
+  const [templateData, setTemplateData] = useState({});
   const { systemData } = useFetchSystemData();
   const [showRequestCert, setShowRequestCert] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -35,6 +37,20 @@ const Certification = () => {
   const [viewModal, setViewModal] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+      if (documentsData && documentsData.length > 0) {
+        // Find the document with the specific ID (e.g., "document1")
+        const document1Data = documentsData.find((doc) => doc.id === "document1");
+    
+        if (document1Data) {
+          // Update the templateData state with the values from document1
+          setTemplateData({
+           ...document1Data
+          });
+        }
+      }
+    }, [documentsData]);
 
   const searchFields = [
     "fullname",
@@ -121,6 +137,7 @@ const Certification = () => {
         selectedTemplate.title,
         systemData?.imageUrl,
         systemData?.tanzaLogoUrl,
+        templateData,
         content
       );
 
