@@ -48,8 +48,9 @@ const Templates = () => {
     ? generateBodyTemplate(
         systemData?.imageUrl,
         systemData?.tanzaLogoUrl,
-        selectedTemplate?.content,
+        selectedTemplate,
         templateData,
+        selectedTemplate.title,
         isTemplateEdit
       )
     : null;

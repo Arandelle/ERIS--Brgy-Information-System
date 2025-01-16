@@ -1,9 +1,10 @@
+// this is for printing process, to render the template with style since the tailwind style won't works on print
 export const generateFullTemplate = (
   templateTitle,
   systemLogo,
   tanzaLogo,
+  content, // get the content with exact values
   templateData,
-  content
 ) => `
   <html>
     <head>
@@ -53,12 +54,12 @@ export const generateFullTemplate = (
       </style>
     </head>
     <body>
-      ${generateBodyTemplate(systemLogo, tanzaLogo, content,templateData)}
+      ${generateBodyTemplate(systemLogo, tanzaLogo, content,templateData, templateTitle)}
     </body>
   </html>
 `;
 
-export const generateBodyTemplate = (systemLogo, tanzaLogo, content,templateData, isEdit = false) => {
+export const generateBodyTemplate = (systemLogo, tanzaLogo, template,templateData, templateTitle, isEdit = false, ) => {
   const editableStyle = isEdit ? ' style="border: 1px dashed #000; padding: 4px;"' : '';
   const editableAttribute = isEdit ? ' contenteditable="true"' : '';
   const imageStyle = isEdit ? ' style="border: 1px dashed #000; cursor: pointer;"' : '';
@@ -106,8 +107,8 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content,templateData
           ${generateEditableImageInput('tanzaLogo', tanzaLogo)}
         </div>
       </div>
-      <p id="certificationTitle" class="text-center font-bold uppercase text-3xl p-12"${editableStyle} ${editableAttribute}>
-        ${templateData.certificationTitle}
+      <p id="certificationTitle" class="text-center font-bold uppercase text-3xl p-12">
+        ${templateTitle}
       </p>
       <div class="flex justify-center">
         <div
@@ -156,7 +157,7 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content,templateData
           style="flex: 1 1 75%; position: relative; height: 200px;"
         >
           <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 100%; background-image: url('${tanzaLogo}'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.3;"></div>
-          <div style="position: relative;">${content}</div>
+          <div style="position: relative;">${template.content || template}</div>
         </div>
       </div>
     </div>`;

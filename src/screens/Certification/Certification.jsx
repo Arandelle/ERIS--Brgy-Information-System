@@ -137,8 +137,8 @@ const Certification = () => {
         selectedTemplate.title,
         systemData?.imageUrl,
         systemData?.tanzaLogoUrl,
+        content,
         templateData,
-        content
       );
 
       // Render printable content
@@ -287,8 +287,8 @@ const Certification = () => {
           color={"green"}
           fontSize={"small"}
           tooltip={"Edit"}
-          className={(rejected || done ) && "cursor-not-allowed opacity-50"}
-          onClick={(rejected || done) ? "" : () => handleEditClick(userData)}
+          className={rejected && "cursor-not-allowed opacity-50"}
+          onClick={rejected ? "" : () => handleEditClick(userData)}
         />
         <IconButton
           icon={icons.delete}
