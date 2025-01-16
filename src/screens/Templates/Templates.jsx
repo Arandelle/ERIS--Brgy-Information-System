@@ -92,6 +92,14 @@ const Templates = () => {
   const handleSaveTemplate = async () => {
     try{
       const updatedTemplateData = {
+        headers: {
+          republic: document.querySelector('#republic')?.innerText || templateData.headers.republic,
+          province: document.querySelector('#province')?.innerText || templateData.headers.province,
+          municipality: document.querySelector('#municipality')?.innerText || templateData.headers.municipality,
+          barangay: document.querySelector('#barangay')?.innerText || templateData.headers.barangay,
+          office: document.querySelector('#office')?.innerText || templateData.headers.office
+        },
+        certificationTitle: document.querySelector('#certificationTitle')?.innerText || templateData.certificationTitle,
         chairman: document.querySelector('#chairman')?.innerText || templateData.chairman,
         counsilors: {
           counsilor1: document.querySelector('#counsilor1')?.innerText || templateData.counsilors.counsilor1,

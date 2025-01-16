@@ -88,16 +88,16 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content,templateData
           style="flex: 1 1 50%"
         >
           <p class="text-sm">
-           <span id="republic" ${editableStyle} ${editableAttribute}> Republic of the Philippines</span>
+           <span id="republic" ${editableStyle} ${editableAttribute}>${templateData.headers.republic}</span>
             <br />
-            <span id="province" ${editableStyle} ${editableAttribute}>Province of Cavite</span>
+            <span id="province" ${editableStyle} ${editableAttribute}>${templateData.headers.province}</span>
             <br />
-           <span id="municipality" ${editableStyle} ${editableAttribute}> Municipality of Tanza</span>
+           <span id="municipality" ${editableStyle} ${editableAttribute}>${templateData.headers.municipality}</span>
             <br />
-            <span id="barangay" class="font-bold uppercase" ${editableStyle} ${editableAttribute}>Barangay Bagtas</span>
+            <span id="barangay" class="font-bold uppercase" ${editableStyle} ${editableAttribute}>${templateData.headers.barangay}</span>
             <br />
             <span id="office" class="font-bold uppercase whitespace-nowrap" ${editableStyle} ${editableAttribute}>
-              Office of the Barangay Chairman
+              ${templateData.headers.office}
             </span>
           </p>
         </div>
@@ -105,8 +105,8 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, content,templateData
           ${generateEditableImageInput('tanzaLogo', tanzaLogo)}
         </div>
       </div>
-      <p class="text-center font-bold uppercase text-3xl p-12"${editableStyle} ${editableAttribute}>
-        Barangay Certification
+      <p id="certificationTitle" class="text-center font-bold uppercase text-3xl p-12"${editableStyle} ${editableAttribute}>
+        ${templateData.certificationTitle}
       </p>
       <div class="flex justify-center">
         <div
