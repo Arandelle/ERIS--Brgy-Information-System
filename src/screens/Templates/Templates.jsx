@@ -13,6 +13,9 @@ import handleDeleteData from "../../hooks/handleDeleteData";
 import { toast } from "sonner";
 import handleEditData from "../../hooks/handleEditData";
 import { templateContent } from "./TemplateContent";
+import { ref, update } from "firebase/database";
+import { database, storage } from "../../services/firebaseConfig";
+import { deleteObject, getDownloadURL, ref as storageRef, uploadBytes } from "firebase/storage";
 
 const Templates = () => {
   const [showAddTemplate, setShowAddTemplate] = useState(false);
@@ -21,28 +24,52 @@ const Templates = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
   const { data: templates } = useFetchData("templateContent");
-  const {data: documentsData} = useFetchData("templates");
+  const { data: documentsData } = useFetchData("templates");
   const { systemData } = useFetchSystemData();
   const [templateData, setTemplateData] = useState({});
-  
+  const [images, setImages] = useState({
+    image1: "",
+    image1File: null,
+    image1Preview: "",
+    image2: "",
+    image2File: null,
+    image2Preview: "",
+  });
 
   useEffect(() => {
     if (documentsData && documentsData.length > 0) {
       // Find the document with the specific ID (e.g., "document1")
       const document1Data = documentsData.find((doc) => doc.id === "document1");
-  
+
       if (document1Data) {
         // Update the templateData state with the values from document1
         setTemplateData({
-         ...document1Data
+          ...document1Data,
         });
       }
     }
   }, [documentsData]);
-  
+
   const selectedTemplate = templates?.find(
     (template) => template.id === selectedTemplateId
   );
+
+  const handleImageChange = (e, imageId) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImages((prevImages) => ({
+          ...prevImages,
+          [`${imageId}File`]: file,
+          [`${imageId}Preview`]: event.target.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    } else {
+      toast.error("Invalid file type or size. Please upload an image under 5MB.");
+    }
+  };
 
   // Generate the template body content based on the selected template
   const renderTemplate = selectedTemplate
@@ -52,11 +79,13 @@ const Templates = () => {
         selectedTemplate,
         templateData,
         selectedTemplate.title,
-        isTemplateEdit
+        isTemplateEdit,
+        handleImageChange,
+        images
       )
     : null;
-  
-    // show the specefic template based on templateId
+
+  // show the specefic template based on templateId
   const handleShowTemplate = (templateId) => {
     setSelectedTemplateId(templateId);
   };
@@ -64,7 +93,7 @@ const Templates = () => {
   const handleCloseButton = () => {
     setShowAddTemplate(!showAddTemplate);
     setIsEdit(false);
-  }
+  };
 
   const handleEditClick = (templateId) => {
     setShowAddTemplate(true);
@@ -92,37 +121,83 @@ const Templates = () => {
   };
 
   const handleSaveTemplate = async () => {
-    try{
+    const templatesRef = ref(database, "templates/document1");
+  
+    const uploadImage = async (imageFile, oldImageUrl) => {
+      if (!imageFile) return oldImageUrl;
+  
+      try {
+        const fileRef = storageRef(storage, `template-images/${Date.now()}_${imageFile.name}`);
+        await uploadBytes(fileRef, imageFile);
+        const newImageUrl = await getDownloadURL(fileRef);
+  
+        // Delete the old image if it exists
+        if (oldImageUrl) {
+          try {
+            const oldImageRef = storageRef(storage, oldImageUrl);
+            await deleteObject(oldImageRef);
+          } catch (error) {
+            console.error("Failed to delete old image:", error);
+          }
+        }
+  
+        return newImageUrl;
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        throw new Error("Failed to upload image. Please try again.");
+      }
+    };
+  
+    try {
+      // Get updated image URLs
+      const image1Url = await uploadImage(images.image1File, templateData?.images?.image1);
+      const image2Url = await uploadImage(images.image2File, templateData?.images?.image2);
+  
+      // Helper function to extract text content
+      const getTextContent = (id, fallback) =>
+        document.querySelector(`#${id}`)?.innerText || fallback;
+  
+      // Prepare updated template data
       const updatedTemplateData = {
+        images: {
+          image1: image1Url,
+          image2: image2Url,
+        },
         headers: {
-          republic: document.querySelector('#republic')?.innerText || templateData.headers.republic,
-          province: document.querySelector('#province')?.innerText || templateData.headers.province,
-          municipality: document.querySelector('#municipality')?.innerText || templateData.headers.municipality,
-          barangay: document.querySelector('#barangay')?.innerText || templateData.headers.barangay,
-          office: document.querySelector('#office')?.innerText || templateData.headers.office
+          republic: getTextContent("republic", templateData.headers?.republic),
+          province: getTextContent("province", templateData.headers?.province),
+          municipality: getTextContent("municipality", templateData.headers?.municipality),
+          barangay: getTextContent("barangay", templateData.headers?.barangay),
+          office: getTextContent("office", templateData.headers?.office),
         },
-        certificationTitle: document.querySelector('#certificationTitle')?.innerText || templateData.certificationTitle,
-        chairman: document.querySelector('#chairman')?.innerText || templateData.chairman,
+        certificationTitle: getTextContent("certificationTitle", templateData?.certificationTitle),
+        chairman: getTextContent("chairman", templateData?.chairman),
         counsilors: {
-          counsilor1: document.querySelector('#counsilor1')?.innerText || templateData.counsilors.counsilor1,
-          counsilor2: document.querySelector('#counsilor2')?.innerText || templateData.counsilors.counsilor2,
-          counsilor3: document.querySelector('#counsilor3')?.innerText || templateData.counsilors.counsilor3,
-          counsilor4: document.querySelector('#counsilor4')?.innerText || templateData.counsilors.counsilor4,
-          counsilor5: document.querySelector('#counsilor5')?.innerText || templateData.counsilors.counsilor5,
-          counsilor6: document.querySelector('#counsilor6')?.innerText || templateData.counsilors.counsilor6,
-          counsilor7: document.querySelector('#counsilor7')?.innerText || templateData.counsilors.counsilor7,
+          counsilor1: getTextContent("counsilor1", templateData.counsilors?.counsilor1),
+          counsilor2: getTextContent("counsilor2", templateData.counsilors?.counsilor2),
+          counsilor3: getTextContent("counsilor3", templateData.counsilors?.counsilor3),
+          counsilor4: getTextContent("counsilor4", templateData.counsilors?.counsilor4),
+          counsilor5: getTextContent("counsilor5", templateData.counsilors?.counsilor5),
+          counsilor6: getTextContent("counsilor6", templateData.counsilors?.counsilor6),
+          counsilor7: getTextContent("counsilor7", templateData.counsilors?.counsilor7),
         },
-        skChairperson: document.querySelector('#skChairperson')?.innerText || templateData.skChairperson,
-        secretary: document.querySelector('#secretary')?.innerText || templateData.secretary,
-        treasurer: document.querySelector('#treasurer')?.innerText || templateData.treasurer,
+        skChairperson: getTextContent("skChairperson", templateData?.skChairperson),
+        secretary: getTextContent("secretary", templateData?.secretary),
+        treasurer: getTextContent("treasurer", templateData?.treasurer),
       };
-
-      await handleEditData("document1", updatedTemplateData, "templates");
+  
+      // Update database
+      await update(templatesRef, updatedTemplateData);
+  
       setIsTemplateEdit(false);
-    }catch(error){
-      toast.error(error);
+      toast.success("Template saved successfully!");
+    } catch (error) {
+      toast.error(error.message || "An error occurred while saving the template.");
+      console.error(error);
     }
   };
+  
+
 
   return (
     <HeaderAndSideBar
@@ -171,21 +246,39 @@ const Templates = () => {
               <>
                 <div className="flex flex-row space-x-2 bg-white dark:bg-gray-800 p-4 mb-4 text-gray-500">
                   <button
-                    className={`px-4 text-green-500 dark:text-green-400 ${isTemplateEdit ? "hidden" : ""}`}
+                    className={`px-4 text-green-500 dark:text-green-400 ${
+                      isTemplateEdit ? "hidden" : ""
+                    }`}
                     onClick={() => handleEditClick(selectedTemplate.id)}
                   >
                     Edit Content
                   </button>
-                  <button className="px-4 text-blue-500 dark:text-blue-400" onClick={isTemplateEdit ? 
-                  () => handleSaveTemplate() : handleTemplateIsEdit}>
+                  <button
+                    className="px-4 text-blue-500 dark:text-blue-400"
+                    onClick={
+                      isTemplateEdit
+                        ? () => handleSaveTemplate()
+                        : handleTemplateIsEdit
+                    }
+                  >
                     {isTemplateEdit ? "Save Changes" : "Edit Template"}
                   </button>
                   {isTemplateEdit && (
-                    <button className="px-4 text-gray-500 dark:text-gray-400" onClick={handleTemplateIsEdit}>
-                    {"Cancel"}
-                  </button>
+                    <button
+                      className="px-4 text-gray-500 dark:text-gray-400"
+                      onClick={handleTemplateIsEdit}
+                    >
+                      {"Cancel"}
+                    </button>
                   )}
-                  <button className={`px-4 text-red-500 dark:text-red-400 ${isTemplateEdit ? "hidden" : ""}`} onClick={()=>handleDeleteModal(selectedTemplate.id)}>Delete Template</button>
+                  <button
+                    className={`px-4 text-red-500 dark:text-red-400 ${
+                      isTemplateEdit ? "hidden" : ""
+                    }`}
+                    onClick={() => handleDeleteModal(selectedTemplate.id)}
+                  >
+                    Delete Template
+                  </button>
                 </div>
                 <div
                   style={{
@@ -199,7 +292,7 @@ const Templates = () => {
                     overflow: "auto",
                   }}
                 >
-                 {renderTemplate} {/**render the jsx template */}
+                  {renderTemplate} {/**render the jsx template */}
                 </div>
               </>
             ) : (
@@ -212,20 +305,23 @@ const Templates = () => {
 
             {showDeleteModal && (
               <AskCard
-              toggleModal={() => setShowDeleteModal(!showDeleteModal)}
-              question={
-                <span>
-                  Do you want to delete
-                  <span className="text-primary-500 text-bold">
-                    {" "}
-                    {templates.find((item) => item.id === selectedTemplateId)?.title}
-                  </span>{" "}
-                  ?{" "}
-                </span>
-              }
-              confirmText={"Delete"}
-              onConfirm={handleConfirmDelete}
-            />
+                toggleModal={() => setShowDeleteModal(!showDeleteModal)}
+                question={
+                  <span>
+                    Do you want to delete
+                    <span className="text-primary-500 text-bold">
+                      {" "}
+                      {
+                        templates.find((item) => item.id === selectedTemplateId)
+                          ?.title
+                      }
+                    </span>{" "}
+                    ?{" "}
+                  </span>
+                }
+                confirmText={"Delete"}
+                onConfirm={handleConfirmDelete}
+              />
             )}
           </>
         </>
