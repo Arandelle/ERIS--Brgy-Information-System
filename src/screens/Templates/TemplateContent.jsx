@@ -1,5 +1,4 @@
 export const templateContent = (
-  systemLogo,
   tanzaLogo,
   template,
   templateData,
@@ -44,7 +43,7 @@ export const templateContent = (
           style={{ flex: "1 1 25%" }}
         >
           {" "}
-          {generateEditableImageInput("image1", systemLogo)}{" "}
+          {generateEditableImageInput("image1", templateData.images.image1)}{" "}
         </div>{" "}
         <div
           className="flex-1 flex items-center justify-center text-center bg-white p-4"
@@ -101,7 +100,7 @@ export const templateContent = (
         </div>{" "}
         <div className="flex-1" style={{ flex: "1 1 25%" }}>
           {" "}
-          {generateEditableImageInput("image2", tanzaLogo)}{" "}
+          {generateEditableImageInput("image2", templateData.images.image2)}{" "}
         </div>{" "}
       </div>{" "}
       <p

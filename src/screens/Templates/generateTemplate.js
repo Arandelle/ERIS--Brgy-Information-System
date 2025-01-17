@@ -1,7 +1,6 @@
 // this is for printing process, to render the template with style since the tailwind style won't works on print
 export const generateFullTemplate = (
   templateTitle,
-  systemLogo,
   tanzaLogo,
   content, // get the content with exact values
   templateData,
@@ -54,12 +53,12 @@ export const generateFullTemplate = (
       </style>
     </head>
     <body>
-      ${generateBodyTemplate(systemLogo, tanzaLogo, content,templateData, templateTitle)}
+      ${generateBodyTemplate(tanzaLogo, content,templateData, templateTitle)}
     </body>
   </html>
 `;
 
-export const generateBodyTemplate = (systemLogo, tanzaLogo, template,templateData, templateTitle, isEdit = false, ) => {
+export const generateBodyTemplate = (tanzaLogo, template,templateData, templateTitle, isEdit = false, ) => {
   const editableStyle = isEdit ? ' style="border: 1px dashed #000; padding: 4px;"' : '';
   const editableAttribute = isEdit ? ' contenteditable="true"' : '';
   const imageStyle = isEdit ? ' style="border: 1px dashed #000; cursor: pointer;"' : '';
@@ -83,7 +82,7 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, template,templateDat
     <div class="p-10">
       <div class="flex justify-center gap-4">
         <div class="flex-1 flex items-center justify-end" style="flex: 1 1 25%">
-          ${generateEditableImageInput('systemLogo', systemLogo)}
+          ${generateEditableImageInput('systemLogo', templateData.images.image1)}
         </div>
         <div
           class="flex-1 flex items-center justify-center text-center bg-white p-4"
@@ -104,7 +103,7 @@ export const generateBodyTemplate = (systemLogo, tanzaLogo, template,templateDat
           </p>
         </div>
         <div class="flex-1" style="flex: 1 1 25%">
-          ${generateEditableImageInput('tanzaLogo', tanzaLogo)}
+          ${generateEditableImageInput('tanzaLogo', templateData.images.image2)}
         </div>
       </div>
       <p id="certificationTitle" class="text-center font-bold uppercase text-3xl p-12">
