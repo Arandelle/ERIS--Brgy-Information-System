@@ -12,6 +12,7 @@ import AskCard from "../../components/ReusableComponents/AskCard";
 import handleDeleteData from "../../hooks/handleDeleteData";
 import { toast } from "sonner";
 import handleEditData from "../../hooks/handleEditData";
+import { templateContent } from "./TemplateContent";
 
 const Templates = () => {
   const [showAddTemplate, setShowAddTemplate] = useState(false);
@@ -45,7 +46,7 @@ const Templates = () => {
 
   // Generate the template body content based on the selected template
   const renderTemplate = selectedTemplate
-    ? generateBodyTemplate(
+    ? templateContent(
         systemData?.imageUrl,
         systemData?.tanzaLogoUrl,
         selectedTemplate,
@@ -197,8 +198,9 @@ const Templates = () => {
                     boxShadow: "0 0 5px rgba(0,0,0,0.1)",
                     overflow: "auto",
                   }}
-                  dangerouslySetInnerHTML={{ __html: renderTemplate }}
-                ></div>
+                >
+                 {renderTemplate} {/**render the jsx template */}
+                </div>
               </>
             ) : (
               <div className="text-center text-xl flex items-center justify-center">
