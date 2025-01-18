@@ -11,8 +11,8 @@ const handleEditData = async (id,data, type) => {
       const snapshot = await get(dataRef);
 
       if (snapshot.exists()) {
-        const announcementData = snapshot.val();
-        let imageUrl = announcementData.imageUrl; // retain the existing image url
+        const existingData = snapshot.val();
+        let imageUrl = existingData.imageUrl; // retain the existing image url
 
         //check if new image is selected
         if (data?.image) {
@@ -28,10 +28,10 @@ const handleEditData = async (id,data, type) => {
             imageUrl = await getDownloadURL(imageRef);
 
             //Delete the current image if it exists
-            if (announcementData.imageUrl) {
+            if (existingData.imageUrl) {
               const oldImageRef = storageRef(
                 storage,
-                announcementData.imageUrl
+                existingData.imageUrl
               );
               try{
                 await deleteObject(oldImageRef);
@@ -57,6 +57,10 @@ const handleEditData = async (id,data, type) => {
             ...dataWithDateAndTimestamp,
             imageUrl
           },
+          systemData: {
+            ...dataWithDateAndTimestamp,
+            imageUrl
+          },
           announcement: {
             ...dataWithDateAndTimestamp,
             imageUrl,
@@ -73,7 +77,7 @@ const handleEditData = async (id,data, type) => {
           },
           requestClearance: {
             ...dataWithDateAndTimestamp,
-          }
+          },
         };
 
         await update(dataRef, dataBasedOnType[type]);

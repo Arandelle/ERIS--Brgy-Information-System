@@ -1,34 +1,27 @@
 import { useEffect, useState } from "react";
 import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import icons from "../assets/icons/Icons";
-import { auth, database, storage } from "../services/firebaseConfig";
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
+import { auth } from "../services/firebaseConfig";
 import { useFetchData } from "../hooks/useFetchData";
-import { update, ref } from "firebase/database";
 import { toast } from "sonner";
-import { useFetchSystemData } from "../hooks/useFetchSystemData";
 import ButtonStyle from "../components/ReusableComponents/Button";
 import ProfileModal from "./ProfileModal";
 import useImageView from "../hooks/useImageView";
 import ViewImage from "./ViewImage";
+import handleEditData from "../hooks/handleEditData";
 
 const Setting = () => {
   const {isModalOpen, currentImage, openModal, closeModal} = useImageView();
-  const { systemData, loading, error, setLoading } = useFetchSystemData();
+  const user = auth.currentUser;
+  const { data: systemData, loading, setLoading} = useFetchData("systemData");
+  const { data: admin } = useFetchData("admins");
+  const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
   const [systemState, setSystemState] = useState({
     originalTitle: "",
     title: "",
     previewImage: "",
     originalImageUrl: "",
-    tanzaLogoUrl: "",
-    tanzaLogoPreview: "",
     logoImageFile: null,
-    tanzaLogoImageFile: null,
     isModified: false,
   });
   const [adminData, setAdminData] = useState({
@@ -37,11 +30,25 @@ const Setting = () => {
     fullname: "",
     imageFile: null,
   });
-
-  const user = auth.currentUser;
-  const { data: admin } = useFetchData("admins");
-  const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
   const [showProfileModal, setShowProfileModal] = useState(false);
+
+  // render the state with the systemData
+  useEffect(() => {
+    if(systemData && systemData.length > 0){
+      const systemDataDetails = systemData.find((data) => data.id === "details" );
+
+      if(systemDataDetails){
+        setSystemState((prevState) => ({
+          ...prevState,
+          originalTitle: systemDataDetails.title,
+          title: systemDataDetails.title,
+          originalImageUrl: systemDataDetails.imageUrl,
+          previewImage: systemDataDetails.imageUrl,
+          isModified: false,
+        }))
+      }
+    }
+  }, [systemData]);
 
   // Handle edit profile
   const handleEditProfile = () => {
@@ -61,12 +68,6 @@ const Setting = () => {
           ...prevState,
           logoImageFile: file,
           previewImage: URL.createObjectURL(file),
-        }));
-      } else if (type === "tanzaLogo") {
-        setSystemState((prevState) => ({
-          ...prevState,
-          tanzaLogoImageFile: file,
-          tanzaLogoPreview: URL.createObjectURL(file),
         }));
       } else if (type === "profile") {
         setAdminData({
@@ -91,28 +92,11 @@ const Setting = () => {
     }));
   };
 
-  // Set the system data to the state
-  useEffect(() => {
-    if (systemData) {
-      console.log("System Data Image URL:", systemData.imageUrl);
-      setSystemState((prevState) => ({
-        ...prevState,
-        originalTitle: systemData.title,
-        title: systemData.title,
-        originalImageUrl: systemData.imageUrl,
-        previewImage: systemData.imageUrl,
-        tanzaLogoPreview: systemData.tanzaLogoPreview,
-        tanzaLogoUrl: systemData.tanzaLogoUrl,
-        isModified: false,
-      }));
-    }
-  }, [systemData]);
-
   // Check if the system data has been modified
   useEffect(() => {
-    const { title, logoImageFile, tanzaLogoImageFile } = systemState;
+    const { title, logoImageFile } = systemState;
     if (
-      title !== systemState.originalTitle || logoImageFile || tanzaLogoImageFile
+      title !== systemState.originalTitle || logoImageFile
     ) {
       setSystemState((prevState) => ({
         ...prevState,
@@ -129,80 +113,13 @@ const Setting = () => {
   // Update the system data
   const handleUpdateData = async () => {
     setLoading(true);
-    const systemRef = ref(database, "systemData");
 
     // Upload the image to the storage
     try {
       let imageUrl = systemState.originalImageUrl; // retain the existing image url
-      let tanzaLogoUrl = systemState.tanzaLogoUrl;
 
-      // Upload the new image if it exists
-      if (systemState.logoImageFile) {
-        try {
-          const imageRef = storageRef(
-            storage,
-            `system-images/${Date.now()}_${systemState.logoImageFile.name}`
-          );
-        
-          await uploadBytes(imageRef, systemState.logoImageFile);
-          imageUrl = await getDownloadURL(imageRef);
-
-          // Delete old image if exists
-          if (systemState.originalImageUrl) {
-            try {
-              const oldImageRef = storageRef(
-                storage,
-                systemState.originalImageUrl
-              );
-              await deleteObject(oldImageRef);
-              console.log("Old image deleted: ", systemState.originalImageUrl);
-            } catch (deleteError) {
-              console.warn("Error deleting old image:", deleteError);
-              // Not a critical error, so we continue
-            }
-          }
-        } catch (error) {
-          console.error("Detailed upload error:", error);
-          toast.error(`Error uploading new image: ${error.message}`);
-          setLoading(false);
-          return;
-        }
-      }
-    
-      if (systemState.tanzaLogoImageFile) {
-        try {
-          const tanzaLogoRef = storageRef(
-            storage,
-            `system-images/${Date.now()}_${systemState.tanzaLogoImageFile.name}`
-          );
-
-          await uploadBytes(tanzaLogoRef, systemState.tanzaLogoImageFile);
-          tanzaLogoUrl = await getDownloadURL(tanzaLogoRef);
-
-          // Delete old image if exists
-          if (systemState.tanzaLogoUrl) {
-            try {
-              const oldTanzaLogoRef = storageRef(
-                storage,
-                systemState.tanzaLogoUrl
-              );
-              await deleteObject(oldTanzaLogoRef);
-              console.log("Old image deleted: ", systemState.tanzaLogoUrl);
-            } catch (deleteError) {
-              console.warn("Error deleting old image:", deleteError);
-              // Not a critical error, so we continue
-            }
-          }
-        } catch (error) {
-          console.error("Detailed upload error:", error);
-          toast.error(`Error uploading new image: ${error.message}`);
-          setLoading(false);
-          return;
-        }
-      }
-
-      const updatedData = { title: systemState.title, imageUrl, tanzaLogoUrl };
-      await update(systemRef, updatedData);
+      const updatedData = { title: systemState.title, image: systemState.logoImageFile };
+      await handleEditData("details", updatedData, "systemData");
       console.log("Data updated in database: ", updatedData);
 
       setSystemState((prevState) => ({
@@ -210,12 +127,9 @@ const Setting = () => {
         originalTitle: systemState.title,
         originalImageUrl: imageUrl,
         previewImage: imageUrl,
-        tanzaLogoUrl: tanzaLogoUrl,
-        tanzaLogoPreview: tanzaLogoUrl,
         isModified: false,
       }));
       setLoading(false);
-      toast.success("Update successfully");
     } catch (error) {
       toast.error(`Error: ${error}`);
       console.error("Error", error);
@@ -333,7 +247,7 @@ const Setting = () => {
                     htmlFor="file-upload"
                     className=" bg-gray-100 dark:text-gray-200 dark:bg-gray-700 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"
                   >
-                    Upload Photo for Bagtas Logo
+                    Upload Logo
                     <input
                       id="file-upload"
                       type="file"
@@ -342,32 +256,6 @@ const Setting = () => {
                     />
                   </label>
                </div>
-              </div>
-
-              <div className="flex flex-row items-center">
-               <div className="flex-1 basis-1/2">
-                  <img
-                    src={systemState.tanzaLogoPreview || systemState.tanzaLogoUrl}
-                    alt="System"
-                    className="w-24 lg:w-40 rounded-full cursor-pointer"
-                    loading="lazy"
-                    onClick={() => openModal(systemState.tanzaLogoUrl)}
-                  />
-               </div>
-              <div className="flex-1 basis-1/2">
-                  <label
-                    htmlFor="file-upload-tanza"
-                    className="bg-gray-100 dark:text-gray-200 dark:bg-gray-700 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"
-                  >
-                    Upload Photo for Tanza logo
-                    <input
-                      id="file-upload-tanza"
-                      type="file"
-                      className="hidden"
-                      onChange={(e) => handleImageChange(e, "tanzaLogo")}
-                    />
-                  </label>
-              </div>
               </div>
             </div>
             {/**Save Button */}

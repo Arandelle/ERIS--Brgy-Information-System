@@ -34,5 +34,5 @@ export const useFetchData = (dataType) => {
     return () => unsubscribe();
   }, [dataType]);
 
-  return { data,setData, loading, error };
+  return { data,setData, loading, error, setLoading };
 };
