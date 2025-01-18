@@ -121,18 +121,18 @@ export const useSidebarData = [
     link: "/hotlines",
   },
   {
-    title: "Certification",
-    icon : (
-      <icons.print className={`${style}`}/>
-    ),
-    link: "/certification",
-  },
-  {
     title: "Templates",
     icon : (
       <icons.document className={`${style}`}/>
     ),
     link: "/templates",
+  },
+  {
+    title: "Certification",
+    icon : (
+      <icons.print className={`${style}`}/>
+    ),
+    link: "/certification",
   },
   {
     title: "Emergency Records",

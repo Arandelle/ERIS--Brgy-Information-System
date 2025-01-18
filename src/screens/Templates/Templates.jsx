@@ -28,12 +28,12 @@ const Templates = () => {
   const { systemData } = useFetchSystemData();
   const [templateData, setTemplateData] = useState({});
   const [images, setImages] = useState({
-    image1: "",
     image1File: null,
     image1Preview: "",
-    image2: "",
     image2File: null,
     image2Preview: "",
+    image3File: null,
+    image3Preview: "",
   });
 
   useEffect(() => {
@@ -151,6 +151,7 @@ const Templates = () => {
       // Get updated image URLs
       const image1Url = await uploadImage(images.image1File, templateData?.images?.image1);
       const image2Url = await uploadImage(images.image2File, templateData?.images?.image2);
+      const image3Url = await uploadImage(images.image3File, templateData?.images?.image3);
   
       // Helper function to extract text content
       const getTextContent = (id, fallback) =>
@@ -161,6 +162,7 @@ const Templates = () => {
         images: {
           image1: image1Url,
           image2: image2Url,
+          image3: image3Url,
         },
         headers: {
           republic: getTextContent("republic", templateData.headers?.republic),
