@@ -1,7 +1,6 @@
 // this is for printing process, to render the template with style since the tailwind style won't works on print
 export const generateFullTemplate = (
   templateTitle,
-  tanzaLogo,
   content, // get the content with exact values
   templateData,
 ) => `
@@ -53,12 +52,12 @@ export const generateFullTemplate = (
       </style>
     </head>
     <body>
-      ${generateBodyTemplate(tanzaLogo, content,templateData, templateTitle)}
+      ${generateBodyTemplate(content,templateData, templateTitle)}
     </body>
   </html>
 `;
 
-export const generateBodyTemplate = (tanzaLogo, template,templateData, templateTitle, isEdit = false, ) => {
+export const generateBodyTemplate = (template,templateData, templateTitle, isEdit = false, ) => {
   const editableStyle = isEdit ? ' style="border: 1px dashed #000; padding: 4px;"' : '';
   const editableAttribute = isEdit ? ' contenteditable="true"' : '';
   const imageStyle = isEdit ? ' style="border: 1px dashed #000; cursor: pointer;"' : '';
@@ -155,7 +154,7 @@ export const generateBodyTemplate = (tanzaLogo, template,templateData, templateT
           class="flex-1 p-4"
           style="flex: 1 1 75%; position: relative; height: 200px;"
         >
-          <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 100%; background-image: url('${tanzaLogo}'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.3;"></div>
+          <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 100%; background-image: url('${templateData.images.image3}'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.3;"></div>
           <div style="position: relative;">${template.content || template}</div>
         </div>
       </div>

@@ -135,7 +135,6 @@ const Certification = () => {
 
       const renderTemplate = generateFullTemplate(
         selectedTemplate.title,
-        systemData?.tanzaLogoUrl,
         content,
         templateData,
       );
