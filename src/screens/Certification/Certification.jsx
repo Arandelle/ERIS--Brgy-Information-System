@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import Toolbar from "../../components/ToolBar";
 import Table from "../../components/Table";
@@ -10,7 +10,6 @@ import usePagination from "../../hooks/usePagination";
 import IconButton from "../../components/ReusableComponents/IconButton";
 import { useFetchData } from "../../hooks/useFetchData";
 import { toast } from "sonner";
-import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import ClearanceModal from "./ClearanceModal";
 import { formatDate } from "../../helper/FormatDate";
 import { generateFullTemplate } from "../Templates/generateTemplate";
@@ -20,14 +19,15 @@ import { ref, update } from "firebase/database";
 import { database } from "../../services/firebaseConfig";
 import ClearanceViewModal from "./ClearanceViewModal";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
+import useSendNotification from "../../hooks/useSendNotification";
 
 const Certification = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const {sendNotification} = useSendNotification();
   const { data: clearance } = useFetchData("requestClearance");
   const { data: template } = useFetchData("templateContent");
   const { data: documentsData } = useFetchData("templates");
   const [templateData, setTemplateData] = useState({});
-  const { systemData } = useFetchSystemData();
   const [showRequestCert, setShowRequestCert] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [showUpdateStatus, setShowUpdateStatus] = useState({
@@ -162,6 +162,7 @@ const Certification = () => {
 
   const handleChangeStatusClick = (userData) => {
     setSelectedId(userData.id);
+    setUserData(userData);
   };
 
   const handleViewClick = (userData) => {
@@ -195,7 +196,9 @@ const Certification = () => {
       };
 
       await update(dataRef, clearanceData);
+      sendNotification("users", userData.userId, "certificateStatus", status);
       toast.info(`Clearance request ${status}`);
+      console.log(userData.userId, status);
     } catch (error) {
       toast.error(`Error updating: ${error}`);
     }
@@ -224,6 +227,7 @@ const Certification = () => {
     const { status } = userData;
     const rejected = status === "rejected";
     const done = status === "done";
+    const readyForPickup = status === "ready for pickup"
 
     const textColor = {
       rejected: "text-red-500 cursor-not-allowed",
@@ -248,13 +252,13 @@ const Certification = () => {
           onChange={(e) => handleUpdateClearanceStatus(e.target.value)}
           disabled={rejected || done}
         >
-          <option value="pending" className="text-yellow-500">
+          <option value="pending" className={`${!readyForPickup && "text-yellow-500"}`} disabled={readyForPickup}>
           Pending
           </option>
           <option value="done" className="text-blue-500">
           Done
           </option>
-          <option value="rejected" className="text-red-500">
+          <option value="rejected" className={`${!readyForPickup && "text-red-500"}`} disabled={readyForPickup}>
           Rejected
           </option>
           <option value="ready for pickup" className="text-green-500">
@@ -357,11 +361,7 @@ const Certification = () => {
                 </span>
               }
               confirmText={capitalizeFirstLetter(showUpdateStatus.status)}
-              onConfirm={
-                userData.status === "rejected"
-                  ? () => handleDeleteConfirm()
-                  : () => handleUpdateClearanceStatus(showUpdateStatus.status)
-              }
+              onConfirm={() => handleDeleteConfirm()}
             />
           )}
 
