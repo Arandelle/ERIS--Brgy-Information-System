@@ -1,5 +1,3 @@
-import footer from "../../assets/images/footer.jpg"
-
 export const generateFullTemplate = (
   templateTitle,
   content,
@@ -193,7 +191,7 @@ export const generateBodyTemplate = (template, templateData, templateTitle, isEd
         </div>
       </div>
       <div class="footer-wrapper">
-        <img src="${footer}" class="footer-image" alt="footer" />
+        <img src="${templateData.images.image4}" class="footer-image" alt="footer" />
       </div>
     </div>
   `;

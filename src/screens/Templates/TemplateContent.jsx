@@ -1,5 +1,3 @@
-import footer from "../../assets/images/footer.jpg"
-
 export const templateContent = (
   template,
   templateData,
