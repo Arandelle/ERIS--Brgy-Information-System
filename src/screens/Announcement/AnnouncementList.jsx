@@ -20,9 +20,11 @@ import usePagination from "../../hooks/usePagination";
 import useFilteredData from "../../components/SearchQuery";
 import useImageView from "../../hooks/useImageView";
 import ViewImage from "../ViewImage";
+import { auth } from "../../services/firebaseConfig";
 
 const Activities = () => {
   const { data: activity, setData: setActivity } = useFetchData("announcement");
+  const admin = auth.currentUser;
   const {isModalOpen, currentImage, openModal, closeModal, } = useImageView();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -93,6 +95,7 @@ const Activities = () => {
       description,
       links,
       image,
+      userId: admin.uid
     };
 
     await handleAddData(announcementData, "announcement");
@@ -123,6 +126,7 @@ const Activities = () => {
       description,
       links,
       image,
+      userId: admin.uid
     };
     await handleEditData(id, announcementData, "announcement");
     setTitle("");

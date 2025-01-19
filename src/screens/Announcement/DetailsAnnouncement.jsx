@@ -22,7 +22,7 @@ const DetailsAnnouncement = ({
   const DetailRow = ({ label, value, isLink, isImage }) => {
     return (
       <div className="flex flex-row max-w-lg">
-        <p className="flex-1 basis-1/4">{label} :</p>
+        <p className="flex-1 basis-1/4">{label}: </p>
 
         {isLink ? (
           <a className="flex-1 basis-3/4 text-blue-500" href={value}>

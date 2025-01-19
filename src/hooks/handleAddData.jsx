@@ -35,6 +35,7 @@ const handleAddData = async (data, type) => {
     announcement: {
       ...dataWithDateAndTimestamp,
       isEdited: false,
+      imageUrl
     },
     hotlines: {
       ...dataWithDateAndTimestamp,
