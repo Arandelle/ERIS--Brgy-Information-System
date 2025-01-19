@@ -34,6 +34,8 @@ const Templates = () => {
     image2Preview: "",
     image3File: null,
     image3Preview: "",
+    image4File: null,
+    image4Preview: "",
   });
 
   useEffect(() => {
@@ -151,6 +153,7 @@ const Templates = () => {
       const image1Url = await uploadImage(images.image1File, templateData?.images?.image1);
       const image2Url = await uploadImage(images.image2File, templateData?.images?.image2);
       const image3Url = await uploadImage(images.image3File, templateData?.images?.image3);
+      const image4Url = await uploadImage(images.image4File, templateData?.images?.image4);
   
       // Helper function to extract text content
       const getTextContent = (id, fallback) =>
@@ -162,6 +165,7 @@ const Templates = () => {
           image1: image1Url,
           image2: image2Url,
           image3: image3Url,
+          image4: image4Url,
         },
         headers: {
           republic: getTextContent("republic", templateData.headers?.republic),

@@ -8,6 +8,9 @@ export const templateContent = (
   handleImageChange,
   images
 ) => {
+
+  const {images: {image1, image2, image3, image4}} = templateData;
+
   const editableStyle = isEdit
     ? "border-2 border-dashed border-black p-1 focus:outline-none"
     : {};
@@ -43,7 +46,7 @@ export const templateContent = (
             className="flex-1 flex items-center justify-end"
             style={{ flex: "1 1 25%" }}
           >
-            {generateEditableImageInput("image1", templateData.images.image1)}
+            {generateEditableImageInput("image1", image1)}
           </div>
           <div
             className="flex-1 flex items-center justify-center text-center bg-white p-4"
@@ -92,7 +95,7 @@ export const templateContent = (
             </p>
           </div>
           <div className="flex-1" style={{ flex: "1 1 25%" }}>
-            {generateEditableImageInput("image2", templateData.images.image2)}
+            {generateEditableImageInput("image2", image2)}
           </div>
         </header>
         <p
@@ -189,7 +192,7 @@ export const templateContent = (
                 left: "0",
                 width: "100%",
                 height: "100mm",
-                backgroundImage: `url(${images.image3Preview || templateData.images.image3})`,
+                backgroundImage: `url(${images.image3Preview || image3})`,
                 backgroundSize: "contain",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
@@ -204,8 +207,18 @@ export const templateContent = (
           </article>
         </section>
       </main>
+      <section className="place-self-center">
+          {isEdit && 
+              <label className="border-2 border-dashed border-black cursor-pointer p-2">
+                Edit footer image
+                <input type="file" className="hidden"
+                  onChange={(e) => handleImageChange(e, "image4")}
+                />
+              </label>
+              }
+       </section>
       <footer className="px-5">
-         <img src={footer} className="w-full" />
+         <img src={images.image4Preview || image4} className="w-full" />
         </footer>
     </div>
   );
