@@ -1,7 +1,8 @@
-// this is for printing process, to render the template with style since the tailwind style won't works on print
+import footer from "../../assets/images/footer.jpg"
+
 export const generateFullTemplate = (
   templateTitle,
-  content, // get the content with exact values
+  content,
   templateData,
 ) => `
   <html>
@@ -14,8 +15,10 @@ export const generateFullTemplate = (
         .p-10 { padding: 2.5rem; }
         .flex { display: flex; }
         .flex-row { flex-direction: row; }
+        .flex-col { flex-direction: column; }
         .items-center { align-items: center; }
         .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
         .text-center { text-align: center; }
         .font-bold { font-weight: 700; }
         .uppercase { text-transform: uppercase; }
@@ -27,6 +30,7 @@ export const generateFullTemplate = (
         .bg-gray-100 { background-color: #f3f4f6; }
         .bg-gray-200 { background-color: #e5e7eb; }
         .p-4 { padding: 1rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
         .font-semibold { font-weight: 600; }
         .flex-1 { flex: 1 1 0%; }
         .basis-1/4 { flex-basis: 25%; }
@@ -45,19 +49,56 @@ export const generateFullTemplate = (
         .font-thin { font-weight: 100; }
         ul { list-style-type: none !important; padding-left: 0 !important; }
         li { margin-left: 0 !important; }
+
+        /* Page layout specific styles */
+        body {
+          margin: 0;
+          padding: 0;
+          min-height: 100vh;
+        }
+        .page-container {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+        }
+        .content-wrapper {
+          flex: 1;
+          padding: 20px;
+        }
+        .footer-wrapper {
+          width: 100%;
+          margin-top: auto;
+        }
+        .footer-image {
+          width: 100%;
+          display: block;
+        }
+
         @media print {
           body { margin: 0; padding: 0; }
-          @page { size: auto; margin: 5mm; }
+          @page { 
+            size: auto; 
+            margin: 5mm;
+          }
+          .page-container {
+            height: 100vh;
+          }
+          .footer-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+          }
         }
       </style>
     </head>
     <body>
-      ${generateBodyTemplate(content,templateData, templateTitle)}
+      ${generateBodyTemplate(content, templateData, templateTitle)}
     </body>
   </html>
 `;
 
-export const generateBodyTemplate = (template,templateData, templateTitle, isEdit = false, ) => {
+export const generateBodyTemplate = (template, templateData, templateTitle, isEdit = false) => {
   const editableStyle = isEdit ? ' style="border: 1px dashed #000; padding: 4px;"' : '';
   const editableAttribute = isEdit ? ' contenteditable="true"' : '';
   const imageStyle = isEdit ? ' style="border: 1px dashed #000; cursor: pointer;"' : '';
@@ -78,86 +119,82 @@ export const generateBodyTemplate = (template,templateData, templateTitle, isEdi
   ` : `<img src="${imageSrc}" alt="Logo" class="h-32 w-32 rounded-full" />`;
 
   return `
-    <div class="p-10">
-      <div class="flex justify-center gap-4">
-        <div class="flex-1 flex items-center justify-end" style="flex: 1 1 25%">
-          ${generateEditableImageInput('systemLogo', templateData.images.image1)}
+    <div class="page-container">
+      <div class="content-wrapper">
+        <div class="flex justify-center gap-4">
+          <div class="flex-1 flex items-center justify-end" style="flex: 1 1 25%">
+            ${generateEditableImageInput('systemLogo', templateData.images.image1)}
+          </div>
+          <div class="flex-1 flex items-center justify-center text-center bg-white p-4" style="flex: 1 1 50%">
+            <p class="text-sm">
+              <span id="republic" ${editableStyle} ${editableAttribute}>${templateData.headers.republic}</span>
+              <br />
+              <span id="province" ${editableStyle} ${editableAttribute}>${templateData.headers.province}</span>
+              <br />
+              <span id="municipality" ${editableStyle} ${editableAttribute}>${templateData.headers.municipality}</span>
+              <br />
+              <span id="barangay" class="font-bold uppercase" ${editableStyle} ${editableAttribute}>${templateData.headers.barangay}</span>
+              <br />
+              <span id="office" class="font-bold uppercase whitespace-nowrap" ${editableStyle} ${editableAttribute}>
+                ${templateData.headers.office}
+              </span>
+            </p>
+          </div>
+          <div class="flex-1" style="flex: 1 1 25%">
+            ${generateEditableImageInput('tanzaLogo', templateData.images.image2)}
+          </div>
         </div>
-        <div
-          class="flex-1 flex items-center justify-center text-center bg-white p-4"
-          style="flex: 1 1 50%"
-        >
-          <p class="text-sm">
-           <span id="republic" ${editableStyle} ${editableAttribute}>${templateData.headers.republic}</span>
-            <br />
-            <span id="province" ${editableStyle} ${editableAttribute}>${templateData.headers.province}</span>
-            <br />
-           <span id="municipality" ${editableStyle} ${editableAttribute}>${templateData.headers.municipality}</span>
-            <br />
-            <span id="barangay" class="font-bold uppercase" ${editableStyle} ${editableAttribute}>${templateData.headers.barangay}</span>
-            <br />
-            <span id="office" class="font-bold uppercase whitespace-nowrap" ${editableStyle} ${editableAttribute}>
-              ${templateData.headers.office}
-            </span>
-          </p>
-        </div>
-        <div class="flex-1" style="flex: 1 1 25%">
-          ${generateEditableImageInput('tanzaLogo', templateData.images.image2)}
+        <p id="certificationTitle" class="text-center font-bold uppercase text-3xl p-12">
+          ${templateTitle}
+        </p>
+        <div class="flex justify-center">
+          <div class="flex-1 bg-blue-100 text-center border-r-2" style="flex: 1 1 25%">
+            <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
+              <li class="p-2">
+                <span id="chairman" ${editableStyle} ${editableAttribute}>${templateData.chairman}</span><br/>
+                <span class="text-xs font-thin">Barangay Chairman</span>
+              </li>
+              <p>
+                <li>
+                  <span class="text-xs font-thin">Barangay Counsilors</span><br/>
+                  <span id="counsilor1" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor1}</span>
+                </li>
+                <li id="counsilor2" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor2}</li>
+                <li id="counsilor3" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor3}</li>
+                <li id="counsilor4" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor4}</li>
+                <li id="counsilor5" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor5}</li>
+                <li id="counsilor6" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor6}</li>
+                <li id="counsilor7" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor7}</li>
+              </p>
+              <p>
+                <li class="p-2">
+                  <span id="skChairperson" ${editableStyle} ${editableAttribute}>${templateData.skChairperson}</span><br/>
+                  <span class="text-xs font-thin">SK Chairperson</span>
+                </li>
+              </p>
+              <p>
+                <li class="p-2">
+                  <span id="secretary" ${editableStyle} ${editableAttribute}>${templateData.secretary}</span><br/>
+                  <span class="text-xs font-thin">Barangay Secretary</span>
+                </li>
+              </p>
+              <p>
+                <li class="p-2">
+                  <span id="treasurer" ${editableStyle} ${editableAttribute}>${templateData.treasurer}</span><br/>
+                  <span class="text-xs font-thin">Barangay Treasurer</span>
+                </li>
+              </p>
+            </ul>
+          </div>
+          <div class="flex-1 px-4" style="flex: 1 1 75%; position: relative; min-height: 200px;">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('${templateData.images.image3}'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.3;"></div>
+            <div style="position: relative;">${template.content || template}</div>
+          </div>
         </div>
       </div>
-      <p id="certificationTitle" class="text-center font-bold uppercase text-3xl p-12">
-        ${templateTitle}
-      </p>
-      <div class="flex justify-center">
-        <div
-          class="flex-1 bg-blue-100 p-4 text-center border-r-2"
-          style="flex: 1 1 25%"
-        >
-          <ul class="list-none text-sm whitespace-nowrap leading-none font-medium">
-            <li class="p-2">
-             <span id="chairman" ${editableStyle} ${editableAttribute}> ${templateData.chairman}</span> </br>
-              <span class="text-xs font-thin">Barangay Chairman</span>
-            </li>
-            <p>
-              <li>
-              <span class="text-xs font-thin">Barangay Counsilors</span> </br>
-              <span id="counsilor1" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor1}</span>
-              </li>
-              <li id="counsilor2" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor2}</li>
-              <li id="counsilor3" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor3}</li>
-              <li id="counsilor4" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor4}</li>
-              <li id="counsilor5" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor5}</li>
-              <li id="counsilor6" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor6}</li>
-              <li id="counsilor7" ${editableStyle} ${editableAttribute}>${templateData.counsilors.counsilor7}</li>
-            </p>
-            <p>
-              <li class="p-2">
-               <span id="skChairperson" ${editableStyle} ${editableAttribute}> ${templateData.skChairperson}</span></br>
-                <span class="text-xs font-thin">SK Chairperson</span>
-              </li>
-            </p>
-            <p>
-              <li class="p-2">
-              <span id="secretary" ${editableStyle} ${editableAttribute}> ${templateData.secretary}</span> </br>
-                <span class="text-xs font-thin">Barangay Secretary</span>
-              </li>
-            </p>
-            <p>
-              <li class="p-2">
-              <span id="treasurer" ${editableStyle} ${editableAttribute}> ${templateData.treasurer}</span> </br>
-                <span class="text-xs font-thin">Barangay Treasurer</span>
-              </li>
-            </p>
-          </ul>
-        </div>
-        <div
-          class="flex-1 p-4"
-          style="flex: 1 1 75%; position: relative; height: 200px;"
-        >
-          <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 100%; background-image: url('${templateData.images.image3}'); background-size: contain; background-position: center; background-repeat: no-repeat; opacity: 0.3;"></div>
-          <div style="position: relative;">${template.content || template}</div>
-        </div>
+      <div class="footer-wrapper">
+        <img src="${footer}" class="footer-image" alt="footer" />
       </div>
-    </div>`;
+    </div>
+  `;
 };
-

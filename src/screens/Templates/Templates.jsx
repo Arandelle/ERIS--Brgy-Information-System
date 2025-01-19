@@ -74,7 +74,6 @@ const Templates = () => {
   // Generate the template body content based on the selected template
   const renderTemplate = selectedTemplate
     ? templateContent(
-        systemData?.tanzaLogoUrl,
         selectedTemplate,
         templateData,
         selectedTemplate.title,
