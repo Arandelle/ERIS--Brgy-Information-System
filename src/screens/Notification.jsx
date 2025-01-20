@@ -125,7 +125,7 @@ const Notification = () => {
             {!viewAll && displayedNotifications.length >= 7 && (
               <button
                 href="#"
-                className="block w-full py-2 text-base font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                className="block w-full py-2 text-base font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-600"
                 onClick={() => setViewAll(true)}
               >
                 <div className="inline-flex items-center ">
@@ -157,10 +157,11 @@ const NotificationItem = ({notification, isNewlyOpened, handleNotificationClick}
     key={notification.id}
     href="#"
     className={`${
-      !notification.isSeen && !isNewlyOpened
-        ? "bg-white hover:bg-gray-100 font-semibold"
-        : "bg-blue-50 hover:bg-blue-100"
-    } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
+  !notification.isSeen && !isNewlyOpened
+    ? "bg-white dark:bg-gray-600 hover:bg-gray-100 font-semibold"
+    : "bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-900"
+} flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
+
     onClick={() => {
       handleNotificationClick(notification.id),
       navigation(`/accounts/${dataType}`)
