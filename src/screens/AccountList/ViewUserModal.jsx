@@ -8,7 +8,7 @@ const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
   const {fullname, age, gender, address, email,mobileNum, customId, createdAt, profileComplete} = userToViewInfo;
   const FetchDataStyle = ({label, data}) => {
     return (
-      <div className="flex flex-row">
+      <div className="flex flex-row dark:text-gray-300">
         <p className="flex-1 basis-1/3">{label} : </p>
         <p className="flex-1 basis-2/3 font-semibold">{data}</p>
       </div>
@@ -29,9 +29,9 @@ const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
              />
              </div>
                <div>
-                  <p className="font-bold text-lg">{fullname || "User's full name"}</p>
-                  <p className="text-sm font-thin text-gray-500">{email || "User's email"}</p>
-                  <p className="text-xs font-thin text-gray-500">{customId || "user's id"}</p>
+                  <p className="font-bold text-lg dark:text-gray-200">{fullname || "User's full name"}</p>
+                  <p className="text-sm font-thin text-gray-500 dark:text-gray-400">{email || "User's email"}</p>
+                  <p className="text-xs font-thin text-gray-500 dark:text-gray-400">{customId || "user's id"}</p>
                </div>
             </div>
           </div>

@@ -114,7 +114,7 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
         children={
           <form onSubmit={handleAddUser}>
             <div className="flex flex-col space-y-4 max-w-lg">
-              <p className="text-sm text-gray-600 italic">
+              <p className="text-sm text-gray-600 dark:text-gray-300 italic">
                 Ensure that the user information is accurately entered to
                 facilitate smooth account creation.
               </p>

@@ -8,7 +8,7 @@ const ClearanceViewModal = ({ handleViewClick, userData = {} }) => {
   const FetchDataStyle = ({label, data}) => {
 
     return (
-      <div className="flex flex-row">
+      <div className="flex flex-row dark:text-gray-300">
         <p className="flex-1 basis-1/3">{label} : </p>
         <p className="flex-1 basis-2/3 font-semibold">{data}</p>
       </div>

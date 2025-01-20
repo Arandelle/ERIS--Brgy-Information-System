@@ -34,7 +34,7 @@ const AnnouncementModal = ({
       title={`${isEdit ? "Edit" : "Create new"} Announcement`}
       children={
         <div className="flex flex-col space-y-4 max-w-lg">
-           <p className="text-sm text-gray-600 italic">Post accurate emergency response tips to ensure community safety and preparedness. Post awareness updates and news regularly to keep everyone informed about potential hazards and safety protocols.</p>
+           <p className="text-sm text-gray-600 dark:text-gray-300 italic">Post accurate emergency response tips to ensure community safety and preparedness. Post awareness updates and news regularly to keep everyone informed about potential hazards and safety protocols.</p>
           <InputField
             type="text"
             placeholder="Title"
@@ -50,7 +50,7 @@ const AnnouncementModal = ({
             onBlur={() => setDescription(capitalizeFirstLetter(description))}
           />
 
-          <label className="text-gray-500 text-sm">Links (optional)</label>
+          <label className="text-gray-500 dark:text-gray-300 text-sm">Links (optional)</label>
           <InputField
             type="text"
             placeholder="Links"
@@ -119,7 +119,7 @@ const AnnouncementModal = ({
 
               <button
                 type="button"
-                className="text-sm text-gray-500 py-2 px-4 border border-gray-400 rounded-md"
+                className="text-sm text-gray-500 dark:text-gray-300 py-2 px-4 border border-gray-400 rounded-md"
                 onClick={handleModal}
               >
                 Cancel

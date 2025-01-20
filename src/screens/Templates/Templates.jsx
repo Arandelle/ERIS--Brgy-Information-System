@@ -15,7 +15,12 @@ import handleEditData from "../../hooks/handleEditData";
 import { templateContent } from "./TemplateContent";
 import { ref, update } from "firebase/database";
 import { database, storage } from "../../services/firebaseConfig";
-import { deleteObject, getDownloadURL, ref as storageRef, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref as storageRef,
+  uploadBytes,
+} from "firebase/storage";
 
 const Templates = () => {
   const [showAddTemplate, setShowAddTemplate] = useState(false);
@@ -58,7 +63,11 @@ const Templates = () => {
 
   const handleImageChange = (e, imageId) => {
     const file = e.target.files[0];
-    if (file && file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024) {
+    if (
+      file &&
+      file.type.startsWith("image/") &&
+      file.size <= 5 * 1024 * 1024
+    ) {
       const reader = new FileReader();
       reader.onload = (event) => {
         setImages((prevImages) => ({
@@ -69,7 +78,9 @@ const Templates = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      toast.error("Invalid file type or size. Please upload an image under 5MB.");
+      toast.error(
+        "Invalid file type or size. Please upload an image under 5MB."
+      );
     }
   };
 
@@ -122,15 +133,18 @@ const Templates = () => {
 
   const handleSaveTemplate = async () => {
     const templatesRef = ref(database, "templates/document1");
-  
+
     const uploadImage = async (imageFile, oldImageUrl) => {
       if (!imageFile) return oldImageUrl;
-  
+
       try {
-        const fileRef = storageRef(storage, `template-images/${Date.now()}_${imageFile.name}`);
+        const fileRef = storageRef(
+          storage,
+          `template-images/${Date.now()}_${imageFile.name}`
+        );
         await uploadBytes(fileRef, imageFile);
         const newImageUrl = await getDownloadURL(fileRef);
-  
+
         // Delete the old image if it exists
         if (oldImageUrl) {
           try {
@@ -140,25 +154,37 @@ const Templates = () => {
             console.error("Failed to delete old image:", error);
           }
         }
-  
+
         return newImageUrl;
       } catch (error) {
         console.error("Error uploading image:", error);
         throw new Error("Failed to upload image. Please try again.");
       }
     };
-  
+
     try {
       // Get updated image URLs
-      const image1Url = await uploadImage(images.image1File, templateData?.images?.image1);
-      const image2Url = await uploadImage(images.image2File, templateData?.images?.image2);
-      const image3Url = await uploadImage(images.image3File, templateData?.images?.image3);
-      const image4Url = await uploadImage(images.image4File, templateData?.images?.image4);
-  
+      const image1Url = await uploadImage(
+        images.image1File,
+        templateData?.images?.image1
+      );
+      const image2Url = await uploadImage(
+        images.image2File,
+        templateData?.images?.image2
+      );
+      const image3Url = await uploadImage(
+        images.image3File,
+        templateData?.images?.image3
+      );
+      const image4Url = await uploadImage(
+        images.image4File,
+        templateData?.images?.image4
+      );
+
       // Helper function to extract text content
       const getTextContent = (id, fallback) =>
         document.querySelector(`#${id}`)?.innerText || fallback;
-  
+
       // Prepare updated template data
       const updatedTemplateData = {
         images: {
@@ -170,38 +196,68 @@ const Templates = () => {
         headers: {
           republic: getTextContent("republic", templateData.headers?.republic),
           province: getTextContent("province", templateData.headers?.province),
-          municipality: getTextContent("municipality", templateData.headers?.municipality),
+          municipality: getTextContent(
+            "municipality",
+            templateData.headers?.municipality
+          ),
           barangay: getTextContent("barangay", templateData.headers?.barangay),
           office: getTextContent("office", templateData.headers?.office),
         },
-        certificationTitle: getTextContent("certificationTitle", templateData?.certificationTitle),
+        certificationTitle: getTextContent(
+          "certificationTitle",
+          templateData?.certificationTitle
+        ),
         chairman: getTextContent("chairman", templateData?.chairman),
         counsilors: {
-          counsilor1: getTextContent("counsilor1", templateData.counsilors?.counsilor1),
-          counsilor2: getTextContent("counsilor2", templateData.counsilors?.counsilor2),
-          counsilor3: getTextContent("counsilor3", templateData.counsilors?.counsilor3),
-          counsilor4: getTextContent("counsilor4", templateData.counsilors?.counsilor4),
-          counsilor5: getTextContent("counsilor5", templateData.counsilors?.counsilor5),
-          counsilor6: getTextContent("counsilor6", templateData.counsilors?.counsilor6),
-          counsilor7: getTextContent("counsilor7", templateData.counsilors?.counsilor7),
+          counsilor1: getTextContent(
+            "counsilor1",
+            templateData.counsilors?.counsilor1
+          ),
+          counsilor2: getTextContent(
+            "counsilor2",
+            templateData.counsilors?.counsilor2
+          ),
+          counsilor3: getTextContent(
+            "counsilor3",
+            templateData.counsilors?.counsilor3
+          ),
+          counsilor4: getTextContent(
+            "counsilor4",
+            templateData.counsilors?.counsilor4
+          ),
+          counsilor5: getTextContent(
+            "counsilor5",
+            templateData.counsilors?.counsilor5
+          ),
+          counsilor6: getTextContent(
+            "counsilor6",
+            templateData.counsilors?.counsilor6
+          ),
+          counsilor7: getTextContent(
+            "counsilor7",
+            templateData.counsilors?.counsilor7
+          ),
         },
-        skChairperson: getTextContent("skChairperson", templateData?.skChairperson),
+        skChairperson: getTextContent(
+          "skChairperson",
+          templateData?.skChairperson
+        ),
         secretary: getTextContent("secretary", templateData?.secretary),
         treasurer: getTextContent("treasurer", templateData?.treasurer),
       };
-  
+
       // Update database
       await update(templatesRef, updatedTemplateData);
-  
+
       setIsTemplateEdit(false);
       toast.success("Template saved successfully!");
     } catch (error) {
-      toast.error(error.message || "An error occurred while saving the template.");
+      toast.error(
+        error.message || "An error occurred while saving the template."
+      );
       console.error(error);
     }
   };
-  
-
 
   return (
     <HeaderAndSideBar
@@ -284,18 +340,8 @@ const Templates = () => {
                     Delete Template
                   </button>
                 </div>
-                <div
-                  style={{
-                    width: "210mm",
-                    height: "297mm",
-                    margin: "0 auto",
-                    padding: "2mm",
-                    background: "#fff",
-                    border: "1px solid #ddd",
-                    boxShadow: "0 0 5px rgba(0,0,0,0.1)",
-                    overflow: "auto",
-                  }}
-                >
+                {/** Template Content */}
+                <div className="w-[210mm] h-[297mm] m-auto p-[2mm] dark:text-gray-300 bg-white dark:bg-gray-800 shadow-md border border-gray-300 dark:border-gray-500">
                   {renderTemplate} {/**render the jsx template */}
                 </div>
               </>

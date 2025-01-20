@@ -96,7 +96,7 @@ const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
       title={"Create Request"}
       children={
         <div className=" max-w-2xl space-y-6">
-          <p className="text-sm text-gray-600 italic">
+          <p className="text-sm text-gray-600 dark:text-gray-300 italic">
             Input the necessary information for creating a request for barangay
             clearance. Ensure all fields are filled accurately and in compliance
             with relevant privacy policies and regulations.

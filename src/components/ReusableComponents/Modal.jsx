@@ -21,7 +21,7 @@ const Modal = ({ closeButton, children, title }) => {
             <span className="sr-only">Close modal</span>
           </button>
           <div className="relative p-6 space-y-4 flex-auto">
-            <h2 className="text-center text-sm md:text-lg font-bold text-gray-600">
+            <h2 className="text-center text-sm md:text-lg font-bold text-gray-600 dark:text-gray-300">
               {title}
             </h2>
             {children}

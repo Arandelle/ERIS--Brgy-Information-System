@@ -29,7 +29,7 @@ const HotlinesModal = ({
       title={"Hotlines Number and Contact"}
       children={
         <div className="flex flex-col space-y-4 max-w-lg">
-        <p className="text-sm text-gray-600 italic">Regularly review and update contact information to ensure its accuracy.
+        <p className="text-sm text-gray-600 dark:text-gray-300 italic">Regularly review and update contact information to ensure its accuracy.
         Ensure that any personal information added complies with relevant privacy policies and regulations.</p>
          <InputField
             type="text"
@@ -67,7 +67,7 @@ const HotlinesModal = ({
 
             <button
               type="button"
-              className="text-sm text-gray-500 py-2 px-4 border border-gray-400 rounded-md"
+              className="text-sm text-gray-500 dark:text-gray-300 py-2 px-4 border border-gray-400 rounded-md"
               onClick={handleHotlinesModal}
             >
               Cancel

@@ -21,7 +21,7 @@ const DetailsAnnouncement = ({
 
   const DetailRow = ({ label, value, isLink, isImage }) => {
     return (
-      <div className="flex flex-row max-w-lg">
+      <div className="flex flex-row max-w-lg dark:text-gray-300">
         <p className="flex-1 basis-1/4">{label}: </p>
 
         {isLink ? (
@@ -30,7 +30,7 @@ const DetailsAnnouncement = ({
           </a>
         ) : isImage ? (
           <p
-            className="flex-1 basis-3/4 cursor-pointer bg-gray-100 p-2 rounded-md shadow-md"
+            className="flex-1 basis-3/4 cursor-pointer bg-gray-100 p-2 rounded-md shadow-md dark:text-gray-800"
             onClick={() => openModal(announcementDetails?.imageUrl)}
           >
             {`${announcementDetails?.title}.jpg`}

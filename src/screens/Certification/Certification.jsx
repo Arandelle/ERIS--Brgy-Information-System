@@ -268,10 +268,10 @@ const Certification = () => {
         }
       />
       <td className="">
-        <div className="flex items-center justify-center space-x-2">
+        <div className="flex items-center justify-center space-x-2 text-">
         <IconButton
           icon={icons.print}
-          color={"gray"}
+          color={"slate"}
           fontSize={"small"}
           tooltip={done ? "Reprint" : "Print"}
           className={rejected && "cursor-not-allowed opacity-35"}

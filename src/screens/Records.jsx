@@ -184,7 +184,7 @@ const Records = () => {
 
     return (
       <div
-        className={`bg-${color}-100 p-2 text-sm text-${color}-500 border-l-2 border-l-${color}-500 rounded-r-md space-y-1`}
+        className={`bg-${color}-100 dark:bg-${color}-800 p-2 text-sm text-${color}-500 dark:text-${color}-300 border-l-2 border-l-${color}-500 dark:border-${color}-300 rounded-r-md space-y-1`}
       >
         {filteredData.map(({ label, value }, index) => (
           <div key={index} className="flex flex-row">

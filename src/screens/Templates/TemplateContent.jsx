@@ -10,7 +10,7 @@ export const templateContent = (
   const {images: {image1, image2, image3, image4}} = templateData;
 
   const editableStyle = isEdit
-    ? "border-2 border-dashed border-black p-1 focus:outline-none"
+    ? "border-2 border-dashed border-black dark:border-white p-1 focus:outline-none"
     : {};
   const editableAttribute = isEdit && { contentEditable: true };
 
@@ -47,7 +47,7 @@ export const templateContent = (
             {generateEditableImageInput("image1", image1)}
           </div>
           <div
-            className="flex-1 flex items-center justify-center text-center bg-white p-4"
+            className="flex-1 flex items-center justify-center text-center p-4"
             style={{ flex: "1 1 50%" }}
           >
             <p className="text-sm">
@@ -105,7 +105,7 @@ export const templateContent = (
       {/** button for add image3 */}
        <section className="place-self-center">
           {isEdit && 
-              <label className="border-2 border-dashed border-black cursor-pointer p-2">
+              <label className="border-2 border-dashed border-black dark:border-white cursor-pointer p-2">
                 Edit background image
                 <input type="file" className="hidden"
                   onChange={(e) => handleImageChange(e, "image3")}
@@ -116,7 +116,7 @@ export const templateContent = (
   
         <section className="flex justify-center">
           <aside
-            className="flex-1 bg-blue-100 text-center border-r-2"
+            className="flex-1 bg-blue-100 dark:bg-blue-300 text-center border-r-2 dark:text-gray-800"
             style={{ flex: "1 1 25%" }}
           >
             <ul className="list-none space-y-2 text-sm whitespace-nowrap leading-none font-medium">
@@ -207,7 +207,7 @@ export const templateContent = (
       </main>
       <section className="place-self-center">
           {isEdit && 
-              <label className="border-2 border-dashed border-black cursor-pointer p-2">
+              <label className="border-2 border-dashed border-black dark:border-white cursor-pointer p-2">
                 Edit footer image
                 <input type="file" className="hidden"
                   onChange={(e) => handleImageChange(e, "image4")}

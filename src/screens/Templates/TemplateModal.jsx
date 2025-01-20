@@ -82,7 +82,7 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
       children={
         <div className="space-y-2">
           <div className="space-y-4 w-full lg:w-[10in]">
-            <label className="block text-gray-700 font-bold">
+            <label className="block text-gray-700 dark:text-gray-300 font-bold">
               Template Title:
             </label>
             <InputField
@@ -97,11 +97,11 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
                 }))
               }
             />
-            <label className="block text-gray-700 font-bold">
+            <label className="block text-gray-700 dark:text-gray-300 font-bold">
               Certificate Type:
             </label>
             <select
-              className="px-4 py-2 text-sm border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:ring-gray-400 focus:border-gray-400 dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600 w-full"
+              className="px-4 py-2 text-sm border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:ring-gray-400 focus:border-gray-400 dark:placeholder:text-gray-200 dark:text-gray-300 dark:bg-gray-600 w-full"
               value={templateData.docsType}
               onChange={(e) =>
                 setTemplateData({ ...templateData, docsType: e.target.value })
@@ -113,7 +113,7 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
               <option value="Clearance">Clearance</option>
               <option value="Indigency">Indigency</option>
             </select>
-            <label className="block text-gray-700 font-bold">
+            <label className="block text-gray-700 dark:text-gray-300 font-bold">
               Edit Content:
             </label>
             <Editor

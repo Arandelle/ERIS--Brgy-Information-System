@@ -7,7 +7,7 @@ const AskCard = ({ toggleModal, question, confirmText,onConfirm }) => {
     <div
       id="popup-modal"
       tabIndex="-1"
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center shadow-lg"
+      className="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-opacity-20 z-50 flex items-center justify-center shadow-lg"
     >
       <div className="relative flex items-center justify-center z-50  h-full p-2 w-full max-w-60 md:p-4 md:max-w-md  md:h-auto">
         <div className="relative flex items-center justify-center bg-white rounded-lg shadow dark:bg-gray-700">
