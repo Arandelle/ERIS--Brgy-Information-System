@@ -262,7 +262,7 @@ const Templates = () => {
   return (
     <HeaderAndSideBar
       content={
-        <>
+        <div className="overflow-hidden">
           <Toolbar
             buttons={
               <ButtonStyle
@@ -374,7 +374,7 @@ const Templates = () => {
               />
             )}
           </>
-        </>
+        </div>
       }
     />
   );

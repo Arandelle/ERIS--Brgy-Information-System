@@ -72,7 +72,7 @@ const ChangePassModal = ({handlePasswordModal}) => {
       }
       submitButton={
         <button
-          className={`${isComplete ? "bg-green-500" : "bg-gray-500"} w-full py-2 text-white text-sm rounded-md`}
+          className={`${isComplete ? "bg-green-500" : "bg-green-500 bg-opacity-50 cursor-not-allowed"} w-full py-2 text-white text-sm rounded-md`}
           disabled={!isComplete}
           onClick={handleChangePassword}
         >

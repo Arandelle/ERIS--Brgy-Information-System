@@ -192,7 +192,7 @@ export default function Login({ setAuth }) {
                 Welcome Admin! Login your Account.
               </h1>
               <InputStyle
-              label={"Email: "}
+               label={"Email: "}
                 iconName={"email"}
                 type={"email"}
                 placeholder={"admin@example.com"}
@@ -207,7 +207,7 @@ export default function Login({ setAuth }) {
                 </label>
                 <a
                   href="#"
-                  className="text-sm underline dark:text-green-400"
+                  className="text-sm underline dark:text-gray-400"
                   onClick={handleForgotPass}
                 >
                   Forgot Password?
@@ -223,7 +223,7 @@ export default function Login({ setAuth }) {
             </div>
             <div>
               <button
-                className="flex flex-row space-x-2 items-center justify-center w-full bg-blue-800 text-white text-bold p-2 rounded shadow-md"
+                className="flex flex-row space-x-2 items-center justify-center w-full bg-blue-800 dark:bg-blue-500 text-white dark:text-gray-100 text-bold p-2 rounded shadow-lg"
                 type="submit"
               >
                 <icons.login fontSize="small" />

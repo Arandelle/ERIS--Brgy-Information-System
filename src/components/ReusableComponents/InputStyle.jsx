@@ -20,9 +20,9 @@ export const InputStyle = ({
 
     return (
       <div className="space-y-2">
-        <label>{label}</label>
+        <label className="dark:text-gray-400">{label}</label>
         <div class="relative">
-          <div class="absolute text-gray-500 inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+          <div class="absolute text-gray-500 dark:text-gray-300 inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
             {IconComponent && <IconComponent fontSize="small" />}
           </div>
           <input
