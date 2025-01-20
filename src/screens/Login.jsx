@@ -16,6 +16,7 @@ import { InputField } from "../components/ReusableComponents/InputField";
 import icons from "../assets/icons/Icons";
 import { useFetchSystemData } from "../hooks/useFetchSystemData";
 import { InputStyle } from "../components/ReusableComponents/InputStyle";
+import Spinner from "../components/ReusableComponents/Spinner";
 
 export default function Login({ setAuth }) {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ export default function Login({ setAuth }) {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [password, setPass] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [otpInput, setOtpInput] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -56,13 +58,14 @@ export default function Login({ setAuth }) {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmitResetPass = () => {
     handlePasswordReset(email);
     setEmail(""); // Clear the input after submission
     setForgotPass(false);
   };
 
   const handleLogin = async (event) => {
+    setLoading(true);
     event.preventDefault();
     try {
       const auth = getAuth();
@@ -78,6 +81,7 @@ export default function Login({ setAuth }) {
       const adminRef = ref(db, `admins/${user.uid}`);
       const adminSnapshot = await get(adminRef);
       if (adminSnapshot.exists()) {
+        setLoading(false);
         toast.success("Login successful");
         console.log("Login as ", email);
         navigate("/dashboard");
@@ -156,6 +160,15 @@ export default function Login({ setAuth }) {
     }
   };
   
+   if(loading){
+      return (
+        <>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
+           <Spinner loading={loading} />
+         </div>    
+        </>
+       )
+    }
 
   return (
     <>
@@ -278,7 +291,7 @@ export default function Login({ setAuth }) {
                 </button>
                 <button
                   className="bg-blue-500 text-sm p-2 rounded-sm text-white shadow-md"
-                  onClick={handleSubmit}
+                  onClick={handleSubmitResetPass}
                 >
                   Send reset password
                 </button>

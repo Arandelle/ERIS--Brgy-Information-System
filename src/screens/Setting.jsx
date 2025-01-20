@@ -15,7 +15,7 @@ const Setting = () => {
   const user = auth.currentUser;
   const { data: systemData, loading, setLoading} = useFetchData("systemData");
   const { data: admin } = useFetchData("admins");
-  const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
+  const currentAdminDetails = admin.find((admin) => admin.id === user?.uid);
   const [systemState, setSystemState] = useState({
     originalTitle: "",
     title: "",
