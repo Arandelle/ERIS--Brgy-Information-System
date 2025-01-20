@@ -10,7 +10,7 @@ const HeaderAndSideBar = ({ content }) => {
   };
 
   return (
-    <div className="w-full flex-col flex overflow-hidden">
+    <div className="w-full flex-col flex">
       <Header toggleSideBar={toggleDropdown} isOpen={isOpen} />
       <div className="flex">
         <div className="fixed z-50 lg:z-0">
@@ -21,7 +21,7 @@ const HeaderAndSideBar = ({ content }) => {
             isOpen ? "ml-0" : "md:ml-60"
           }`}
         >
-          <div className="p-2 overflow-auto">{content}</div>
+          <div className="p-2 overflow-x-auto">{content}</div>
         </div>
       </div>
     </div>
