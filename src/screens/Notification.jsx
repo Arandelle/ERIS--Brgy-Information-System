@@ -6,35 +6,37 @@ import { getTimeDifference } from "../helper/TimeDiff";
 import { formatDate } from "../helper/FormatDate";
 import { useNavigate } from "react-router-dom";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
-import {useFetchData} from "../hooks/useFetchData";
+import { useFetchData } from "../hooks/useFetchData";
 import icons from "../assets/icons/Icons";
 
 const Notification = () => {
   const [notificationBadge, setNotificationBadge] = useState(0);
   const [openedNotifications, setOpenedNotifications] = useState([]);
   const [viewAll, setViewAll] = useState(false);
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => {
-          setIsOpen(!isOpen);
+    setIsOpen(!isOpen);
   };
 
   const currentUser = auth.currentUser;
-  const {data: notifications} = useFetchData(`admins/${currentUser.uid}/notifications`)
-  
+  const { data: notifications } = useFetchData(
+    `admins/${currentUser.uid}/notifications`
+  );
+
   useEffect(() => {
-    if(notifications.length){
+    if (notifications.length) {
       let unseenCount = 0;
 
       notifications.forEach((notification) => {
-        if(!notification.isSeen){
+        if (!notification.isSeen) {
           unseenCount++;
         }
       });
 
-      notifications.sort((a,b) => new Date(b.date) - new Date(a.date));
-      setNotificationBadge(unseenCount); // Update the badge 
+      notifications.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setNotificationBadge(unseenCount); // Update the badge
     }
-  })
+  });
 
   const handleDropdownToggle = () => {
     toggleDropdown();
@@ -115,9 +117,11 @@ const Notification = () => {
                   notification.id
                 );
                 return (
-                 <NotificationItem isNewlyOpened={isNewlyOpened} notification={notification}
-                  handleNotificationClick={handleNotificationClick}
-                 />
+                  <NotificationItem
+                    isNewlyOpened={isNewlyOpened}
+                    notification={notification}
+                    handleNotificationClick={handleNotificationClick}
+                  />
                 );
               })
             )}
@@ -129,7 +133,7 @@ const Notification = () => {
                 onClick={() => setViewAll(true)}
               >
                 <div className="inline-flex items-center ">
-                <icons.view />
+                  <icons.view />
                   View all
                 </div>
               </button>
@@ -141,54 +145,59 @@ const Notification = () => {
   );
 };
 
-const NotificationItem = ({notification, isNewlyOpened, handleNotificationClick}) => {
+const NotificationItem = ({
+  notification,
+  isNewlyOpened,
+  handleNotificationClick,
+}) => {
   const navigation = useNavigate();
-  const {data: users} = useFetchData("users");
-  const {data: responders} = useFetchData("responders");
+  const { data: users } = useFetchData("users");
+  const { data: responders } = useFetchData("responders");
 
   const userDetails = users?.find((user) => user.id === notification.userId);
-  const responderDetails = responders?.find((responder) => responder.id === notification.responderId);
-  const image = userDetails?.img || responderDetails?.img || "Unknown"
- 
-  const dataType = userDetails ? "users" : "responders"
+  const responderDetails = responders?.find(
+    (responder) => responder.id === notification.responderId
+  );
+  const image = userDetails?.img || responderDetails?.img || "Unknown";
+
+  const dataType = userDetails ? "users" : "responders";
 
   return (
     <a
-    key={notification.id}
-    href="#"
-    className={`${
-  !notification.isSeen && !isNewlyOpened
-    ? "bg-white dark:bg-gray-600 hover:bg-gray-100 font-semibold"
-    : "bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-900"
-} flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
-
-    onClick={() => {
-      handleNotificationClick(notification.id),
-      navigation(`/accounts/${dataType}`)
-    }}
-  >
-    <div className="flex-shrink-0 relative">
-      <img
-        className="w-12 h-12 rounded-full border-2 border-primary-500"
-        src={image}
-        alt="Notification avatar"
-      />
-      {!notification.isSeen && !isNewlyOpened && (
-        <span className="absolute top-0 right-0 block h-3 w-3 bg-red-500 rounded-full border-2 border-white dark:border-gray-700"></span>
-      )}
-    </div>
-    <div className="pl-4 w-full">
-      <div className="text-sm mb-1 text-gray-600 dark:text-gray-300">
-        <p>{notification.message}</p>
+      key={notification.id}
+      href="#"
+      className={`${
+        !notification.isSeen && !isNewlyOpened
+          ? "bg-white dark:bg-gray-600 hover:bg-gray-100 font-semibold"
+          : "bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-900"
+      } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
+      onClick={() => {
+        handleNotificationClick(notification.id),
+          navigation(`/accounts/${dataType}`);
+      }}
+    >
+      <div className="flex-shrink-0 relative">
+        <img
+          className="w-12 h-12 rounded-full border-2 border-primary-500"
+          src={image}
+          alt="Notification avatar"
+        />
+        {!notification.isSeen && !isNewlyOpened && (
+          <span className="absolute top-0 right-0 block h-3 w-3 bg-red-500 rounded-full border-2 border-white dark:border-gray-700"></span>
+        )}
       </div>
-      <div className="flex justify-between text-xs text-blue-400 dark:text-gray-400">
-        <span>{getTimeDifference(notification.timestamp)}</span>
-        <span className="text-gray-500 dark:text-green-400">
-          {formatDate(notification.date)}
-        </span>
+      <div className="pl-4 w-full">
+        <div className="text-sm mb-1 text-gray-600 dark:text-gray-300">
+          <p>{notification.message}</p>
+        </div>
+        <div className="flex justify-between text-xs text-blue-400 dark:text-gray-400">
+          <span>{getTimeDifference(notification.timestamp)}</span>
+          <span className="text-gray-500 dark:text-green-400">
+            {formatDate(notification.date)}
+          </span>
+        </div>
       </div>
-    </div>
-  </a>
-  )
-}
+    </a>
+  );
+};
 export default Notification;

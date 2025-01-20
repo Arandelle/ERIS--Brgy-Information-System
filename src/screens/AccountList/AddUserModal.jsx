@@ -27,84 +27,86 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const randomNumber = Math.floor(Math.random() * 6);
+    const randomNumber = Math.floor(Math.random() * 5) + 1;
     const url = `https://flowbite.com/docs/images/people/profile-picture-${randomNumber}.jpg`;
     setImageUrl(url);
   }, []);
 
-  const handleAddUser = async (e) => {
-    e.preventDefault(); // Prevents the default form submission behavior
+    const handleAddUser = async (e) => {
+      e.preventDefault(); // Prevents the default form submission behavior
 
-    if (!email || !password) {
-      toast.error("Please fill in all fields");
-      return;
-    }
+      if (!email || !password) {
+        toast.error("Please fill in all fields");
+        return;
+      }
 
-    try {
-      const currentUser = auth.currentUser;
-      const userId = await generateUniqueBarangayID("user");
+      try {
+        const currentUser = auth.currentUser;
+        const userId = await generateUniqueBarangayID("user");
 
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-      await sendEmailVerification(user);
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const user = userCredential.user;
+        await sendEmailVerification(user);
 
-      const userData = {
-        email: user.email,
-        profileComplete: false,
-        createdAt: new Date().toISOString(),
-        timestamp: serverTimestamp(),
-        img: imageUrl,
-        customId: userId,
-      };
-      const database = getDatabase(app);
-      await set(ref(database, `${label}/${user.uid}`), userData);
+        const userData = {
+          email: user.email,
+          profileComplete: false,
+          createdAt: new Date().toISOString(),
+          timestamp: serverTimestamp(),
+          img: imageUrl,
+          customId: userId,
+          id: user.uid
+        };
+        const database = getDatabase(app);
+        await set(ref(database, `${label}/${user.uid}`), userData);
 
-      await auth.updateCurrentUser(currentUser); // restore the admin
-      navigation("/accounts/users");
+        await auth.updateCurrentUser(currentUser); // restore the admin
+        navigation("/accounts/users");
 
-      const adminId = currentUser.uid;
-      const notificationRef = ref(database, `admins/${adminId}/notifications`);
-      const newNotification = {
-        type: `${label}`,
-        message: `You have successfully created an account for ${label}`,
-        email: `${user.email}`,
-        isSeen: false,
-        date: new Date().toISOString(),
-        timestamp: serverTimestamp(),
-        img: imageUrl,
-      };
+        const adminId = currentUser.uid;
+        const notificationRef = ref(database, `admins/${adminId}/notifications`);
+        const newNotification = {
+          type: `${label}`,
+          message: `You have successfully created an account for ${label}`,
+          email: `${user.email}`,
+          isSeen: false,
+          date: new Date().toISOString(),
+          timestamp: serverTimestamp(),
+          img: imageUrl,
+          userId: user.uid
+        };
 
-      await push(notificationRef, newNotification);
+        await push(notificationRef, newNotification);
 
-      console.log("User created:", user.uid);
-      toast(
-        <div className="flex items-center justify-center space-x-3 flex-row">
-          <img
-            className="w-12 h-12 rounded-full border-2 border-primary-500"
-            src={imageUrl}
-            alt="Notification avatar"
-          />
-          <div>
-            <p className="font-bold">{`${capitalizeFirstLetter(
-              label
-            )} has been createad`}</p>
-            <p>{`${new Date().toLocaleString()}`}</p>
+        console.log("User created:", user.uid);
+        toast(
+          <div className="flex items-center justify-center space-x-3 flex-row">
+            <img
+              className="w-12 h-12 rounded-full border-2 border-primary-500"
+              src={imageUrl}
+              alt="Notification avatar"
+            />
+            <div>
+              <p className="font-bold">{`${capitalizeFirstLetter(
+                label
+              )} has been createad`}</p>
+              <p>{`${new Date().toLocaleString()}`}</p>
+            </div>
           </div>
-        </div>
-      );
-      setEmail("");
-      setPassword("");
-      setAddUser(false); // Close the modal after successful submission
-    } catch (error) {
-      setError(error.message);
-      console.error("Error signing up:", error);
-      toast.error("Error signing up", error.message);
-    }
-  };
+        );
+        setEmail("");
+        setPassword("");
+        setAddUser(false); // Close the modal after successful submission
+      } catch (error) {
+        setError(error.message);
+        console.error("Error signing up:", error);
+        toast.error("Error signing up for user", error.message);
+      }
+    };
 
   return (
     <div>
