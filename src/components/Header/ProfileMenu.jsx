@@ -10,7 +10,7 @@ const Profile = () => {
   const user = auth.currentUser;
   const {data: admin} = useFetchData("admins");
 
-  const currentAdminDetails = admin.find((admin) => admin.id === user.uid);
+  const currentAdminDetails = admin.find((admin) => admin.id === user?.uid);
 
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => {
