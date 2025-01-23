@@ -8,17 +8,14 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import ResidentsList from "./screens/AccountList/Residents";
 import Map from "./screens/Maps/Map";
 import Login from "./screens/Login";
 import Records from "./screens/Records";
-import Activities from "./screens/Announcement/AnnouncementList";
+import Announcement from "./screens/Announcement/AnnouncementList";
 import Setting from "./screens/Setting";
 import { Toaster } from "sonner";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, getDatabase, ref } from "firebase/database";
-import { useFetchData } from "./hooks/useFetchData";
-import ErrorBoundary from "./ErrorBoundary";
 import UserList from "./screens/AccountList/UserList";
 import { Spinner } from "./components/ReusableComponents/Spinner";
 import Hotlines from "./screens/Hotlines/Hotlines";
@@ -29,9 +26,8 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
-  // const {data: users} = useFetchData("users");
-  // const {data: responders} = useFetchData("responders");
 
+  // Check if user is logged in
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -63,7 +59,6 @@ const App = () => {
   
   return (
       <Router>
-         <ErrorBoundary>
         <>
           <Toaster richColors Headless position="top-center" expand="true" />
           <div className="flex">
@@ -109,7 +104,7 @@ const App = () => {
               />
               <Route
                 path="/announcement"
-                element={user && isAdmin ? <Activities /> : <Navigate to="/" />}
+                element={user && isAdmin ? <Announcement /> : <Navigate to="/" />}
               />
               <Route 
                 path="/hotlines"
@@ -134,7 +129,6 @@ const App = () => {
             </Routes>
           </div>
         </>
-        </ErrorBoundary>
       </Router>
 
   );

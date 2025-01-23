@@ -21,15 +21,18 @@ import Modal from "../../components/ReusableComponents/Modal";
 
 const AddUserModal = ({ addUser, setAddUser, label }) => {
   const navigation = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+    imageUrl: "",
+  });
+  const { email, password, imageUrl } = userData;
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const randomNumber = Math.floor(Math.random() * 5) + 1;
     const url = `https://flowbite.com/docs/images/people/profile-picture-${randomNumber}.jpg`;
-    setImageUrl(url);
+    setUserData({ ...userData, imageUrl: url });
   }, []);
 
     const handleAddUser = async (e) => {
@@ -98,8 +101,7 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
             </div>
           </div>
         );
-        setEmail("");
-        setPassword("");
+        setUserData({ email: "", password: "", imageUrl: "" });
         setAddUser(false); // Close the modal after successful submission
       } catch (error) {
         setError(error.message);
@@ -124,14 +126,14 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
               <InputField
                 className={"border"}
                 type={"email"}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                 value={email}
                 placeholder={"Enter Email"}
               />
               <InputField
                 className={"border"}
                 type={"password"}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setUserData({ ...userData, password: e.target.value })}
                 value={password}
                 placeholder={"Enter Password"}
               />
