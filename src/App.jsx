@@ -50,12 +50,12 @@ const App = () => {
 
   // Listen for new notifications
   useEffect(() => {
-    const currentUser = auth.currentUser;
-    if (!currentUser) return;
+
+    if (!user) return;
 
     const notificationsRef = ref(
       database,
-      `admins/${currentUser.uid}/notifications`
+      `admins/${user.uid}/notifications`
     );
 
     // Listen for new notifications
@@ -79,7 +79,7 @@ const App = () => {
     });
 
     return () => unsubscribe(); // Cleanup listener on unmount
-  }, []);
+  }, [user]);
 
   if (loading) {
     return (
