@@ -93,9 +93,10 @@ const Notification = () => {
               <span className="sr-only">View notifications</span>
               <icons.notifation />
             </button>
+            {/** Show notification badge it its below 100 */}
             {notificationBadge > 0 && (
-              <span className="absolute top-0 right-0 flex items-center justify-center text-white font-bold rounded-full bg-red-500 w-5 h-5 text-xs">
-                {notificationBadge < 16 ? notificationBadge : "15+"}
+              <span className="absolute top-0 right-0 flex items-center justify-center text-white font-bold rounded-full bg-red-500 w-6 h-6 text-xs">
+                {notificationBadge < 100 ? notificationBadge : "99+"}
               </span>
             )}
           </div>

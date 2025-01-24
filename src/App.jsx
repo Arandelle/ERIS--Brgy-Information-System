@@ -62,18 +62,19 @@ const App = () => {
     const unsubscribe = onChildAdded(notificationsRef, (snapshot) => {
       const notification = snapshot.val();
       if (notification) {
-        const {message, imageUrl} = notification;
+        const {message, img, title} = notification;
         toast(
           <div className="flex items-center justify-center space-x-3 flex-row">
-            <img
-              className="w-12 h-12 rounded-full border-2 border-primary-500"
-              src={imageUrl}
-              alt="Notification avatar"
-            />
-            <div>
-              <p className="font-bold">{message}</p>
-            </div>
+          <img
+            className="w-12 h-12 rounded-full border-2 border-primary-500"
+            src={img}
+            alt="Notification avatar"
+          />
+          <div className="flex flex-col">
+            <p className="font-bold">{title}</p>
+            <p className="text-xs">{message}</p>
           </div>
+        </div>
         );
       }
     });
