@@ -1,36 +1,34 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { toast } from "sonner";
 import { InputField } from "../../components/ReusableComponents/InputField";
-import { auth, app } from "../../services/firebaseConfig";
+import { auth, database } from "../../services/firebaseConfig";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
 import {
-  getDatabase,
-  push,
   ref,
   serverTimestamp,
   set,
 } from "firebase/database";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import { generateUniqueBarangayID } from "../../helper/generateID";
 import Modal from "../../components/ReusableComponents/Modal";
+import useSendNotification from "../../hooks/useSendNotification";
 
 const AddUserModal = ({ addUser, setAddUser, label }) => {
   const navigation = useNavigate();
+  const { sendNotification } = useSendNotification(); // use the sendNotification hook
   const [userData, setUserData] = useState({
     email: "",
     password: "",
     imageUrl: "",
   });
-  const { email, password, imageUrl } = userData;
+  const { email, password, imageUrl } = userData; // Destructure the userData object
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const randomNumber = Math.floor(Math.random() * 5) + 1;
+    const randomNumber = Math.floor(Math.random() * 5) + 1; // Generate a random number between 1 and 5 ( adding 1 to avoid 0)
     const url = `https://flowbite.com/docs/images/people/profile-picture-${randomNumber}.jpg`;
     setUserData({ ...userData, imageUrl: url });
   }, []);
@@ -45,14 +43,14 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
 
       try {
         const currentUser = auth.currentUser;
-        const userId = await generateUniqueBarangayID("user");
+        const userId = await generateUniqueBarangayID(`${label}`);
 
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           email,
           password
         );
-        const user = userCredential.user;
+        const user = userCredential.user; // The user object is returned from the createUserWithEmailAndPassword method
         await sendEmailVerification(user);
 
         const userData = {
@@ -64,43 +62,23 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
           customId: userId,
           id: user.uid
         };
-        const database = getDatabase(app);
-        await set(ref(database, `${label}/${user.uid}`), userData);
+        const accountRef = ref(database, `${label}/${user.uid}`); // Create a reference to the user's account
+        await set(accountRef, userData); // Save the user's data to the right user account (uid)
 
         await auth.updateCurrentUser(currentUser); // restore the admin
         navigation("/accounts/users");
 
         const adminId = currentUser.uid;
-        const notificationRef = ref(database, `admins/${adminId}/notifications`);
         const newNotification = {
           type: `${label}`,
-          message: `You have successfully created an account for ${label}`,
-          email: `${user.email}`,
-          isSeen: false,
-          date: new Date().toISOString(),
-          timestamp: serverTimestamp(),
-          img: imageUrl,
           userId: user.uid
         };
 
-        await push(notificationRef, newNotification);
+        // send notification to the admin
+        await sendNotification("admins", adminId, "createAccount", "admin", newNotification);
+        await sendNotification(`${label}`, user.uid, "createAccount","user", newNotification);
 
-        console.log("User created:", user.uid);
-        toast(
-          <div className="flex items-center justify-center space-x-3 flex-row">
-            <img
-              className="w-12 h-12 rounded-full border-2 border-primary-500"
-              src={imageUrl}
-              alt="Notification avatar"
-            />
-            <div>
-              <p className="font-bold">{`${capitalizeFirstLetter(
-                label
-              )} has been createad`}</p>
-              <p>{`${new Date().toLocaleString()}`}</p>
-            </div>
-          </div>
-        );
+        console.log("User created:", user);
         setUserData({ email: "", password: "", imageUrl: "" });
         setAddUser(false); // Close the modal after successful submission
       } catch (error) {

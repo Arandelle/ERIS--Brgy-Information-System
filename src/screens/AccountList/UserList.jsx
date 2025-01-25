@@ -31,6 +31,7 @@ const UserList = ({ data }) => {
     "customId",
     "createdAt",
     "address",
+    "id"
   ];
 
   const filteredData = useFilteredData(userData, searchQuery, searchField);
