@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { generateUniqueBarangayID } from "../../helper/generateID";
 import Modal from "../../components/ReusableComponents/Modal";
 import useSendNotification from "../../hooks/useSendNotification";
+import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 
 const AddUserModal = ({ addUser, setAddUser, label }) => {
   const navigation = useNavigate();
@@ -79,8 +80,26 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
         await sendNotification(`${label}`, user.uid, "createAccount","user", newNotification);
 
         console.log("User created:", user);
+
+        toast(
+          <div className="flex items-center justify-center space-x-3 flex-row">
+            <img
+              className="w-12 h-12 rounded-full border-2 border-primary-500"
+              src={imageUrl}
+              alt="Notification avatar"
+            />
+            <div>
+              <p className="font-bold">{`${capitalizeFirstLetter(
+                label
+              )} has been createad`}</p>
+              <p>{`${new Date().toLocaleString()}`}</p>
+            </div>
+          </div>
+        );
+        
         setUserData({ email: "", password: "", imageUrl: "" });
         setAddUser(false); // Close the modal after successful submission
+
       } catch (error) {
         setError(error.message);
         console.error("Error signing up:", error);

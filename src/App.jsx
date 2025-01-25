@@ -48,39 +48,39 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  // Listen for new notifications
-  useEffect(() => {
+  // // Listen for new notifications
+  // useEffect(() => {
 
-    if (!user) return;
+  //   if (!user) return;
 
-    const notificationsRef = ref(
-      database,
-      `admins/${user.uid}/notifications`
-    );
+  //   const notificationsRef = ref(
+  //     database,
+  //     `admins/${user.uid}/notifications`
+  //   );
 
-    // Listen for new notifications
-    const unsubscribe = onChildAdded(notificationsRef, (snapshot) => {
-      const notification = snapshot.val();
-      if (notification) {
-        const {message, img, title} = notification;
-        toast(
-          <div className="flex items-center justify-center space-x-3 flex-row">
-          <img
-            className="w-12 h-12 rounded-full border-2 border-primary-500"
-            src={img}
-            alt="Notification avatar"
-          />
-          <div className="flex flex-col">
-            <p className="font-bold">{title}</p>
-            <p className="text-xs">{message}</p>
-          </div>
-        </div>
-        );
-      }
-    });
+  //   // Listen for new notifications
+  //   const unsubscribe = onChildAdded(notificationsRef, (snapshot) => {
+  //     const notification = snapshot.val();
+  //     if (notification) {
+  //       const {message, img, title} = notification;
+  //       toast(
+  //         <div className="flex items-center justify-center space-x-3 flex-row">
+  //         <img
+  //           className="w-12 h-12 rounded-full border-2 border-primary-500"
+  //           src={img}
+  //           alt="Notification avatar"
+  //         />
+  //         <div className="flex flex-col">
+  //           <p className="font-bold">{title}</p>
+  //           <p className="text-xs">{message}</p>
+  //         </div>
+  //       </div>
+  //       );
+  //     }
+  //   });
 
-    return () => unsubscribe(); // Cleanup listener on unmount
-  }, [user]);
+  //   return () => unsubscribe(); // Cleanup listener on unmount
+  // }, [user]);
 
   if (loading) {
     return (

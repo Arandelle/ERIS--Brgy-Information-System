@@ -157,7 +157,7 @@ const NotificationItem = ({
 
   const userDetails = users?.find((user) => user.id === notification.userId);
   const responderDetails = responders?.find(
-    (responder) => responder.id === notification.responderId
+    (responder) => responder.id === notification.userId
   );
   const image = userDetails?.img || responderDetails?.img || "Unknown";
 
