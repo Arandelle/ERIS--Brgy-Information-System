@@ -2,22 +2,21 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import emailjs from "emailjs-com";
-import OTP from "../../assets/images/otp.svg";
-import { Tooltip } from "@mui/material";
 import {
   getAuth,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  signOut,
 } from "firebase/auth";
 import { get, getDatabase, ref, set } from "firebase/database";
-import { auth } from "../../services/firebaseConfig";
+import { auth, database } from "../../services/firebaseConfig";
 import Modal from "../../components/ReusableComponents/Modal";
-import { InputField } from "../../components/ReusableComponents/InputField";
 import icons from "../../assets/icons/Icons";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import { InputStyle } from "../../components/ReusableComponents/InputStyle";
 import Spinner from "../../components/ReusableComponents/Spinner";
 import ForgetPassword from "./ForgetPassword";
+import OtpForm from "./OtpForm";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,6 +34,34 @@ export default function Login() {
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [forgotPass, setForgotPass] = useState(false);
   const [resetPassSent, setResetPassSent] = useState(false);
+
+  const handleLoginError = (error) => {
+    switch (error.code) {
+      case "auth/invalid-credential":
+        toast.error("Login failed: Invalid password.");
+        break;
+      case "auth/user-not-found":
+        toast.error("Login failed: No user found with this email.");
+        break;
+      case "auth/too-many-requests":
+        toast.error(
+          "Login failed: Too many unsuccessful login attempts. Please try again later."
+        );
+        break;
+      case "auth/email-already-in-use":
+        toast.error("Registration failed: Email is already in use.");
+        break;
+      case "auth/weak-password":
+        toast.error("Registration failed: Password is too weak.");
+        break;
+      case "auth/invalid-email":
+        toast.error("Registration failed: Invalid email format.");
+        break;
+      default:
+        toast.error(`An error occurred: ${error.message}`);
+        break;
+    }
+  }
 
   const handleForgotPass = () => {
     setForgotPass(!forgotPass);
@@ -83,10 +110,7 @@ export default function Login() {
         password
       );
       const user = userCredentials.user;
-
-      //check if an account is admin
-      const db = getDatabase();
-      const adminRef = ref(db, `admins/${user.uid}`);
+      const adminRef = ref(database, `admins/${user.uid}`);
       const adminSnapshot = await get(adminRef);
       if (adminSnapshot.exists()) {
         setLoading(false);
@@ -100,31 +124,7 @@ export default function Login() {
         await auth.signOut();
       }
     } catch (error) {
-      switch (error.code) {
-        case "auth/invalid-credential":
-          toast.error("Login failed: Invalid password.");
-          break;
-        case "auth/user-not-found":
-          toast.error("Login failed: No user found with this email.");
-          break;
-        case "auth/too-many-requests":
-          toast.error(
-            "Login failed: Too many unsuccessful login attempts. Please try again later."
-          );
-          break;
-        case "auth/email-already-in-use":
-          toast.error("Registration failed: Email is already in use.");
-          break;
-        case "auth/weak-password":
-          toast.error("Registration failed: Password is too weak.");
-          break;
-        case "auth/invalid-email":
-          toast.error("Registration failed: Invalid email format.");
-          break;
-        default:
-          toast.error(`An error occurred: ${error.message}`);
-          break;
-      }
+      handleLoginError(error);
       setLoading(false);
       setEmailToMask("");
       setResetPassSent(false);
@@ -135,58 +135,66 @@ export default function Login() {
     event.preventDefault();
     setLoading(true);
     try {
-      if (!email || !password) {
-        toast.error("Please enter both email and password");
-        return;
-      }
-
-      // Generate OTP and send it to the user's email
-      const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
-      const templateParams = {
-        to_email: email,
-        otp: otpCode,
-      };
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        templateParams,
-        import.meta.env.VITE_EMAILJS_USER_ID
+      // Sign in with email and password
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
       );
-      toast.success("OTP sent successfully");
-
-      // Save the generated OTP for verification
-      setGeneratedOtp(otpCode.toString());
-      setOtpSent(true);
+  
+      const user = userCredentials.user; // Get the user object from the credentials
+  
+      if (user) {
+        // Generate OTP and send it to the user's email
+        await signOut(auth); // sign out the user before sending the otp
+        const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
+        const templateParams = {
+          to_email: email,
+          otp: otpCode,
+        };
+  
+        await emailjs.send(
+          import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          templateParams,
+          import.meta.env.VITE_EMAILJS_USER_ID
+        );
+        toast.success("OTP sent successfully");
+  
+        // Save the generated OTP for verification
+        setGeneratedOtp(otpCode.toString());
+        setOtpSent(true);
+        setEmailToMask(maskedEmail(email));
+      }
       setLoading(false);
-      setEmailToMask(maskedEmail(email));
     } catch (error) {
-      toast.error("Failed to send OTP: " + error.message);
+      handleLoginError(error);
       setLoading(false);
+      setEmailToMask("");
+      setResetPassSent(false);
     }
   };
-
+  
   const handleVerify = async (event) => {
     event.preventDefault();
     if (otpInput === "") {
       toast.error("Please enter the OTP");
       return;
     }
-   
+  
     if (otpInput === generatedOtp) {
       setLoading(true);
       try {
-        // Proceed with Firebase login after OTP verification
-        const auth = getAuth();
+        // OTP verified, proceed with Firebase login
         const userCredentials = await signInWithEmailAndPassword(
           auth,
           email,
           password
         );
         const user = userCredentials.user;
-
+  
         // Check if the user has admin privileges
-        const db = getDatabase();
-        const adminRef = ref(db, `admins/${user.uid}`);
+        const adminRef = ref(database, `admins/${user.uid}`);
         const adminSnapshot = await get(adminRef);
         if (adminSnapshot.exists()) {
           toast.success("Login successful");
@@ -206,6 +214,7 @@ export default function Login() {
       setLoading(false);
     }
   };
+  
 
   // mask the email address for security
   const maskedEmail = (email) => {
@@ -299,30 +308,14 @@ export default function Login() {
         </div>
 
         {/*Input for verfication  */}
-        <form
-          className={`flex flex-col ${
-            otpSent && !otpVerified ? "block" : "hidden"
-          }`}
-          onSubmit={handleVerify}
-        >
-        <div className="place-items-center">  <img src={OTP} alt="Image" className="h-60 w-60" /></div>
-          <h1 className="text-red-600 dark:text-gray-300 py-2">Enter the otp we have sent to your  email <span className="font-bold italic">{emailToMask}</span></h1>
-          <div className="flex flex-row space-x-2 ">
-            <input
-              class=""
-              type="text"
-              placeholder="Enter OTP"
-              value={otpInput}
-              onChange={(e) => setOtpInput(e.target.value)}
-            />
-            <button
-              className="w-full bg-blue-800 text-white text-bold py-2 px-4 rounded"
-              type="submit"
-            >
-              Verify
-            </button>
-          </div>
-        </form>
+       {otpSent && (
+        <OtpForm 
+          handleVerify={handleVerify}
+          emailToMask={emailToMask}
+          setOtpInput={setOtpInput}
+          otpInput={otpInput}
+        />
+       )}
       </main>
 
       {forgotPass && (
