@@ -2,27 +2,29 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import emailjs from "emailjs-com";
-import OTP from "../assets/images/otp.svg";
+import OTP from "../../assets/images/otp.svg";
 import { Tooltip } from "@mui/material";
 import {
   getAuth,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { get, getDatabase, ref } from "firebase/database";
-import { auth } from "../services/firebaseConfig";
-import Modal from "../components/ReusableComponents/Modal";
-import { InputField } from "../components/ReusableComponents/InputField";
-import icons from "../assets/icons/Icons";
-import { useFetchSystemData } from "../hooks/useFetchSystemData";
-import { InputStyle } from "../components/ReusableComponents/InputStyle";
-import Spinner from "../components/ReusableComponents/Spinner";
+import { get, getDatabase, ref, set } from "firebase/database";
+import { auth } from "../../services/firebaseConfig";
+import Modal from "../../components/ReusableComponents/Modal";
+import { InputField } from "../../components/ReusableComponents/InputField";
+import icons from "../../assets/icons/Icons";
+import { useFetchSystemData } from "../../hooks/useFetchSystemData";
+import { InputStyle } from "../../components/ReusableComponents/InputStyle";
+import Spinner from "../../components/ReusableComponents/Spinner";
+import ForgetPassword from "./ForgetPassword";
 
 export default function Login({ setAuth }) {
   const navigate = useNavigate();
 
   const { systemData } = useFetchSystemData();
   const [email, setEmail] = useState("");
+  const [emailForReset, setEmailForReset] = useState(""); // use for email display when reset password is sent
   const [emailError, setEmailError] = useState("");
   const [password, setPass] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,6 +34,7 @@ export default function Login({ setAuth }) {
   const [otpVerified, setOtpVerified] = useState(false);
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [forgotPass, setForgotPass] = useState(false);
+  const [resetPassSent, setResetPassSent] = useState(false);
 
   const handleForgotPass = () => {
     setForgotPass(!forgotPass);
@@ -50,17 +53,22 @@ export default function Login({ setAuth }) {
   };
 
   const handlePasswordReset = async (email) => {
+    setLoading(true);
     try {
       await sendPasswordResetEmail(auth, email);
-      toast.success("Success", "Password reset email sent");
+      toast.success("Success: Password reset email sent");
+      setLoading(false);
+      setResetPassSent(true);
     } catch (error) {
       toast.error(`Error, ${error.message}`);
+      setLoading(false);
     }
   };
 
   const handleSubmitResetPass = () => {
     handlePasswordReset(email);
-    setEmail(""); // Clear the input after submission
+    setEmailForReset(maskedEmail(email)); // save the email for display
+    setEmail(""); // reset the email input
     setForgotPass(false);
   };
 
@@ -90,7 +98,32 @@ export default function Login({ setAuth }) {
         await auth.signOut();
       }
     } catch (error) {
-      toast.error("Login failed: " + error.message);
+      switch (error.code) {
+        case "auth/invalid-credential":
+          toast.error("Login failed: Invalid password.");
+          break;
+        case "auth/user-not-found":
+          toast.error("Login failed: No user found with this email.");
+          break;
+        case "auth/too-many-requests":
+          toast.error(
+            "Login failed: Too many unsuccessful login attempts. Please try again later."
+          );
+          break;
+        case "auth/email-already-in-use":
+          toast.error("Registration failed: Email is already in use.");
+          break;
+        case "auth/weak-password":
+          toast.error("Registration failed: Password is too weak.");
+          break;
+        case "auth/invalid-email":
+          toast.error("Registration failed: Invalid email format.");
+          break;
+        default:
+          toast.error(`An error occurred: ${error.message}`);
+          break;
+      }
+      setLoading(false);
     }
   };
 
@@ -101,7 +134,7 @@ export default function Login({ setAuth }) {
   //       toast.error("Please enter both email and password");
   //       return;
   //     }
-  
+
   //     // Generate OTP and send it to the user's email
   //     const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
   //     const templateParams = {
@@ -115,7 +148,7 @@ export default function Login({ setAuth }) {
   //       import.meta.env.VITE_EMAILJS_USER_ID
   //     );
   //     toast.success("OTP sent successfully");
-  
+
   //     // Save the generated OTP for verification
   //     setGeneratedOtp(otpCode.toString());
   //     setOtpSent(true);
@@ -123,13 +156,13 @@ export default function Login({ setAuth }) {
   //     toast.error("Failed to send OTP: " + error.message);
   //   }
   // };
-  
+
   const handleVerify = async () => {
     if (otpInput === "") {
       toast.error("Please enter the OTP");
       return;
     }
-  
+
     if (otpInput === generatedOtp) {
       try {
         // Proceed with Firebase login after OTP verification
@@ -140,7 +173,7 @@ export default function Login({ setAuth }) {
           password
         );
         const user = userCredentials.user;
-  
+
         // Check if the user has admin privileges
         const db = getDatabase();
         const adminRef = ref(db, `admins/${user.uid}`);
@@ -159,16 +192,25 @@ export default function Login({ setAuth }) {
       toast.error("Incorrect OTP, please try again");
     }
   };
-  
-   if(loading){
-      return (
-        <>
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
-           <Spinner loading={loading} />
-         </div>    
-        </>
-       )
-    }
+
+  // mask the email address for security
+  const maskedEmail = (email) => {
+    const [name, domain] = email.split("@"); // split the email into name and domain between @
+
+    if (name.length <= 2) return email; // if the name is less than 2 characters. return the email as usual
+    const maskedName = name.slice(0, 2) + "****"; // mask the name with 2 characters and ****
+    return maskedName + "@" + domain; // return the masked email
+  };
+
+  if (loading) {
+    return (
+      <>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
+          <Spinner loading={loading} />
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -191,8 +233,17 @@ export default function Login({ setAuth }) {
               <h1 className="text-2xl text-center dark:text-gray-300">
                 Welcome Admin! Login your Account.
               </h1>
+
+              {resetPassSent && (
+           <div className="place-self-center m-4">
+              <p className="p-2 text-red-600 dark:text-gray-300 whitespace-nowrap">
+                We have sent a reset password link to your email{" "}
+                <span className="italic font-bold">{emailForReset}</span>
+              </p>
+           </div>
+          )}
               <InputStyle
-               label={"Email: "}
+                label={"Email: "}
                 iconName={"email"}
                 type={"email"}
                 placeholder={"admin@example.com"}
@@ -264,39 +315,12 @@ export default function Login({ setAuth }) {
           closeButton={handleForgotPass}
           title={"Reset Password"}
           children={
-            <div className="space-y-4 sm:w-auto md:min-w-[32rem]">
-              <div className="space-y-2">
-                <p className="text-sm text-gray-800">
-                  Enter your email address:
-                </p>
-                <InputStyle
-                  iconName={"email"}
-                  type={"email"}
-                  placeholder={"Enter your email"}
-                  value={email}
-                  onChange={(e) => handleEmailChange(e.target.value)}
-                />
-              </div>
-
-              {emailError && (
-                <p className="text-red-500 text-sm">{emailError}</p>
-              )}
-
-              <div className="flex flex-row space-x-2 place-content-end">
-                <button
-                  className="border border-gray-400 px-4 text-sm p-2 rounded-sm text-gray-800"
-                  onClick={handleForgotPass}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="bg-blue-500 text-sm p-2 rounded-sm text-white shadow-md"
-                  onClick={handleSubmitResetPass}
-                >
-                  Send reset password
-                </button>
-              </div>
-            </div>
+            <ForgetPassword
+              email={email}
+              handleEmailChange={handleEmailChange}
+              emailError={emailError}
+              handleSubmitResetPass={handleSubmitResetPass}
+            />
           }
         />
       )}

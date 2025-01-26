@@ -119,7 +119,7 @@ const Records = () => {
 
       return status ? (
         <td className={`text-center font-bold ${statusStyle}`}>
-        {capitalizeFirstLetter(data)}
+        {capitalizeFirstLetter(data || "")}
         </td>
       ) : (
         <td className="px-6 py-4 max-w-16 text-ellipsis overflow-hidden whitespace-nowrap">

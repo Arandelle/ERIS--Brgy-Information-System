@@ -9,7 +9,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import Map from "./screens/Maps/Map";
-import Login from "./screens/Login";
+import Login from "./screens/LoginScreen/Login";
 import Records from "./screens/Records";
 import Announcement from "./screens/Announcement/AnnouncementList";
 import Setting from "./screens/Setting";
