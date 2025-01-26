@@ -24,7 +24,7 @@ export default function Login() {
 
   const { systemData } = useFetchSystemData();
   const [email, setEmail] = useState("");
-  const [emailForReset, setEmailForReset] = useState(""); // use for email display when reset password is sent
+  const [emailToMask, setEmailToMask] = useState(""); // use for email display when reset password is sent
   const [emailError, setEmailError] = useState("");
   const [password, setPass] = useState("");
   const [loading, setLoading] = useState(false);
@@ -67,7 +67,7 @@ export default function Login() {
 
   const handleSubmitResetPass = () => {
     handlePasswordReset(email);
-    setEmailForReset(maskedEmail(email)); // save the email for display
+    setEmailToMask(maskedEmail(email)); // save the email for display
     setEmail(""); // reset the email input
     setForgotPass(false);
   };
@@ -90,8 +90,8 @@ export default function Login() {
       const adminSnapshot = await get(adminRef);
       if (adminSnapshot.exists()) {
         setLoading(false);
-        setEmailForReset("");
-        setResetPassSent(false);
+        setEmailToMask("");
+        setResetPassSent(false); 
         toast.success("Login successful");
         console.log("Login as ", email);
         navigate("/dashboard");
@@ -126,7 +126,7 @@ export default function Login() {
           break;
       }
       setLoading(false);
-      setEmailForReset("");
+      setEmailToMask("");
       setResetPassSent(false);
     }
   };
@@ -158,7 +158,7 @@ export default function Login() {
       setGeneratedOtp(otpCode.toString());
       setOtpSent(true);
       setLoading(false);
-      setEmail(maskedEmail(email));
+      setEmailToMask(maskedEmail(email));
     } catch (error) {
       toast.error("Failed to send OTP: " + error.message);
       setLoading(false);
@@ -252,7 +252,7 @@ export default function Login() {
            <div className="place-self-center m-4">
               <p className="p-2 text-red-600 dark:text-gray-300 whitespace-nowrap">
                 We have sent a reset password link to your email{" "}
-                <span className="italic font-bold">{emailForReset}</span>
+                <span className="italic font-bold">{emailToMask}</span>
               </p>
            </div>
           )}
@@ -306,7 +306,7 @@ export default function Login() {
           onSubmit={handleVerify}
         >
         <div className="place-items-center">  <img src={OTP} alt="Image" className="h-60 w-60" /></div>
-          <h1 className="text-red-600 dark:text-gray-300 py-2">Enter the otp we have sent to your  email <span className="font-bold italic">{email}</span></h1>
+          <h1 className="text-red-600 dark:text-gray-300 py-2">Enter the otp we have sent to your  email <span className="font-bold italic">{emailToMask}</span></h1>
           <div className="flex flex-row space-x-2 ">
             <input
               class=""
