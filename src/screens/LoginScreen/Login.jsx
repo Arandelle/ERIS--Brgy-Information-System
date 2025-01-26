@@ -305,7 +305,7 @@ export default function Login() {
           }`}
           onSubmit={handleVerify}
         >
-          <img src={OTP} alt="Image" className="h-60 w-60" />
+        <div className="place-items-center">  <img src={OTP} alt="Image" className="h-60 w-60" /></div>
           <h1 className="text-red-600 dark:text-gray-300 py-2">Enter the otp we have sent to your  email <span className="font-bold italic">{email}</span></h1>
           <div className="flex flex-row space-x-2 ">
             <input
@@ -316,7 +316,7 @@ export default function Login() {
               onChange={(e) => setOtpInput(e.target.value)}
             />
             <button
-              className="w-full bg-primary-500 text-white text-bold py-2 px-4 rounded"
+              className="w-full bg-blue-800 text-white text-bold py-2 px-4 rounded"
               type="submit"
             >
               Verify
