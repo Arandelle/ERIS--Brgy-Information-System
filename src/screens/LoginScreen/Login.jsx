@@ -251,7 +251,7 @@ export default function Login() {
             otpSent && !otpVerified ? "hidden" : "block"
           }`}
         >
-          <form action="" onSubmit={handleSubmitWithOtp} className={`space-y-4`}>
+          <form action="" onSubmit={handleLogin} className={`space-y-4`}>
             <div className="space-y-2">
               <h1 className="text-2xl text-center dark:text-gray-300">
                 Welcome Admin! Login your Account.
