@@ -19,7 +19,7 @@ import { InputStyle } from "../../components/ReusableComponents/InputStyle";
 import Spinner from "../../components/ReusableComponents/Spinner";
 import ForgetPassword from "./ForgetPassword";
 
-export default function Login({ setAuth }) {
+export default function Login() {
   const navigate = useNavigate();
 
   const { systemData } = useFetchSystemData();
@@ -90,6 +90,8 @@ export default function Login({ setAuth }) {
       const adminSnapshot = await get(adminRef);
       if (adminSnapshot.exists()) {
         setLoading(false);
+        setEmailForReset("");
+        setResetPassSent(false);
         toast.success("Login successful");
         console.log("Login as ", email);
         navigate("/dashboard");
@@ -124,46 +126,54 @@ export default function Login({ setAuth }) {
           break;
       }
       setLoading(false);
+      setEmailForReset("");
+      setResetPassSent(false);
     }
   };
 
-  // const handleSubmitWithOtp = async (event) => {
-  //   event.preventDefault();
-  //   try {
-  //     if (!email || !password) {
-  //       toast.error("Please enter both email and password");
-  //       return;
-  //     }
+  const handleSubmitWithOtp = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      if (!email || !password) {
+        toast.error("Please enter both email and password");
+        return;
+      }
 
-  //     // Generate OTP and send it to the user's email
-  //     const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
-  //     const templateParams = {
-  //       to_email: email,
-  //       otp: otpCode,
-  //     };
-  //     await emailjs.send(
-  //       import.meta.env.VITE_EMAILJS_SERVICE_ID,
-  //       import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-  //       templateParams,
-  //       import.meta.env.VITE_EMAILJS_USER_ID
-  //     );
-  //     toast.success("OTP sent successfully");
+      // Generate OTP and send it to the user's email
+      const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
+      const templateParams = {
+        to_email: email,
+        otp: otpCode,
+      };
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        templateParams,
+        import.meta.env.VITE_EMAILJS_USER_ID
+      );
+      toast.success("OTP sent successfully");
 
-  //     // Save the generated OTP for verification
-  //     setGeneratedOtp(otpCode.toString());
-  //     setOtpSent(true);
-  //   } catch (error) {
-  //     toast.error("Failed to send OTP: " + error.message);
-  //   }
-  // };
+      // Save the generated OTP for verification
+      setGeneratedOtp(otpCode.toString());
+      setOtpSent(true);
+      setLoading(false);
+      setEmail(maskedEmail(email));
+    } catch (error) {
+      toast.error("Failed to send OTP: " + error.message);
+      setLoading(false);
+    }
+  };
 
-  const handleVerify = async () => {
+  const handleVerify = async (event) => {
+    event.preventDefault();
     if (otpInput === "") {
       toast.error("Please enter the OTP");
       return;
     }
-
+   
     if (otpInput === generatedOtp) {
+      setLoading(true);
       try {
         // Proceed with Firebase login after OTP verification
         const auth = getAuth();
@@ -181,15 +191,19 @@ export default function Login({ setAuth }) {
         if (adminSnapshot.exists()) {
           toast.success("Login successful");
           navigate("/dashboard");
+          setLoading(false);
         } else {
           toast.error("You do not have admin privileges");
           await auth.signOut();
+          setLoading(false);
         }
       } catch (error) {
         toast.error("Login failed: " + error.message);
+        setLoading(false);
       }
     } else {
       toast.error("Incorrect OTP, please try again");
+      setLoading(false);
     }
   };
 
@@ -228,7 +242,7 @@ export default function Login({ setAuth }) {
             otpSent && !otpVerified ? "hidden" : "block"
           }`}
         >
-          <form action="" onSubmit={handleLogin} className={`space-y-4`}>
+          <form action="" onSubmit={handleSubmitWithOtp} className={`space-y-4`}>
             <div className="space-y-2">
               <h1 className="text-2xl text-center dark:text-gray-300">
                 Welcome Admin! Login your Account.
@@ -285,13 +299,14 @@ export default function Login({ setAuth }) {
         </div>
 
         {/*Input for verfication  */}
-        <div
+        <form
           className={`flex flex-col ${
             otpSent && !otpVerified ? "block" : "hidden"
           }`}
+          onSubmit={handleVerify}
         >
           <img src={OTP} alt="Image" className="h-60 w-60" />
-          <h1>Enter the otp we sent to your email</h1>
+          <h1 className="text-red-600 dark:text-gray-300 py-2">Enter the otp we have sent to your  email <span className="font-bold italic">{email}</span></h1>
           <div className="flex flex-row space-x-2 ">
             <input
               class=""
@@ -302,12 +317,12 @@ export default function Login({ setAuth }) {
             />
             <button
               className="w-full bg-primary-500 text-white text-bold py-2 px-4 rounded"
-              onClick={handleVerify}
+              type="submit"
             >
               Verify
             </button>
           </div>
-        </div>
+        </form>
       </main>
 
       {forgotPass && (
