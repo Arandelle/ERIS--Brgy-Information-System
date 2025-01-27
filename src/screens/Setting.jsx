@@ -225,7 +225,7 @@ const Setting = () => {
                       {currentAdminDetails?.fullname}
                     </p>
                     <p className="text-gray-500 dark:text-gray-400 text-sm">
-                      {user.email}
+                      {user?.email}
                     </p>
                   </div>
                 </div>

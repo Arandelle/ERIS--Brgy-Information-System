@@ -97,38 +97,7 @@ export default function Login() {
     setForgotPass(false);
   };
 
-  const handleLogin = async (event) => {
-    setLoading(true);
-    event.preventDefault();
-    try {
-
-      const userCredentials = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredentials.user;
-      const adminRef = ref(database, `admins/${user.uid}`);
-      const adminSnapshot = await get(adminRef);
-      if (adminSnapshot.exists()) {
-        setLoading(false);
-        setEmailToMask("");
-        setResetPassSent(false);
-        toast.success("Login successful");
-        console.log("Login as ", email);
-        navigate("/dashboard");
-      } else {
-        toast.error("You do not have admin priveledges");
-        await auth.signOut();
-      }
-    } catch (error) {
-      handleLoginError(error);
-      setLoading(false);
-      setEmailToMask("");
-      setResetPassSent(false);
-    }
-  };
-
+  
   const handleSubmitWithOtp = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -143,6 +112,8 @@ export default function Login() {
       const user = userCredentials.user; // Get the user object from the credentials
 
       if (user) {
+        // check the systemData, if isOtpEnabled is true proceed to send otp else login
+        if(systemData?.isOtpEnabled){
         // Generate OTP and send it to the user's email
         await signOut(auth); // sign out the user before sending the otp
         const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
@@ -163,6 +134,12 @@ export default function Login() {
         setGeneratedOtp(otpCode.toString());
         setOtpSent(true);
         setEmailToMask(maskedEmail(email));
+      } else {
+        // if isOtpEnable is false if will proceed here
+        toast.success("Login successful");
+        navigate("/dashboard");
+        setLoading(false);
+      }
       }
       setLoading(false);
     } catch (error) {
@@ -172,7 +149,8 @@ export default function Login() {
       setResetPassSent(false);
     }
   };
-
+   
+  // verify the otp sent to the email
   const handleVerify = async (event) => {
     event.preventDefault();
     if (otpInput === "") {
@@ -247,7 +225,7 @@ export default function Login() {
           <div
           className={`w-full max-w-md`}
         >
-          <form action="" onSubmit={handleLogin} className={`space-y-4`}>
+          <form action="" onSubmit={handleSubmitWithOtp} className={`space-y-4`}>
             <div className="space-y-2">
               <h1 className="text-2xl text-center dark:text-gray-300">
                 Welcome Admin! Login your Account.
