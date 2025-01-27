@@ -11,6 +11,7 @@ import ViewImage from "./ViewImage";
 import handleEditData from "../hooks/handleEditData";
 import SwitchButton from "../components/ReusableComponents/SwitchButton";
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
+import handleErrorMessage from "../helper/handleErrorMessage";
 
 const Setting = () => {
   const { isModalOpen, currentImage, openModal, closeModal } = useImageView();
@@ -169,11 +170,7 @@ const Setting = () => {
         await handleEditData("details", newSystemData, "systemData");
       }
     } catch (error) {
-      if (error.code === "auth/wrong-password") {
-        toast.error("Incorrect password. Please try again.");
-      } else {
-        toast.error("An error occurred: " + error.message);
-      }
+      handleErrorMessage(error);
     }
   };
 

@@ -16,6 +16,7 @@ import { InputStyle } from "../../components/ReusableComponents/InputStyle";
 import Spinner from "../../components/ReusableComponents/Spinner";
 import ForgetPassword from "./ForgetPassword";
 import OtpForm from "./OtpForm";
+import handleErrorMessage from "../../helper/handleErrorMessage";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -32,34 +33,6 @@ export default function Login() {
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [forgotPass, setForgotPass] = useState(false);
   const [resetPassSent, setResetPassSent] = useState(false);
-
-  const handleLoginError = (error) => {
-    switch (error.code) {
-      case "auth/invalid-credential":
-        toast.error("Login failed: Invalid password.");
-        break;
-      case "auth/user-not-found":
-        toast.error("Login failed: No user found with this email.");
-        break;
-      case "auth/too-many-requests":
-        toast.error(
-          "Login failed: Too many unsuccessful login attempts. Please try again later."
-        );
-        break;
-      case "auth/email-already-in-use":
-        toast.error("Registration failed: Email is already in use.");
-        break;
-      case "auth/weak-password":
-        toast.error("Registration failed: Password is too weak.");
-        break;
-      case "auth/invalid-email":
-        toast.error("Registration failed: Invalid email format.");
-        break;
-      default:
-        toast.error(`An error occurred: ${error.message}`);
-        break;
-    }
-  };
 
   const handleForgotPass = () => {
     setForgotPass(!forgotPass);
@@ -143,7 +116,7 @@ export default function Login() {
       }
       setLoading(false);
     } catch (error) {
-      handleLoginError(error);
+      handleErrorMessage(error);
       setLoading(false);
       setEmailToMask("");
       setResetPassSent(false);
