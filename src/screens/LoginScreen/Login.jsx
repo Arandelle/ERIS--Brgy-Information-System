@@ -3,12 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import emailjs from "emailjs-com";
 import {
-  getAuth,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
 } from "firebase/auth";
-import { get, getDatabase, ref, set } from "firebase/database";
+import { get,ref } from "firebase/database";
 import { auth, database } from "../../services/firebaseConfig";
 import Modal from "../../components/ReusableComponents/Modal";
 import icons from "../../assets/icons/Icons";
@@ -30,7 +29,6 @@ export default function Login() {
 
   const [otpInput, setOtpInput] = useState("");
   const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [forgotPass, setForgotPass] = useState(false);
   const [resetPassSent, setResetPassSent] = useState(false);
@@ -61,7 +59,7 @@ export default function Login() {
         toast.error(`An error occurred: ${error.message}`);
         break;
     }
-  }
+  };
 
   const handleForgotPass = () => {
     setForgotPass(!forgotPass);
@@ -103,7 +101,7 @@ export default function Login() {
     setLoading(true);
     event.preventDefault();
     try {
-      const auth = getAuth();
+
       const userCredentials = await signInWithEmailAndPassword(
         auth,
         email,
@@ -115,7 +113,7 @@ export default function Login() {
       if (adminSnapshot.exists()) {
         setLoading(false);
         setEmailToMask("");
-        setResetPassSent(false); 
+        setResetPassSent(false);
         toast.success("Login successful");
         console.log("Login as ", email);
         navigate("/dashboard");
@@ -141,9 +139,9 @@ export default function Login() {
         email,
         password
       );
-  
+
       const user = userCredentials.user; // Get the user object from the credentials
-  
+
       if (user) {
         // Generate OTP and send it to the user's email
         await signOut(auth); // sign out the user before sending the otp
@@ -152,7 +150,7 @@ export default function Login() {
           to_email: email,
           otp: otpCode,
         };
-  
+
         await emailjs.send(
           import.meta.env.VITE_EMAILJS_SERVICE_ID,
           import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
@@ -160,7 +158,7 @@ export default function Login() {
           import.meta.env.VITE_EMAILJS_USER_ID
         );
         toast.success("OTP sent successfully");
-  
+
         // Save the generated OTP for verification
         setGeneratedOtp(otpCode.toString());
         setOtpSent(true);
@@ -174,14 +172,14 @@ export default function Login() {
       setResetPassSent(false);
     }
   };
-  
+
   const handleVerify = async (event) => {
     event.preventDefault();
     if (otpInput === "") {
       toast.error("Please enter the OTP");
       return;
     }
-  
+
     if (otpInput === generatedOtp) {
       setLoading(true);
       try {
@@ -192,7 +190,7 @@ export default function Login() {
           password
         );
         const user = userCredentials.user;
-  
+
         // Check if the user has admin privileges
         const adminRef = ref(database, `admins/${user.uid}`);
         const adminSnapshot = await get(adminRef);
@@ -214,7 +212,6 @@ export default function Login() {
       setLoading(false);
     }
   };
-  
 
   // mask the email address for security
   const maskedEmail = (email) => {
@@ -246,10 +243,9 @@ export default function Login() {
             backgroundImage: `url(${systemData?.imageUrl})`,
           }}
         ></div>
-        <div
-          className={`w-full max-w-md ${
-            otpSent && !otpVerified ? "hidden" : "block"
-          }`}
+        {!otpSent && (
+          <div
+          className={`w-full max-w-md`}
         >
           <form action="" onSubmit={handleLogin} className={`space-y-4`}>
             <div className="space-y-2">
@@ -258,13 +254,13 @@ export default function Login() {
               </h1>
 
               {resetPassSent && (
-           <div className="place-self-center m-4">
-              <p className="p-2 text-red-600 dark:text-gray-300 whitespace-nowrap">
-                We have sent a reset password link to your email{" "}
-                <span className="italic font-bold">{emailToMask}</span>
-              </p>
-           </div>
-          )}
+                <div className="place-self-center m-4">
+                  <p className="p-2 text-red-600 dark:text-gray-300 whitespace-nowrap">
+                    We have sent a reset password link to your email{" "}
+                    <span className="italic font-bold">{emailToMask}</span>
+                  </p>
+                </div>
+              )}
               <InputStyle
                 label={"Email: "}
                 iconName={"email"}
@@ -306,18 +302,17 @@ export default function Login() {
             </div>
           </form>
         </div>
-
-        {/*Input for verfication  */}
-       {otpSent && (
-        <OtpForm 
+        )}
+              {/*Input for verfication  */}
+      {otpSent && (
+        <OtpForm
           handleVerify={handleVerify}
           emailToMask={emailToMask}
           setOtpInput={setOtpInput}
           otpInput={otpInput}
         />
-       )}
+      )}
       </main>
-
       {forgotPass && (
         <Modal
           closeButton={handleForgotPass}

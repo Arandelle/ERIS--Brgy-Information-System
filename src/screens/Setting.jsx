@@ -9,11 +9,13 @@ import ProfileModal from "./ProfileModal";
 import useImageView from "../hooks/useImageView";
 import ViewImage from "./ViewImage";
 import handleEditData from "../hooks/handleEditData";
+import SwitchButton from "../components/ReusableComponents/SwitchButton";
+import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 
 const Setting = () => {
-  const {isModalOpen, currentImage, openModal, closeModal} = useImageView();
+  const { isModalOpen, currentImage, openModal, closeModal } = useImageView();
   const user = auth.currentUser;
-  const { data: systemData, loading, setLoading} = useFetchData("systemData");
+  const { data: systemData, loading, setLoading } = useFetchData("systemData");
   const { data: admin } = useFetchData("admins");
   const currentAdminDetails = admin.find((admin) => admin.id === user?.uid);
   const [systemState, setSystemState] = useState({
@@ -23,6 +25,7 @@ const Setting = () => {
     originalImageUrl: "",
     logoImageFile: null,
     isModified: false,
+    isOtpEnabled: true,
   });
   const [adminData, setAdminData] = useState({
     image: "",
@@ -32,12 +35,13 @@ const Setting = () => {
   });
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  // render the state with the systemData
-  useEffect(() => {
-    if(systemData && systemData.length > 0){
-      const systemDataDetails = systemData.find((data) => data.id === "details" );
+  // create variable to get the specific data under systeData which is we use the id 'details'
+  const systemDataDetails = systemData.find((data) => data.id === "details");
 
-      if(systemDataDetails){
+  // render the systemState the systemData's data under the details
+  useEffect(() => {
+    if (systemData && systemData.length > 0) {
+      if (systemDataDetails) {
         setSystemState((prevState) => ({
           ...prevState,
           originalTitle: systemDataDetails.title,
@@ -45,7 +49,8 @@ const Setting = () => {
           originalImageUrl: systemDataDetails.imageUrl,
           previewImage: systemDataDetails.imageUrl,
           isModified: false,
-        }))
+          isOtpEnabled: systemDataDetails.isOtpEnabled,
+        }));
       }
     }
   }, [systemData]);
@@ -95,9 +100,7 @@ const Setting = () => {
   // Check if the system data has been modified
   useEffect(() => {
     const { title, logoImageFile } = systemState;
-    if (
-      title !== systemState.originalTitle || logoImageFile
-    ) {
+    if (title !== systemState.originalTitle || logoImageFile) {
       setSystemState((prevState) => ({
         ...prevState,
         isModified: true,
@@ -118,7 +121,10 @@ const Setting = () => {
     try {
       let imageUrl = systemState.originalImageUrl; // retain the existing image url
 
-      const updatedData = { title: systemState.title, image: systemState.logoImageFile };
+      const updatedData = {
+        title: systemState.title,
+        image: systemState.logoImageFile,
+      };
       await handleEditData("details", updatedData, "systemData");
       console.log("Data updated in database: ", updatedData);
 
@@ -137,12 +143,46 @@ const Setting = () => {
     }
   };
 
+  const handleOtpEnable = async () => {
+    try {
+      if (systemDataDetails.isOtpEnabled) {
+        const password = prompt("Please enter your password first before turning off the otp");
+        if(!password){
+          toast.warning("Password is required before proceeding");
+          return;
+        }
+        // reauthenticate the user
+        const credential = EmailAuthProvider.credential(user.email, password);
+        await reauthenticateWithCredential(user, credential);
+        const newSytemData = {
+          ...systemDataDetails,
+          isOtpEnabled: false
+        }
+
+        await handleEditData("details", newSytemData, "systemData");
+        return;
+      } else {
+        const newSystemData = {
+          ...systemDataDetails,
+          isOtpEnabled: true,
+        };
+        await handleEditData("details", newSystemData, "systemData");
+      }
+    } catch (error) {
+      if (error.code === "auth/wrong-password") {
+        toast.error("Incorrect password. Please try again.");
+      } else {
+        toast.error("An error occurred: " + error.message);
+      }
+    }
+  };
+
   if (loading) {
     return (
       <HeaderAndSideBar
         content={
-          <div className="flex items-center justify-center h-svh">
-            loading...
+          <div className="flex items-center text-gray-500 justify-center h-svh">
+            Loading please wait...
           </div>
         }
       />
@@ -151,9 +191,9 @@ const Setting = () => {
 
   const LabelStyle = ({ label }) => {
     return (
-        <p className="flex-1 basis-1/2 font-medium text-gray-800 text-md lg:text-lg dark:text-gray-200">
-          {label}
-        </p>
+      <p className="flex-1 basis-1/2 font-medium text-gray-800 text-md lg:text-lg dark:text-gray-200">
+        {label}
+      </p>
     );
   };
 
@@ -189,7 +229,7 @@ const Setting = () => {
                     </p>
                   </div>
                 </div>
-               <div className="flex-1 ">
+                <div className="flex-1 ">
                   <ButtonStyle
                     icon={icons.edit}
                     color={"gray"}
@@ -197,7 +237,7 @@ const Setting = () => {
                     label={"Edit Profile"}
                     onClick={handleEditProfile}
                   />
-               </div>
+                </div>
               </div>
             </div>
             {/**System container */}
@@ -211,7 +251,7 @@ const Setting = () => {
               <div className="space-y-3 py-6 px-0 lg:px-8">
                 <div className="flex flex-row items-center">
                   <LabelStyle label={"Title"} />
-                <div className="flex-1 basis-1/2">
+                  <div className="flex-1 basis-1/2">
                     <input
                       type="text"
                       value={systemState.title}
@@ -219,30 +259,32 @@ const Setting = () => {
                       maxLength={10}
                       className="rounded-lg shadow-sm border-2 border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm"
                     />
-                </div>
+                  </div>
                 </div>
                 <div className="flex flex-row items-center">
-                  <LabelStyle label={"Barangay"}/>
-                 <div className="flex-1 basis-1/2">
+                  <LabelStyle label={"Barangay"} />
+                  <div className="flex-1 basis-1/2">
                     <select className="rounded-lg shadow-sm border-2 border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm">
                       <option>Bagtas</option>
                     </select>
-                 </div>
+                  </div>
                 </div>
               </div>
 
               {/**Logo */}
-              <div className="flex flex-row items-center">
+              <section className="flex flex-row items-center">
                 <div className="flex-1 basis-1/2">
                   <img
-                    src={systemState.previewImage || systemState.originalImageUrl}
+                    src={
+                      systemState.previewImage || systemState.originalImageUrl
+                    }
                     alt="System"
                     className="w-24 lg:w-40 rounded-full cursor-pointer"
                     loading="lazy"
                     onClick={() => openModal(systemState.previewImage)}
                   />
                 </div>
-               <div className="flex-1 basis-1/2">
+                <div className="flex-1 basis-1/2">
                   <label
                     htmlFor="file-upload"
                     className=" bg-gray-100 dark:text-gray-200 dark:bg-gray-700 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"
@@ -255,8 +297,15 @@ const Setting = () => {
                       onChange={(e) => handleImageChange(e, "logo")}
                     />
                   </label>
-               </div>
-              </div>
+                </div>
+              </section>
+
+              <section className="flex flex-row items-center lg:px-8">
+                <div className={`flex-1 basis-1/2 font-bold ${systemState.isOtpEnabled ? "text-blue-800" : "text-gray-500"}`}>Allow OTP Login</div>
+                <div className="flex-1 basis-1/2" disabled>
+                  <SwitchButton onChange={() => handleOtpEnable()} isOtpEnabled={systemState.isOtpEnabled} />
+                </div>
+              </section>
             </div>
             {/**Save Button */}
             <div className="py-4 place-self-end">
@@ -284,10 +333,7 @@ const Setting = () => {
           )}
 
           {isModalOpen && (
-            <ViewImage 
-              currentImage={currentImage}
-              closeModal={closeModal}
-            />
+            <ViewImage currentImage={currentImage} closeModal={closeModal} />
           )}
         </div>
       }
