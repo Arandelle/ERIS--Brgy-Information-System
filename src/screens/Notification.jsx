@@ -20,7 +20,7 @@ const Notification = () => {
 
   const currentUser = auth.currentUser;
   const { data: notifications } = useFetchData(
-    `admins/${currentUser.uid}/notifications`
+    `admins/${currentUser?.uid}/notifications`
   );
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const Notification = () => {
     const user = auth.currentUser;
     const notificationUpdateRef = ref(
       database,
-      `admins/${user.uid}/notifications/${notificationId}`
+      `admins/${user?.uid}/notifications/${notificationId}`
     );
 
     // Mark the notification as seen in Firebase

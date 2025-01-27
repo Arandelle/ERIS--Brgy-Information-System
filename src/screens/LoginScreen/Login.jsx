@@ -97,7 +97,7 @@ export default function Login() {
     setForgotPass(false);
   };
 
-  
+
   const handleSubmitWithOtp = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -170,7 +170,7 @@ export default function Login() {
         const user = userCredentials.user;
 
         // Check if the user has admin privileges
-        const adminRef = ref(database, `admins/${user.uid}`);
+        const adminRef = ref(database, `admins/${user?.uid}`);
         const adminSnapshot = await get(adminRef);
         if (adminSnapshot.exists()) {
           toast.success("Login successful");
