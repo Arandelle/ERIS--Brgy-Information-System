@@ -264,7 +264,7 @@ const Setting = () => {
                 <div className="flex flex-row items-center">
                   <LabelStyle label={"Barangay"} />
                   <div className="flex-1 basis-1/2">
-                    <select className="rounded-lg shadow-sm border-2 border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm">
+                    <select className="rounded-lg shadow-sm border-2 cursor-pointer border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm">
                       <option>Bagtas</option>
                     </select>
                   </div>
@@ -299,15 +299,7 @@ const Setting = () => {
                   </label>
                 </div>
               </section>
-
-              <section className="flex flex-row items-center lg:px-8">
-                <div className={`flex-1 basis-1/2 font-bold ${systemState.isOtpEnabled ? "text-blue-800" : "text-gray-500"}`}>Allow OTP Login</div>
-                <div className="flex-1 basis-1/2" disabled>
-                  <SwitchButton onChange={() => handleOtpEnable()} isOtpEnabled={systemState.isOtpEnabled} />
-                </div>
-              </section>
-            </div>
-            {/**Save Button */}
+              {/**Save Button */}
             <div className="py-4 place-self-end">
               <button
                 className={`py-2 px-4 rounded-md text-sm text-white ${
@@ -319,7 +311,23 @@ const Setting = () => {
                 Save update
               </button>
             </div>
+            </div>
+            
+           <section className="border-b py-2 space-y-1">
+              <p className="font-medium text-lg dark:text-gray-200">Authentication</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
+                Manage your system authentication
+              </p>
+              <section className="flex flex-row items-center lg:p-8">
+             
+                  <div className={`flex-1 basis-1/2 font-bold ${systemState.isOtpEnabled ? "text-blue-800" : "text-gray-500"}`}>Allow OTP Login</div>
+                  <div className="flex-1 basis-1/2" disabled>
+                    <SwitchButton onChange={() => handleOtpEnable()} isOtpEnabled={systemState.isOtpEnabled} />
+                  </div>
+                </section>  
+           </section>          
           </div>
+          
 
           {showProfileModal && (
             <ProfileModal

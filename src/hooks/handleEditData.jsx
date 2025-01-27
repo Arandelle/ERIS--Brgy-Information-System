@@ -82,7 +82,7 @@ const handleEditData = async (id,data, type) => {
 
         await update(dataRef, dataBasedOnType[type]);
 
-        toast.success(`${type} update successfully`);
+        toast.success(`${type?.toLowerCase()} updated successfully`);
 
       } else {
         toast.error(`${type} not found`);
