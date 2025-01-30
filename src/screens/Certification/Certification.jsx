@@ -38,6 +38,10 @@ const Certification = () => {
   const [selectedId, setSelectedId] = useState("");
   const [userData, setUserData] = useState(null);
 
+  useEffect(() => {
+    console.table(userData  )
+  }, [userData])
+
     useEffect(() => {
       if (documentsData && documentsData.length > 0) {
         // Find the document with the specific ID (e.g., "document1")
@@ -196,7 +200,7 @@ const Certification = () => {
       };
 
       await update(dataRef, clearanceData);
-      sendNotification("users", userData.userId, "certificateStatus", status);
+      sendNotification("users", "1W5pUkUVYlTBITVJo3xhYaeDoEi1", "certificateStatus", status);
       toast.info(`Clearance request ${status}`);
       console.log(userData.userId, status);
     } catch (error) {
@@ -237,7 +241,7 @@ const Certification = () => {
     };
     return (
       <>
-      <TableData data={userData.docsType} />
+      <TableData data={userData.userId} />
       <TableData data={userData.fullname} />
       <TableData data={userData.age} />
       <TableData data={userData.gender} />

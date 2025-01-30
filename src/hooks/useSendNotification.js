@@ -23,20 +23,20 @@ const useSendNotification = () => {
           title: "Certification Status Update",
           message: "Sorry your certification request is rejected",
           description: "Please check your details and try again",
-          icon: "account-alert",
+          icon: "close-circle",
         },
         "ready for pickup": {
           ...mainNotificationData,
           title: "Certification Status Update",
           message: "Your certification request is ready for pickup",
           description: "Go to your barangay hall and pickup your certificate",
-          icon: "account-check",
+          icon: "clipboard-check-outline",
         },
         done: {
           ...mainNotificationData,
           title: "Certification Status Update",
           message: "Your certification request was successfully printed",
-          icon: "account-check",
+          icon: "check-circle",
         },
       },
       createAccount: {
@@ -44,7 +44,7 @@ const useSendNotification = () => {
           ...mainNotificationData,
           ...newNotificationData,
           title: "Account Created",
-          message: `You have successfully created an account for ${newNotificationData.type}`,
+          message: `You have successfully created an account for ${newNotificationData?.type}`,
         },
         user: {
           ...mainNotificationData,
@@ -70,6 +70,7 @@ const useSendNotification = () => {
 
       // ensure notificationData is not undefined before pushing
       await push(notificationRef, notificationData);
+    console.log(`${dataType}/${userId}/notifications `);
     } catch (error) {
       toast.error("Error", "Error submitting notification");
     }
