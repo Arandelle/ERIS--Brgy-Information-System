@@ -83,7 +83,7 @@ const Certification = () => {
   } = usePagination(filteredData);
 
   const sortedData = currentItems.sort((a, b) => {
-    const statusOrder = { pending: 1, done: 2, rejected: 3 };
+    const statusOrder = { pending: 1,"ready for pickup": 2, done: 3, rejected: 4 };
     return statusOrder[a.status] - statusOrder[b.status];
   });
 
