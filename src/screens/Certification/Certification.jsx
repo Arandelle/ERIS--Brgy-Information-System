@@ -241,7 +241,7 @@ const Certification = () => {
     };
     return (
       <>
-      <TableData data={userData.userId} />
+      <TableData data={userData.docsType} />
       <TableData data={userData.fullname} />
       <TableData data={userData.age} />
       <TableData data={userData.gender} />

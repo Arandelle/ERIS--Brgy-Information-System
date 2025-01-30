@@ -1,8 +1,10 @@
 import { push, ref, serverTimestamp } from "firebase/database";
-import { database } from "../services/firebaseConfig";
+import { auth, database } from "../services/firebaseConfig";
 import { toast } from "sonner";
 
 const useSendNotification = () => {
+  const currentUser = auth.currentUser;
+
   const sendNotification = async (
     dataType,
     userId,
@@ -14,6 +16,7 @@ const useSendNotification = () => {
       isSeen: false,
       date: new Date().toISOString(),
       timestamp: serverTimestamp(),
+      adminId: currentUser?.uid
     };
 
     const notificationMessage = {
