@@ -171,6 +171,11 @@ const NotificationItem = ({
     [userDetails, responderDetails]
   );
 
+  const customID = useMemo(() => 
+    userDetails?.customId || responderDetails?.customId || "Unknown", 
+    [userDetails, responderDetails]
+  );
+
   const dataType = userDetails ? "users" : "responders";
 
   return (

@@ -14,16 +14,18 @@ import AddUserModal from "./AddUserModal";
 import ViewUserModal from "./ViewUserModal";
 import useImageView from "../../hooks/useImageView";
 import ViewImage from "../ViewImage";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const UserList = ({ data }) => {
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const userId = searchParams.get("user");
   const { data: userData = [] } = useFetchData(data);
   const [searchQuery, setSearchQuery] = useState("");
   const [addUser, setAddUser] = useState(null);
   const [userToViewInfo, setUserToViewInfo] = useState(null);
-  const [viewUser, setViewUser] = useState(false);
   const {isModalOpen, currentImage, openModal, closeModal} = useImageView();
+  const [loading, setLoading] = useState(false);
+
 
   const searchField = [
     "fullname",
@@ -65,15 +67,13 @@ const UserList = ({ data }) => {
 
   // handle to view selected user
   const handleViewUser = (user) => {
-    setViewUser(true);
+    setSearchParams({user: user.id})
     setUserToViewInfo(user);
-    navigate(`/accounts/users/${user.customId}`)
   };
 
   const handleCloseViewUser = () => {
-    setViewUser(false);
+    setSearchParams({});
     setUserToViewInfo(null);
-    navigate(`/accounts/users`);
   }
 
   const TableData = ({data}) => {
@@ -165,13 +165,13 @@ const UserList = ({ data }) => {
             setSearchQuery={setSearchQuery}
           />
           {addUser && <AddUserModal addUser={handleAddingUser} label={data} />}
-          {userToViewInfo && viewUser && (
-            <ViewUserModal
-              userToViewInfo={userToViewInfo}
-              setViewUser={setViewUser}
-              handleCloseViewUser={handleCloseViewUser}
-            />
-          )}
+          {((userToViewInfo && userId) || loading) && (
+        <ViewUserModal
+          userToViewInfo={userToViewInfo}
+          handleCloseViewUser={handleCloseViewUser}
+          loading={loading}
+        />
+      )}
 
           {isModalOpen && (
             <ViewImage 

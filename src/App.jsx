@@ -122,16 +122,6 @@ const App = () => {
               }
             />
             <Route
-              path="/accounts/users/:userId"
-              element={
-                user && isAdmin ? (
-                  <UserList />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            />
-            <Route
               path="/accounts/responders"
               element={
                 user && isAdmin ? (

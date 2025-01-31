@@ -3,7 +3,7 @@ import {formatDateWithTime } from "../../helper/FormatDate";
 import ViewImage from "../ViewImage";
 import useImageView from "../../hooks/useImageView";
 
-const ViewUserModal = ({ setViewUser, userToViewInfo,handleCloseViewUser }) => {
+const ViewUserModal = ({ userToViewInfo,handleCloseViewUser }) => {
   const {isModalOpen,openModal, closeModal} = useImageView();
   const {fullname, age, gender, address, email,mobileNum, customId, createdAt, profileComplete} = userToViewInfo;
   const FetchDataStyle = ({label, data}) => {
