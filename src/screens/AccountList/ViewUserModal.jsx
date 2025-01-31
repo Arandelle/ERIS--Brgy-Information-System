@@ -3,7 +3,7 @@ import {formatDateWithTime } from "../../helper/FormatDate";
 import ViewImage from "../ViewImage";
 import useImageView from "../../hooks/useImageView";
 
-const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
+const ViewUserModal = ({ setViewUser, userToViewInfo,handleCloseViewUser }) => {
   const {isModalOpen,openModal, closeModal} = useImageView();
   const {fullname, age, gender, address, email,mobileNum, customId, createdAt, profileComplete} = userToViewInfo;
   const FetchDataStyle = ({label, data}) => {
@@ -17,7 +17,7 @@ const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
 
   return (
     <Modal
-      closeButton={() => setViewUser(!true)}
+      closeButton={handleCloseViewUser}
       title={"User Profile"}
       children={
         <>
@@ -45,7 +45,7 @@ const ViewUserModal = ({ setViewUser, userToViewInfo }) => {
             <p className="text-red-500">Not yet completed</p>
           )}
           </div>
-          <div className="place-self-end"><button className="px-4 py-2 rounded-md bg-blue-600 text-white" onClick={() =>  setViewUser(false)}>Ok</button></div>
+          <div className="place-self-end"><button className="px-4 py-2 rounded-md bg-blue-600 text-white" onClick={handleCloseViewUser}>Ok</button></div>
         
         {isModalOpen && (
           <ViewImage currentImage={userToViewInfo.img} closeModal={closeModal} />

@@ -1,7 +1,7 @@
 import { Tooltip } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useMemo } from "react";
 import { auth, database } from "../services/firebaseConfig";
-import { ref, onValue, update } from "firebase/database";
+import { ref, update } from "firebase/database";
 import { getTimeDifference } from "../helper/TimeDiff";
 import { formatDate } from "../helper/FormatDate";
 import { useNavigate } from "react-router-dom";
@@ -146,6 +146,7 @@ const Notification = () => {
   );
 };
 
+
 const NotificationItem = ({
   notification,
   isNewlyOpened,
@@ -155,11 +156,20 @@ const NotificationItem = ({
   const { data: users } = useFetchData("users");
   const { data: responders } = useFetchData("responders");
 
-  const userDetails = users?.find((user) => user.id === notification.userId);
-  const responderDetails = responders?.find(
-    (responder) => responder.id === notification.userId
+  const userDetails = useMemo(() => 
+    users?.find((user) => user.id === notification.userId), 
+    [users, notification.userId]
   );
-  const image = userDetails?.img || responderDetails?.img || "Unknown";
+
+  const responderDetails = useMemo(() => 
+    responders?.find((responder) => responder.id === notification.userId), 
+    [responders, notification.userId]
+  );
+
+  const image = useMemo(() => 
+    userDetails?.img || responderDetails?.img || "Unknown", 
+    [userDetails, responderDetails]
+  );
 
   const dataType = userDetails ? "users" : "responders";
 
@@ -174,7 +184,7 @@ const NotificationItem = ({
       } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
       onClick={() => {
         handleNotificationClick(notification.id),
-          navigation(`/accounts/${dataType}`);
+        navigation(`/accounts/${dataType}`);
       }}
     >
       <div className="flex-shrink-0 relative">

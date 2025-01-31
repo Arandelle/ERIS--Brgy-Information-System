@@ -14,8 +14,10 @@ import AddUserModal from "./AddUserModal";
 import ViewUserModal from "./ViewUserModal";
 import useImageView from "../../hooks/useImageView";
 import ViewImage from "../ViewImage";
+import { useNavigate } from "react-router-dom";
 
 const UserList = ({ data }) => {
+  const navigate = useNavigate();
   const { data: userData = [] } = useFetchData(data);
   const [searchQuery, setSearchQuery] = useState("");
   const [addUser, setAddUser] = useState(null);
@@ -24,8 +26,7 @@ const UserList = ({ data }) => {
   const {isModalOpen, currentImage, openModal, closeModal} = useImageView();
 
   const searchField = [
-    "firstname",
-    "lastname",
+    "fullname",
     "mobileNum",
     "gender",
     "customId",
@@ -66,7 +67,14 @@ const UserList = ({ data }) => {
   const handleViewUser = (user) => {
     setViewUser(true);
     setUserToViewInfo(user);
+    navigate(`/accounts/users/${user.customId}`)
   };
+
+  const handleCloseViewUser = () => {
+    setViewUser(false);
+    setUserToViewInfo(null);
+    navigate(`/accounts/users`);
+  }
 
   const TableData = ({data}) => {
     const nullValue = <p className="italic text-nowrap text-xs">not yet set</p>;
@@ -161,6 +169,7 @@ const UserList = ({ data }) => {
             <ViewUserModal
               userToViewInfo={userToViewInfo}
               setViewUser={setViewUser}
+              handleCloseViewUser={handleCloseViewUser}
             />
           )}
 
