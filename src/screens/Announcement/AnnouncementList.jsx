@@ -21,9 +21,11 @@ import useFilteredData from "../../components/SearchQuery";
 import useImageView from "../../hooks/useImageView";
 import ViewImage from "../ViewImage";
 import { auth } from "../../services/firebaseConfig";
+import useSearchParam from "../../hooks/useSearchParam";
 
 const Activities = () => {
   const { data: activity, setData: setActivity } = useFetchData("announcement");
+  const {searhParams, setSearchParams} = useSearchParam();
   const admin = auth.currentUser;
   const {isModalOpen, currentImage, openModal, closeModal, } = useImageView();
   const [title, setTitle] = useState("");
@@ -70,6 +72,7 @@ const Activities = () => {
     setPrevImage("");
     setIsEdit(false); // Indicating that we are adding a new announcement
     setSelectedId(""); // Clear any selected id
+    setSearchParams(!modal ? "newAnnouncement" : {}); // clear the url params
   };
 
   const handleImageChange = (e) => {
@@ -99,7 +102,6 @@ const Activities = () => {
     };
 
     await handleAddData(announcementData, "announcement");
-
     setTitle("");
     setDescription("");
     setLinks("");
@@ -109,6 +111,7 @@ const Activities = () => {
   };
 
   const handleEditClick = (announcement) => {
+    setSearchParams({"edit/uid": announcement.id})
     setModal(true);
     setTitle(announcement.title);
     setDescription(announcement.description);
@@ -137,6 +140,7 @@ const Activities = () => {
   };
 
   const handleDeleteClick = (id) => {
+    setSearchParams({delete: id})
     setSelectedId(id);
     setIsDelete(!isDelete);
     setShowDetails(false);
@@ -177,7 +181,7 @@ const Activities = () => {
               src={announcement.imageUrl}
               alt="image"
               className="h-8 w-8 md:h-12 md:w-12 rounded-full cursor-pointer"
-              onClick={() => openModal(announcement.imageUrl)}
+              onClick={() => {openModal(announcement.imageUrl)}}
             />
          </div>
         </td>
@@ -193,6 +197,7 @@ const Activities = () => {
               onClick={() => {
                 setShowDetails(!showDetails);
                 setSelectedId(announcement.id);
+                setSearchParams({"Details/uid": announcement.id})
               }}
               tooltip={"View"}
               fontSize={"small"}
@@ -280,7 +285,7 @@ const Activities = () => {
 
           {isDelete && (
             <QuestionModal
-              toggleModal={() => setIsDelete(!isDelete)}
+              toggleModal={() => {setIsDelete(!isDelete), setSearchParams({})}}
               question={
                 <span>
                   Do you want to delete
@@ -297,7 +302,7 @@ const Activities = () => {
           )}
           {showDetails && (
             <DetailsAnnouncement
-              closeButton={() => setShowDetails(!showDetails)}
+              closeButton={() => {setShowDetails(!showDetails), setSearchParams({})}}
               handleEditClick={handleEditClick}
               handleDeleteClick={handleDeleteClick}
               selectedId={selectedId}

@@ -14,18 +14,17 @@ import AddUserModal from "./AddUserModal";
 import ViewUserModal from "./ViewUserModal";
 import useImageView from "../../hooks/useImageView";
 import ViewImage from "../ViewImage";
-import { useSearchParams } from "react-router-dom";
+import useSearchParam from "../../hooks/useSearchParam";
 
 const UserList = ({ data }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const userId = searchParams.get("user");
+  const { searchParams, setSearchParams } = useSearchParam();
+  const userId = searchParams.get("uid");
   const { data: userData = [] } = useFetchData(data);
   const [searchQuery, setSearchQuery] = useState("");
   const [addUser, setAddUser] = useState(null);
   const [userToViewInfo, setUserToViewInfo] = useState(null);
-  const {isModalOpen, currentImage, openModal, closeModal} = useImageView();
+  const { isModalOpen, currentImage, openModal, closeModal } = useImageView();
   const [loading, setLoading] = useState(false);
-
 
   const searchField = [
     "fullname",
@@ -34,7 +33,7 @@ const UserList = ({ data }) => {
     "customId",
     "createdAt",
     "address",
-    "id"
+    "id",
   ];
 
   const filteredData = useFilteredData(userData, searchQuery, searchField);
@@ -67,26 +66,26 @@ const UserList = ({ data }) => {
 
   // handle to view selected user
   const handleViewUser = (user) => {
-    setSearchParams({user: user.id})
+    setSearchParams({ uid: user.id });
     setUserToViewInfo(user);
   };
 
   const handleCloseViewUser = () => {
     setSearchParams({});
     setUserToViewInfo(null);
-  }
+  };
 
-  const TableData = ({data}) => {
+  const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">not yet set</p>;
 
     return (
       <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
-          <div className="truncate max-w-[100px] sm:max-w-[200px]">
-            {data ||  nullValue}
-          </div>
+        <div className="truncate max-w-[100px] sm:max-w-[200px]">
+          {data || nullValue}
+        </div>
       </td>
-    )
-  }
+    );
+  };
 
   const renderRow = (user) => {
     const anonymous = <p className="italic text-nowrap text-xs">not yet set</p>;
@@ -127,20 +126,20 @@ const UserList = ({ data }) => {
         <TableData data={user.address} />
         <TableData data={user.gender} />
         <TableData data={user.mobileNum} />
-        <TableData data={formatDate(user.createdAt)}/>
+        <TableData data={formatDate(user.createdAt)} />
         <td className="flex-1">
-            <div className="flex items-center justify-center">
-              <IconButton
-                icon={icons.view}
-                color={"blue"}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleViewUser(user);
-                }}
-                tooltip={"Show more details"}
-                fontSize={"small"}
-              />
-            </div>
+          <div className="flex items-center justify-center">
+            <IconButton
+              icon={icons.view}
+              color={"blue"}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleViewUser(user);
+              }}
+              tooltip={"Show more details"}
+              fontSize={"small"}
+            />
+          </div>
         </td>
       </>
     );
@@ -166,18 +165,15 @@ const UserList = ({ data }) => {
           />
           {addUser && <AddUserModal addUser={handleAddingUser} label={data} />}
           {((userToViewInfo && userId) || loading) && (
-        <ViewUserModal
-          userToViewInfo={userToViewInfo}
-          handleCloseViewUser={handleCloseViewUser}
-          loading={loading}
-        />
-      )}
+            <ViewUserModal
+              userToViewInfo={userToViewInfo}
+              handleCloseViewUser={handleCloseViewUser}
+              loading={loading}
+            />
+          )}
 
           {isModalOpen && (
-            <ViewImage 
-              currentImage={currentImage}
-              closeModal={closeModal}
-            />
+            <ViewImage currentImage={currentImage} closeModal={closeModal} />
           )}
           <Table
             headers={HeaderData}

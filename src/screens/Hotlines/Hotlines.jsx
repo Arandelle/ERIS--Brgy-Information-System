@@ -15,8 +15,10 @@ import AskCard from "../../components/ReusableComponents/AskCard";
 import handleDeleteData from "../../hooks/handleDeleteData";
 import { toast } from "sonner";
 import handleEditData from "../../hooks/handleEditData";
+import useSearchParam from "../../hooks/useSearchParam";
 
 const Hotlines = () => {
+  const {searchParams, setSearchParams} = useSearchParam();
   const { data: hotlines = [] } = useFetchData("hotlines");
   const [hotlinesModal, setHotlinesModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -90,6 +92,7 @@ const Hotlines = () => {
     setHotlinesModal(!hotlinesModal);
     setIsEdit(false);
     setHotlinesState({});
+    setSearchParams(!hotlinesModal ? "Add new" : {})
   };
 
   const handleAddHotlines = async () => {
@@ -101,11 +104,13 @@ const Hotlines = () => {
 
     setHotlinesState({});
     setHotlinesModal(false);
+    setSearchParams({})
   };
 
   const handleDeleteModal = (id) => {
     setSelectedId(id);
     setShowDeleteModal(true);
+    setSearchParams({uid: id})
   };
 
   const handleConfirmDelete = async () => {
@@ -116,9 +121,11 @@ const Hotlines = () => {
     }
 
     setShowDeleteModal(false);
+    setSearchParams({})
   };
 
   const handleEditClick = (hotlines) => {
+    setSearchParams({"edit/uid" : hotlines.id})
     setHotlinesModal(true);
     setHotlinesState((prev) => ({
       ...prev,
@@ -141,6 +148,7 @@ const Hotlines = () => {
     await handleEditData(id, hotlinesData, "hotlines");
     setHotlinesState({});
     setHotlinesModal(false);
+    setSearchParams({});
   };
 
   return (
