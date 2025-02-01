@@ -77,7 +77,7 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
 
   return (
     <Modal
-      closeButton={() => setShowAddTemplate(false)}
+      closeButton={setShowAddTemplate}
       title={`${isEdit ? "Edit Template" : "Create Template"}`}
       children={
         <div className="space-y-2">

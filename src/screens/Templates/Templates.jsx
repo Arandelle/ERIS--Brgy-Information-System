@@ -5,13 +5,10 @@ import icons from "../../assets/icons/Icons";
 import TemplateModal from "./TemplateModal";
 import Toolbar from "../../components/ToolBar";
 import { useFetchData } from "../../hooks/useFetchData";
-import { useFetchSystemData } from "../../hooks/useFetchSystemData";
-import { generateBodyTemplate } from "./generateTemplate";
 import EmptyLogo from "../../components/ReusableComponents/EmptyLogo";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import handleDeleteData from "../../hooks/handleDeleteData";
 import { toast } from "sonner";
-import handleEditData from "../../hooks/handleEditData";
 import { templateContent } from "./TemplateContent";
 import { ref, update } from "firebase/database";
 import { database, storage } from "../../services/firebaseConfig";
@@ -21,8 +18,10 @@ import {
   ref as storageRef,
   uploadBytes,
 } from "firebase/storage";
+import useSearchParam from "../../hooks/useSearchParam";
 
 const Templates = () => {
+  const {setSearchParams} = useSearchParam();
   const [showAddTemplate, setShowAddTemplate] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isTemplateEdit, setIsTemplateEdit] = useState(false);
@@ -30,7 +29,6 @@ const Templates = () => {
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
   const { data: templates } = useFetchData("templateContent");
   const { data: documentsData } = useFetchData("templates");
-  const { systemData } = useFetchSystemData();
   const [templateData, setTemplateData] = useState({});
   const [images, setImages] = useState({
     image1File: null,
@@ -99,22 +97,26 @@ const Templates = () => {
   // show the specefic template based on templateId
   const handleShowTemplate = (templateId) => {
     setSelectedTemplateId(templateId);
+    setSearchParams({templates})
   };
 
-  const handleCloseButton = () => {
+  const handleShowModal = () => {
     setShowAddTemplate(!showAddTemplate);
     setIsEdit(false);
+    setSearchParams(!showAddTemplate ? "add news" : "");
   };
 
   const handleEditClick = (templateId) => {
-    setShowAddTemplate(true);
+    setShowAddTemplate(!showAddTemplate);
     setIsEdit(true);
     setSelectedTemplateId(templateId);
+    setSearchParams({edit: templateId})
   };
 
   const handleDeleteModal = (id) => {
     setSelectedTemplateId(id);
     setShowDeleteModal(true);
+    setSearchParams({delete: id})
   };
 
   const handleConfirmDelete = async () => {
@@ -125,12 +127,15 @@ const Templates = () => {
     }
 
     setShowDeleteModal(false);
+    setSearchParams({})
   };
 
   const handleTemplateIsEdit = () => {
     setIsTemplateEdit(!isTemplateEdit);
+    setSearchParams(!isTemplateEdit ? "edit template" : "")
   };
 
+  // save the template Data
   const handleSaveTemplate = async () => {
     const templatesRef = ref(database, "templates/document1");
 
@@ -250,6 +255,7 @@ const Templates = () => {
       await update(templatesRef, updatedTemplateData);
 
       setIsTemplateEdit(false);
+      setSearchParams({})
       toast.success("Template saved successfully!");
     } catch (error) {
       toast.error(
@@ -270,7 +276,7 @@ const Templates = () => {
                 color={"gray"}
                 label={"Create Template"}
                 fontSize={"small"}
-                onClick={handleCloseButton}
+                onClick={handleShowModal}
               />
             }
             label="List of Templates"
@@ -278,7 +284,7 @@ const Templates = () => {
           {/**Modal for creating template */}
           {showAddTemplate && (
             <TemplateModal
-              setShowAddTemplate={setShowAddTemplate}
+              setShowAddTemplate={handleShowModal}
               isEdit={isEdit}
               setIsEdit={setIsEdit}
               selectedTemplateId={selectedTemplateId}
@@ -355,7 +361,7 @@ const Templates = () => {
 
             {showDeleteModal && (
               <AskCard
-                toggleModal={() => setShowDeleteModal(!showDeleteModal)}
+                toggleModal={() => {setShowDeleteModal(!showDeleteModal), setSearchParams({})}}
                 question={
                   <span>
                     Do you want to delete

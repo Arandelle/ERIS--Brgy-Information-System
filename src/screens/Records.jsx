@@ -14,8 +14,10 @@ import { Tooltip } from "@mui/material";
 import Modal from "../components/ReusableComponents/Modal";
 import useImageView from "../hooks/useImageView";
 import ViewImage from "./ViewImage";
+import useSearchParam from "../hooks/useSearchParam";
 
 const Records = () => {
+  const {setSearchParams} = useSearchParam();
   const { data: emergencyHistory = [] } = useFetchData("emergencyRequest");
   const { data: users = [] } = useFetchData("users");
   const { data: responders = [] } = useFetchData("responders");
@@ -163,6 +165,7 @@ const Records = () => {
               onClick={() => {
                 setIsView(!isView);
                 setSelectedId(emergency?.id);
+                setSearchParams({uid: emergency.id})
               }}
               tooltip={"Show more details"}
               fontSize={"small"}
@@ -224,7 +227,7 @@ const Records = () => {
           )}
           {isView && (
             <Modal
-              closeButton={() => setIsView(!isView)}
+              closeButton={() => {setIsView(!isView), setSearchParams({})}}
               title={"Emergency Details"}
               children={
                 <div className="w-full space-y-4">

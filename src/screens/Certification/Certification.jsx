@@ -20,8 +20,10 @@ import { database } from "../../services/firebaseConfig";
 import ClearanceViewModal from "./ClearanceViewModal";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import useSendNotification from "../../hooks/useSendNotification";
+import useSearchParam from "../../hooks/useSearchParam";
 
 const Certification = () => {
+  const {searchParam, setSearchParams} = useSearchParam();
   const [searchQuery, setSearchQuery] = useState("");
   const {sendNotification} = useSendNotification();
   const { data: clearance } = useFetchData("requestClearance");
@@ -155,6 +157,7 @@ const Certification = () => {
           visible: true,
           status: "done",
         });
+        setSearchParams({"print" : rowData.id})
         printWindow.close();
       };
 
@@ -172,6 +175,7 @@ const Certification = () => {
   const handleViewClick = (userData) => {
     setUserData(userData);
     setViewModal(!viewModal);
+    setSearchParams(!viewModal ? {uid: userData.id} : "")
   };
 
   const handleEditClick = (userData) => {
@@ -179,16 +183,18 @@ const Certification = () => {
     setSelectedId(userData.id);
     setUserData(userData);
     setIsEdit(true);
+    setSearchParams({edit: userData.id})
     console.log(isEdit, userData.docsType);
   };
 
-  const handleRejectClick = (userData) => {
+  const handleDeleteClick = (userData) => {
     setUserData(userData);
     setSelectedId(userData.id);
     setShowUpdateStatus({
       visible: true,
       status: "Delete",
     });
+    setSearchParams({delete: userData.id})
   };
 
   const handleUpdateClearanceStatus = async (status) => {
@@ -211,7 +217,9 @@ const Certification = () => {
       visible: false,
       status: "",
     });
+    setSearchParams({})
   };
+
 
   const handleDeleteConfirm = async () => {
     await handleDeleteData(selectedId, "requestClearance");
@@ -220,11 +228,22 @@ const Certification = () => {
       visible: false,
       status: "",
     });
+    setSearchParams({})
+  };
+
+
+  const handleIfDoneOrDelete = (choice) => {
+    if(choice === "done"){
+      handleUpdateClearanceStatus(choice);
+    } else if (choice === "Delete"){
+      handleDeleteConfirm();
+    }
   };
 
   const handleCloseModal = () => {
     setShowRequestCert(!showRequestCert);
     setIsEdit(!isEdit);
+    setSearchParams({})
   };
 
   const renderRow = (userData) => {
@@ -301,7 +320,7 @@ const Certification = () => {
           color={"red"}
           fontSize={"small"}
           tooltip={"Delete"}
-          onClick={() => handleRejectClick(userData)}
+          onClick={() => handleDeleteClick(userData)}
         />
         </div>
       </td>
@@ -321,7 +340,7 @@ const Certification = () => {
                 color={"gray"}
                 label={"Create Request"}
                 fontSize={"small"}
-                onClick={() => setShowRequestCert(true)}
+                onClick={() => {setShowRequestCert(true), setSearchParams("create request")}}
               />
             }
             label="List of Certification Request"
@@ -352,7 +371,8 @@ const Certification = () => {
                     visible: false,
                     status: "",
                   },
-                  setUserData({})
+                  setUserData({}),
+                  setSearchParams({})
                 )
               }
               question={
@@ -365,7 +385,7 @@ const Certification = () => {
                 </span>
               }
               confirmText={capitalizeFirstLetter(showUpdateStatus.status)}
-              onConfirm={() => handleDeleteConfirm()}
+              onConfirm={() => handleIfDoneOrDelete(showUpdateStatus.status)}
             />
           )}
 
