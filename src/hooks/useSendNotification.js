@@ -54,6 +54,7 @@ const useSendNotification = () => {
           ...newNotificationData,
           title: "Account Created",
           message: `Welcome! Your account has been created successfully.`,
+          icon: "account-check"
         }
       }
     };
