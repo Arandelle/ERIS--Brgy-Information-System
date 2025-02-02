@@ -117,7 +117,7 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
               Edit Content:
             </label>
             <Editor
-              apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+              apiKey={import.meta.env.VITE_NEW_TINYMCE_API_KEY}
               onInit={(_evt, editor) => (editorRef.current = editor)}
               initialValue={isEdit ? selectedTemplate?.content : ""}
               init={{
