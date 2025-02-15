@@ -305,6 +305,12 @@ const Records = () => {
                           recordDetails?.description ||
                           "No description available",
                       },
+                      {
+                        label: "Response Message",
+                        value:
+                          recordDetails?.messageLog ||
+                          "No message available",
+                      },
                     ]}
                     color={"gray"}
                   />
