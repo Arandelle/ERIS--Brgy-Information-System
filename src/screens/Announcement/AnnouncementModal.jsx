@@ -76,7 +76,7 @@ const AnnouncementModal = ({
                       isEdit ? "text-green-500" : "text-gray-500"
                     }`}
                   >
-                    Upload Photo
+                    Upload Media
                   </p>
                 </div>
 
