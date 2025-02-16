@@ -9,17 +9,20 @@ import {
 
 const handleAddData = async (data, type) => {
 
-  let imageUrl = "";
+  let fileUrl = "";
+  let fileType = "";
 
-  if (data?.image) {
-    const imageFile = data.image;
-    const imageRef = storageRef(storage, `${type}-images/${imageFile.name}`);
+  if (data?.file) {
+    const file = data.file;
+    fileType = data.fileType;
+
+    const fileRef = storageRef(storage, `${type}-${fileType}s/${file.name}`);
 
     try {
-      await uploadBytes(imageRef, imageFile);
-      imageUrl = await getDownloadURL(imageRef);
+      await uploadBytes(fileRef, file);
+      fileUrl = await getDownloadURL(fileRef);
     } catch (error) {
-      console.error(`Error uploading ${type} image: `, error);
+      console.error(`Error uploading ${fileType} image: `, error);
       toast.error(`Error uploading image: ${error}`);
       return;
     }
@@ -35,7 +38,8 @@ const handleAddData = async (data, type) => {
     announcement: {
       ...dataWithDateAndTimestamp,
       isEdited: false,
-      imageUrl
+      fileUrl,
+      fileType
     },
     hotlines: {
       ...dataWithDateAndTimestamp,

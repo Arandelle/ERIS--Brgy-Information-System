@@ -12,16 +12,16 @@ import IconButton from "../components/ReusableComponents/IconButton";
 import icons from "../assets/icons/Icons";
 import { Tooltip } from "@mui/material";
 import Modal from "../components/ReusableComponents/Modal";
-import useImageView from "../hooks/useImageView";
-import ViewImage from "./ViewImage";
+import MediaModal from "./MediaModal";
 import useSearchParam from "../hooks/useSearchParam";
+import useViewMedia from "../hooks/useViewMedia";
 
 const Records = () => {
   const {setSearchParams} = useSearchParam();
   const { data: emergencyHistory = [] } = useFetchData("emergencyRequest");
   const { data: users = [] } = useFetchData("users");
   const { data: responders = [] } = useFetchData("responders");
-  const { currentImage, isModalOpen, openModal, closeModal } = useImageView();
+  const { currentMedia, isModalOpen, openModal, closeModal } = useViewMedia();
   const [isView, setIsView] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -223,7 +223,7 @@ const Records = () => {
             data={filteredData}
           />
           {isModalOpen && (
-            <ViewImage currentImage={currentImage} closeModal={closeModal} />
+            <MediaModal currentMedia={currentMedia} closeModal={closeModal} />
           )}
           {isView && (
             <Modal

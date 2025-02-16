@@ -1,10 +1,10 @@
 import Modal from "../../components/ReusableComponents/Modal";
 import {formatDateWithTime } from "../../helper/FormatDate";
-import ViewImage from "../ViewImage";
-import useImageView from "../../hooks/useImageView";
+import MediaModal from "../MediaModal";
+import useViewMedia from "../../hooks/useViewMedia";
 
 const ViewUserModal = ({ userToViewInfo,handleCloseViewUser }) => {
-  const {isModalOpen,openModal, closeModal} = useImageView();
+  const {isModalOpen,openModal, closeModal} = useViewMedia();
   const {fullname, age, gender, address, email,mobileNum, customId, createdAt, profileComplete} = userToViewInfo;
   const FetchDataStyle = ({label, data}) => {
     return (
@@ -48,7 +48,7 @@ const ViewUserModal = ({ userToViewInfo,handleCloseViewUser }) => {
           <div className="place-self-end"><button className="px-4 py-2 rounded-md bg-blue-600 text-white" onClick={handleCloseViewUser}>Ok</button></div>
         
         {isModalOpen && (
-          <ViewImage currentImage={userToViewInfo.img} closeModal={closeModal} />
+          <MediaModal currentMedia={userToViewInfo.img} closeModal={closeModal} />
         )}
 
         </>

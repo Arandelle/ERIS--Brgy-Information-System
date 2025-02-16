@@ -12,9 +12,9 @@ import IconButton from "../../components/ReusableComponents/IconButton";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import AddUserModal from "./AddUserModal";
 import ViewUserModal from "./ViewUserModal";
-import useImageView from "../../hooks/useImageView";
-import ViewImage from "../ViewImage";
+import MediaModal from "../MediaModal";
 import useSearchParam from "../../hooks/useSearchParam";
+import useViewMedia from "../../hooks/useViewMedia";
 
 const UserList = ({ data }) => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -23,7 +23,7 @@ const UserList = ({ data }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [addUser, setAddUser] = useState(null);
   const [userToViewInfo, setUserToViewInfo] = useState(null);
-  const { isModalOpen, currentImage, openModal, closeModal } = useImageView();
+  const { isModalOpen, currentMedia, openModal, closeModal } = useViewMedia();
   const [loading, setLoading] = useState(false);
 
   const searchField = [
@@ -173,7 +173,7 @@ const UserList = ({ data }) => {
           )}
 
           {isModalOpen && (
-            <ViewImage currentImage={currentImage} closeModal={closeModal} />
+            <MediaModal currentMedia={currentMedia} closeModal={closeModal} />
           )}
           <Table
             headers={HeaderData}

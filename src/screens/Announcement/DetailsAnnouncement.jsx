@@ -3,9 +3,9 @@ import { useFetchData } from "../../hooks/useFetchData";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import icons from "../../assets/icons/Icons";
 import { getTimeDifference } from "../../helper/TimeDiff";
-import useImageView from "../../hooks/useImageView";
-import ViewImage from "../ViewImage";
+import MediaModal from "../MediaModal";
 import { formatDateWithTime } from "../../helper/FormatDate";
+import useViewMedia from "../../hooks/useViewMedia";
 
 const DetailsAnnouncement = ({
   closeButton,
@@ -13,7 +13,7 @@ const DetailsAnnouncement = ({
   handleEditClick,
   handleDeleteClick,
 }) => {
-  const { isModalOpen, currentImage, openModal, closeModal } = useImageView();
+  const { isModalOpen, currentMedia,mediaType, openModal, closeModal } = useViewMedia();
   const { data: activity } = useFetchData("announcement");
   const announcementDetails = activity.find(
     (announcement) => announcement.id === selectedId
@@ -31,7 +31,7 @@ const DetailsAnnouncement = ({
         ) : isImage ? (
           <p
             className="flex-1 basis-3/4 cursor-pointer bg-gray-100 p-2 rounded-md shadow-md dark:text-gray-800"
-            onClick={() => openModal(announcementDetails?.imageUrl)}
+            onClick={() => openModal(announcementDetails?.fileUrl)}
           >
             {`${announcementDetails?.title}.jpg`}
           </p>
@@ -86,8 +86,9 @@ const DetailsAnnouncement = ({
         </div>
       </Modal>
       {isModalOpen && (
-        <ViewImage 
-          currentImage={currentImage}
+        <MediaModal 
+          currentMedia={currentMedia}
+          mediaType={mediaType}
           closeModal={closeModal}
         />
       )}

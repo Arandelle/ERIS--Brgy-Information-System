@@ -13,20 +13,19 @@ const AnnouncementModal = ({
   handleImageChange,
   handleAddAnnouncement,
   selectedId,
-  title,
-  setTitle,
+  postDetails,
+  setPostDetails,
   prevImage,
-  links,
-  setLinks,
-  description,
-  setDescription,
   isEdit,
 }) => {
   const [isComplete, setIsComplete] = useState(false);
   useEffect(() => {
+    const {title, description} = postDetails;
     const completeData = title && description;
     setIsComplete(completeData);
-  }, [title, description]);
+  }, [postDetails.title, postDetails.description]);
+
+  console.log("preview", prevImage)
 
   return (
     <Modal
@@ -38,25 +37,25 @@ const AnnouncementModal = ({
           <InputField
             type="text"
             placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            onBlur={() => setTitle(capitalizeFirstLetter(title))}
+            value={postDetails.title}
+            onChange={(e) => setPostDetails({...postDetails, title: e.target.value})}
+            onBlur={() => setPostDetails({...postDetails, title: capitalizeFirstLetter(postDetails.title)})}
             className={"w-full"}
           />
           <TextArea
-            value={description}
+            value={postDetails.description}
             placeholder={"Description"}
-            onChange={(e) => setDescription(e.target.value)}
-            onBlur={() => setDescription(capitalizeFirstLetter(description))}
+            onChange={(e) => setPostDetails({...postDetails, description: e.target.value})}
+            onBlur={() => setPostDetails({...postDetails, description: capitalizeFirstLetter(postDetails.description)})}
           />
 
           <label className="text-gray-500 dark:text-gray-300 text-sm">Links (optional)</label>
           <InputField
             type="text"
             placeholder="Links"
-            value={links}
-            onChange={(e) => setLinks(e.target.value)}
-            onBlur={() => setLinks(links.toLowerCase())}
+            value={postDetails.links}
+            onChange={(e) => setPostDetails({...postDetails, links: e.target.value})}
+            onBlur={() => setPostDetails({...postDetails, links: postDetails.links.toLowerCase()})}
             className={"w-full text-blue-400"}
           />
           {/**Upload Photo */}
@@ -91,7 +90,16 @@ const AnnouncementModal = ({
               <div className="flex items-center justify-center p-2 rounded-md w-full">
                 {/**Preview Image */}
                 <label className="cursor-pointer">
+                {prevImage && postDetails.fileType === "image" && (
                   <img src={prevImage} className="h-24 md:h-40" />
+                )}
+
+                {prevImage && postDetails.fileType === "video" && (
+                  <video controls width={500} className="mt-2">
+                    <source src={prevImage}/>
+                  </video>
+                )}
+                  
                   <InputField
                     type="file"
                     className={"hidden"}

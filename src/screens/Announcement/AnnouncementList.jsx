@@ -18,21 +18,24 @@ import QuestionModal from "../../components/ReusableComponents/AskCard";
 import DetailsAnnouncement from "./DetailsAnnouncement";
 import usePagination from "../../hooks/usePagination";
 import useFilteredData from "../../components/SearchQuery";
-import useImageView from "../../hooks/useImageView";
-import ViewImage from "../ViewImage";
+import MediaModal from "../MediaModal";
 import { auth } from "../../services/firebaseConfig";
 import useSearchParam from "../../hooks/useSearchParam";
+import useViewMedia from "../../hooks/useViewMedia";
 
 const Activities = () => {
   const { data: activity, setData: setActivity } = useFetchData("announcement");
-  const {searhParams, setSearchParams} = useSearchParam();
+  const { searhParams, setSearchParams } = useSearchParam();
   const admin = auth.currentUser;
-  const {isModalOpen, currentImage, openModal, closeModal, } = useImageView();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [links, setLinks] = useState("");
-  const [date, setDate] = useState("");
-  const [image, setImage] = useState("");
+  const { isModalOpen, currentMedia,mediaType, openModal, closeModal } = useViewMedia();
+  const [postDetails, setPostDetails] = useState({
+    title: "",
+    description: "",
+    links: "",
+    date: "",
+    file: null,
+    fileType: null,
+  });
   const [prevImage, setPrevImage] = useState("");
   const [modal, setModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -65,10 +68,7 @@ const Activities = () => {
 
   const handleModal = () => {
     setModal(!modal);
-    setTitle("");
-    setDescription("");
-    setLinks("");
-    setImage("");
+    setPostDetails({});
     setPrevImage("");
     setIsEdit(false); // Indicating that we are adding a new announcement
     setSelectedId(""); // Clear any selected id
@@ -78,12 +78,21 @@ const Activities = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
-    if (
-      file &&
-      file.type.startsWith("image/") &&
-      file.size <= 5 * 1024 * 1024
-    ) {
-      setImage(file);
+    if (!file) return;
+
+    const fileSizeLimit = file.type.startsWith("image/")
+      ? 5 * 1024 * 1024
+      : 25 * 1024 * 1024;
+    if (file.size > fileSizeLimit) {
+      toast.warning("File size exceeds the limit.");
+      return;
+    }
+    if (file.type.startsWith("image/") || file.type.startsWith("video/")) {
+      setPostDetails({
+        ...postDetails,
+        file: file,
+        fileType: file.type.startsWith("image/") ? "image" : "video",
+      });
       setPrevImage(URL.createObjectURL(file));
     } else {
       toast.error(
@@ -93,54 +102,44 @@ const Activities = () => {
   };
 
   const handleAddAnnouncement = async () => {
-    const announcementData = {
-      title,
-      description,
-      links,
-      image,
-      userId: admin.uid
+    const postData = {
+      ...postDetails,
+      userId: admin.uid,
     };
 
-    await handleAddData(announcementData, "announcement");
-    setTitle("");
-    setDescription("");
-    setLinks("");
-    setDate("");
-    setImage("");
+    await handleAddData(postData, "announcement");
+    setPostDetails({});
     setModal(false);
   };
 
-  const handleEditClick = (announcement) => {
-    setSearchParams({"edit/uid": announcement.id})
+  const handleEditClick = (post) => {
+    setSearchParams({ "edit/uid": post.id });
     setModal(true);
-    setTitle(announcement.title);
-    setDescription(announcement.description);
-    setLinks(announcement.links);
-    setImage("");
-    setPrevImage(announcement.imageUrl);
+    setPostDetails({
+      ...postDetails,
+      title: post.title,
+      description: post.description,
+      links: post.links || "",
+      fileType: post.fileType || "image"
+    });
+    setPrevImage(post.fileUrl);
     setIsEdit(true);
-    setSelectedId(announcement.id);
+    setSelectedId(post.id);
     setShowDetails(false);
   };
 
   const handleEditAnnouncement = async (id) => {
-    const announcementData = {
-      title,
-      description,
-      links,
-      image,
-      userId: admin.uid
+    const postData = {
+      ...postDetails,
+      userId: admin.uid,
     };
-    await handleEditData(id, announcementData, "announcement");
-    setTitle("");
-    setDescription("");
-    setLinks("");
-    setImage("");
+    await handleEditData(id, postData, "announcement");
+    setPostDetails({});
     setModal(false);
   };
 
   const handleDeleteClick = (id) => {
-    setSearchParams({delete: id})
+    setSearchParams({ delete: id });
     setSelectedId(id);
     setIsDelete(!isDelete);
     setShowDetails(false);
@@ -172,23 +171,51 @@ const Activities = () => {
     );
   };
 
-  const renderRow = (announcement) => {
+  const renderRow = (post) => {
     return (
       <>
         <td className="px-6 py-4 flex">
-         <div className="flex-shrink-0">
-            <img
-              src={announcement.imageUrl}
-              alt="image"
-              className="h-8 w-8 md:h-12 md:w-12 rounded-full cursor-pointer"
-              onClick={() => {openModal(announcement.imageUrl)}}
-            />
-         </div>
+          <div className="flex-shrink-0">
+            {post.fileType === "image" && (
+              <img
+                src={post.fileUrl}
+                alt="image"
+                className="h-8 w-8 md:h-12 md:w-12 rounded-full cursor-pointer"
+                onClick={() => {
+                  openModal(post.fileUrl, "image");
+                }}
+              />
+            )}
+            {post.fileType === "video" && (
+              <div
+                className="relative h-8 w-8 md:h-12 md:w-12 cursor-pointer"
+                onClick={() => openModal(post.fileUrl, "video")}
+              >
+                <video
+                  src={post.fileUrl}
+                  className="h-full w-full object-cover rounded-full"
+                  poster="https://via.placeholder.com/150" // Use a placeholder or extract a frame
+                  muted
+                ></video>
+
+                {/* Play icon overlay */}
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-full">
+                  <svg
+                    className="w-6 h-6 text-blue-800"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 5v14l11-7z"></path>
+                  </svg>
+                </div>
+              </div>
+            )}
+          </div>
         </td>
-        <TableData data={announcement.title} />
-        <TableData data={formatDateWithTime(announcement.date)} />
-        <TableData data={announcement.description} />
-        <TableData data={getTimeDifference(announcement.timestamp)} />
+        <TableData data={post.title} />
+        <TableData data={formatDateWithTime(post.date)} />
+        <TableData data={post.description} />
+        <TableData data={getTimeDifference(post.timestamp)} />
         <td>
           <div className="flex px-2 space-x-4 flex-row items-center justify-center">
             <IconButton
@@ -196,8 +223,8 @@ const Activities = () => {
               color={"blue"}
               onClick={() => {
                 setShowDetails(!showDetails);
-                setSelectedId(announcement.id);
-                setSearchParams({"Details/uid": announcement.id})
+                setSelectedId(post.id);
+                setSearchParams({ "Details/uid": post.id });
               }}
               tooltip={"View"}
               fontSize={"small"}
@@ -205,14 +232,14 @@ const Activities = () => {
             <IconButton
               icon={icons.edit}
               color={"green"}
-              onClick={() => handleEditClick(announcement)}
+              onClick={() => handleEditClick(post)}
               tooltip={"Edit"}
               fontSize={"small"}
             />
             <IconButton
               icon={icons.delete}
               color={"red"}
-              onClick={() => handleDeleteClick(announcement.id)}
+              onClick={() => handleDeleteClick(post.id)}
               tooltip={"Delete"}
               fontSize={"small"}
             />
@@ -264,28 +291,23 @@ const Activities = () => {
               handleAddAnnouncement={handleAddAnnouncement}
               {...{
                 selectedId,
-                title,
-                setTitle,
+                postDetails,
+                setPostDetails,
                 prevImage,
-                links,
-                setLinks,
-                description,
-                setDescription,
                 isEdit,
               }}
             />
           )}
 
           {isModalOpen && (
-            <ViewImage 
-              currentImage={currentImage}
-              closeModal={closeModal}
-            />
+            <MediaModal currentMedia={currentMedia} mediaType={mediaType} closeModal={closeModal} />
           )}
 
           {isDelete && (
             <QuestionModal
-              toggleModal={() => {setIsDelete(!isDelete), setSearchParams({})}}
+              toggleModal={() => {
+                setIsDelete(!isDelete), setSearchParams({});
+              }}
               question={
                 <span>
                   Do you want to delete
@@ -302,7 +324,9 @@ const Activities = () => {
           )}
           {showDetails && (
             <DetailsAnnouncement
-              closeButton={() => {setShowDetails(!showDetails), setSearchParams({})}}
+              closeButton={() => {
+                setShowDetails(!showDetails), setSearchParams({});
+              }}
               handleEditClick={handleEditClick}
               handleDeleteClick={handleDeleteClick}
               selectedId={selectedId}

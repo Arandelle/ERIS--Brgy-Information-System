@@ -6,15 +6,15 @@ import { useFetchData } from "../hooks/useFetchData";
 import { toast } from "sonner";
 import ButtonStyle from "../components/ReusableComponents/Button";
 import ProfileModal from "./ProfileModal";
-import useImageView from "../hooks/useImageView";
-import ViewImage from "./ViewImage";
+import MediaModal from "./MediaModal";
 import handleEditData from "../hooks/handleEditData";
 import SwitchButton from "../components/ReusableComponents/SwitchButton";
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import handleErrorMessage from "../helper/handleErrorMessage";
+import useViewMedia from "../hooks/useViewMedia";
 
 const Setting = () => {
-  const { isModalOpen, currentImage, openModal, closeModal } = useImageView();
+  const { isModalOpen, currentMedia, openModal, closeModal } = useViewMedia();
   const user = auth.currentUser;
   const { data: systemData, loading, setLoading } = useFetchData("systemData");
   const { data: admin } = useFetchData("admins");
@@ -338,7 +338,7 @@ const Setting = () => {
           )}
 
           {isModalOpen && (
-            <ViewImage currentImage={currentImage} closeModal={closeModal} />
+            <MediaModal currentMedia={currentMedia} closeModal={closeModal} />
           )}
         </div>
       }

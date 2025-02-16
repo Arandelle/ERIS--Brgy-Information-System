@@ -12,26 +12,29 @@ const handleEditData = async (id,data, type) => {
 
       if (snapshot.exists()) {
         const existingData = snapshot.val();
-        let imageUrl = existingData.imageUrl; // retain the existing image url
+        let fileUrl = existingData.fileUrl; // retain the existing image url
+        let fileType = existingData.fileType 
 
         //check if new image is selected
-        if (data?.image) {
-          const imageFile = data.image;
+        if (data?.file) {
+          const file = data.file;
+          fileType = data.fileType;
+
           const imageRef = storageRef(
             storage,
-            `${type}-images/${imageFile.name}`
+            `${type}-${fileType}s/${file.name}`
           );
 
           //upload the new image
           try {
-            await uploadBytes(imageRef, imageFile);
-            imageUrl = await getDownloadURL(imageRef);
+            await uploadBytes(imageRef, file);
+            fileUrl = await getDownloadURL(imageRef);
 
             //Delete the current image if it exists
-            if (existingData.imageUrl) {
+            if (existingData.fileUrl) {
               const oldImageRef = storageRef(
                 storage,
-                existingData.imageUrl
+                existingData.fileUrl
               );
               try{
                 await deleteObject(oldImageRef);
@@ -55,16 +58,17 @@ const handleEditData = async (id,data, type) => {
         const dataBasedOnType = {
           admins: {
             ...dataWithDateAndTimestamp,
-            imageUrl
+            fileUrl
           },
           systemData: {
             ...dataWithDateAndTimestamp,
-            imageUrl
+            fileUrl
           },
           announcement: {
             ...dataWithDateAndTimestamp,
-            imageUrl,
-            isEdited: false,
+            fileUrl,
+            fileType,
+            isEdited: true,
           },
           hotlines: {
             ...dataWithDateAndTimestamp,
