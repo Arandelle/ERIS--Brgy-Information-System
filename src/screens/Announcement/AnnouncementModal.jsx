@@ -95,9 +95,19 @@ const AnnouncementModal = ({
                 )}
 
                 {prevImage && postDetails.fileType === "video" && (
-                  <video controls width={500} className="mt-2">
-                    <source src={prevImage}/>
-                  </video>
+                  <>
+                 <label className="cursor-pointer">
+                 <p className="bg-green-500 text-white p-2 text-center rounded-md">Upload new media</p>
+                    <InputField
+                      type="file"
+                      className={"hidden"}
+                      onChange={handleImageChange}
+                    />
+                 </label>
+                    <video controls width={500} className="mt-2">
+                      <source src={prevImage}/>
+                    </video>
+                  </>
                 )}
                   
                   <InputField

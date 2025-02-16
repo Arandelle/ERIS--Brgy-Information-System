@@ -31,9 +31,9 @@ const DetailsAnnouncement = ({
         ) : isImage ? (
           <p
             className="flex-1 basis-3/4 cursor-pointer bg-gray-100 p-2 rounded-md shadow-md dark:text-gray-800"
-            onClick={() => openModal(announcementDetails?.fileUrl)}
+            onClick={() => openModal(announcementDetails?.fileUrl, announcementDetails?.fileType)}
           >
-            {`${announcementDetails?.title}.jpg`}
+            {`${announcementDetails?.title}`}
           </p>
         ) : (
           <p className="flex-1 basis-3/4">{value}</p>
@@ -46,7 +46,7 @@ const DetailsAnnouncement = ({
     <>
       <Modal closeButton={closeButton} title={"Post Details"}>
         <DetailRow
-          label={"Image"}
+          label={announcementDetails?.fileType === "image" ? "Image" : "Video"}
           value={announcementDetails?.description}
           isImage
         />
