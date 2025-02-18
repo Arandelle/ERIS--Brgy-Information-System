@@ -179,7 +179,7 @@ const Records = () => {
   {
     /**Modal for emergency details */
   }
-  const RenderDetails = ({ data, color }) => {
+  const RenderDetails = ({ data }) => {
     const filteredData = data.filter(
       ({ value }) => value != null && value !== ""
     );
@@ -187,7 +187,7 @@ const Records = () => {
 
     return (
       <div
-        className={`bg-${color}-100 dark:bg-${color}-800 p-2 text-sm text-${color}-500 dark:text-${color}-300 border-l-2 border-l-${color}-500 dark:border-${color}-300 rounded-r-md space-y-1`}
+        className={`bg-gray-100 dark:bg-gray-800 p-2 text-sm text-gray-500 dark:text-gray-300 border-l-2 border-l-gray-500 dark:border-gray-300 rounded-r-md space-y-1`}
       >
         {filteredData.map(({ label, value }, index) => (
           <div key={index} className="flex flex-row">
@@ -246,7 +246,6 @@ const Records = () => {
                         value: recordDetails?.responderID || "N/A",
                       },
                     ]}
-                    color={"yellow"}
                   />
                   <RenderDetails
                     data={[
@@ -259,7 +258,7 @@ const Records = () => {
                         value: recordDetails?.responderName,
                       },
                     ]}
-                    color={"gray"}
+                    
                   />
                   <RenderDetails
                     data={[
@@ -276,7 +275,7 @@ const Records = () => {
                           : "N/A",
                       },
                     ]}
-                    color={"gray"}
+                    
                   />
                   <RenderDetails
                     data={[
@@ -295,7 +294,7 @@ const Records = () => {
                         value: recordDetails?.location?.longitude || "N/A",
                       },
                     ]}
-                    color={"gray"}
+                    
                   />
                   <RenderDetails
                     data={[
@@ -312,7 +311,7 @@ const Records = () => {
                           "No message available",
                       },
                     ]}
-                    color={"gray"}
+                    
                   />
                 </div>
               }
