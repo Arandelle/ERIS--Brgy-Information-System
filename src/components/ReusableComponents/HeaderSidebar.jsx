@@ -10,7 +10,7 @@ const HeaderAndSideBar = ({ content }) => {
   };
 
   return (
-    <div className="w-full flex-col flex">
+    <div className="flex-1 flex-col flex">
       <Header toggleSideBar={toggleDropdown} isOpen={isOpen} />
       <div className="flex">
         <div className="fixed z-50 lg:z-0">
