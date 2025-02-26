@@ -21,7 +21,7 @@ const HotlinesModal = ({
     const {organization, name, contact, email, description} = hotlineState;
     const completeData = organization && name && (contact || email) && description;
     setIsComplete(completeData);
-  }, [hotlineState.description, hotlineState.name, hotlineState.contact, hotlineState.email, hotlineState.description]);
+  }, [hotlineState.category, hotlineState.organization, hotlineState.name, hotlineState.contact, hotlineState.email, hotlineState.description]);
 
   return (
     <Modal
@@ -31,6 +31,17 @@ const HotlinesModal = ({
         <div className="flex flex-col space-y-4 max-w-lg">
         <p className="text-sm text-gray-600 dark:text-gray-300 italic">Regularly review and update contact information to ensure its accuracy.
         Ensure that any personal information added complies with relevant privacy policies and regulations.</p>
+        <select className="w-full text-gray-600 p-2 border border-gray-300 rounded-md cursor-pointer"
+        value={hotlineState.category}
+        onChange={(e) => setHotlinesState(prev => ({...prev, category: e.target.value}))}
+        >
+          <option value="" disabled>Select Category</option>
+          <option value="fire">Fire</option>
+          <option value="medical">Medical</option>
+          <option value="crime">Crime</option>
+          <option value="natural disaster">Natural Disaster</option>
+          <option value="other">Other</option>
+        </select>
          <InputField
             type="text"
             placeholder="Organizations"

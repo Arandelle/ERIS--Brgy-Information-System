@@ -28,13 +28,14 @@ const Hotlines = () => {
     contact: "",
     email: "",
     description: "",
+    category: "",
   });
   const [selectedId, setSelectedId] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const searchField = ["organization","name", "contact","email", "description"];
-  const HotlineHeaders = ["Ornizations", "Name", "PhoneNumber","Email", "Description", "Action"];
+  const searchField = ["category","organization","name", "contact","email", "description"];
+  const HotlineHeaders = ["Category","Organizations", "Name", "PhoneNumber", "Description", "Action"];
 
   const filteredData = useFilteredData(hotlines, searchQuery, searchField);
 
@@ -61,10 +62,10 @@ const Hotlines = () => {
   const renderRow = (hotlines) => {
     return (
       <>
+       <TableData data={hotlines.category} />
         <TableData data={hotlines.organization}/>
         <TableData data={hotlines.name} />
         <TableData data={hotlines.contact}/>
-        <TableData data={hotlines.email}/>
         <TableData data={hotlines.description} />
         <td className="">
           <div className="flex items-center justify-center space-x-4">
@@ -134,6 +135,7 @@ const Hotlines = () => {
       contact: hotlines.contact,
       email: hotlines.email,
       description: hotlines.description,
+      category: hotlines.category,
     }));
     setSelectedId(hotlines.id);
     setIsEdit(true);
