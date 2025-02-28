@@ -150,16 +150,16 @@ const Dashboard = () => {
 
           <div className="grid gap-3 md:gap-4 lg:grid-cols-4 lg:grid-rows-8 my-4 ">
             <>
-              <div className="col-span-4 lg:col-span-3 row-span-4 shadow-md">
+              <div className="col-span-4 lg:col-span-3 row-span-4">
                 <EmergencyAreaChart />
               </div>
               <div className="col-span-4 lg:col-span-1 row-span-4">
                 <CertificateList pending={pending}/>
               </div>
-              <div className="col-span-4 lg:col-span-2 row-span-4 shadow-md">
+              <div className="col-span-4 lg:col-span-2 row-span-4">
                 <BarChart />
               </div> 
-              <div className="col-span-4 lg:col-span-2 row-span-4 shadow-md">
+              <div className="col-span-4 lg:col-span-2 row-span-4">
                 <PieChart />
               </div> 
             </>

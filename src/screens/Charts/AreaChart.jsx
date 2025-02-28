@@ -63,7 +63,7 @@ const EmergencyAreaChart = () => {
   }, [emergencyRequest, selectedYear]);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-md">
+    <div className="bg-white dark:bg-gray-800 rounded-md h-full shadow-md">
       <div className="flex flex-row items-center justify-center p-4 space-x-4">
         <select
           value={selectedYear}
@@ -88,8 +88,8 @@ const EmergencyAreaChart = () => {
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={emergencyData}>
-          <XAxis dataKey="name" />
-          <YAxis />
+          <XAxis dataKey="name" stroke="#3388df" />
+          <YAxis stroke="#3388df"/>
           <Tooltip
             contentStyle={{
               backgroundColor: "#2d3748",
@@ -103,7 +103,6 @@ const EmergencyAreaChart = () => {
             dataKey="requests"
             stroke="#3388df"
             fill="#3388df"
-            opacity={0.6}
           />
         </AreaChart>
       </ResponsiveContainer>
