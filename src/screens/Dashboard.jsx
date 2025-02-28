@@ -11,7 +11,7 @@ import { useFetchData } from "../hooks/useFetchData";
 import icons from "../assets/icons/Icons";
 import { Tooltip } from "@mui/material";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
-import Heatmap from "./Heatmap";
+import Heatmap from "./Maps/Heatmap";
 
 const DashboardCard = ({
   title,
