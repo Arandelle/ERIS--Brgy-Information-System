@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
-import Dashboard from "./screens/Dashboard";
+import Dashboard from "./screens/Dashboard/Dashboard";
 import MyCalendar from "./screens/Calendar/MyCalendar";
 import {
   BrowserRouter as Router,

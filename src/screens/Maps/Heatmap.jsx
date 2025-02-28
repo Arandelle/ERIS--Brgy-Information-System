@@ -14,8 +14,9 @@ const CoverageRadius = ({ center, radius }) => {
     if (!center) return;
 
     const circle = L.circle(center, {
-      color: "none",
-      fillColor: "#3388ff",
+      // color: "black", // border color
+      weight: 0.5, // border weight
+      fillColor: "#3388ff", 
       fillOpacity: 0.2,
       radius, // in meters
     }).addTo(map);

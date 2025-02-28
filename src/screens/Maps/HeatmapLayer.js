@@ -42,7 +42,7 @@ export const HeatmapLayer = () => {
         const heatLayer = L.heatLayer(emergencyData, {
             radius: 25, //size of each heat point
             blur: 15, //smoothness of the heatmap
-            maxZoom: 17 // heatmap fades when zoom in/out
+            maxZoom: 17// heatmap fades when zoom in/out
         }).addTo(map);
         
     return () => {
