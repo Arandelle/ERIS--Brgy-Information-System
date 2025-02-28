@@ -50,8 +50,8 @@ function Sidebar({ isOpen, toggleSidebar }) {
               key={key}
               className={`${
                 !val.items || openSubMenu !== val.title
-                  ? "flex items-center p-2 text-base font-normal rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-l-4 hover:border-l-primary-500 group cursor-pointer"
-                  : "text-gray-900 dark:text-white p-2 cursor-pointer"
+                  ? "flex items-center p-2 text-base font-normal rounded-lg dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-l-4 hover:border-l-primary-500 group cursor-pointer"
+                  : "text-gray-900 dark:text-gray-400 p-2 cursor-pointer"
               }`}
               onClick={() => handleMenuItemClick(val)}
             > 

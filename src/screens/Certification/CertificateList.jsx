@@ -4,7 +4,7 @@ import icons from '../../assets/icons/Icons';
 
 const CertificateList = ({pending}) => {
   return (
-    <div className="bg-white w-full rounded-md border-t-4 border-t-blue-500 dark:border-t-blue-400 shadow-md dark:bg-gray-700">
+    <div className="bg-white w-full h-full rounded-md border-t-4 border-t-blue-500 dark:border-t-blue-400 shadow-md dark:bg-gray-800">
     <p className="text-center p-2 dark:text-gray-400">Request Documents</p>
     {pending.length === 0 ? (
       <EmptyLogo message={"No request documents"}/>

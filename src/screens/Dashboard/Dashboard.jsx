@@ -9,9 +9,11 @@ import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar"
 import DateToday from "../../helper/DateToday";
 import { useFetchData } from "../../hooks/useFetchData";
 import Heatmap from "../Maps/Heatmap";
-import EmergencyAreaChart from "../AreaChart";
+import EmergencyAreaChart from "../Charts/AreaChart";
 import CertificateList from "../Certification/CertificateList";
 import { DashboardCard } from "./DashboardCard";
+import  BarChart  from "../Charts/BarChart";
+import  PieChart  from "../Charts/PieChart";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -146,18 +148,24 @@ const Dashboard = () => {
             />
           </div>
 
-          <div className="grid gap-3 md:gap-4 lg:grid-cols-4 lg:grid-rows-12 my-4 ">
+          <div className="grid gap-3 md:gap-4 lg:grid-cols-4 lg:grid-rows-8 my-4 ">
             <>
-              <div className="col-span-4 lg:col-span-3 row-span-5 bg-white rounded-md">
+              <div className="col-span-4 lg:col-span-3 row-span-4 shadow-md">
                 <EmergencyAreaChart />
-              </div> 
-              <div className="col-span-4 lg:col-span-1 row-span-5">
+              </div>
+              <div className="col-span-4 lg:col-span-1 row-span-4">
                 <CertificateList pending={pending}/>
               </div>
-              <div className="h-svh lg:h-full col-span-4 row-span-7">
-              <Heatmap/>
-            </div>
+              <div className="col-span-4 lg:col-span-2 row-span-4 shadow-md">
+                <BarChart />
+              </div> 
+              <div className="col-span-4 lg:col-span-2 row-span-4 shadow-md">
+                <PieChart />
+              </div> 
             </>
+          </div>
+          <div className="h-svh">
+              <Heatmap/>
           </div>
         </>
       }

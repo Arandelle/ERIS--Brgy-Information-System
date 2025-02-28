@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useFetchData } from "../hooks/useFetchData";
+import { useFetchData } from "../../hooks/useFetchData";
 
 const EmergencyAreaChart = () => {
   const { data: emergencyRequest } = useFetchData("emergencyRequest");
@@ -15,7 +15,7 @@ const EmergencyAreaChart = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // defaul to current year
 
   useEffect(() => {
-    if (!emergencyRequest && emergencyRequest.leng === 0) return;
+    if (!emergencyRequest && emergencyRequest.length === 0) return;
 
     const emergencyMap = new Map();
     const currentYear = new Date().getFullYear();
@@ -63,12 +63,12 @@ const EmergencyAreaChart = () => {
   }, [emergencyRequest, selectedYear]);
 
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-800 rounded-md">
       <div className="flex flex-row items-center justify-center p-4 space-x-4">
         <select
           value={selectedYear}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
-          className="p-2 border-none rounded cursor-pointer"
+          className="p-2 border border-gray-300 rounded cursor-pointer dark:bg-gray-700 dark:text-gray-200"
         >
           {[
             ...new Set(
@@ -84,18 +84,26 @@ const EmergencyAreaChart = () => {
               </option>
             ))}
         </select>
-        <p>Total Emergency Request</p>
+        <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Emergency Request</p>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={emergencyData}>
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#2d3748",
+              color: "#fff",
+              borderRadius: "5px",
+            }}
+            itemStyle={{ color: "#fff" }}
+          />
           <Area
             type="monotone"
             dataKey="requests"
             stroke="#3388df"
             fill="#3388df"
+            opacity={0.6}
           />
         </AreaChart>
       </ResponsiveContainer>
