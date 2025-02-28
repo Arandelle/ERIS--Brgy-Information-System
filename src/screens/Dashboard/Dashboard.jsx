@@ -9,7 +9,7 @@ import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar"
 import DateToday from "../../helper/DateToday";
 import { useFetchData } from "../../hooks/useFetchData";
 import Heatmap from "../Maps/Heatmap";
-import EmergencyBarChart from "../EmergencyBarChart";
+import EmergencyAreaChart from "../AreaChart";
 import CertificateList from "../Certification/CertificateList";
 import { DashboardCard } from "./DashboardCard";
 
@@ -149,7 +149,7 @@ const Dashboard = () => {
           <div className="grid gap-3 md:gap-4 lg:grid-cols-4 lg:grid-rows-12 my-4 ">
             <>
               <div className="col-span-4 lg:col-span-3 row-span-5 bg-white rounded-md">
-                <EmergencyBarChart />
+                <EmergencyAreaChart />
               </div> 
               <div className="col-span-4 lg:col-span-1 row-span-5">
                 <CertificateList pending={pending}/>
