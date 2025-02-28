@@ -108,18 +108,10 @@ const UserList = ({ data }) => {
             onClick={() => openModal(user.img)}
           />
           <div className="ps-2 sm:ps-3">
-            {user.firstname && user.lastname ? (
-              <div className="text-sm sm:text-base flex flex-row font-semibold space-x-1 text-ellipsis truncate max-w-[100px]">
-                <p>
-                  {user.firstname}, {user.lastname}
-                </p>
-              </div>
-            ) : (
-              anonymous
-            )}
-            <div className="font-normal text-gray-500 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[200px]">
+            <p>{user.fullname ?? "null"}</p>
+            <p className="font-normal text-gray-500 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[200px]">
               {user.email}
-            </div>
+            </p>
           </div>
         </th>
         <TableData data={user.customId} />
