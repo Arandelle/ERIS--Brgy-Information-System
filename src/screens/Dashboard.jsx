@@ -11,6 +11,7 @@ import { useFetchData } from "../hooks/useFetchData";
 import icons from "../assets/icons/Icons";
 import { Tooltip } from "@mui/material";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
+import Heatmap from "./Heatmap";
 
 const DashboardCard = ({
   title,
@@ -356,7 +357,7 @@ const Dashboard = () => {
           <div className="grid gap-3 md:gap-4 lg:grid-cols-4">
             <>
               <div className="order-3 lg:order-1 col-span-1 col-row-1 lg:col-span-3 row-span-5 h-svh">
-                <MapContent />
+                <Heatmap />
               </div>
               <div className="order-2 col-span-1 mt-2 md:mt-0">
                 <div className="bg-white w-full border-t-4 border-t-blue-500 dark:border-t-blue-400 shadow-md dark:bg-gray-700">
