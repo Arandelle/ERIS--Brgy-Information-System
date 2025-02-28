@@ -5,55 +5,29 @@ import "leaflet.heat";
 import L from "leaflet";
 import { CustomScrollZoomHandler } from "../../helper/scrollUtils";
 import { useFetchData } from "../../hooks/useFetchData";
-  
-const HeatmapLayer = () => {
-    const map = useMap();
-    const { data: emergencyRequest } = useFetchData("emergencyRequest");
-    const [emergencyData, setEmergencyData] = useState([]);
-  
-    useEffect(() => {
-      if (!emergencyRequest || emergencyRequest.length === 0) return;
-  
-      const locationMap = new Map();
-  
-      // Process emergency requests
-      emergencyRequest.forEach((request) => {
-        if (request.location && request.location.latitude && request.location.longitude) {
-          const lat = request.location.latitude;
-          const lng = request.location.longitude;
-          const key = `${lat},${lng}`;
-  
-          // Count occurrences
-          locationMap.set(key, (locationMap.get(key) || 0) + 1);
-        }
-      });
-  
-      // Convert map data into heatmap format
-      const heatData = Array.from(locationMap.entries()).map(([key, count]) => {
-        const [lat, lng] = key.split(",").map(Number);
-        return [lat, lng, count]; // Use count as intensity
-      });
-  
-      setEmergencyData(heatData);
-    }, [emergencyRequest]);
-  
-    useEffect(() => {
-      if (emergencyData.length === 0) return;
-  
-      const heatLayer = L.heatLayer(emergencyData, {
-        radius: 25,
-        blur: 15,
-        maxZoom: 17,
-      }).addTo(map);
-  
-      return () => {
-        map.removeLayer(heatLayer);
-      };
-    }, [map, emergencyData]);
-  
-    return null;
-  };
-  
+import { HeatmapLayer } from "./HeatmapLayer";
+
+const CoverageRadius = ({ center, radius }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!center) return;
+
+    const circle = L.circle(center, {
+      color: "none",
+      fillColor: "#3388ff",
+      fillOpacity: 0.2,
+      radius, // in meters
+    }).addTo(map);
+
+    return () => {
+      map.removeLayer(circle);
+    };
+  }, [map, center, radius]);
+
+  return null;
+};
+   
 const Heatmap = () => {
   const [position, setPosition] = useState(null);
 
@@ -76,12 +50,13 @@ const Heatmap = () => {
   return (
       <MapContainer
         center={position}
-        zoom={15}
+        zoom={16}
         className="h-full w-full z-0 rounded-md"
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <HeatmapLayer /> {/** to render the heat mark */}
         <CustomScrollZoomHandler /> {/**to prevent the zoom in/out in scroll, should use ctrl + scroll */}
+        <CoverageRadius  center={position} radius={700}/> {/**radius for covered area */}
       </MapContainer>
   );
 };
