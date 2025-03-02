@@ -119,7 +119,10 @@ export const HeatmapLayer = ({ selectedYear, setAvailableYears }) => {
             // Add popup with count for exact coordinates
             const key = `${point.lat},${point.lng}`;
             const totalCount = emergencyData.locationMap.get(key);
-            marker.bindPopup(`<b>Emergency Count: ${totalCount}</b><br>Location: ${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}`);
+            const type = point.details.emergencyType
+            const emergencyId = point.details.emergencyId
+
+            marker.bindPopup(`<b>${emergencyId}</b><br><b>Emergency Count: ${totalCount}</b><br>Coordinates: ${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}<br>Emergency Type: ${type}`);
             
             markers.addLayer(marker);
         });

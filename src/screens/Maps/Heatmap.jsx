@@ -50,11 +50,11 @@ const Heatmap = () => {
 
   return (
     <div className="relative h-full">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 p-4 z-10 cursor-pointer">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 p-4 z-10">
         {availableYears.length > 0 && (
           <select value={selectedYear}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
-          className="p-2 border rounded">
+          className="p-2 border rounded cursor-pointer">
             {availableYears.map((year) => (
               <option key={year} value={year}>
                 {year}
