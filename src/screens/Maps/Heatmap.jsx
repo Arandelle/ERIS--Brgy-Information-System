@@ -5,6 +5,8 @@ import "leaflet.heat";
 import L from "leaflet";
 import { CustomScrollZoomHandler } from "../../helper/scrollUtils";
 import { HeatmapLayer } from "./HeatmapLayer";
+import { DisplayModeControl } from "./MapControl/DisplayModeControl";
+import { YearSelectorControl } from "./MapControl/YearSelectorControl";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -31,6 +33,7 @@ const Heatmap = () => {
   const [position, setPosition] = useState(null);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
   const [availableYears, setAvailableYears] = useState([]);
+  const [displayMode, setDisplayMode] = useState("heat");
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -50,26 +53,28 @@ const Heatmap = () => {
 
   return (
     <div className="relative h-full">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 p-4 z-10">
-        {availableYears.length > 0 && (
-          <select value={selectedYear}
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
-          className="p-2 border rounded cursor-pointer">
-            {availableYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        )}
-      </div>
       <MapContainer
         center={position}
         zoom={16}
         className="h-full w-full z-0 rounded-md"
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <HeatmapLayer selectedYear={selectedYear} setAvailableYears={setAvailableYears}/> {/** Pass selectedYear */}
+        <HeatmapLayer
+          selectedYear={selectedYear}
+          setAvailableYears={setAvailableYears}
+          displayMode={displayMode}
+        />
+        {availableYears.length > 0 && (
+          <YearSelectorControl
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
+            availableYears={availableYears}
+          />
+        )}
+        <DisplayModeControl
+          displayMode={displayMode}
+          setDisplayMode={setDisplayMode}
+        />
         <CustomScrollZoomHandler />
         <CoverageRadius center={position} radius={700} />
       </MapContainer>

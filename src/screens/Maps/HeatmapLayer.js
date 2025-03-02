@@ -6,13 +6,12 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
-export const HeatmapLayer = ({ selectedYear, setAvailableYears }) => {
+export const HeatmapLayer = ({ selectedYear, setAvailableYears, displayMode }) => {
     const map = useMap();
     const { data: emergencyRequest } = useFetchData("emergencyRequest");
     const [emergencyData, setEmergencyData] = useState([]);
     const [markerLayer, setMarkerLayer] = useState(null);
     const [heatLayer, setHeatLayer] = useState(null);
-    const [displayMode, setDisplayMode] = useState('heat'); // Default to hybrid mode
 
     // Extract available years from data
     useEffect(() => {
@@ -69,7 +68,7 @@ export const HeatmapLayer = ({ selectedYear, setAvailableYears }) => {
     }, [emergencyRequest, selectedYear]);
 
     // Create and manage layers
-    useEffect(() => {
+    useEffect(() => { 
         if (!emergencyData.heatData || emergencyData.heatData.length === 0) return;
         
         // Remove existing layers
@@ -91,29 +90,78 @@ export const HeatmapLayer = ({ selectedYear, setAvailableYears }) => {
             maxClusterRadius: 50,
             // Custom icon creation for clusters to show the count
             iconCreateFunction: function(cluster) {
+                const childMarkers = cluster.getAllChildMarkers();
+                const emergencyCounts = {};
+
+                childMarkers.forEach(marker => {
+                  const emergencyType = marker.options.emergencyType || "Unknown";
+                  emergencyCounts[emergencyType] = (emergencyCounts[emergencyType] || 0) + 1;
+                });
+
+                // Determine the dominant emergency type
+                let dominantType = "Unknown";
+                let maxCount = 0;
+
+                Object.entries(emergencyCounts).forEach(([type, count]) => {
+                  if(count > maxCount){
+                    maxCount = count;
+                    dominantType = type
+                  }
+                });
+
+                // Define colors based on dominant type
+                const typeColors = {
+                  "fire": "#FF5733",
+                  "medical": "#28A745",
+                  "crime": "#FFC107",
+                  "natural disaster": "#007BFF",
+                  "Unknown": "#6C757D" // Default gray for unknown types
+                }
+
                 const count = cluster.getChildCount();
-                let className = 'cluster-marker-small';
-                
-                if (count > 10) className = 'cluster-marker-medium';
-                if (count > 30) className = 'cluster-marker-large';
+                const bgColor = typeColors[dominantType] || "Unknown";
                 
                 return L.divIcon({
-                    html: `<div><span>${count}</span></div>`,
-                    className: className,
+                    html: `<div style="
+                    background-color: ${bgColor};
+                    color: white;
+                    border-radius: 50%;
+                    height: 40px;
+                    width: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    border: 2px solid white;
+                    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+                    ">${count}</div>`,
+                    className: "",
                     iconSize: L.point(40, 40)
                 });
             }
         });
-        
+
+        // Define color mapping based on emergency type
+        const emergencyTypeColors = {
+          "medical": "#ff5733",  // Red-Orange
+          "fire": "#ff0000",     // Red
+          "crime": "#000000",    // Black
+          "accident": "#f39c12", // Yellow-Orange
+          "natural disaster": "#8e44ad", // Purple
+          "Other": "#3498db"     // Blue
+      };      
         // Add markers to cluster group
         emergencyData.pointsData.forEach(point => {
+            const emergencyType = point.details.emergencyType || "Other" // default type if undefined
+            const emergencyColor = emergencyTypeColors[emergencyType] || "#3388ff" // default color
             const marker = L.circleMarker([point.lat, point.lng], {
                 radius: 8,
-                fillColor: '#3388ff',
+                fillColor: emergencyColor,
                 color: '#fff',
                 weight: 1,
                 opacity: 1,
-                fillOpacity: 0.8
+                fillOpacity: 0.8,
+                emergencyType: point.details.emergencyType
             });
             
             // Add popup with count for exact coordinates
@@ -122,8 +170,10 @@ export const HeatmapLayer = ({ selectedYear, setAvailableYears }) => {
             const type = point.details.emergencyType
             const emergencyId = point.details.emergencyId
 
-            marker.bindPopup(`<b>${emergencyId}</b><br><b>Emergency Count: ${totalCount}</b><br>Coordinates: ${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}<br>Emergency Type: ${type}`);
-            
+            marker.bindPopup(`<b>${emergencyId}</b><br>
+              <b>Emergency Count: ${totalCount}</b><br>
+              Coordinates: ${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}<br>
+              Emergency Type: ${type}`);
             markers.addLayer(marker);
         });
         
@@ -139,114 +189,14 @@ export const HeatmapLayer = ({ selectedYear, setAvailableYears }) => {
         // Store layers for later reference
         setHeatLayer(newHeatLayer);
         setMarkerLayer(markers);
-        
-        // Add display mode toggle control
-        const displayControl = L.control({ position: 'topright' });
-        displayControl.onAdd = function() {
-            const div = L.DomUtil.create('div', 'display-control');
-            div.innerHTML = `
-                <div class="leaflet-control leaflet-bar bg-white p-2 rounded shadow-md">
-                    <div class="font-medium mb-1">Display Mode:</div>
-                    <div class="flex flex-col space-y-1">
-                        <label class="flex items-center">
-                            <input type="radio" name="display-mode" value="hybrid" ${displayMode === 'hybrid' ? 'checked' : ''} class="mr-1" />
-                            <span>Both</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="display-mode" value="heat" ${displayMode === 'heat' ? 'checked' : ''} class="mr-1" />
-                            <span>Heatmap</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="display-mode" value="cluster" ${displayMode === 'cluster' ? 'checked' : ''} class="mr-1" />
-                            <span>Clusters</span>
-                        </label>
-                    </div>
-                </div>
-            `;
-            
-            // Add event listeners with a slight delay to ensure DOM is ready
-            setTimeout(() => {
-                const radios = div.querySelectorAll('input[type="radio"]');
-                radios.forEach(radio => {
-                    L.DomEvent.on(radio, 'change', function(e) {
-                        setDisplayMode(e.target.value);
-                    });
-                    L.DomEvent.disableClickPropagation(radio);
-                });
-            }, 100);
-            
-            return div;
-        };
-        displayControl.addTo(map);
-        
-        // Add custom CSS for marker clusters
-        if (!document.getElementById('cluster-markers-style')) {
-            const style = document.createElement('style');
-            style.id = 'cluster-markers-style';
-            style.innerHTML = `
-                .cluster-marker-small,
-                .cluster-marker-medium,
-                .cluster-marker-large {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-radius: 50%;
-                    background-color: rgba(51, 136, 255, 0.8);
-                    color: white;
-                    font-weight: bold;
-                    border: 2px solid white;
-                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-                }
-                .cluster-marker-small {
-                    width: 30px;
-                    height: 30px;
-                }
-                .cluster-marker-medium {
-                    width: 40px;
-                    height: 40px;
-                }
-                .cluster-marker-large {
-                    width: 50px;
-                    height: 50px;
-                }
-                .cluster-marker-small div,
-                .cluster-marker-medium div,
-                .cluster-marker-large div {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 100%;
-                    height: 100%;
-                }
-            `;
-            document.head.appendChild(style);
-        }
-        
+                
         return () => {
             // Clean up
             if (newHeatLayer) map.removeLayer(newHeatLayer);
             if (markers) map.removeLayer(markers);
-            map.removeControl(displayControl);
+           
         };
-    }, [map, emergencyData]);
-
-    // Handle display mode changes
-    useEffect(() => {
-        if (!heatLayer || !markerLayer) return;
-        
-        // Remove existing layers
-        map.removeLayer(heatLayer);
-        map.removeLayer(markerLayer);
-        
-        // Apply the selected display mode
-        if (displayMode === 'heat' || displayMode === 'hybrid') {
-            heatLayer.addTo(map);
-        }
-        
-        if (displayMode === 'cluster' || displayMode === 'hybrid') {
-            markerLayer.addTo(map);
-        }
-    }, [map, heatLayer, markerLayer, displayMode]);
+    }, [map, emergencyData, displayMode]);
 
     return null; // No UI rendered directly
 };
