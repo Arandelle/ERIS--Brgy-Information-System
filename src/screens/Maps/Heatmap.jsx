@@ -29,7 +29,39 @@ const CoverageRadius = ({ center, radius }) => {
   return null;
 };
 
-const Heatmap = () => {
+const MaximizeMapControl = ({ maximize, setMaximize }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    const maximizeButton = L.control({ position: "topright" });
+
+    maximizeButton.onAdd = function () {
+      const button = L.DomUtil.create("button", "maximize-button");
+      button.innerHTML = `<button class="leaflet-control leaflet-bar p-2 border rounded cursor-pointer bg-white shadow-md" >
+       <p class="cursor-pointer">🔍</p>
+      </button>`;
+
+      L.DomEvent.on(button, "click", function () {
+        setMaximize((prev) => !prev);
+      });
+
+      L.DomEvent.disableClickPropagation(button);
+      L.DomEvent.disableScrollPropagation(button);
+
+      return button;
+    };
+
+    maximizeButton.addTo(map);
+
+    return () => {
+      maximizeButton.remove();
+    };
+  }, [map, maximize]);
+
+  return null;
+};
+
+const Heatmap = ({ maximize, setMaximize }) => {
   const [position, setPosition] = useState(null);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
   const [availableYears, setAvailableYears] = useState([]);
@@ -59,6 +91,7 @@ const Heatmap = () => {
         className="h-full w-full z-0 rounded-md"
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <MaximizeMapControl maximize={maximize} setMaximize={setMaximize} />
         <HeatmapLayer
           selectedYear={selectedYear}
           setAvailableYears={setAvailableYears}

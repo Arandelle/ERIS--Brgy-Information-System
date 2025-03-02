@@ -12,7 +12,7 @@ export const YearSelectorControl = ({ selectedYear, setSelectedYear, availableYe
     yearControl.onAdd = function() {
       const div = L.DomUtil.create('div', 'year-selector-control');
       div.innerHTML = `
-        <select class="p-2 border rounded cursor-pointer bg-white shadow-md">
+        <select class="leaflet-bar p-2 border rounded cursor-pointer bg-white shadow-md">
           ${availableYears.map(year => 
             `<option value="${year}" ${year === selectedYear ? 'selected' : ''}>${year}</option>`
           ).join('')}

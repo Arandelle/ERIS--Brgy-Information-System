@@ -6,13 +6,25 @@ import Heatmap from "./Heatmap";
 // Fix Leaflet marker icon issue
 function MyMapComponent() {
 
-  return ( 
-    <HeaderAndSideBar content={
-         <div className="h-screen"> 
-         {/* <MapContent /> */}
-         <Heatmap />
-         </div>
-    }/>
+  const [maximize, setMaximize] = useState(false);
+
+  return (
+    <>
+      {!maximize ? (
+        <HeaderAndSideBar
+          content={
+            <div className="h-screen">
+              {/* <MapContent /> */}
+              <Heatmap maximize={maximize} setMaximize={setMaximize}/>
+            </div>
+          }
+        />
+      ) : (
+        <div className="h-screen w-screen">
+          <Heatmap maximize={maximize} setMaximize={setMaximize}/>
+        </div>
+      )}
+    </>
   );
 }
 export default MyMapComponent;
