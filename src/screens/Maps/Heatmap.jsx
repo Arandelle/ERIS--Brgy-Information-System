@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.heat";
 import L from "leaflet";
 import { CustomScrollZoomHandler } from "../../helper/scrollUtils";
-import { useFetchData } from "../../hooks/useFetchData";
 import { HeatmapLayer } from "./HeatmapLayer";
 
 const CoverageRadius = ({ center, radius }) => {
@@ -14,11 +13,10 @@ const CoverageRadius = ({ center, radius }) => {
     if (!center) return;
 
     const circle = L.circle(center, {
-      // color: "black", // border color
-      weight: 0.5, // border weight
-      fillColor: "#3388ff", 
+      weight: 0.5,
+      fillColor: "#3388ff",
       fillOpacity: 0.2,
-      radius, // in meters
+      radius,
     }).addTo(map);
 
     return () => {
@@ -28,9 +26,11 @@ const CoverageRadius = ({ center, radius }) => {
 
   return null;
 };
-   
+
 const Heatmap = () => {
   const [position, setPosition] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
+  const [availableYears, setAvailableYears] = useState([]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -39,7 +39,7 @@ const Heatmap = () => {
       },
       (error) => {
         console.error(error);
-        setPosition([14.33289, 120.85065]); //fall back position
+        setPosition([14.33289, 120.85065]); // Fallback position
       }
     );
   }, []);
@@ -49,16 +49,31 @@ const Heatmap = () => {
   }
 
   return (
+    <div className="relative h-full">
+      <div className="absolute top-0 right-0 p-4 z-10">
+        {availableYears.length > 0 && (
+          <select value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+          className="p-2 border rounded">
+            {availableYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
       <MapContainer
         center={position}
         zoom={16}
         className="h-full w-full z-0 rounded-md"
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <HeatmapLayer /> {/** to render the heat mark */}
-        <CustomScrollZoomHandler /> {/**to prevent the zoom in/out in scroll, should use ctrl + scroll */}
-        <CoverageRadius  center={position} radius={700}/> {/**radius for covered area */}
+        <HeatmapLayer selectedYear={selectedYear} setAvailableYears={setAvailableYears}/> {/** Pass selectedYear */}
+        <CustomScrollZoomHandler />
+        <CoverageRadius center={position} radius={700} />
       </MapContainer>
+    </div>
   );
 };
 

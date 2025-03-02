@@ -3,11 +3,18 @@ import { useMap } from 'react-leaflet'
 import { useFetchData } from '../../hooks/useFetchData';
 import L from "leaflet";
 
-export const HeatmapLayer = () => {
+export const HeatmapLayer = ({selectedYear, setAvailableYears}) => {
 
     const map = useMap();
     const {data: emergencyRequest} = useFetchData("emergencyRequest");
     const [emergencyData, setEmergencyData] = useState([]);
+
+    useEffect(() => {
+        if(!emergencyRequest || emergencyRequest.length === 0) return;
+
+        const years = [...new Set(emergencyRequest.map(req => new Date(req.timestamp).getFullYear()))].sort((a,b) => b - a);
+        setAvailableYears(years)
+    },[emergencyRequest, setAvailableYears]);
 
     useEffect(() => {
 
@@ -17,12 +24,15 @@ export const HeatmapLayer = () => {
 
         //process emergency request
         emergencyRequest.forEach((request) => {
-            if(request.location && request.location.latitude && request.location.longitude){
-                const lat = request.location.latitude;
-                const lng = request.location.longitude;
-                const key = `${lat},${lng}`; // store as a key
-
-                locationMap.set(key, (locationMap.get(key) || 0) + 0.8);
+            if(request.location && request.location.latitude && request.location.longitude && request.timestamp){
+                const year = new Date(request.timestamp).getFullYear();
+               
+                if(year === selectedYear){
+                    const lat = request.location.latitude;
+                    const lng = request.location.longitude;
+                    const key = `${lat},${lng}`; // store as a key
+                    locationMap.set(key, (locationMap.get(key) || 0) + 0.8);
+                }
             }
         });
 
@@ -34,7 +44,7 @@ export const HeatmapLayer = () => {
 
         setEmergencyData(heatData); // add the data
 
-    }, [emergencyRequest]);
+    }, [emergencyRequest, selectedYear]);
 
     useEffect(() => {
         if(emergencyData.length === 0) return;
