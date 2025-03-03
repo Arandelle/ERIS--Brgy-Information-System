@@ -30,6 +30,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import LoginIcon from '@mui/icons-material/Login';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 const icons = {
     email: EmailIcon,
@@ -63,7 +64,8 @@ const icons = {
     addPhoto: AddPhotoAlternateIcon,
     document: DescriptionIcon,
     print: PrintIcon,
-    cancel: CancelIcon
+    cancel: CancelIcon,
+    chart: BarChartIcon
 }
 
 export default icons;

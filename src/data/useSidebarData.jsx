@@ -1,7 +1,7 @@
 import React from "react";
 import icons from "../assets/icons/Icons";
 
- const style = "w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+ const style = "w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
 export const useSidebarData = [
   {
     title: "Dashboard",
@@ -93,7 +93,7 @@ export const useSidebarData = [
   //   link: "/calendar",
   // },
   {
-    title: "Safety & Awareness",
+    title: "Post Awareness",
     icon: (
       <svg
         class={`${style}`}
@@ -135,7 +135,7 @@ export const useSidebarData = [
     link: "/certification",
   },
   {
-    title: "Emergency Records",
+    title: "Emergency List",
     icon: (
       <icons.clock className={`${style}`} />
     ),
@@ -144,7 +144,7 @@ export const useSidebarData = [
   {
     title: "Reports",
     icon: (
-      <icons.print className={`${style}`} />
+      <icons.chart className={`${style}`} />
     ),
     link: "/reports"
   }

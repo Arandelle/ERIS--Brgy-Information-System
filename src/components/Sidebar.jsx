@@ -39,7 +39,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
     <div className="bg-black bg-opacity-25 w-full md:relative md:w-0" onClick={toggleSidebar} ></div> {/* This is the overlay */}
     <div className="flex flex-col absolute md:relative w-4/5 md:w-60 shadow-lg px-3 h-screen bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       
-      <div className="px-3 overflow-auto flex-grow">
+      <div className="overflow-auto flex-grow">
         <ul className=" space-y-2">
           <div className="text-center space-y-2 sticky top-0 z-50">
             <button type="button" 
@@ -61,7 +61,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
               key={key}
               className={`${
                 !val.items || openSubMenu !== val.title
-                  ? `flex items-center p-2 text-base font-normal rounded-lg dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-l-4 hover:border-l-primary-500 group cursor-pointer ${(isActive === val.link || openSubMenu === val.title) && "bg-gray-200 border-l-4 border-l-primary-500 dark:bg-gray-600"}`
+                  ? `flex items-center p-2 text-base font-normal rounded-lg dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-l-4 hover:border-l-blue-800 group cursor-pointer ${(isActive === val.link || openSubMenu === val.title) && "bg-gray-200 border-l-4 border-l-blue-800 dark:bg-gray-600"}`
                   : "text-gray-900 dark:text-gray-400 p-2 cursor-pointer"
               }`}
               onClick={() => handleMenuItemClick(val)}
@@ -83,7 +83,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
                     <li
                       key={subKey}
                       className={`flex items-center p-2 pl-12 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 cursor-pointer
-                      ${isActive === subVal.link && "bg-gray-200 dark:bg-gray-600 border-l-4 border-l-primary-500"}`}
+                      ${isActive === subVal.link && "bg-gray-200 dark:bg-gray-600 border-l-4 border-l-blue-800"}`}
                       onClick={() => handleSubMenuClick(subVal.link)}
                     >
                       <div className="flex items-center w-full">
