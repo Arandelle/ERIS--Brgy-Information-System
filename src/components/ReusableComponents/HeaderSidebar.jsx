@@ -14,7 +14,7 @@ const HeaderAndSideBar = ({ content }) => {
       <Header toggleSideBar={toggleDropdown} isOpen={isOpen} />
       <div className="flex h-full">
         {/* Sidebar with independent scrolling */}
-        <div className="z-50 lg:z-0 h-full">
+        <div className="z-50 md:z-0 h-full">
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
         </div>
         
