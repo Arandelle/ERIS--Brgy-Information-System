@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapContent from "../Maps/MapContent";
 import population from "../../assets/images/population.svg";
@@ -20,6 +20,7 @@ const Dashboard = () => {
   const { data: emergencyData } = useFetchData("emergencyRequest");
   const { data: clearanceData } = useFetchData("requestClearance");
   const [selectedOption, setSelectedOption] = useState("monthly");
+  const [maximize, setMaximize] = useState(false);
 
   const onGoing = emergencyData.filter((item) => item.status === "on-going");
   const pending = clearanceData.filter((item) => item.status === "pending");
@@ -105,7 +106,12 @@ const Dashboard = () => {
   const handleNavigate = (path) => {
     navigate(path);
   };
-  const now = new Date();
+
+  useEffect(() => {
+    if(maximize){
+      navigate("/maps");
+    } 
+  },[maximize]);
 
   return (
     <HeaderAndSideBar
@@ -165,7 +171,7 @@ const Dashboard = () => {
             </>
           </div>
           <div className="h-svh">
-              <Heatmap/>
+              <Heatmap maximize={maximize} setMaximize={setMaximize}/>
           </div>
         </>
       }

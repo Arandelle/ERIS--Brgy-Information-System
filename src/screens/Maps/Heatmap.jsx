@@ -37,7 +37,7 @@ const MaximizeMapControl = ({ maximize, setMaximize }) => {
 
     maximizeButton.onAdd = function () {
       const button = L.DomUtil.create("button", "maximize-button");
-      button.innerHTML = `<button class="leaflet-control leaflet-bar p-2 border rounded cursor-pointer bg-white shadow-md" >
+      button.innerHTML = `<button class="leaflet-bar p-2 border rounded cursor-pointer bg-white shadow-md" >
        <p class="cursor-pointer">🔍</p>
       </button>`;
 

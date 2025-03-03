@@ -12,7 +12,7 @@ export const DisplayModeControl = ({ displayMode, setDisplayMode }) => {
     displayControl.onAdd = function() {
       const div = L.DomUtil.create('div', 'display-control');
       div.innerHTML = `
-        <div class="leaflet-control leaflet-bar bg-white p-2 rounded shadow-md cursor-pointer">
+        <div class="leaflet-bar bg-white p-2 rounded shadow-md cursor-pointer">
           <div class="font-medium mb-1">Display Mode:</div>
           <div class="flex flex-col space-y-1">
             <label class="flex items-center cursor-pointer">
