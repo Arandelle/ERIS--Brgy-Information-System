@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSidebarData } from "../data/useSidebarData";
 import SearchInput from "./Header/SearchInput";
 import icons from "../assets/icons/Icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Sidebar({ isOpen, toggleSidebar }) {
   const navigate = useNavigate();
+  const location = useLocation(); // get the current path
   const [openSubMenu, setOpenSubMenu] = useState(null);
+  const [isActive, setIsActive] = useState(location.pathname);
+
+  useEffect(() => {
+    setIsActive(location.pathname);
+
+    //automatically open submenu if sub-item is active
+    const parentMenu = useSidebarData.find((menu) => menu.items?.some(sub => sub.link === location.pathname));
+
+    setOpenSubMenu(parentMenu ? parentMenu.title : null);
+  }, [location.pathname]);
 
   const handleMenuItemClick = (val) => {
     if (!val.items) {
@@ -46,11 +57,11 @@ function Sidebar({ isOpen, toggleSidebar }) {
           </div>
   
           {useSidebarData.map((val, key) => (
-            <li
+              <li
               key={key}
               className={`${
                 !val.items || openSubMenu !== val.title
-                  ? "flex items-center p-2 text-base font-normal rounded-lg dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-l-4 hover:border-l-primary-500 group cursor-pointer"
+                  ? `flex items-center p-2 text-base font-normal rounded-lg dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-l-4 hover:border-l-primary-500 group cursor-pointer ${(isActive === val.link || openSubMenu === val.title) && "bg-gray-200 border-l-4 border-l-primary-500 dark:bg-gray-600"}`
                   : "text-gray-900 dark:text-gray-400 p-2 cursor-pointer"
               }`}
               onClick={() => handleMenuItemClick(val)}
@@ -71,7 +82,8 @@ function Sidebar({ isOpen, toggleSidebar }) {
                   {val.items.map((subVal, subKey) => (
                     <li
                       key={subKey}
-                      className="flex items-center p-2 pl-12 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 cursor-pointer"
+                      className={`flex items-center p-2 pl-12 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 cursor-pointer
+                      ${isActive === subVal.link && "bg-gray-200 dark:bg-gray-600 border-l-4 border-l-primary-500"}`}
                       onClick={() => handleSubMenuClick(subVal.link)}
                     >
                       <div className="flex items-center w-full">
