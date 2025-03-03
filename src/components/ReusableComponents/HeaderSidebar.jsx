@@ -10,18 +10,17 @@ const HeaderAndSideBar = ({ content }) => {
   };
 
   return (
-    <div className="flex-1 flex-col flex">
+    <div className="flex-1 flex flex-col h-screen">
       <Header toggleSideBar={toggleDropdown} isOpen={isOpen} />
-      <div className="flex">
-        <div className="fixed z-50 lg:z-0">
+      <div className="flex h-full">
+        {/* Sidebar with independent scrolling */}
+        <div className="z-50 lg:z-0 h-full">
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
         </div>
-        <div
-          className={`w-full transition-all duration-300 ${
-            isOpen ? "ml-0" : "md:ml-60"
-          }`}
-        >
-          <div className="p-2 overflow-x-auto">{content}</div>
+        
+        {/* Main content with independent scrolling */}
+        <div className="w-full h-full overflow-y-auto">
+          <div className="p-2">{content}</div>
         </div>
       </div>
     </div>

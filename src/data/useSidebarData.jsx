@@ -141,4 +141,11 @@ export const useSidebarData = [
     ),
     link: "/records",
   },
+  {
+    title: "Reports",
+    icon: (
+      <icons.print className={`${style}`} />
+    ),
+    link: "/reports"
+  }
 ];
