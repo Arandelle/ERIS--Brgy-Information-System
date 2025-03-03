@@ -78,29 +78,49 @@ const EmergencyTable = ({ data }) => {
   );
 };
 
-// Chart component for data visualization
+// Chart component for data visualization by days
 const EmergencyChart = ({ data }) => {
   if (!data || data.length === 0) {
     return <div className="text-center py-4">No data available for chart</div>;
   }
 
-  // Process data for the chart (count by status)
+  // Process data for the chart (count by day)
   const processChartData = () => {
-    const statusCount = {};
+    // Group emergencies by date
+    const dailyCounts = {};
     
     data.forEach(item => {
-      const status = item.status || "Unknown";
-      if (statusCount[status]) {
-        statusCount[status]++;
+      if (!item.timestamp) return;
+      
+      // Format date as YYYY-MM-DD
+      const date = new Date(item.timestamp);
+      const dateStr = date.toISOString().split('T')[0];
+      
+      // Count emergencies per day
+      if (dailyCounts[dateStr]) {
+        dailyCounts[dateStr]++;
       } else {
-        statusCount[status] = 1;
+        dailyCounts[dateStr] = 1;
       }
     });
     
-    return Object.keys(statusCount).map(status => ({
-      name: status,
-      count: statusCount[status]
-    }));
+    // Convert to array format for Recharts
+    const chartData = Object.keys(dailyCounts).map(date => {
+      // Format the date for display (e.g., "Mar 4")
+      const displayDate = new Date(date);
+      const formattedDate = `${displayDate.toLocaleString('default', { month: 'short' })} ${displayDate.getDate()}`;
+      
+      return {
+        date: date, // Original date for sorting
+        displayDate: formattedDate, // Formatted date for display
+        count: dailyCounts[date],
+      };
+    });
+    
+    // Sort by date
+    chartData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    return chartData;
   };
 
   const chartData = processChartData();
@@ -110,11 +130,14 @@ const EmergencyChart = ({ data }) => {
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="displayDate" />
           <YAxis />
-          <Tooltip />
+          <Tooltip 
+            formatter={(value) => [`${value} emergencies`, 'Count']}
+            labelFormatter={(label) => `Date: ${label}`}
+          />
           <Legend />
-          <Bar dataKey="count" name="Number of Emergencies" fill="#4f46e5" />
+          <Bar dataKey="count" name="Emergency Count" fill="#4f46e5" />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -157,24 +180,41 @@ const Reports = () => {
   // Prepare chart data whenever filtered data changes
   useEffect(() => {
     if (filteredData && filteredData.length > 0) {
-      // For the chart data, we'll group by status
-      const statusCount = {};
+      // For the chart data, we'll group by day
+      const dailyCounts = {};
       
       filteredData.forEach(item => {
-        const status = item.status || "Unknown";
-        if (statusCount[status]) {
-          statusCount[status]++;
+        if (!item.timestamp) return;
+        
+        // Format date as YYYY-MM-DD
+        const date = new Date(item.timestamp);
+        const dateStr = date.toISOString().split('T')[0];
+        
+        // Count emergencies per day
+        if (dailyCounts[dateStr]) {
+          dailyCounts[dateStr]++;
         } else {
-          statusCount[status] = 1;
+          dailyCounts[dateStr] = 1;
         }
       });
       
-      const preparedChartData = Object.keys(statusCount).map(status => ({
-        name: status,
-        count: statusCount[status]
-      }));
+      // Convert to array format for Recharts
+      const chartData = Object.keys(dailyCounts).map(date => {
+        // Format the date for display (e.g., "Mar 4")
+        const displayDate = new Date(date);
+        const formattedDate = `${displayDate.toLocaleString('default', { month: 'short' })} ${displayDate.getDate()}`;
+        
+        return {
+          date: date, // Original date for sorting
+          displayDate: formattedDate, // Formatted date for display
+          count: dailyCounts[date],
+        };
+      });
       
-      setChartData(preparedChartData);
+      // Sort by date
+      chartData.sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      setChartData(chartData);
     } else {
       setChartData([]);
     }
@@ -211,10 +251,10 @@ const Reports = () => {
       const svgClone = chartContainer.querySelector('svg').cloneNode(true);
       // Set explicit width and height for the SVG
       svgClone.setAttribute('width', '100%');
-      svgClone.setAttribute('height', '300px');
+      svgClone.setAttribute('height', '0');
       chartSvg = `
-        <div style="margin-bottom: 30px;">
-          <h2 style="text-align: center; margin-bottom: 15px;">Emergency Status Distribution</h2>
+        <div style="margin-bottom: 5px;">
+          <h2 style="text-align: center; margin-bottom: 5px;">Daily Emergency Count</h2>
           ${svgClone.outerHTML}
         </div>
       `;
@@ -225,15 +265,18 @@ const Reports = () => {
         <head>
           <title>Emergency Report</title>
           <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            h1 { color: #2563eb; text-align: center; margin-bottom: 20px; }
+            body { font-family: Arial, sans-serif; margin: 10px; }
+            h1 { color: #2563eb; text-align: center; margin-bottom: 10px; }
             h2 { color: #4b5563; }
-            .report-info { margin-bottom: 20px; }
+            .report-info { margin-bottom: 10px; display: flex; flex-direction: column }
             .report-info p { margin: 5px 0; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 5px; }
             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
             th { background-color: #f2f2f2; }
             tr:nth-child(even) { background-color: #f9f9f9; }
+            .recharts-wrapper {
+    page-break-inside: avoid;
+}
             @media print {
               body { -webkit-print-color-adjust: exact; }
             }
@@ -246,9 +289,10 @@ const Reports = () => {
             <p><strong>Emergency Type:</strong> ${generateData.emergencyType}</p>
             <p><strong>Date Range:</strong> ${generateData.startDate || 'Not specified'} to ${generateData.endDate || 'Not specified'}</p>
             <p><strong>Generated On:</strong> ${new Date().toLocaleString()}</p>
+
+             ${chartSvg}
           </div>
           
-          ${chartSvg}
           
           ${generateData.preview !== 'chart' ? `
             <h2>Emergency Data</h2>
@@ -374,10 +418,10 @@ const Reports = () => {
             </div>
             <div className="flex-1 basis-1/2 space-y-3">
               <Label label={"Preview Report"} isMainLabel={true} />
-              <div className="">
-                <div className="border rounded-md p-2 overflow-auto">
+              <div className="flex flex-col">
+                <div className="border rounded-md p-2 row-span-2 overflow-auto">
                   {/* Preview area */}
-                  {filteredData.length > 0 ? (
+                  {filteredData.length > 0 && generateData.format !== "Excel"? (
                     <div className="space-y-4">
                       {/* Show chart if preview includes chart */}
                       {(generateData.preview === 'chart' || generateData.preview === 'both') && (
@@ -388,7 +432,7 @@ const Reports = () => {
                       
                       {/* Show table if preview includes table */}
                       {(generateData.preview === 'table' || generateData.preview === 'both') && (
-                        <div className=" overflow-y-auto h-60">
+                        <div className="h-60">
                           <EmergencyTable data={filteredData.slice(0, 5)} />
                           {filteredData.length > 5 && (
                             <div className="text-center text-gray-500 mt-2">
