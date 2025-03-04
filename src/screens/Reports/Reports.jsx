@@ -31,6 +31,7 @@ const Container = ({ label, inputs }) => {
 const Reports = () => {
   const printRef = useRef();
   const { data: emergencyRequest } = useFetchData("emergencyRequest");
+  const {data: users} = useFetchData("users");
   const [filteredData, setFilteredData] = useState([]);
   const [generateData, setGenerateData] = useState({
     reportTypes: "Emergency Summary",
@@ -61,6 +62,7 @@ const Reports = () => {
     exportToExcel(formattedData, "emergency_summary.xlsx");
   };
 
+  // filter the main data into the current year
   useEffect(() => {
     if(!emergencyRequest || emergencyRequest.length === 0) return;
     const currentYear = new Date().getFullYear();
@@ -83,8 +85,11 @@ const Reports = () => {
   // update the filtered data
   useEffect(() => {
     if (!emergencyRequest || emergencyRequest.length === 0) return;
+
+    let filtered = [];
   
-    let filtered = emergencyRequest.filter((item) => {
+   if(generateData.reportTypes === "Emergency Summary"){
+    filtered = emergencyRequest.filter((item) => {
       const requestDate = new Date(item.timestamp);
       const type = (item.emergencyType || "").toLowerCase();
       const start = generateData.startDate ? new Date(generateData.startDate) : null;
@@ -95,9 +100,18 @@ const Reports = () => {
              (!end || requestDate <= end) && 
              (emergencyType === "all" || !emergencyType || type === emergencyType);
     });
+   } else if(generateData.reportTypes === "User Growth Analysis"){
+    filtered = users.filter((item) => {
+      const date = new Date(item.timestamp);
+      const start = generateData.startDate ? new Date(generateData.startDate) : null;
+      const end = generateData.endDate ? new Date(generateData.endDate) : null;
+
+      return (!start || date >= start) && (!end || date <= end);
+    })
+   }
   
     setFilteredData(filtered);
-  }, [generateData, emergencyRequest]);
+  }, [generateData, emergencyRequest, users]);
   
   // Toggle for preview options
   const handlePreviewToggle = (type) => {
@@ -177,7 +191,8 @@ const Reports = () => {
                   </div>
                 }
               />
-              <Container
+              {generateData.reportTypes === "Emergency Summary" && (
+                <Container
                 label={"Emergency Types"}
                 inputs={
                   <SelectStyle
@@ -194,6 +209,7 @@ const Reports = () => {
                   />
                 }
               />
+              )}         
               <Label label={"Format Options"} isMainLabel={true} />
               <Container
                 label={"Format"}
@@ -229,7 +245,7 @@ const Reports = () => {
                       {/* Show table if preview includes table */}
                       {(generateData.preview === 'table' || generateData.preview === 'both') && (
                         <div className="h-60 max-w-60">
-                          <EmergencyTable data={filteredData.slice(0, 5)} />
+                          <EmergencyTable data={filteredData.slice(0, 5)}  dataType={generateData.reportTypes} />
                           {filteredData.length > 5 && (
                             <div className="text-center text-gray-500 mt-2">
                               {filteredData.length - 5} more records not shown in preview
@@ -275,7 +291,7 @@ const Reports = () => {
           
           {/* Hidden printable area - this will only be used when printing */}
           <div id="printableArea" style={{ display: "none" }} ref={printRef}>
-            <EmergencyTable data={filteredData} />
+            <EmergencyTable data={filteredData} dataType={generateData.reportTypes} />
           </div>
           
           <div className="mt-6 text-right">
