@@ -6,6 +6,8 @@ import { useFetchData } from "../../hooks/useFetchData";
 import { exportToExcel } from "./exportToExcel";
 import { EmergencyTable,EmergencyChart } from "./PreviewData";
 import ReportInsights from "./ReportInsigths";
+import { handlePrint } from "./handlePrint";
+import { formatDateWithTime } from "../../helper/FormatDate";
 
 const Label = ({ label, isMainLabel }) => {
   return isMainLabel ? (
@@ -30,11 +32,10 @@ const Reports = () => {
   const printRef = useRef();
   const { data: emergencyRequest } = useFetchData("emergencyRequest");
   const [filteredData, setFilteredData] = useState([]);
-  const [chartData, setChartData] = useState([]);
   const [generateData, setGenerateData] = useState({
     reportTypes: "Emergency Summary",
-    startDate: "",
-    endDate: "",
+    startDate: null,
+    endDate: null,
     emergencyType: "All",
     format: "PDF",
     preview: "both",
@@ -60,49 +61,26 @@ const Reports = () => {
     exportToExcel(formattedData, "emergency_summary.xlsx");
   };
 
-  // Prepare chart data whenever filtered data changes
   useEffect(() => {
-    if (filteredData && filteredData.length > 0) {
-      // For the chart data, we'll group by day
-      const dailyCounts = {};
-      
-      filteredData.forEach(item => {
-        if (!item.timestamp) return;
-        
-        // Format date as YYYY-MM-DD
-        const date = new Date(item.timestamp);
-        const dateStr = date.toISOString().split('T')[0];
-        
-        // Count emergencies per day
-        if (dailyCounts[dateStr]) {
-          dailyCounts[dateStr]++;
-        } else {
-          dailyCounts[dateStr] = 1;
-        }
-      });
-      
-      // Convert to array format for Recharts
-      const chartData = Object.keys(dailyCounts).map(date => {
-        // Format the date for display (e.g., "Mar 4")
-        const displayDate = new Date(date);
-        const formattedDate = `${displayDate.toLocaleString('default', { month: 'short' })} ${displayDate.getDate()}`;
-        
-        return {
-          date: date, // Original date for sorting
-          displayDate: formattedDate, // Formatted date for display
-          count: dailyCounts[date],
-        };
-      });
-      
-      // Sort by date
-      chartData.sort((a, b) => new Date(a.date) - new Date(b.date));
-      
-      setChartData(chartData);
-    } else {
-      setChartData([]);
-    }
-  }, [filteredData]);
+    if(!emergencyRequest || emergencyRequest.length === 0) return;
+    const currentYear = new Date().getFullYear();
+    
+    const thisYearData = emergencyRequest.filter((item) => 
+      new Date(item.timestamp).getFullYear() === currentYear
+    );
 
+    const minTimestamp = new Date(Math.min(...thisYearData.map((item) => item.timestamp)));
+    const maxTimestamp = new Date(Math.max(...thisYearData.map((item) => item.timestamp)));
+
+    setGenerateData(prev => ({
+      ...prev,
+      startDate: prev.startDate ?? formatDateWithTime(minTimestamp),
+      endDate: prev.endDate ?? formatDateWithTime(maxTimestamp)
+    }))
+
+  }, [emergencyRequest]);
+
+  // update the filtered data
   useEffect(() => {
     if (!emergencyRequest || emergencyRequest.length === 0) return;
   
@@ -121,80 +99,6 @@ const Reports = () => {
     setFilteredData(filtered);
   }, [generateData, emergencyRequest]);
   
-  // Function to handle printing with chart
-  const handlePrint = () => {
-    const printContent = document.getElementById('printableArea');
-    const printInsights = document.getElementById('printableInsights');
-    const WinPrint = window.open('', '', 'width=900,height=650');
-    
-    // Get the chart SVG if it exists
-    let chartSvg = '';
-    const chartContainer = document.querySelector('.recharts-wrapper');
-    if (chartContainer && generateData.preview !== 'table') {
-      // Clone the SVG to avoid modifying the original
-      const svgClone = chartContainer.querySelector('svg').cloneNode(true);
-      // Set explicit width and height for the SVG
-      svgClone.setAttribute('width', '100%');
-      svgClone.setAttribute('height', '0');
-      chartSvg = `
-        <div style="margin-bottom: 5px;">
-          <h2 style="text-align: center; margin-bottom: 5px;">Daily Emergency Count</h2>
-          ${svgClone.outerHTML}
-        </div>
-      `;
-    }
-    
-    WinPrint.document.write(`
-      <html>
-        <head>
-          <title>Emergency Report</title>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 10px; }
-            h1 { color: #2563eb; text-align: center; margin-bottom: 10px; }
-            h2 { color: #4b5563; }
-            .report-info { margin-bottom: 10px; display: flex; flex-direction: column }
-            .report-info p { margin: 5px 0; }
-            table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-            .recharts-wrapper {
-    page-break-inside: avoid;
-}
-            @media print {
-              body { -webkit-print-color-adjust: exact; }
-            }
-          </style>
-        </head>
-        <body>
-          <h1>Emergency Summary Report</h1>
-          <div class="report-info">
-            <p><strong>Report Type:</strong> ${generateData.reportTypes}</p>
-            <p><strong>Emergency Type:</strong> ${generateData.emergencyType}</p>
-            <p><strong>Date Range:</strong> ${generateData.startDate || 'Not specified'} to ${generateData.endDate || 'Not specified'}</p>
-            <p><strong>Generated On:</strong> ${new Date().toLocaleString()}</p>
-
-             ${chartSvg}
-          </div>
-          
-          
-          ${generateData.preview !== 'chart' ? `
-            <h2>Emergency Data</h2>
-            ${printContent.innerHTML}
-            ${printInsights.innerHTML}
-          ` : ''}
-        </body>
-      </html>
-    `);
-    
-    WinPrint.document.close();
-    WinPrint.focus();
-    setTimeout(() => {
-      WinPrint.print();
-      WinPrint.close();
-    }, 1000);
-  };
-
   // Toggle for preview options
   const handlePreviewToggle = (type) => {
     const currentPreview = generateData.preview;
@@ -381,7 +285,7 @@ const Reports = () => {
                 if (generateData.format === "Excel") {
                   handleExport();
                 } else {
-                  handlePrint();
+                  handlePrint(generateData);
                 }
               }}
             >
