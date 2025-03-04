@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
-import SelectStyle from "../components/ReusableComponents/SelectStyle";
-import { InputField } from "../components/ReusableComponents/InputField";
-import { useFetchData } from "../hooks/useFetchData";
+import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
+import SelectStyle from "../../components/ReusableComponents/SelectStyle";
+import { InputField } from "../../components/ReusableComponents/InputField";
+import { useFetchData } from "../../hooks/useFetchData";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 import * as XLSX from "xlsx";
@@ -137,7 +137,7 @@ const EmergencyChart = ({ data }) => {
             labelFormatter={(label) => `Date: ${label}`}
           />
           <Legend />
-          <Bar dataKey="count" name="Emergency Count" fill="#4f46e5" />
+          <Bar dataKey="count" name="Emergency Count" fill="#4f46e5" barSize={40} radius={[4, 4, 0, 0]}/>
         </BarChart>
       </ResponsiveContainer>
     </div>

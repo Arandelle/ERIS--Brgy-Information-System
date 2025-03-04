@@ -24,7 +24,7 @@ import Certification from "./screens/Certification/Certification";
 import Templates from "./screens/Templates/Templates";
 import { toast } from "sonner";
 import { onChildAdded } from "firebase/database";
-import Reports from "./screens/Reports";
+import Reports from "./screens/Reports/Reports";
 
 const App = () => {
   const [user, setUser] = useState(null);

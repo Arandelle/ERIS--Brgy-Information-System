@@ -1,5 +1,5 @@
 import React from "react";
-import { Area, AreaChart, Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 const ChartComponent = ({
   data,
@@ -44,6 +44,7 @@ const ChartComponent = ({
       <ResponsiveContainer width="100%" height={300}>
       {type === "bar" ? (
         <BarChart data={data}>
+        <CartesianGrid strokeDasharray="3 3"/>
           <XAxis dataKey="name" stroke="#3388df" />
           <YAxis stroke="#3388df" />
           <Tooltip
@@ -65,6 +66,7 @@ const ChartComponent = ({
         </BarChart>
       ) : (
         <AreaChart data={data}>
+        <CartesianGrid strokeDasharray="3 3"/>
             <XAxis dataKey="name" stroke="#3388df" />
             <YAxis stroke="#3388df" />
             <Tooltip
