@@ -3,29 +3,9 @@ import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar"
 import SelectStyle from "../../components/ReusableComponents/SelectStyle";
 import { InputField } from "../../components/ReusableComponents/InputField";
 import { useFetchData } from "../../hooks/useFetchData";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
-
-export const exportToExcel = (data, fileName = "emergency_summary.xlsx") => {
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.json_to_sheet(data);
-  XLSX.utils.book_append_sheet(wb, ws, "Emergency Summary");
-  const wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
-  const blob = new Blob([s2ab(wbout)], { type: "application/octet-stream" });
-  saveAs(blob, fileName);
-};
-
-// Convert string to ArrayBuffer for Excel export
-const s2ab = (s) => {
-  const buf = new ArrayBuffer(s.length);
-  const view = new Uint8Array(buf);
-  for (let i = 0; i < s.length; i++) {
-    view[i] = s.charCodeAt(i) & 0xff;
-  }
-  return buf;
-};
+import { exportToExcel } from "./exportToExcel";
+import { EmergencyTable,EmergencyChart } from "./PreviewData";
+import ReportInsights from "./ReportInsigths";
 
 const Label = ({ label, isMainLabel }) => {
   return isMainLabel ? (
@@ -46,104 +26,6 @@ const Container = ({ label, inputs }) => {
   );
 };
 
-// Table component for displaying filtered data
-const EmergencyTable = ({ data }) => {
-  if (!data || data.length === 0) {
-    return <div className="text-center py-4">No data available</div>;
-  }
-
-  return (
-    <table className="min-w-full bg-white border border-gray-200">
-      <thead>
-        <tr className="bg-gray-100">
-          <th className="py-2 px-4 border-b text-left">ID</th>
-          <th className="py-2 px-4 border-b text-left">Type</th>
-          <th className="py-2 px-4 border-b text-left">Status</th>
-          <th className="py-2 px-4 border-b text-left">Location</th>
-          <th className="py-2 px-4 border-b text-left">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((request, index) => (
-          <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
-            <td className="py-2 px-4 border-b">{request.emergencyId || "N/A"}</td>
-            <td className="py-2 px-4 border-b">{request.emergencyType || "N/A"}</td>
-            <td className="py-2 px-4 border-b">{request.status || "N/A"}</td>
-            <td className="py-2 px-4 border-b">{request.location?.address || "N/A"}</td>
-            <td className="py-2 px-4 border-b">{new Date(request.timestamp).toLocaleString() || "N/A"}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
-// Chart component for data visualization by days
-const EmergencyChart = ({ data }) => {
-  if (!data || data.length === 0) {
-    return <div className="text-center py-4">No data available for chart</div>;
-  }
-
-  // Process data for the chart (count by day)
-  const processChartData = () => {
-    // Group emergencies by date
-    const dailyCounts = {};
-    
-    data.forEach(item => {
-      if (!item.timestamp) return;
-      
-      // Format date as YYYY-MM-DD
-      const date = new Date(item.timestamp);
-      const dateStr = date.toISOString().split('T')[0];
-      
-      // Count emergencies per day
-      if (dailyCounts[dateStr]) {
-        dailyCounts[dateStr]++;
-      } else {
-        dailyCounts[dateStr] = 1;
-      }
-    });
-    
-    // Convert to array format for Recharts
-    const chartData = Object.keys(dailyCounts).map(date => {
-      // Format the date for display (e.g., "Mar 4")
-      const displayDate = new Date(date);
-      const formattedDate = `${displayDate.toLocaleString('default', { month: 'short' })} ${displayDate.getDate()}`;
-      
-      return {
-        date: date, // Original date for sorting
-        displayDate: formattedDate, // Formatted date for display
-        count: dailyCounts[date],
-      };
-    });
-    
-    // Sort by date
-    chartData.sort((a, b) => new Date(a.date) - new Date(b.date));
-    
-    return chartData;
-  };
-
-  const chartData = processChartData();
-
-  return (
-    <div className="w-full" style={{ height: "300px" }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="displayDate" />
-          <YAxis />
-          <Tooltip 
-            formatter={(value) => [`${value} emergencies`, 'Count']}
-            labelFormatter={(label) => `Date: ${label}`}
-          />
-          <Legend />
-          <Bar dataKey="count" name="Emergency Count" fill="#4f46e5" barSize={40} radius={[4, 4, 0, 0]}/>
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
-
 const Reports = () => {
   const printRef = useRef();
   const { data: emergencyRequest } = useFetchData("emergencyRequest");
@@ -153,7 +35,7 @@ const Reports = () => {
     reportTypes: "Emergency Summary",
     startDate: "",
     endDate: "",
-    emergencyType: "Medical",
+    emergencyType: "All",
     format: "PDF",
     preview: "both",
   });
@@ -169,7 +51,8 @@ const Reports = () => {
       ID: request.emergencyId || "N/A",
       Type: request.emergencyType || "N/A",
       Status: request.status || "N/A",
-      Location: request.location?.address || "N/A",
+      Log: request.messageLog || "N/A",
+      Location: request.location?.geoCodeLocation || "N/A",
       Date: new Date(request.timestamp).toLocaleString() || "N/A",
     }));
 
@@ -232,7 +115,7 @@ const Reports = () => {
   
       return (!start || requestDate >= start) && 
              (!end || requestDate <= end) && 
-             (!emergencyType || type === emergencyType);
+             (emergencyType === "all" || !emergencyType || type === emergencyType);
     });
   
     setFilteredData(filtered);
@@ -241,6 +124,7 @@ const Reports = () => {
   // Function to handle printing with chart
   const handlePrint = () => {
     const printContent = document.getElementById('printableArea');
+    const printInsights = document.getElementById('printableInsights');
     const WinPrint = window.open('', '', 'width=900,height=650');
     
     // Get the chart SVG if it exists
@@ -297,6 +181,7 @@ const Reports = () => {
           ${generateData.preview !== 'chart' ? `
             <h2>Emergency Data</h2>
             ${printContent.innerHTML}
+            ${printInsights.innerHTML}
           ` : ''}
         </body>
       </html>
@@ -395,6 +280,7 @@ const Reports = () => {
                     value={generateData.emergencyType}
                     onChange={(e) => setGenerateData(prev => ({...prev, emergencyType: e.target.value}))}
                     options={[
+                      "All",
                       "Medical",
                       "Crime",
                       "Fire",
@@ -415,6 +301,12 @@ const Reports = () => {
                   />
                 }
               />
+              <Container 
+                label={"What does this mean?"}
+                inputs={
+                 <div id="printableInsights" ref={printRef}> <ReportInsights filteredData={filteredData} generateData={generateData} /></div>
+                }
+              />
             </div>
             <div className="flex-1 basis-1/2 space-y-3">
               <Label label={"Preview Report"} isMainLabel={true} />
@@ -432,7 +324,7 @@ const Reports = () => {
                       
                       {/* Show table if preview includes table */}
                       {(generateData.preview === 'table' || generateData.preview === 'both') && (
-                        <div className="h-60">
+                        <div className="h-60 max-w-60">
                           <EmergencyTable data={filteredData.slice(0, 5)} />
                           {filteredData.length > 5 && (
                             <div className="text-center text-gray-500 mt-2">
