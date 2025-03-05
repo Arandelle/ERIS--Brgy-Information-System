@@ -63,7 +63,7 @@ const MaximizeMapControl = ({ maximize, setMaximize }) => {
   return null;
 };
 
-const Heatmap = ({ maximize, setMaximize }) => {
+const MainMap = ({ maximize, setMaximize }) => {
   const [position, setPosition] = useState([14.33289, 120.85065]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
   const [availableYears, setAvailableYears] = useState([]);
@@ -118,4 +118,4 @@ const Heatmap = ({ maximize, setMaximize }) => {
   );
 };
 
-export default Heatmap;
+export default MainMap;

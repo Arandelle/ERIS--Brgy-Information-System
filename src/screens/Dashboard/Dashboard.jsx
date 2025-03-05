@@ -8,7 +8,7 @@ import navigator from "../../assets/images/direction.svg";
 import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import DateToday from "../../helper/DateToday";
 import { useFetchData } from "../../hooks/useFetchData";
-import Heatmap from "../Maps/Heatmap";
+import MainMap from "../Maps/MainMap";
 import EmergencyAreaChart from "../Charts/AreaChart";
 import CertificateList from "../Certification/CertificateList";
 import { DashboardCard } from "./DashboardCard";
@@ -171,7 +171,7 @@ const Dashboard = () => {
             </>
           </div>
           <div className="h-svh">
-              <Heatmap maximize={maximize} setMaximize={setMaximize}/>
+              <MainMap maximize={maximize} setMaximize={setMaximize}/>
           </div>
         </>
       }
