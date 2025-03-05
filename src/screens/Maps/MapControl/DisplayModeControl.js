@@ -13,19 +13,21 @@ export const DisplayModeControl = ({ displayMode, setDisplayMode }) => {
       const div = L.DomUtil.create('div', 'display-control');
       div.innerHTML = `
         <div class="leaflet-bar bg-white p-2 rounded shadow-md cursor-pointer">
-          <div class="font-medium mb-1">Display Mode:</div>
+          <div class="font-bold p-1 mb-1">Display Mode:</div>
           <div class="flex flex-col space-y-1">
-            <label class="flex items-center cursor-pointer">
-              <input type="radio" name="display-mode" value="hybrid" ${displayMode === 'hybrid' ? 'checked' : ''} class="mr-1 cursor-pointer" />
-              <span>Both</span>
-            </label>
-            <label class="flex items-center cursor-pointer">
+            <label class="flex items-center cursor-pointer space-x-1">
               <input type="radio" name="display-mode" value="heat" ${displayMode === 'heat' ? 'checked' : ''} class="mr-1 cursor-pointer" />
               <span>Heatmap</span>
             </label>
-            <label class="flex items-center cursor-pointer">
+            <label class="flex items-center cursor-pointer space-x-1">
               <input type="radio" name="display-mode" value="cluster" ${displayMode === 'cluster' ? 'checked' : ''} class="mr-1 cursor-pointer" />
               <span>Clusters</span>
+            </label>
+            <label class="flex items-center cursor-pointer space-x-1">
+              <input type="radio" name="display-mode" value="marker" ${displayMode === 'marker' ? 'checked' : ''} class="mr-1 cursor-pointer" />
+            <p class="flex flex-col">
+                <span>Marker</span>
+            </p>
             </label>
           </div>
         </div>

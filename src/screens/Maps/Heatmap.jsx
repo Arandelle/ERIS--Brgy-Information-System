@@ -4,9 +4,11 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.heat";
 import L from "leaflet";
 import { CustomScrollZoomHandler } from "../../helper/scrollUtils";
-import { HeatmapLayer } from "./HeatmapLayer";
+import { DisplayLayer } from "./useDisplayLayer";
 import { DisplayModeControl } from "./MapControl/DisplayModeControl";
 import { YearSelectorControl } from "./MapControl/YearSelectorControl";
+import { ClusterLegendControl } from "./MapControl/ClusterLegendControl";
+import { HeatLegendControl } from "./MapControl/HeatLegendControl";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -61,85 +63,6 @@ const MaximizeMapControl = ({ maximize, setMaximize }) => {
   return null;
 };
 
-const LegenMap = () => {
-  const map = useMap();
-
-  useEffect(() => {
-    const legendContainer = L.control({ position: "bottomright" });
-    legendContainer.onAdd = function () {
-      const div = L.DomUtil.create("div", "container");
-      div.innerHTML = `<div class="leaflet-bar bg-white p-2">
-      <p>Legend: </p>
-        <ul class="">
-          <li class="text-orange-500">* Medical</li>
-          <li class="text-[#ff0000]">* Fire</li>
-          <li class="text-black">* Crime</li>
-          <li class="text-purple-500">* Natural Disaster</li>
-          <li class="text-blue-500">* Other</li>
-        </ul>
-      </div>`;
-
-      return div;
-    };
-
-    legendContainer.addTo(map);
-
-    return () => {
-      legendContainer.remove();
-    };
-  }, [map]);
-};
-const CreateHeatLegendControl = () => {
-  const map = useMap();
-  useEffect(() => {
-    const legend = L.control({ position: "bottomright" });
-    legend.onAdd = function () {
-      const div = L.DomUtil.create("div", "heat-legend");
-
-      // Create gradient blocks
-      const grades = [
-        { label: "Very Low", color: "rgba(0, 0, 255, 0.4)" }, // Light Blue
-        { label: "Low", color: "rgba(0, 255, 255, 0.4)" }, // Cyan
-        { label: "Medium", color: "rgba(255, 255, 0, 0.6)" }, // Yellow
-        { label: "High", color: "rgba(255, 165, 0, 0.8)" }, // Orange
-        { label: "Very High", color: "rgba(255, 0, 0, 1)" }, // Intense Red
-      ];
-
-      div.innerHTML = `
-        <div class="leaflet-bar bg-white p-2 rounded-md shadow-md" style="min-width: 150px;">
-          <div class="mb-2 p-1 text-center font-semibold">
-            Emergency Intensity 
-            <small class="block text-xs text-gray-600">
-              (Varies with zoom level)
-            </small>
-          </div>
-          ${grades
-            .map(
-              (grade) => `
-            <div class="flex items-center mb-1">
-             <div class="w-5 h-5 p-2 mr-2 border border-[rgba(0,0,0,0.3)] rounded-md" style="background-color: ${grade.color}"
-              "></div>
-            ${grade.label}
-            </div>
-          `
-            )
-            .join("")}
-        </div>
-      `;
-
-      return div;
-    };
-
-    legend.addTo(map);
-
-    return () => {
-      legend.remove();
-    };
-  }, [map]);
-
-  return null;
-};
-
 const Heatmap = ({ maximize, setMaximize }) => {
   const [position, setPosition] = useState([14.33289, 120.85065]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
@@ -171,7 +94,7 @@ const Heatmap = ({ maximize, setMaximize }) => {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <MaximizeMapControl maximize={maximize} setMaximize={setMaximize} />
-        <HeatmapLayer
+        <DisplayLayer
           selectedYear={selectedYear}
           setAvailableYears={setAvailableYears}
           displayMode={displayMode}
@@ -187,7 +110,7 @@ const Heatmap = ({ maximize, setMaximize }) => {
           displayMode={displayMode}
           setDisplayMode={setDisplayMode}
         />
-        {displayMode !== "heat" ? <LegenMap /> : <CreateHeatLegendControl />}
+        {displayMode !== "heat" ? <ClusterLegendControl /> : <HeatLegendControl />}
         <CustomScrollZoomHandler />
         <CoverageRadius center={position} radius={700} />
       </MapContainer>

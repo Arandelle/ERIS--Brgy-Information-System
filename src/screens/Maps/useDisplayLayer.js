@@ -7,7 +7,7 @@ import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { formatDateWithTime } from "../../helper/FormatDate";
 
-export const HeatmapLayer = ({
+export const DisplayLayer = ({
   selectedYear,
   setAvailableYears,
   displayMode,
@@ -17,6 +17,7 @@ export const HeatmapLayer = ({
   const [emergencyData, setEmergencyData] = useState([]);
   const [markerLayer, setMarkerLayer] = useState(null);
   const [heatLayer, setHeatLayer] = useState(null);
+  const [mapMarkerLayer, setMapMarkerLayer] = useState(null);
 
   // Extract available years from data
   useEffect(() => {
@@ -88,6 +89,7 @@ export const HeatmapLayer = ({
     // Remove existing layers
     if (heatLayer) map.removeLayer(heatLayer);
     if (markerLayer) map.removeLayer(markerLayer);
+    if (mapMarkerLayer) map.removeLayer(mapMarkerLayer); // Remove the new map marker layer
 
     // Create heatmap layer
     const newHeatLayer = L.heatLayer(emergencyData.heatData, {
@@ -97,12 +99,11 @@ export const HeatmapLayer = ({
     });
 
     // Create marker cluster group
-    const markers = L.markerClusterGroup({
+    const clusters = L.markerClusterGroup({
       showCoverageOnHover: false,
       spiderfyOnMaxZoom: true,
       disableClusteringAtZoom: 18,
       maxClusterRadius: 50,
-      // Custom icon creation for clusters to show the count
       iconCreateFunction: function (cluster) {
         const childMarkers = cluster.getAllChildMarkers();
         const emergencyCounts = {};
@@ -113,7 +114,6 @@ export const HeatmapLayer = ({
             (emergencyCounts[emergencyType] || 0) + 1;
         });
 
-        // Determine the dominant emergency type
         let dominantType = "Unknown";
         let maxCount = 0;
 
@@ -124,32 +124,22 @@ export const HeatmapLayer = ({
           }
         });
 
-        // Define colors based on dominant type
         const typeColors = {
           fire: "#ff0000",
           medical: "#ff5733",
           crime: "#000000",
           "natural disaster": "#8e44ad",
-          Unknown: "#6C757D", // Default gray for unknown types
+          Unknown: "#6C757D",
         };
 
         const count = cluster.getChildCount();
         const bgColor = typeColors[dominantType] || "Unknown";
 
         return L.divIcon({
-          html: `<div style="
-                    background-color: ${bgColor};
-                    color: white;
-                    border-radius: 50%;
-                    height: 40px;
-                    width: 40px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: bold;
-                    border: 2px solid white;
-                    box-shadow: 0 0 5px rgba(0,0,0,0.3);
-                    ">${count}</div>`,
+          html: `<div style="background-color: ${bgColor}; color: white; border-radius: 50%;
+                     height: 40px; width: 40px; display: flex; align-items: center;
+                     justify-content: center; font-weight: bold; border: 2px solid white;
+                     box-shadow: 0 0 5px rgba(0,0,0,0.3);">${count}</div>`,
           className: "",
           iconSize: L.point(40, 40),
         });
@@ -158,61 +148,84 @@ export const HeatmapLayer = ({
 
     // Define color mapping based on emergency type
     const emergencyTypeColors = {
-      medical: "#ff5733", // Red-Orange
-      fire: "#ff0000", // Red
-      crime: "#000000", // Black
-      accident: "#f39c12", // Yellow-Orange
-      "natural disaster": "#8e44ad", // Purple
-      Other: "#3498db", // Blue
+      medical: "#ff5733",
+      fire: "#ff0000",
+      crime: "#000000",
+      accident: "#f39c12",
+      "natural disaster": "#8e44ad",
+      Other: "#3498db",
     };
-    // Add markers to cluster group
+
+    // Create a separate layer for normal map markers
+    const mapMarkers = L.layerGroup();
+
+    // Add markers to the respective layers
     emergencyData.pointsData.forEach((point) => {
-      const emergencyType = point.details.emergencyType || "Other"; // default type if undefined
-      const emergencyColor = emergencyTypeColors[emergencyType] || "#3388ff"; // default color
-      const marker = L.circleMarker([point.lat, point.lng], {
+      const emergencyType = point.details.emergencyType || "Other";
+      const emergencyColor = emergencyTypeColors[emergencyType] || "#3388ff";
+      const status = point.details.status;
+
+      const marker = L.marker([point.lat, point.lng]);
+      const cluster = L.circleMarker([point.lat, point.lng], {
         radius: 8,
         fillColor: emergencyColor,
         color: "#fff",
         weight: 1,
         opacity: 1,
         fillOpacity: 0.8,
-        emergencyType: point.details.emergencyType,
+        emergencyType: emergencyType,
       });
 
-      // Add popup with count for exact coordinates
-      const key = `${point.lat},${point.lng}`;
-      const totalCount = emergencyData.locationMap.get(key);
-      const type = point.details.emergencyType;
       const emergencyId = point.details.emergencyId;
       const date = point.details.timestamp;
-      const status = point.details.status;
 
       marker.bindPopup(`<b>ID: ${emergencyId}</b><br>
-                Type: ${type}<br>
-                Status: ${status}<br>
-                Date: ${formatDateWithTime(date)}<br>
-                Coordinates: ${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}<br>
-              `);
-      markers.addLayer(marker);
+                        Type: ${emergencyType}<br>
+                        Status: ${status}<br>
+                        Date: ${formatDateWithTime(date)}<br>
+                        Coordinates: ${point.lat.toFixed(
+                          4
+                        )}, ${point.lng.toFixed(4)}<br>
+                      `);
+      cluster.bindPopup(`<b>ID: ${emergencyId}</b><br>
+                        Type: ${emergencyType}<br>
+                        Status: ${status}<br>
+                        Date: ${formatDateWithTime(date)}<br>
+                        Coordinates: ${point.lat.toFixed(
+                          4
+                        )}, ${point.lng.toFixed(4)}<br>
+                      `);
+
+      if (
+        (status === "on-going" || status === "awaiting response") &&
+        displayMode === "marker"
+      ) {
+        mapMarkers.addLayer(marker); // Add to separate marker layer
+      }
+
+      clusters.addLayer(cluster);
     });
 
     // Apply the selected display mode
-    if (displayMode === "heat" || displayMode === "hybrid") {
+    if (displayMode === "heat") {
       newHeatLayer.addTo(map);
     }
-
-    if (displayMode === "cluster" || displayMode === "hybrid") {
-      markers.addTo(map);
+    if (displayMode === "cluster") {
+      clusters.addTo(map);
+    }
+    if (displayMode === "marker") {
+      mapMarkers.addTo(map); // Add map markers only in "marker" mode
     }
 
-    // Store layers for later reference
+    // Store layers for reference
     setHeatLayer(newHeatLayer);
-    setMarkerLayer(markers);
+    setMarkerLayer(clusters);
+    setMapMarkerLayer(mapMarkers); // Store new map marker layer
 
     return () => {
-      // Clean up
       if (newHeatLayer) map.removeLayer(newHeatLayer);
-      if (markers) map.removeLayer(markers);
+      if (clusters) map.removeLayer(clusters);
+      if (mapMarkers) map.removeLayer(mapMarkers);
     };
   }, [map, emergencyData, displayMode]);
 

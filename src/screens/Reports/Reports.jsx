@@ -382,7 +382,7 @@ const Reports = () => {
               {`Save as ${generateData.format}`}
             </button>
             <button
-              className="bg-gray-500 py-2 px-6 rounded text-white font-semibold text-base"
+              className="bg-gray-500 hover:bg-gray-600 py-2 px-6 rounded text-white font-semibold text-base"
               onClick={() => handlePrint(generateData)}
             >
               Print
