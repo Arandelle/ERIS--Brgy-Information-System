@@ -32,6 +32,7 @@ const Container = ({ label, inputs }) => {
 
 const Reports = () => {
   const printRef = useRef();
+  const insightRef = useRef();
   const chartRef = useRef();
   const {generatePDF} = ExportPDF();
   const { data: emergencyRequest } = useFetchData("emergencyRequest");
@@ -229,7 +230,7 @@ const Reports = () => {
               <Container 
                 label={"What does this mean?"}
                 inputs={
-                 <div id="printableInsights" ref={printRef}> 
+                 <div id="printableInsights" ref={insightRef}> 
                  {generateData.reportTypes === "Emergency Summary" ? (
                   <ReportInsights filteredData={filteredData} generateData={generateData} />
                  ) : (
@@ -312,7 +313,7 @@ const Reports = () => {
                 if (generateData.format === "Excel") {
                   handleExport();
                 } else {
-                  generatePDF(filteredData, chartRef, generateData.reportTypes);
+                  generatePDF(filteredData, chartRef,insightRef, generateData.reportTypes);
                 }
               }}
             >

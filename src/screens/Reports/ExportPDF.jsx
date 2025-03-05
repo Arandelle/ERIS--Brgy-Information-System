@@ -5,89 +5,84 @@ import { useFetchData } from "../../hooks/useFetchData";
 
 const ExportPDF = () => {
   const { data: responder } = useFetchData("responders");
-  const generatePDF = (filteredData, chartRef, dataType) => {
-    const emergencySummary = dataType === "Emergency Summary";
-    const userGrowth = dataType === "User Growth Analysis";
-    const title = emergencySummary
-      ? "Emergency Summary"
-      : "User Growth Analysis";
-    const doc = new jsPDF();
-    doc.text(title, 10, 10);
 
-    // Ensure chartRef is not null
+  const generatePDF = (filteredData, chartRef, insightsRef, dataType) => {
+    const emergencySummary = dataType === "Emergency Summary";
+    const title = emergencySummary ? "Emergency Summary" : "User Growth Analysis";
+
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text(title, 10, 10);
+    let finalY = 20; // Starting Y position
+
+    // Capture chart as an image (if available)
     if (chartRef.current) {
       html2canvas(chartRef.current).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
+        const chartImg = canvas.toDataURL("image/png");
+        doc.addImage(chartImg, "PNG", 10, finalY, 180, 80);
+        finalY += 90; // Adjust Y position after chart
 
-        // Add chart image to PDF
-        doc.addImage(imgData, "PNG", 10, 20, 180, 80);
-
-        let finalY = 110; // leave space below the chart
-
-        // create table
-        if (filteredData.length > 0) {
-          if (emergencySummary) {
-            const columns = [
-              "ID",
-              "Type",
-              "Location",
-              "Responder",
-              "Logs",
-              "Date",
-            ];
-            const rows = filteredData.map((item) => {
-              const responderDetails = responder?.find(
-                (responder) => responder.id === item?.responderId
-              );
-
-              return [
-                item.emergencyId,
-                item.emergencyType,
-                item.location?.geoCodeLocation,
-                responderDetails?.fullname || "N/A",
-                item.messageLog || "No logs",
-                new Date(item.timestamp).toLocaleString(), // Convert timestamp
-              ];
-            });
-
-            // Add table to PDF
-            autoTable(doc, {
-              head: [columns],
-              body: rows,
-              startY: finalY,
-            });
-          } else if (userGrowth) {
-            const columns = [
-              "ID",
-              "Email",
-              "Fullname",
-              "Age",
-              "Gender",
-              "Address",
-              "Phone",
-            ];
-            const rows = filteredData.map((item) => [
-              item.customId || "N/A",
-              item.email || "N/A",
-              item.fullname || "N/A",
-              item.age || "N/A",
-              item.gender || "N/A",
-              item.address || "N/A",
-              item.mobileNum || "N/A",
-            ]);
-
-            autoTable(doc, {
-              head: [columns],
-              body: rows,
-              startY: 20,
-            });
-          }
-        }
-        doc.save("report.pdf");
+        // Add table after the chart
+        addTable(doc, filteredData, emergencySummary, finalY, insightsRef);
       });
     } else {
-      doc.save("report.pdf"); // Save PDF even if no chart is present
+      addTable(doc, filteredData, emergencySummary, finalY, insightsRef);
     }
+  };
+
+  // Function to add table
+  const addTable = (doc, filteredData, emergencySummary, startY, insightsRef) => {
+    if (filteredData.length > 0) {
+      const columns = emergencySummary
+        ? ["ID", "Type", "Location", "Responder", "Logs", "Date"]
+        : ["ID", "Email", "Fullname", "Age", "Gender", "Address", "Phone"];
+
+      const rows = filteredData.map((item) => {
+        if (emergencySummary) {
+          const responderDetails = responder?.find(
+            (responder) => responder.id === item?.responderId
+          );
+          return [
+            item.emergencyId,
+            item.emergencyType,
+            item.location?.geoCodeLocation,
+            responderDetails?.fullname || "N/A",
+            item.messageLog || "No logs",
+            new Date(item.timestamp).toLocaleString(),
+          ];
+        } else {
+          return [
+            item.customId || "N/A",
+            item.email || "N/A",
+            item.fullname || "N/A",
+            item.age || "N/A",
+            item.gender || "N/A",
+            item.address || "N/A",
+            item.mobileNum || "N/A",
+          ];
+        }
+      });
+
+      autoTable(doc, {
+        head: [columns],
+        body: rows,
+        startY,
+      });
+
+      let finalY = doc.lastAutoTable.finalY + 10; // Position insights below the table
+
+      // Add insights at the bottom
+      if (insightsRef.current) {
+        const insightsText = insightsRef.current.innerText.trim();
+        if (insightsText) {
+          doc.setFontSize(10); // Make text smaller
+          const splitText = doc.splitTextToSize(insightsText, 180);
+          doc.text(splitText, 10, finalY);
+        }
+      }
+    }
+
+    doc.save("report.pdf");
   };
 
   return { generatePDF };
