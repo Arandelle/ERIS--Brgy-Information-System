@@ -65,8 +65,8 @@ const LegenMap = () => {
   const map = useMap();
 
   useEffect(() => {
-    const legendContainer = L.control({ position: "topright" });
-    legendContainer.onAdd = function() {
+    const legendContainer = L.control({ position: "bottomright" });
+    legendContainer.onAdd = function () {
       const div = L.DomUtil.create("div", "container");
       div.innerHTML = `<div class="leaflet-bar bg-white p-2">
       <p>Legend: </p>
@@ -80,60 +80,66 @@ const LegenMap = () => {
       </div>`;
 
       return div;
-    }
+    };
 
     legendContainer.addTo(map);
 
-    return () => {legendContainer.remove();}
+    return () => {
+      legendContainer.remove();
+    };
   }, [map]);
 };
 const CreateHeatLegendControl = () => {
   const map = useMap();
   useEffect(() => {
-    const legend = L.control({ position: 'bottomright' });
-    legend.onAdd = function() {
-      const div = L.DomUtil.create('div', 'heat-legend');
-      
+    const legend = L.control({ position: "bottomright" });
+    legend.onAdd = function () {
+      const div = L.DomUtil.create("div", "heat-legend");
+
       // Create gradient blocks
       const grades = [
-        { label: 'Very Low', color: 'rgba(128, 0, 128, 0.2)' },  // Light Purple
-        { label: 'Low', color: 'rgba(160, 32, 240, 0.4)' },     // Medium Purple
-        { label: 'Medium', color: 'rgba(255, 0, 255, 0.6)' },   // Magenta
-        { label: 'High', color: 'rgba(255, 64, 64, 0.8)' },     // Reddish
-        { label: 'Very High', color: 'rgba(255, 0, 0, 1)' }     // Intense Red
+        { label: "Very Low", color: "rgba(0, 0, 255, 0.4)" }, // Light Blue
+        { label: "Low", color: "rgba(0, 255, 255, 0.4)" }, // Cyan
+        { label: "Medium", color: "rgba(255, 255, 0, 0.6)" }, // Yellow
+        { label: "High", color: "rgba(255, 165, 0, 0.8)" }, // Orange
+        { label: "Very High", color: "rgba(255, 0, 0, 1)" }, // Intense Red
       ];
 
       div.innerHTML = `
         <div class="leaflet-bar bg-white p-2 rounded-md shadow-md" style="min-width: 150px;">
-          <div class="bg-gray-100 p-2 mb-2 rounded text-center font-semibold">
-            Heat Intensity
+          <div class="mb-2 p-1 text-center font-semibold">
+            Emergency Intensity 
+            <small class="block text-xs text-gray-600">
+              (Varies with zoom level)
+            </small>
           </div>
-          ${grades.map((grade) => `
+          ${grades
+            .map(
+              (grade) => `
             <div class="flex items-center mb-1">
-              <div style="
-                width: 20px; 
-                height: 20px; 
-                background-color: ${grade.color}; 
-                margin-right: 10px;
-                border: 1px solid rgba(0,0,0,0.3);
-                border-radius: 4px;
+             <div class="w-5 h-5 p-2 mr-2 border border-[rgba(0,0,0,0.3)] rounded-md" style="background-color: ${grade.color}"
               "></div>
-              <span class="text-sm">${grade.label}</span>
+            ${grade.label}
             </div>
-          `).join('')}
+          `
+            )
+            .join("")}
         </div>
       `;
 
       return div;
-    }; 
+    };
 
     legend.addTo(map);
 
-    return () => {legend.remove()};
-  },[map]);
+    return () => {
+      legend.remove();
+    };
+  }, [map]);
 
   return null;
 };
+
 const Heatmap = ({ maximize, setMaximize }) => {
   const [position, setPosition] = useState([14.33289, 120.85065]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
@@ -158,7 +164,6 @@ const Heatmap = ({ maximize, setMaximize }) => {
 
   return (
     <div className="relative h-full">
-
       <MapContainer
         center={position}
         zoom={16}
@@ -182,9 +187,7 @@ const Heatmap = ({ maximize, setMaximize }) => {
           displayMode={displayMode}
           setDisplayMode={setDisplayMode}
         />
-        {displayMode !== "heat" ? (
-          <LegenMap />
-        ) : <CreateHeatLegendControl />}
+        {displayMode !== "heat" ? <LegenMap /> : <CreateHeatLegendControl />}
         <CustomScrollZoomHandler />
         <CoverageRadius center={position} radius={700} />
       </MapContainer>
