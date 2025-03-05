@@ -245,7 +245,7 @@ const Reports = () => {
               <div className="flex flex-col">
                 <div className="border rounded-md p-2 row-span-2 overflow-auto">
                   {/* Preview area */}
-                  {filteredData.length > 0 && generateData.format !== "Excel"? (
+                  {filteredData.length > 0 ? (
                     <div className="space-y-4">
                       {/* Show chart if preview includes chart */}
                       {(generateData.preview === 'chart' || generateData.preview === 'both') && (
@@ -306,7 +306,7 @@ const Reports = () => {
             <EmergencyTable data={filteredData} dataType={generateData.reportTypes} />
           </div>
           
-          <div className="mt-6 text-right">
+          <div className="mt-6 text-right space-x-4">
             <button
               className="py-2 px-6 font-semibold bg-green-400 text-white rounded shadow-md hover:bg-green-500 transition-colors"
               onClick={() => {
@@ -317,8 +317,9 @@ const Reports = () => {
                 }
               }}
             >
-              Generate Report
+              {`Save as ${generateData.format}`}
             </button>
+            <button className="bg-gray-500 p-2 rounded text-white font-semibold text-base" onClick={() => handlePrint(generateData)}>Print now</button>
           </div>
         </div>
       }
