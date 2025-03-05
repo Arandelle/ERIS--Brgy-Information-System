@@ -126,10 +126,10 @@ export const HeatmapLayer = ({
 
         // Define colors based on dominant type
         const typeColors = {
-          fire: "#FF5733",
-          medical: "#28A745",
-          crime: "#FFC107",
-          "natural disaster": "#007BFF",
+          fire: "#ff0000",
+          medical: "#ff5733",
+          crime: "#000000",
+          "natural disaster": "#8e44ad",
           Unknown: "#6C757D", // Default gray for unknown types
         };
 
