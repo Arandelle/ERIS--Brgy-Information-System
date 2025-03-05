@@ -61,8 +61,8 @@ export const EmergencyTable = ({ data, dataType }) => {
               "ID",
               "Email",
               "Fullname",
-              "Gender",
               "Age",
+              "Gender",
               "Address",
               "Phone",
             ]}

@@ -9,6 +9,7 @@ import ReportInsights from "./ReportInsigths";
 import { handlePrint } from "./handlePrint";
 import { formatDateWithTime } from "../../helper/FormatDate";
 import UsersInsights from "./UsersInsights";
+import ExportPDF from "./ExportPDF";
 
 const Label = ({ label, isMainLabel }) => {
   return isMainLabel ? (
@@ -31,6 +32,8 @@ const Container = ({ label, inputs }) => {
 
 const Reports = () => {
   const printRef = useRef();
+  const chartRef = useRef();
+  const {generatePDF} = ExportPDF();
   const { data: emergencyRequest } = useFetchData("emergencyRequest");
   const {data: users} = useFetchData("users");
   const [filteredData, setFilteredData] = useState([]);
@@ -245,7 +248,7 @@ const Reports = () => {
                     <div className="space-y-4">
                       {/* Show chart if preview includes chart */}
                       {(generateData.preview === 'chart' || generateData.preview === 'both') && (
-                        <div className="mb-4">
+                        <div ref={chartRef} className="mb-4">
                           <EmergencyChart data={filteredData} dataType={generateData.reportTypes}/>
                         </div>
                       )}
@@ -309,7 +312,7 @@ const Reports = () => {
                 if (generateData.format === "Excel") {
                   handleExport();
                 } else {
-                  handlePrint(generateData);
+                  generatePDF(filteredData, chartRef, generateData.reportTypes);
                 }
               }}
             >
