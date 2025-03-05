@@ -123,7 +123,7 @@ const ReportInsights = ({ filteredData, generateData }) => {
     }
     
     return (
-      <div className="text-sm space-y-2">
+      <div className="text-sm space-y-2 text-gray-600">
         <p className="font-medium">This report shows:</p>
         <p>
           <span className="font-medium">Total <span className='font-bold'>{emergencyType}</span> Emergencies:</span> {insights.totalCount} 
@@ -148,7 +148,7 @@ const ReportInsights = ({ filteredData, generateData }) => {
         {insights.peakTimes !== "N/A" && (
           <p><span className="font-medium">Peak Hours:</span> {insights.peakTimes}</p>
         )}
-        <p className="mt-3 text-gray-500 italic">
+        <p className="mt-3 text-gray-400 italic">
           This report will help you {insights.trend === "increasing" ? 
             "identify the rising trend in emergency incidents" : 
             insights.trend === "decreasing" ? 

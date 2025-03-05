@@ -4,10 +4,10 @@ import SelectStyle from "../../components/ReusableComponents/SelectStyle";
 import { InputField } from "../../components/ReusableComponents/InputField";
 import { useFetchData } from "../../hooks/useFetchData";
 import { exportToExcel } from "./exportToExcel";
-import { EmergencyTable,EmergencyChart } from "./PreviewData";
+import { EmergencyTable, EmergencyChart } from "./PreviewData";
 import ReportInsights from "./ReportInsigths";
 import { handlePrint } from "./handlePrint";
-import { formatDateWithTime } from "../../helper/FormatDate";
+import { formatDate } from "../../helper/FormatDate";
 import UsersInsights from "./UsersInsights";
 import ExportPDF from "./ExportPDF";
 
@@ -34,9 +34,9 @@ const Reports = () => {
   const printRef = useRef();
   const insightRef = useRef();
   const chartRef = useRef();
-  const {generatePDF} = ExportPDF();
+  const { generatePDF } = ExportPDF();
   const { data: emergencyRequest } = useFetchData("emergencyRequest");
-  const {data: users} = useFetchData("users");
+  const { data: users } = useFetchData("users");
   const [filteredData, setFilteredData] = useState([]);
   const [generateData, setGenerateData] = useState({
     reportTypes: "Emergency Summary",
@@ -69,69 +69,82 @@ const Reports = () => {
 
   // filter the main data into the current year
   useEffect(() => {
-    if(!emergencyRequest || emergencyRequest.length === 0) return;
+    if (!emergencyRequest || emergencyRequest.length === 0) return;
     const currentYear = new Date().getFullYear();
-    
-    const thisYearData = emergencyRequest.filter((item) => 
-      new Date(item.timestamp).getFullYear() === currentYear
+
+    const thisYearData = emergencyRequest.filter(
+      (item) => new Date(item.timestamp).getFullYear() === currentYear
     );
 
-    const minTimestamp = new Date(currentYear, 0,1,0,0,0,0);
-    const maxTimestamp = new Date(Math.max(...thisYearData.map((item) => item.timestamp)));
+    const minTimestamp = new Date(currentYear, 0, 1, 0, 0, 0, 0);
+    const maxTimestamp = new Date(
+      Math.max(...thisYearData.map((item) => item.timestamp))
+    );
 
-    setGenerateData(prev => ({
+    setGenerateData((prev) => ({
       ...prev,
-      startDate: prev.startDate ?? formatDateWithTime(minTimestamp),
-      endDate: prev.endDate ?? formatDateWithTime(maxTimestamp)
-    }))
-
+      startDate: prev.startDate ?? formatDate(minTimestamp),
+      endDate: prev.endDate ?? formatDate(maxTimestamp),
+    }));
   }, [emergencyRequest]);
 
   // update the filtered data
   useEffect(() => {
     if (!emergencyRequest || emergencyRequest.length === 0) return;
-    const {reportTypes} = generateData
+    const { reportTypes } = generateData;
     const emergencySummary = reportTypes === "Emergency Summary";
     const userGrowthAnalysis = reportTypes === "User Growth Analysis";
- 
-    let filtered = [];
-  
-   if(emergencySummary){
-    filtered = emergencyRequest.filter((item) => {
-      const requestDate = new Date(item.timestamp);
-      const type = (item.emergencyType || "").toLowerCase();
-      const start = generateData.startDate ? new Date(generateData.startDate) : null;
-      const end = generateData.endDate ? new Date(generateData.endDate) : null;
-      const emergencyType = generateData.emergencyType.toLowerCase();
-  
-      return (!start || requestDate >= start) && 
-             (!end || requestDate <= end) && 
-             (emergencyType === "all" || !emergencyType || type === emergencyType);
-    });
-   } else if(userGrowthAnalysis){
-    filtered = users.filter((item) => {
-      const date = new Date(item.timestamp);
-      const start = generateData.startDate ? new Date(generateData.startDate) : null;
-      const end = generateData.endDate ? new Date(generateData.endDate) : null;
 
-      return (!start || date >= start) && (!end || date <= end);
-    })
-   } 
+    let filtered = [];
+
+    if (emergencySummary) {
+      filtered = emergencyRequest.filter((item) => {
+        const requestDate = new Date(item.timestamp);
+        const type = (item.emergencyType || "").toLowerCase();
+        const start = generateData.startDate
+          ? new Date(generateData.startDate)
+          : null;
+        const end = generateData.endDate
+          ? new Date(generateData.endDate)
+          : null;
+        const emergencyType = generateData.emergencyType.toLowerCase();
+
+        return (
+          (!start || requestDate >= start) &&
+          (!end || requestDate <= end) &&
+          (emergencyType === "all" || !emergencyType || type === emergencyType)
+        );
+      });
+    } else if (userGrowthAnalysis) {
+      filtered = users.filter((item) => {
+        const date = new Date(item.timestamp);
+        const start = generateData.startDate
+          ? new Date(generateData.startDate)
+          : null;
+        const end = generateData.endDate
+          ? new Date(generateData.endDate)
+          : null;
+
+        return (!start || date >= start) && (!end || date <= end);
+      });
+    }
     setFilteredData(filtered);
   }, [generateData, emergencyRequest, users]);
-  
+
   // Toggle for preview options
   const handlePreviewToggle = (type) => {
     const currentPreview = generateData.preview;
-    
-    if (type === 'table') {
-      if (currentPreview === 'table') return; // Already table only
-      if (currentPreview === 'both') setGenerateData(prev => ({...prev, preview: 'chart'}));
-      else setGenerateData(prev => ({...prev, preview: 'both'}));
-    } else if (type === 'chart') {
-      if (currentPreview === 'chart') return; // Already chart only
-      if (currentPreview === 'both') setGenerateData(prev => ({...prev, preview: 'table'}));
-      else setGenerateData(prev => ({...prev, preview: 'both'}));
+
+    if (type === "table") {
+      if (currentPreview === "table") return; // Already table only
+      if (currentPreview === "both")
+        setGenerateData((prev) => ({ ...prev, preview: "chart" }));
+      else setGenerateData((prev) => ({ ...prev, preview: "both" }));
+    } else if (type === "chart") {
+      if (currentPreview === "chart") return; // Already chart only
+      if (currentPreview === "both")
+        setGenerateData((prev) => ({ ...prev, preview: "table" }));
+      else setGenerateData((prev) => ({ ...prev, preview: "both" }));
     }
   };
 
@@ -155,10 +168,7 @@ const Reports = () => {
                         reportTypes: e.target.value,
                       }))
                     }
-                    options={[
-                      "Emergency Summary",
-                      "User Growth Analysis",
-                    ]}
+                    options={["Emergency Summary", "User Growth Analysis"]}
                   />
                 }
               />
@@ -199,44 +209,45 @@ const Reports = () => {
               />
               {generateData.reportTypes === "Emergency Summary" && (
                 <Container
-                label={"Emergency Types"}
-                inputs={
-                  <SelectStyle
-                    value={generateData.emergencyType}
-                    onChange={(e) => setGenerateData(prev => ({...prev, emergencyType: e.target.value}))}
-                    options={[
-                      "All",
-                      "Medical",
-                      "Crime",
-                      "Fire",
-                      "Natural Disaster",
-                      "Other",
-                    ]}
-                  />
-                }
-              />
-              )}         
-              <Label label={"Format Options"} isMainLabel={true} />
+                  label={"Emergency Types"}
+                  inputs={
+                    <SelectStyle
+                      value={generateData.emergencyType}
+                      onChange={(e) =>
+                        setGenerateData((prev) => ({
+                          ...prev,
+                          emergencyType: e.target.value,
+                        }))
+                      }
+                      options={[
+                        "All",
+                        "Medical",
+                        "Crime",
+                        "Fire",
+                        "Natural Disaster",
+                        "Other",
+                      ]}
+                    />
+                  }
+                />
+              )}
+
               <Container
-                label={"Format"}
+                label={<Label label="Insights" isMainLabel={true}/>}
                 inputs={
-                  <SelectStyle 
-                    value={generateData.format}
-                    onChange={(e) => setGenerateData(prev => ({...prev, format: e.target.value}))}
-                    options={["PDF", "Excel"]} 
-                  />
-                }
-              />
-              <Container 
-                label={"What does this mean?"}
-                inputs={
-                 <div id="printableInsights" ref={insightRef}> 
-                 {generateData.reportTypes === "Emergency Summary" ? (
-                  <ReportInsights filteredData={filteredData} generateData={generateData} />
-                 ) : (
-                  <UsersInsights filteredData={filteredData} generateData={generateData} />
-                 )}
-                 </div>
+                  <div id="printableInsights" ref={insightRef}>
+                    {generateData.reportTypes === "Emergency Summary" ? (
+                      <ReportInsights
+                        filteredData={filteredData}
+                        generateData={generateData}
+                      />
+                    ) : (
+                      <UsersInsights
+                        filteredData={filteredData}
+                        generateData={generateData}
+                      />
+                    )}
+                  </div>
                 }
               />
             </div>
@@ -248,19 +259,28 @@ const Reports = () => {
                   {filteredData.length > 0 ? (
                     <div className="space-y-4">
                       {/* Show chart if preview includes chart */}
-                      {(generateData.preview === 'chart' || generateData.preview === 'both') && (
+                      {(generateData.preview === "chart" ||
+                        generateData.preview === "both") && (
                         <div ref={chartRef} className="mb-4">
-                          <EmergencyChart data={filteredData} dataType={generateData.reportTypes}/>
+                          <EmergencyChart
+                            data={filteredData}
+                            dataType={generateData.reportTypes}
+                          />
                         </div>
                       )}
-                      
+
                       {/* Show table if preview includes table */}
-                      {(generateData.preview === 'table' || generateData.preview === 'both') && (
+                      {(generateData.preview === "table" ||
+                        generateData.preview === "both") && (
                         <div className=" max-w-lg">
-                          <EmergencyTable data={filteredData.slice(0, 5)}  dataType={generateData.reportTypes} />
+                          <EmergencyTable
+                            data={filteredData.slice(0, 5)}
+                            dataType={generateData.reportTypes}
+                          />
                           {filteredData.length > 5 && (
                             <div className="text-center text-gray-500">
-                              {filteredData.length - 5} more records not shown in preview
+                              {filteredData.length - 5} more records not shown
+                              in preview
                             </div>
                           )}
                         </div>
@@ -274,52 +294,86 @@ const Reports = () => {
                 </div>
                 <div className="flex flex-row space-x-4 p-4">
                   <div className="space-x-2">
-                    <input 
-                      type="checkbox" 
-                      id="includeTable" 
-                      checked={generateData.preview === "table" || generateData.preview === "both"} 
-                      onChange={() => handlePreviewToggle('table')}
-                      disabled={generateData.format === 'Excel'}
+                    <input
+                      type="checkbox"
+                      id="includeTable"
+                      checked={
+                        generateData.preview === "table" ||
+                        generateData.preview === "both"
+                      }
+                      onChange={() => handlePreviewToggle("table")}
+                      disabled={generateData.format === "Excel"}
                     />
                     <label htmlFor="includeTable">Include Table</label>
                   </div>
                   <div className="space-x-2">
-                    <input 
-                      type="checkbox" 
-                      id="includeChart" 
-                      checked={generateData.preview === "chart" || generateData.preview === "both"} 
-                      onChange={() => handlePreviewToggle('chart')}
-                      disabled={generateData.format === 'Excel'}
+                    <input
+                      type="checkbox"
+                      id="includeChart"
+                      checked={
+                        generateData.preview === "chart" ||
+                        generateData.preview === "both"
+                      }
+                      onChange={() => handlePreviewToggle("chart")}
+                      disabled={generateData.format === "Excel"}
                     />
                     <label htmlFor="includeChart">Include Chart</label>
                   </div>
-                  {generateData.format === 'Excel' && (
-                    <span className="text-gray-500 text-sm ml-2">Chart not available in Excel format</span>
+                  {generateData.format === "Excel" && (
+                    <span className="text-gray-500 text-sm ml-2">
+                      Chart not available in Excel format
+                    </span>
                   )}
                 </div>
               </div>
             </div>
           </div>
-          
+
           {/* Hidden printable area - this will only be used when printing */}
           <div id="printableArea" style={{ display: "none" }} ref={printRef}>
-            <EmergencyTable data={filteredData} dataType={generateData.reportTypes} />
+            <EmergencyTable
+              data={filteredData}
+              dataType={generateData.reportTypes}
+            />
           </div>
-          
-          <div className="mt-6 text-right space-x-4">
+
+          <div className="mt-6 flex flex-row  place-self-end space-x-4">
+           <div>
+              <SelectStyle
+                value={generateData.format}
+                onChange={(e) =>
+                  setGenerateData((prev) => ({
+                    ...prev,
+                    format: e.target.value,
+                  }))
+                }
+                options={["PDF", "Excel"]}
+              />
+           </div>
+
             <button
               className="py-2 px-6 font-semibold bg-green-400 text-white rounded shadow-md hover:bg-green-500 transition-colors"
               onClick={() => {
                 if (generateData.format === "Excel") {
                   handleExport();
                 } else {
-                  generatePDF(filteredData, chartRef,insightRef, generateData.reportTypes);
+                  generatePDF(
+                    filteredData,
+                    chartRef,
+                    insightRef,
+                    generateData.reportTypes
+                  );
                 }
               }}
             >
               {`Save as ${generateData.format}`}
             </button>
-            <button className="bg-gray-500 p-2 rounded text-white font-semibold text-base" onClick={() => handlePrint(generateData)}>Print now</button>
+            <button
+              className="bg-gray-500 py-2 px-6 rounded text-white font-semibold text-base"
+              onClick={() => handlePrint(generateData)}
+            >
+              Print
+            </button>
           </div>
         </div>
       }
