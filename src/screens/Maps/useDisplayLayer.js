@@ -6,7 +6,7 @@ import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { formatDateWithTime } from "../../helper/FormatDate";
-import { blueIcon, redIcon, greenIcon} from "../../helper/iconUtils"
+import { blueIcon, redIcon, greenIcon } from "../../helper/iconUtils";
 
 export const DisplayLayer = ({
   selectedYear,
@@ -165,9 +165,9 @@ export const DisplayLayer = ({
       const emergencyType = point.details.emergencyType || "Other";
       const emergencyColor = emergencyTypeColors[emergencyType] || "#3388ff";
       const status = point.details.status;
-      const markerIcon = status === "awaiting response" ? blueIcon : greenIcon
+      const markerIcon = status === "awaiting response" ? blueIcon : greenIcon;
 
-      const marker = L.marker([point.lat, point.lng], {icon: markerIcon});
+      const marker = L.marker([point.lat, point.lng], { icon: markerIcon });
       const cluster = L.circleMarker([point.lat, point.lng], {
         radius: 8,
         fillColor: emergencyColor,
@@ -188,6 +188,12 @@ export const DisplayLayer = ({
                         Coordinates: ${point.lat.toFixed(
                           4
                         )}, ${point.lng.toFixed(4)}<br>
+                        ${
+                          status === "awaiting response"
+                            ? `<button class="p-2 bg-green-500 w-full my-2 text-white rounded-md" onclick={alert("Deployed")}>Deploy</button>`
+                            : ""
+                        }
+                        
                       `);
       cluster.bindPopup(`<b>ID: ${emergencyId}</b><br>
                         Type: ${emergencyType}<br>
