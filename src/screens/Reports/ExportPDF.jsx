@@ -12,10 +12,14 @@ const ExportPDF = () => {
 
     const doc = new jsPDF();
     doc.setFontSize(14);
-    doc.text(title, 10, 10);
-    let finalY = 20; // Starting Y position
+    doc.text("Report Overview", 10, 10); // Static Label
+    doc.setFontSize(12);
+    doc.text(`Title: ${title}`, 10, 20);
+    doc.text(`Generated On: ${new Date().toLocaleString()}`, 10, 30);
 
-    // Capture chart as an image (if available)
+    let finalY = 40; // Adjusted Y position after labels
+
+    // Capture chart as an image
     if (chartRef.current) {
       html2canvas(chartRef.current).then((canvas) => {
         const chartImg = canvas.toDataURL("image/png");
@@ -69,13 +73,17 @@ const ExportPDF = () => {
         startY,
       });
 
-      let finalY = doc.lastAutoTable.finalY + 10; // Position insights below the table
+      let finalY = doc.lastAutoTable.finalY + 10;
 
-      // Add insights at the bottom
+      // Add insights section with a static label
+      doc.setFontSize(12);
+      doc.text("Insights:", 10, finalY);
+      finalY += 5;
+      doc.setFontSize(10); // Smaller text for insights
+
       if (insightsRef.current) {
         const insightsText = insightsRef.current.innerText.trim();
         if (insightsText) {
-          doc.setFontSize(10); // Make text smaller
           const splitText = doc.splitTextToSize(insightsText, 180);
           doc.text(splitText, 10, finalY);
         }
