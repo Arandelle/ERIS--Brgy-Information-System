@@ -6,6 +6,7 @@ import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { formatDateWithTime } from "../../helper/FormatDate";
+import { blueIcon, redIcon, greenIcon} from "../../helper/iconUtils"
 
 export const DisplayLayer = ({
   selectedYear,
@@ -164,8 +165,9 @@ export const DisplayLayer = ({
       const emergencyType = point.details.emergencyType || "Other";
       const emergencyColor = emergencyTypeColors[emergencyType] || "#3388ff";
       const status = point.details.status;
+      const markerIcon = status === "awaiting response" ? blueIcon : greenIcon
 
-      const marker = L.marker([point.lat, point.lng]);
+      const marker = L.marker([point.lat, point.lng], {icon: markerIcon});
       const cluster = L.circleMarker([point.lat, point.lng], {
         radius: 8,
         fillColor: emergencyColor,

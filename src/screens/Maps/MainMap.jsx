@@ -9,6 +9,7 @@ import { DisplayModeControl } from "./MapControl/DisplayModeControl";
 import { YearSelectorControl } from "./MapControl/YearSelectorControl";
 import { ClusterLegendControl } from "./MapControl/ClusterLegendControl";
 import { HeatLegendControl } from "./MapControl/HeatLegendControl";
+import { MarkerLegendControl } from "./MapControl/MarkerLegendControl";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -110,7 +111,7 @@ const MainMap = ({ maximize, setMaximize }) => {
           displayMode={displayMode}
           setDisplayMode={setDisplayMode}
         />
-        {displayMode !== "heat" ? <ClusterLegendControl /> : <HeatLegendControl />}
+        {displayMode === "heat" ? <HeatLegendControl /> : displayMode === "cluster" ?  <ClusterLegendControl /> : <MarkerLegendControl />  }
         <CustomScrollZoomHandler />
         <CoverageRadius center={position} radius={700} />
       </MapContainer>
