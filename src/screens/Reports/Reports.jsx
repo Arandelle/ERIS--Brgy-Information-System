@@ -52,16 +52,29 @@ const Reports = () => {
     if (!filteredData || filteredData.length === 0) {
       alert("No emergency request data available.");
       return;
-    }
+    };
 
-    const formattedData = filteredData.map((request) => ({
-      ID: request.emergencyId || "N/A",
-      Type: request.emergencyType || "N/A",
-      Status: request.status || "N/A",
-      Log: request.messageLog || "N/A",
-      Location: request.location?.geoCodeLocation || "N/A",
-      Date: new Date(request.timestamp).toLocaleString() || "N/A",
-    }));
+    let formattedData = {};
+    if(generateData.reportTypes === "Emergency Summary"){
+        formattedData = filteredData.map((request) => ({
+        ID: request.emergencyId || "N/A",
+        Type: request.emergencyType || "N/A",
+        Status: request.status || "N/A",
+        Log: request.messageLog || "N/A",
+        Location: request.location?.geoCodeLocation || "N/A",
+        Date: new Date(request.timestamp).toLocaleString() || "N/A",
+      }));
+    } else {
+       formattedData = filteredData.map((user) => ({
+        ID: user.customId || "N/A",
+        Email: user.email || "N/A",
+        Fullname: user.fullname || "N/A",
+        Age: user.age || "N/A",
+        Gender: user.gender || "N/A",
+        Address: user.address || "N/A",
+        Phone: user.mobileNum || "N/A"
+       }))
+    }
 
     console.log("Exporting Data:", formattedData);
     exportToExcel(formattedData, "emergency_summary.xlsx");
