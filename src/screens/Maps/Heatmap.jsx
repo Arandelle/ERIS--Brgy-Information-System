@@ -62,22 +62,22 @@ const MaximizeMapControl = ({ maximize, setMaximize }) => {
 };
 
 const Heatmap = ({ maximize, setMaximize }) => {
-  const [position, setPosition] = useState(null);
+  const [position, setPosition] = useState([14.33289, 120.85065]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
   const [availableYears, setAvailableYears] = useState([]);
   const [displayMode, setDisplayMode] = useState("heat");
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (location) => {
-        setPosition([location.coords.latitude, location.coords.longitude]);
-      },
-      (error) => {
-        console.error(error);
-        setPosition([14.33289, 120.85065]); // Fallback position
-      }
-    );
-  }, []);
+  // useEffect(() => {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (location) => {
+  //       setPosition([location.coords.latitude, location.coords.longitude]);
+  //     },
+  //     (error) => {
+  //       console.error(error);
+  //       setPosition([14.33289, 120.85065]); // Fallback position
+  //     }
+  //   );
+  // }, []);
 
   if (!position) {
     return <div>Loading...</div>;

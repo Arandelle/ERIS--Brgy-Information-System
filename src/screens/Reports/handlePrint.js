@@ -3,6 +3,18 @@
     const printContent = document.getElementById('printableArea');
     const printInsights = document.getElementById('printableInsights');
     const WinPrint = window.open('', '', 'width=900,height=650');
+
+    const emergencySummary = generateData.reportTypes === "Emergency Summary"
+    const userGrowth = generateData.reportTypes === "User Growth Analysis";
+    let chartTitle, tableTitle  = "";
+    
+    if(emergencySummary ){
+      chartTitle = "Daily Emergency Count";
+      tableTitle = "Emergency Data"
+    } else if (userGrowth) {
+      chartTitle = "Total users count";
+      tableTitle = "Users Data"
+    }
     
     // Get the chart SVG if it exists
     let chartSvg = '';
@@ -15,7 +27,7 @@
       svgClone.setAttribute('height', '0');
       chartSvg = `
         <div style="margin-bottom: 5px;">
-          <h2 style="text-align: center; margin-bottom: 5px;">Daily Emergency Count</h2>
+          <h2 style="text-align: center; margin-bottom: 5px;">${chartTitle}</h2>
           ${svgClone.outerHTML}
         </div>
       `;
@@ -24,7 +36,7 @@
     WinPrint.document.write(`
       <html>
         <head>
-          <title>Emergency Report</title>
+          <title>${generateData.reportTypes}</title>
           <style>
             body { font-family: Arial, sans-serif; margin: 10px; }
             h1 { color: #2563eb; text-align: center; margin-bottom: 10px; }
@@ -44,10 +56,12 @@
           </style>
         </head>
         <body>
-          <h1>Emergency Summary Report</h1>
+          <h1>Summary Report</h1>
           <div class="report-info">
             <p><strong>Report Type:</strong> ${generateData.reportTypes}</p>
-            <p><strong>Emergency Type:</strong> ${generateData.emergencyType}</p>
+            ${!userGrowth ? (
+            `<p><strong>Emergency Type:</strong> ${generateData.emergencyType}</p>`
+            ) : ''}
             <p><strong>Date Range:</strong> ${generateData.startDate || 'Not specified'} to ${generateData.endDate || 'Not specified'}</p>
             <p><strong>Generated On:</strong> ${new Date().toLocaleString()}</p>
 
@@ -56,7 +70,7 @@
           
           
           ${generateData.preview !== 'chart' ? `
-            <h2>Emergency Data</h2>
+            <h2 style="text-align: center; margin-bottom: 10px;">${tableTitle}</h2>
             ${printContent.innerHTML}
             ${printInsights.innerHTML}
           ` : ''}

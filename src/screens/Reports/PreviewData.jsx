@@ -7,17 +7,18 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  LineChart,
+  Line,
 } from "recharts";
 import { useFetchData } from "../../hooks/useFetchData";
 import { formatDate } from "../../helper/FormatDate";
+import {capitalizeFirstLetter} from "../../helper/CapitalizeFirstLetter"
 
 // Table component for displaying filtered data
 export const EmergencyTable = ({ data, dataType }) => {
   const { data: responders } = useFetchData("responders");
 
   const emergencySummary = dataType === "Emergency Summary";
-  const userSummary = dataType === "User Growth Analysis";
-  const emergencyDistribution = dataType === "Emergency Type Distribution";
 
   const ThStyle = ({ labels }) => {
     return (
@@ -36,8 +37,8 @@ export const EmergencyTable = ({ data, dataType }) => {
     return (
       items.length > 0 &&
       items.map((item) => (
-        <td key={item} className="py-2 px-4 border-b text-sm ">
-          {item || "N/A"}
+        <td key={item} className="py-2 px-4 border-b text-sm">
+          {item ? capitalizeFirstLetter(item.toString()) :"N/A"}
         </td>
       ))
     );
@@ -122,10 +123,12 @@ export const EmergencyTable = ({ data, dataType }) => {
 };
 
 // Chart component for data visualization by days
-export const EmergencyChart = ({ data }) => {
+export const EmergencyChart = ({ data, dataType }) => {
   if (!data || data.length === 0) {
     return <div className="text-center py-4">No data available for chart</div>;
   }
+
+  const emergencySummary = dataType === "Emergency Summary";
 
   // Process data for the chart (count by day)
   const processChartData = () => {
@@ -172,6 +175,7 @@ export const EmergencyChart = ({ data }) => {
 
   return (
     <div className="w-full" style={{ height: "300px" }}>
+    {emergencySummary ? (
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={chartData}
@@ -187,13 +191,38 @@ export const EmergencyChart = ({ data }) => {
           <Legend />
           <Bar
             dataKey="count"
-            name="Emergency Count"
+            name={emergencySummary ? "Emergency Count" : "Users count" } 
             fill="#4f46e5"
             barSize={40}
             radius={[4, 4, 0, 0]}
           />
         </BarChart>
       </ResponsiveContainer>
+    ) : (
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart
+          data={chartData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="displayDate" />
+          <YAxis />
+          <Tooltip
+            formatter={(value) => [`${value} users`, "Count"]}
+            labelFormatter={(label) => `Date: ${label}`}
+          />
+          <Legend />
+          <Line 
+            type="monotone" 
+            dataKey="count" 
+            name="Users Count"
+            stroke="#4f46e5" 
+            strokeWidth={3} 
+            dot={{ r: 5 }} 
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    )}
     </div>
   );
 };

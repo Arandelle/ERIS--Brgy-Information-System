@@ -8,6 +8,7 @@ import { EmergencyTable,EmergencyChart } from "./PreviewData";
 import ReportInsights from "./ReportInsigths";
 import { handlePrint } from "./handlePrint";
 import { formatDateWithTime } from "../../helper/FormatDate";
+import UsersInsights from "./UsersInsights";
 
 const Label = ({ label, isMainLabel }) => {
   return isMainLabel ? (
@@ -71,7 +72,7 @@ const Reports = () => {
       new Date(item.timestamp).getFullYear() === currentYear
     );
 
-    const minTimestamp = new Date(Math.min(...thisYearData.map((item) => item.timestamp)));
+    const minTimestamp = new Date(currentYear, 0,1,0,0,0,0);
     const maxTimestamp = new Date(Math.max(...thisYearData.map((item) => item.timestamp)));
 
     setGenerateData(prev => ({
@@ -85,10 +86,13 @@ const Reports = () => {
   // update the filtered data
   useEffect(() => {
     if (!emergencyRequest || emergencyRequest.length === 0) return;
-
+    const {reportTypes} = generateData
+    const emergencySummary = reportTypes === "Emergency Summary";
+    const userGrowthAnalysis = reportTypes === "User Growth Analysis";
+ 
     let filtered = [];
   
-   if(generateData.reportTypes === "Emergency Summary"){
+   if(emergencySummary){
     filtered = emergencyRequest.filter((item) => {
       const requestDate = new Date(item.timestamp);
       const type = (item.emergencyType || "").toLowerCase();
@@ -100,7 +104,7 @@ const Reports = () => {
              (!end || requestDate <= end) && 
              (emergencyType === "all" || !emergencyType || type === emergencyType);
     });
-   } else if(generateData.reportTypes === "User Growth Analysis"){
+   } else if(userGrowthAnalysis){
     filtered = users.filter((item) => {
       const date = new Date(item.timestamp);
       const start = generateData.startDate ? new Date(generateData.startDate) : null;
@@ -108,8 +112,7 @@ const Reports = () => {
 
       return (!start || date >= start) && (!end || date <= end);
     })
-   }
-  
+   } 
     setFilteredData(filtered);
   }, [generateData, emergencyRequest, users]);
   
@@ -135,8 +138,8 @@ const Reports = () => {
           <h1 className="text-2xl font-bold text-blue-800 mb-6">
             Generate Reports
           </h1>
-          <div className="flex flex-col md:flex-row space-x-0 md:space-x-5 space-y-5 md:space-y-0">
-            <div className="space-y-4 flex-1 basis-1/2">
+          <div className="flex flex-col lg:flex-row space-x-0 md:space-x-5 space-y-5 md:space-y-0">
+            <div className="space-y-4 flex-1 basis-2/5">
               <Container
                 label={<Label label="Report Types" isMainLabel={true} />}
                 inputs={
@@ -151,7 +154,6 @@ const Reports = () => {
                     options={[
                       "Emergency Summary",
                       "User Growth Analysis",
-                      "Emergency Type Distribution",
                     ]}
                   />
                 }
@@ -224,11 +226,17 @@ const Reports = () => {
               <Container 
                 label={"What does this mean?"}
                 inputs={
-                 <div id="printableInsights" ref={printRef}> <ReportInsights filteredData={filteredData} generateData={generateData} /></div>
+                 <div id="printableInsights" ref={printRef}> 
+                 {generateData.reportTypes === "Emergency Summary" ? (
+                  <ReportInsights filteredData={filteredData} generateData={generateData} />
+                 ) : (
+                  <UsersInsights filteredData={filteredData} generateData={generateData} />
+                 )}
+                 </div>
                 }
               />
             </div>
-            <div className="flex-1 basis-1/2 space-y-3">
+            <div className="flex-1 basis-3/5 space-y-3">
               <Label label={"Preview Report"} isMainLabel={true} />
               <div className="flex flex-col">
                 <div className="border rounded-md p-2 row-span-2 overflow-auto">
@@ -238,16 +246,16 @@ const Reports = () => {
                       {/* Show chart if preview includes chart */}
                       {(generateData.preview === 'chart' || generateData.preview === 'both') && (
                         <div className="mb-4">
-                          <EmergencyChart data={filteredData} />
+                          <EmergencyChart data={filteredData} dataType={generateData.reportTypes}/>
                         </div>
                       )}
                       
                       {/* Show table if preview includes table */}
                       {(generateData.preview === 'table' || generateData.preview === 'both') && (
-                        <div className="h-60 max-w-60">
+                        <div className=" max-w-lg">
                           <EmergencyTable data={filteredData.slice(0, 5)}  dataType={generateData.reportTypes} />
                           {filteredData.length > 5 && (
-                            <div className="text-center text-gray-500 mt-2">
+                            <div className="text-center text-gray-500">
                               {filteredData.length - 5} more records not shown in preview
                             </div>
                           )}
