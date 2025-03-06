@@ -10,6 +10,7 @@ import { YearSelectorControl } from "./MapControl/YearSelectorControl";
 import { ClusterLegendControl } from "./MapControl/ClusterLegendControl";
 import { HeatLegendControl } from "./MapControl/HeatLegendControl";
 import { MarkerLegendControl } from "./MapControl/MarkerLegendControl";
+import { ResponderListControl } from "./MapControl/ResponderListControl";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -69,6 +70,7 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
   const [availableYears, setAvailableYears] = useState([]);
   const [displayMode, setDisplayMode] = useState("heat");
+  const [showModal, setShowModal] = useState(false);
 
   // useEffect(() => {
   //   navigator.geolocation.getCurrentPosition(
@@ -99,6 +101,7 @@ const MainMap = ({ maximize, setMaximize }) => {
           selectedYear={selectedYear}
           setAvailableYears={setAvailableYears}
           displayMode={displayMode}
+          setShowModal={setShowModal}
         />
         {availableYears.length > 0 && (
           <YearSelectorControl
@@ -111,7 +114,14 @@ const MainMap = ({ maximize, setMaximize }) => {
           displayMode={displayMode}
           setDisplayMode={setDisplayMode}
         />
-        {displayMode === "heat" ? <HeatLegendControl /> : displayMode === "cluster" ?  <ClusterLegendControl /> : <MarkerLegendControl />  }
+        {showModal && <ResponderListControl />}
+        {displayMode === "heat" ? (
+          <HeatLegendControl />
+        ) : displayMode === "cluster" ? (
+          <ClusterLegendControl />
+        ) : (
+          <MarkerLegendControl />
+        )}
         <CustomScrollZoomHandler />
         <CoverageRadius center={position} radius={700} />
       </MapContainer>

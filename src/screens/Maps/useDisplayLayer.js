@@ -8,10 +8,12 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { formatDateWithTime } from "../../helper/FormatDate";
 import { blueIcon, redIcon, greenIcon } from "../../helper/iconUtils";
 
+
 export const DisplayLayer = ({
   selectedYear,
   setAvailableYears,
   displayMode,
+  setShowModal
 }) => {
   const map = useMap();
   const { data: emergencyRequest } = useFetchData("emergencyRequest");
@@ -19,6 +21,14 @@ export const DisplayLayer = ({
   const [markerLayer, setMarkerLayer] = useState(null);
   const [heatLayer, setHeatLayer] = useState(null);
   const [mapMarkerLayer, setMapMarkerLayer] = useState(null);
+
+useEffect(() => {
+  window.assignResponder = (emergencyId) => {
+    alert(`Assigning responder to Emergency ID: ${emergencyId}`);
+    // Here you can add your logic to update Firebase or perform actual deployment logic
+    setShowModal(prev => !prev);
+  };
+}, []);
 
   // Extract available years from data
   useEffect(() => {
@@ -190,7 +200,7 @@ export const DisplayLayer = ({
                         )}, ${point.lng.toFixed(4)}<br>
                         ${
                           status === "pending"
-                            ? `<button class="p-2 bg-green-500 w-full my-2 text-white rounded-md" onclick={alert("Deployed")}>Deploy</button>`
+                            ? `<button class="p-2 bg-green-500 w-full my-2 text-white rounded-md" onclick="window.assignResponder('${emergencyId}')">Deploy</button>`
                             : ""
                         }
                         

@@ -14,12 +14,12 @@ const HeaderAndSideBar = ({ content }) => {
       <Header toggleSideBar={toggleDropdown} isOpen={isOpen} />
       <div className="flex h-full">
         {/* Sidebar with independent scrolling */}
-        <div className="z-50 md:z-0 h-full">
+        <div className="z-50 md:z-0">
           <Sidebar isOpen={isOpen} toggleSidebar={toggleDropdown} />
         </div>
         
         {/* Main content with independent scrolling */}
-        <div className="w-full h-full overflow-y-auto">
+        <div className="w-full h-full overflow-y-auto z-40">
           <div className="p-2">{content}</div>
         </div>
       </div>
