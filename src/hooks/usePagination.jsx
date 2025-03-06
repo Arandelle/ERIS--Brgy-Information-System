@@ -2,10 +2,24 @@ import {useState, useMemo} from 'react'
 
 const usePagination = (data) => {
 
-    const sortedData = useMemo(() => {
-        return [...data].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      }, [data]);
-
+  const sortedData = useMemo(() => {
+    const sortedStatus = {
+      "resolved": 1,
+      "pending": 3,
+      "on-going": 2,
+      "expired": 0,
+    };
+  
+    return [...data].sort((a, b) => {
+      // First, sort by status
+      const statusDiff = sortedStatus[b.status] - sortedStatus[a.status];
+      if (statusDiff !== 0) return statusDiff; // If different, use status order
+  
+      // If status is the same, sort by timestamp (latest first)
+      return new Date(b.date) - new Date(a.date);
+    });
+  }, [data]);
+  
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
   

@@ -79,18 +79,6 @@ const Records = () => {
     totalPages,
   } = usePagination(filteredData); // Pass filteredData to ensure pagination is applied to the filtered dataset
 
-  const sortedData = currentItems.sort((a,b) => {
-
-    const sortedStatus = {
-      "resolved" : 1,
-      "awaiting response" : 3,
-      "on-going" : 2,
-      "expired" : 0,
-    }
-
-    return sortedStatus[b.status] - sortedStatus[a.status];
-  })
-
   const HeaderData = [
     "emergency id",
     "Name",
@@ -108,7 +96,7 @@ const Records = () => {
 
     const getStatusStyles = {
       "resolved" : "text-green-500",
-      "awaiting response" : "text-yellow-500",
+      "pending" : "text-yellow-500",
       "on-going" : "text-blue-500",
       "expired" : "text-red-500",
     }
@@ -210,7 +198,7 @@ const Records = () => {
           />
           <Table
             headers={HeaderData}
-            data={sortedData}
+            data={currentItems}
             renderRow={renderRow}
             emptyMessage={"No records found"}
           />

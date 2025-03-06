@@ -165,7 +165,7 @@ export const DisplayLayer = ({
       const emergencyType = point.details.emergencyType || "Other";
       const emergencyColor = emergencyTypeColors[emergencyType] || "#3388ff";
       const status = point.details.status;
-      const markerIcon = status === "awaiting response" ? blueIcon : greenIcon;
+      const markerIcon = status === "pending" ? blueIcon : greenIcon;
 
       const marker = L.marker([point.lat, point.lng], { icon: markerIcon });
       const cluster = L.circleMarker([point.lat, point.lng], {
@@ -189,7 +189,7 @@ export const DisplayLayer = ({
                           4
                         )}, ${point.lng.toFixed(4)}<br>
                         ${
-                          status === "awaiting response"
+                          status === "pending"
                             ? `<button class="p-2 bg-green-500 w-full my-2 text-white rounded-md" onclick={alert("Deployed")}>Deploy</button>`
                             : ""
                         }
@@ -205,7 +205,7 @@ export const DisplayLayer = ({
                       `);
 
       if (
-        (status === "on-going" || status === "awaiting response") &&
+        (status === "on-going" || status === "pending") &&
         displayMode === "marker"
       ) {
         mapMarkers.addLayer(marker); // Add to separate marker layer
