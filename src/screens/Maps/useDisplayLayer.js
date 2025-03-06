@@ -13,7 +13,8 @@ export const DisplayLayer = ({
   selectedYear,
   setAvailableYears,
   displayMode,
-  setShowModal
+  setShowModal,
+  setEmergencyId
 }) => {
   const map = useMap();
   const { data: emergencyRequest } = useFetchData("emergencyRequest");
@@ -23,9 +24,7 @@ export const DisplayLayer = ({
   const [mapMarkerLayer, setMapMarkerLayer] = useState(null);
 
 useEffect(() => {
-  window.assignResponder = (emergencyId) => {
-    alert(`Assigning responder to Emergency ID: ${emergencyId}`);
-    // Here you can add your logic to update Firebase or perform actual deployment logic
+  window.assignResponder = () => {
     setShowModal(prev => !prev);
   };
 }, []);
@@ -188,6 +187,7 @@ useEffect(() => {
         emergencyType: emergencyType,
       });
 
+      const id = point.details.id;
       const emergencyId = point.details.emergencyId;
       const date = point.details.timestamp;
 
@@ -197,14 +197,15 @@ useEffect(() => {
                         Date: ${formatDateWithTime(date)}<br>
                         Coordinates: ${point.lat.toFixed(
                           4
-                        )}, ${point.lng.toFixed(4)}<br>
-                        ${
-                          status === "pending"
-                            ? `<button class="p-2 bg-green-500 w-full my-2 text-white rounded-md" onclick="window.assignResponder('${emergencyId}')">Deploy</button>`
-                            : ""
-                        }
-                        
-                      `);
+                        )}, ${point.lng.toFixed(4)}<br>`).on('popupopen', function(){
+                          setShowModal(true);
+                          setEmergencyId(id)
+                        }).on('popupclose', function(){
+                          setShowModal(false);
+                          setEmergencyId(null);
+                        });
+
+
       cluster.bindPopup(`<b>ID: ${emergencyId}</b><br>
                         Type: ${emergencyType}<br>
                         Status: ${status}<br>
