@@ -26,12 +26,6 @@ const Records = () => {
   const [selectedId, setSelectedId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Helper function to safely concatenate name parts
-  const formatFullName = (firstname, lastname) => {
-    const name = [firstname, lastname].filter(Boolean).join(" ").trim();
-    return name || "Anonymous";
-  };
-
   // updated data to include the name of users and responder which not included in original list of emergencyHistory
   const updatedData = emergencyHistory.map((emergency) => {
     const user = users.find((user) => user?.id === emergency?.userId);
@@ -41,9 +35,9 @@ const Records = () => {
 
     return {
       ...emergency,
-      userName: formatFullName(user?.firstname, user?.lastname),
+      userName: user?.fullname,
       responderName: responder
-        ? formatFullName(responder?.firstname, responder?.lastname)
+        ? responder.fullname
         : "Waiting for responder",
       userID: user?.customId || "N/A",
       responderID: responder?.customId || "N/A",
@@ -64,7 +58,7 @@ const Records = () => {
     "status",
     "type",
     "description",
-    "location.address",
+    "location.geoCodeLocation",
   ];
 
   // to updated the value of filteredData which is the searchQuery
@@ -122,7 +116,7 @@ const Records = () => {
       <>
         <RowDataStyle data={recordDetails?.emergencyId} />
         <RowDataStyle data={recordDetails?.userName} />
-        <RowDataStyle data={recordDetails?.location?.address} />
+        <RowDataStyle data={recordDetails?.location?.geoCodeLocation} />
         <RowDataStyle data={formatDateWithTime(recordDetails?.date)} />
         <RowDataStyle data={recordDetails?.status} status />
         <td className="px-6 py-4">
@@ -270,7 +264,7 @@ const Records = () => {
                       {
                         label: "Geocode Location: ",
                         value:
-                          recordDetails?.location?.address ||
+                          recordDetails?.location?.geoCodeLocation ||
                           "No address available",
                       },
                       {

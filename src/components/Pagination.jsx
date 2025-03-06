@@ -50,7 +50,7 @@ const Pagination = ({
         <li key={i}>
           <button
             onClick={() => setCurrentPage(i)}
-            className={`hidden sm:flex items-center justify-center px-3 h-8 leading-tight ${
+            className={`flex items-center justify-center px-3 h-8 leading-tight ${
               currentPage === i
                 ? "text-gray-900 bg-primary-300 border border-gray-400 hover:bg-primary-400 hover:text-gray-700 dark:bg-gray-600 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-white"
                 : "text-gray-500 bg-white border border-gray-300 hover:bg-primary-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
