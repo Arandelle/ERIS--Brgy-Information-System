@@ -14,7 +14,7 @@ export const DisplayLayer = ({
   setAvailableYears,
   displayMode,
   setShowModal,
-  setEmergencyId
+  setSelectedEmergency
 }) => {
   const map = useMap();
   const { data: emergencyRequest } = useFetchData("emergencyRequest");
@@ -199,10 +199,10 @@ useEffect(() => {
                           4
                         )}, ${point.lng.toFixed(4)}<br>`).on('popupopen', function(){
                           setShowModal(true);
-                          setEmergencyId(id)
+                          setSelectedEmergency(point.details)
                         }).on('popupclose', function(){
                           setShowModal(false);
-                          setEmergencyId(null);
+                          setSelectedEmergency(null);
                         });
 
 

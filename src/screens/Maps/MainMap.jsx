@@ -71,7 +71,7 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [availableYears, setAvailableYears] = useState([]);
   const [displayMode, setDisplayMode] = useState("heat");
   const [showModal, setShowModal] = useState(false);
-  const [emergencyId, setEmergencyId] = useState('');
+  const [emergencyData, setSelectedEmergency] = useState({});
 
   // useEffect(() => {
   //   navigator.geolocation.getCurrentPosition(
@@ -103,7 +103,7 @@ const MainMap = ({ maximize, setMaximize }) => {
           setAvailableYears={setAvailableYears}
           displayMode={displayMode}
           setShowModal={setShowModal}
-          setEmergencyId={setEmergencyId}
+          setSelectedEmergency={setSelectedEmergency}
         />
         {availableYears.length > 0 && (
           <YearSelectorControl
@@ -116,7 +116,7 @@ const MainMap = ({ maximize, setMaximize }) => {
           displayMode={displayMode}
           setDisplayMode={setDisplayMode}
         />
-        {showModal && <ResponderListControl emergencyId={emergencyId}/>}
+        {showModal && <ResponderListControl emergencyData={emergencyData}/>}
         {displayMode === "heat" ? (
           <HeatLegendControl />
         ) : displayMode === "cluster" ? (

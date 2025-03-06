@@ -1,8 +1,10 @@
 import { useEffect, useMemo } from "react";
 import { useMap } from "react-leaflet";
 import { useFetchData } from "../../../hooks/useFetchData";
+import { push, ref, serverTimestamp, update } from "firebase/database";
+import { database } from "../../../services/firebaseConfig";
 
-export const ResponderListControl = ({emergencyId}) => {
+export const ResponderListControl = ({emergencyData}) => {
   const map = useMap();
   const { data: responders } = useFetchData("responders");
 
@@ -10,6 +12,87 @@ export const ResponderListControl = ({emergencyId}) => {
   const availableResponders = useMemo(() => {
     return responders ? responders.filter((responder) => !responder.pendingEmergency) : [];
   }, [responders]);
+
+  const updateEmergencyStatus = async (emergencyData, responderData) => {
+    if(!emergencyData) return alert("No emergency found");
+
+    try{
+        // Create history entry
+        const historyRef = ref(database, `responders/${responderData.id}/history`);
+        const newHistoryEntry = {
+          emergencyId: emergencyData.emergencyId,
+          userId: emergencyData.userId,
+          timestamp: serverTimestamp(),
+          location: emergencyData.location.geoCodeLocation,
+          description: emergencyData.description ?? "No description",
+          status: "on-going",
+          date: emergencyData.date,
+          responseTime: new Date().toISOString(),
+        };
+
+        const newHistoryRef = await push(historyRef, newHistoryEntry);
+        const historyId = newHistoryRef.key;
+
+        const updates = {
+            [`responders/${responderData.id}/pendingEmergency`]: {
+              userId: emergencyData.userId,
+              emergencyId: emergencyData.emergencyId,
+              historyId: historyId,
+              locationCoords: {
+                latitude: emergencyData.location.latitude,
+                longitude: emergencyData.location.longitude,
+              },
+            },
+            [`emergencyRequest/${emergencyData.id}/status`]: "on-going",
+            [`emergencyRequest/${emergencyData.id}/locationOfResponder`]: {
+              latitude: responderData.location.latitude,
+              longitude: responderData.location.longitude,
+            },
+            [`emergencyRequest/${emergencyData.id}/responderId`]: responderData.id,
+            [`emergencyRequest/${emergencyData.id}/responseTime`]:
+              new Date().toISOString(),
+            [`users/${emergencyData.userId}/emergencyHistory/${emergencyData.id}/status`]:
+              "on-going",
+            [`users/${emergencyData.userId}/emergencyHistory/${emergencyData.id}/locationOfResponder`]:
+              {
+                latitude: responderData.location.latitude,
+                longitude: responderData.location.longitude,
+              },
+            [`users/${emergencyData.userId}/emergencyHistory/${emergencyData.id}/responderId`]:
+              responderData.id,
+            [`users/${emergencyData.userId}/emergencyHistory/${emergencyData.id}/responseTime`]:
+              new Date().toISOString(),
+            [`users/${emergencyData.userId}/activeRequest/responderId`]: responderData.id,
+            [`users/${emergencyData.userId}/activeRequest/locationOfResponder`]: {
+              latitude: responderData.location.latitude,
+              longitude: responderData.location.longitude,
+            },
+          };
+  
+          // Create notification
+          const notificationRef = ref(
+            database,
+            `users/${emergencyData.userId}/notifications`
+          );
+          await push(notificationRef, {
+            responderId: responderData.id,
+            type: "responder",
+            title: "Emergency Response Dispatched",
+            message: `A responder has been dispatched for your ${emergencyData.type} emergency.`,
+            isSeen: false,
+            date: new Date().toISOString(),
+            timestamp: serverTimestamp(),
+            icon: "car-emergency",
+          });
+  
+          await update(ref(database), updates);
+          alert("Successfully deployed!");
+
+    }catch(error){
+        console.error(error);
+    }
+  }
+
 
   useEffect(() => {
     const marker = L.control({ position: "topleft" });
@@ -53,8 +136,8 @@ export const ResponderListControl = ({emergencyId}) => {
           button.classList.add("bg-blue-500", "text-white", "px-3", "py-1", "rounded-md", "hover:bg-blue-600");
 
           // Add click event listener
-          button.addEventListener("click", () => {
-            alert(`Deploying ${responder.fullname} to ${emergencyId}!`);
+          button.addEventListener("click", async () => {
+            await updateEmergencyStatus(emergencyData, responder);
           });
 
           // Append elements to the responder div
