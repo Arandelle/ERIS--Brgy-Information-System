@@ -23,12 +23,6 @@ export const DisplayLayer = ({
   const [heatLayer, setHeatLayer] = useState(null);
   const [mapMarkerLayer, setMapMarkerLayer] = useState(null);
 
-useEffect(() => {
-  window.assignResponder = () => {
-    setShowModal(prev => !prev);
-  };
-}, []);
-
   // Extract available years from data
   useEffect(() => {
     if (!emergencyRequest || emergencyRequest.length === 0) return;
@@ -176,7 +170,7 @@ useEffect(() => {
       const status = point.details.status;
       const markerIcon = status === "pending" ? blueIcon : greenIcon;
 
-      const marker = L.marker([point.lat, point.lng], { icon: markerIcon });
+      const marker = L.marker([point.lat, point.lng], { icon: redIcon });
       const cluster = L.circleMarker([point.lat, point.lng], {
         radius: 8,
         fillColor: emergencyColor,

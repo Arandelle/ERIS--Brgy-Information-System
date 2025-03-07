@@ -97,7 +97,7 @@ const Reports = () => {
     setGenerateData((prev) => ({
       ...prev,
       startDate: prev.startDate ?? formatDate(minTimestamp),
-      endDate: prev.endDate ?? formatDate(maxTimestamp),
+      endDate: prev.endDate ?? maxTimestamp,
     }));
   }, [emergencyRequest]);
 

@@ -103,7 +103,10 @@ export const ResponderListControl = ({emergencyData}) => {
           <div class="mb-2 p-1 text-center font-semibold">
             Available Responders
           </div>
-          <div id="responder-list-container"></div>
+          <div id="responder-list-container">
+          ${availableResponders.length > 0 ? (
+          ``) : `<p>No available responder</p>`}
+          </div>
         </div>`;
 
       return div;
@@ -114,7 +117,7 @@ export const ResponderListControl = ({emergencyData}) => {
     // Wait for the control to be added, then append responder list dynamically
     setTimeout(() => {
       const container = document.getElementById("responder-list-container");
-      if (container) {
+      if (container && availableResponders.length > 0) {
         availableResponders.forEach((responder) => {
           const responderDiv = document.createElement("div");
           responderDiv.classList.add("flex", "items-center", "space-x-2", "mb-1");

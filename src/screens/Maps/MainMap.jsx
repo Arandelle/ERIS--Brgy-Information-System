@@ -122,7 +122,7 @@ const MainMap = ({ maximize, setMaximize }) => {
         ) : displayMode === "cluster" ? (
           <ClusterLegendControl />
         ) : (
-          <MarkerLegendControl />
+          <MarkerLegendControl selectedYear={selectedYear}/>
         )}
         <CustomScrollZoomHandler />
         <CoverageRadius center={position} radius={700} />
