@@ -4,7 +4,7 @@ import { useFetchData } from "../../../hooks/useFetchData";
 import { push, ref, serverTimestamp, update } from "firebase/database";
 import { database } from "../../../services/firebaseConfig";
 
-export const ResponderListControl = ({emergencyData}) => {
+export const ResponderListControl = ({selectedEmergency}) => {
   const map = useMap();
   const { data: responders } = useFetchData("responders");
 
@@ -13,20 +13,20 @@ export const ResponderListControl = ({emergencyData}) => {
     return responders ? responders.filter((responder) => !responder.pendingEmergency) : [];
   }, [responders]);
 
-  const updateEmergencyStatus = async (emergencyData, responderData) => {
-    if(!emergencyData) return alert("No emergency found");
+  const updateEmergencyStatus = async (selectedEmergency, responderData) => {
+    if(!selectedEmergency) return alert("No emergency found");
 
     try{
         // Create history entry
         const historyRef = ref(database, `responders/${responderData.id}/history`);
         const newHistoryEntry = {
-          emergencyId: emergencyData.emergencyId,
-          userId: emergencyData.userId,
+          emergencyId: selectedEmergency.emergencyId,
+          userId: selectedEmergency.userId,
           timestamp: serverTimestamp(),
-          location: emergencyData.location.geoCodeLocation,
-          description: emergencyData.description ?? "No description",
+          location: selectedEmergency.location.geoCodeLocation,
+          description: selectedEmergency.description ?? "No description",
           status: "on-going",
-          date: emergencyData.date,
+          date: selectedEmergency.date,
           responseTime: new Date().toISOString(),
         };
 
@@ -35,35 +35,35 @@ export const ResponderListControl = ({emergencyData}) => {
 
         const updates = {
             [`responders/${responderData.id}/pendingEmergency`]: {
-              userId: emergencyData.userId,
-              emergencyId: emergencyData.emergencyId,
+              userId: selectedEmergency.userId,
+              emergencyId: selectedEmergency.emergencyId,
               historyId: historyId,
               locationCoords: {
-                latitude: emergencyData.location.latitude,
-                longitude: emergencyData.location.longitude,
+                latitude: selectedEmergency.location.latitude,
+                longitude: selectedEmergency.location.longitude,
               },
             },
-            [`emergencyRequest/${emergencyData.id}/status`]: "on-going",
-            [`emergencyRequest/${emergencyData.id}/locationOfResponder`]: {
+            [`emergencyRequest/${selectedEmergency.id}/status`]: "on-going",
+            [`emergencyRequest/${selectedEmergency.id}/locationOfResponder`]: {
               latitude: responderData.location.latitude,
               longitude: responderData.location.longitude,
             },
-            [`emergencyRequest/${emergencyData.id}/responderId`]: responderData.id,
-            [`emergencyRequest/${emergencyData.id}/responseTime`]:
+            [`emergencyRequest/${selectedEmergency.id}/responderId`]: responderData.id,
+            [`emergencyRequest/${selectedEmergency.id}/responseTime`]:
               new Date().toISOString(),
-            [`users/${emergencyData.userId}/emergencyHistory/${emergencyData.id}/status`]:
+            [`users/${selectedEmergency.userId}/emergencyHistory/${selectedEmergency.id}/status`]:
               "on-going",
-            [`users/${emergencyData.userId}/emergencyHistory/${emergencyData.id}/locationOfResponder`]:
+            [`users/${selectedEmergency.userId}/emergencyHistory/${selectedEmergency.id}/locationOfResponder`]:
               {
                 latitude: responderData.location.latitude,
                 longitude: responderData.location.longitude,
               },
-            [`users/${emergencyData.userId}/emergencyHistory/${emergencyData.id}/responderId`]:
+            [`users/${selectedEmergency.userId}/emergencyHistory/${selectedEmergency.id}/responderId`]:
               responderData.id,
-            [`users/${emergencyData.userId}/emergencyHistory/${emergencyData.id}/responseTime`]:
+            [`users/${selectedEmergency.userId}/emergencyHistory/${selectedEmergency.id}/responseTime`]:
               new Date().toISOString(),
-            [`users/${emergencyData.userId}/activeRequest/responderId`]: responderData.id,
-            [`users/${emergencyData.userId}/activeRequest/locationOfResponder`]: {
+            [`users/${selectedEmergency.userId}/activeRequest/responderId`]: responderData.id,
+            [`users/${selectedEmergency.userId}/activeRequest/locationOfResponder`]: {
               latitude: responderData.location.latitude,
               longitude: responderData.location.longitude,
             },
@@ -72,13 +72,13 @@ export const ResponderListControl = ({emergencyData}) => {
           // Create notification
           const notificationRef = ref(
             database,
-            `users/${emergencyData.userId}/notifications`
+            `users/${selectedEmergency.userId}/notifications`
           );
           await push(notificationRef, {
             responderId: responderData.id,
             type: "responder",
             title: "Emergency Response Dispatched",
-            message: `A responder has been dispatched for your ${emergencyData.type} emergency.`,
+            message: `A responder has been dispatched for your ${selectedEmergency.type} emergency.`,
             isSeen: false,
             date: new Date().toISOString(),
             timestamp: serverTimestamp(),
@@ -140,7 +140,7 @@ export const ResponderListControl = ({emergencyData}) => {
 
           // Add click event listener
           button.addEventListener("click", async () => {
-            await updateEmergencyStatus(emergencyData, responder);
+            await updateEmergencyStatus(selectedEmergency, responder);
           });
 
           // Append elements to the responder div

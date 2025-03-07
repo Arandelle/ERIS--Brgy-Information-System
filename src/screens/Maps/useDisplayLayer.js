@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useMap } from "react-leaflet";
-import { useFetchData } from "../../hooks/useFetchData";
 import L from "leaflet";
 import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
@@ -10,14 +9,14 @@ import { blueIcon, redIcon, greenIcon } from "../../helper/iconUtils";
 
 
 export const DisplayLayer = ({
+  emergencyRequest,
   selectedYear,
   setAvailableYears,
   displayMode,
-  setShowModal,
+  setShowResponderList,
   setSelectedEmergency
 }) => {
   const map = useMap();
-  const { data: emergencyRequest } = useFetchData("emergencyRequest");
   const [emergencyData, setEmergencyData] = useState([]);
   const [markerLayer, setMarkerLayer] = useState(null);
   const [heatLayer, setHeatLayer] = useState(null);
@@ -168,9 +167,9 @@ export const DisplayLayer = ({
       const emergencyType = point.details.emergencyType || "Other";
       const emergencyColor = emergencyTypeColors[emergencyType] || "#3388ff";
       const status = point.details.status;
-      const markerIcon = status === "pending" ? blueIcon : greenIcon;
+      const markerIcon = status === "pending" ? redIcon : greenIcon;
 
-      const marker = L.marker([point.lat, point.lng], { icon: redIcon });
+      const marker = L.marker([point.lat, point.lng], { icon: markerIcon });
       const cluster = L.circleMarker([point.lat, point.lng], {
         radius: 8,
         fillColor: emergencyColor,
@@ -192,10 +191,10 @@ export const DisplayLayer = ({
                         Coordinates: ${point.lat.toFixed(
                           4
                         )}, ${point.lng.toFixed(4)}<br>`).on('popupopen', function(){
-                          setShowModal(true);
+                          setShowResponderList(true);
                           setSelectedEmergency(point.details)
                         }).on('popupclose', function(){
-                          setShowModal(false);
+                          setShowResponderList(false);
                           setSelectedEmergency(null);
                         });
 

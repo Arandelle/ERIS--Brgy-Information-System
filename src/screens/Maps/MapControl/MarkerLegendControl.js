@@ -1,23 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useMap } from "react-leaflet";
-import { useFetchData } from "../../../hooks/useFetchData";
 
-export const MarkerLegendControl = ({selectedYear}) => {
+export const MarkerLegendControl = ({filteredEmergency,selectedYear}) => {
   const map = useMap();
-  const { data: emergencyRequest } = useFetchData("emergencyRequest");
-  const [filteredEmergency, setFilteredEmergency] = useState([]);
-
-  useEffect(() => {
-    if (!emergencyRequest || emergencyRequest.length === 0) return;
-    
-    const filteredData = emergencyRequest.filter((emergency) => {
-        const year = new Date(emergency.timestamp).getFullYear();    
-        return (year === selectedYear && ( emergency.status === "pending" || emergency.status === "on-going"))
-    }
-    );
-
-    setFilteredEmergency(filteredData);
-  }, [emergencyRequest, selectedYear]);
 
   useEffect(() => {
     const marker = L.control({ position: "bottomright" });
@@ -59,7 +44,7 @@ export const MarkerLegendControl = ({selectedYear}) => {
     return () => {
       marker.remove();
     };
-  }, [map, filteredEmergency, selectedYear]);
+  }, [map, filteredEmergency,selectedYear]);
 
   return null;
 };

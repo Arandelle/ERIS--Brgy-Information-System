@@ -11,6 +11,7 @@ import { ClusterLegendControl } from "./MapControl/ClusterLegendControl";
 import { HeatLegendControl } from "./MapControl/HeatLegendControl";
 import { MarkerLegendControl } from "./MapControl/MarkerLegendControl";
 import { ResponderListControl } from "./MapControl/ResponderListControl";
+import { useFetchData } from "../../hooks/useFetchData";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -66,12 +67,40 @@ const MaximizeMapControl = ({ maximize, setMaximize }) => {
 };
 
 const MainMap = ({ maximize, setMaximize }) => {
-  const [position, setPosition] = useState([14.33289, 120.85065]);
+  const {data: emergencyRequest} = useFetchData("emergencyRequest"); //fetch the emergency request from firebase
+  const [position, setPosition] = useState([14.33289, 120.85065]); // set default position (to center the circle)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
-  const [availableYears, setAvailableYears] = useState([]);
-  const [displayMode, setDisplayMode] = useState("heat");
-  const [showModal, setShowModal] = useState(false);
-  const [emergencyData, setSelectedEmergency] = useState({});
+  const [availableYears, setAvailableYears] = useState([]); // state to handle available years to reuse through out the map
+  const [displayMode, setDisplayMode] = useState("heat"); // default state for display mode to reuse in other hooks
+  const [showRespondersList, setShowResponderList] = useState(false); 
+  const [selectedEmergency, setSelectedEmergency] = useState({}); 
+
+  const [filteredEmergency, setFilteredEmergency] = useState([]);
+  const [emergencyTypeCount, setEmergencyTypeCount] = useState({});
+  
+  useEffect(() => {
+    if (!emergencyRequest || emergencyRequest.length === 0) return;
+  
+    const filter = emergencyRequest.filter((emergency) => {
+      const year = new Date(emergency.timestamp).getFullYear();
+      return year === selectedYear && (emergency.status === "pending" || emergency.status === "on-going");
+    });
+  
+    setFilteredEmergency(filter);
+  
+    // Count emergencyType occurrences
+    const typeCount = emergencyRequest.reduce((acc, emergency) => {
+      const year = new Date(emergency.timestamp).getFullYear();
+      if(year === selectedYear){
+        acc[emergency.emergencyType] = (acc[emergency.emergencyType] || 0) + 1;
+      };
+      return acc;
+    }, {});
+
+    setEmergencyTypeCount(typeCount);
+  
+  }, [emergencyRequest, selectedYear]);
+  
 
   // useEffect(() => {
   //   navigator.geolocation.getCurrentPosition(
@@ -99,10 +128,11 @@ const MainMap = ({ maximize, setMaximize }) => {
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <MaximizeMapControl maximize={maximize} setMaximize={setMaximize} />
         <DisplayLayer
+          emergencyRequest={emergencyRequest}
           selectedYear={selectedYear}
           setAvailableYears={setAvailableYears}
           displayMode={displayMode}
-          setShowModal={setShowModal}
+          setShowResponderList={setShowResponderList}
           setSelectedEmergency={setSelectedEmergency}
         />
         {availableYears.length > 0 && (
@@ -116,13 +146,13 @@ const MainMap = ({ maximize, setMaximize }) => {
           displayMode={displayMode}
           setDisplayMode={setDisplayMode}
         />
-        {showModal && <ResponderListControl emergencyData={emergencyData}/>}
+        {showRespondersList && <ResponderListControl selectedEmergency={selectedEmergency}/>}
         {displayMode === "heat" ? (
           <HeatLegendControl />
         ) : displayMode === "cluster" ? (
-          <ClusterLegendControl />
+          <ClusterLegendControl emergencyTypeCount={emergencyTypeCount} selectedYear={selectedEmergency}/>
         ) : (
-          <MarkerLegendControl selectedYear={selectedYear}/>
+          <MarkerLegendControl filteredEmergency={filteredEmergency} selectedYear={selectedYear}/>
         )}
         <CustomScrollZoomHandler />
         <CoverageRadius center={position} radius={700} />

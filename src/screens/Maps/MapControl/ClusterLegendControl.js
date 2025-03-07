@@ -1,7 +1,7 @@
 import { useMap } from "react-leaflet";
 import { useEffect } from "react";
 
-export const ClusterLegendControl = () => {
+export const ClusterLegendControl = ({emergencyTypeCount,selectedYear}) => {
   const map = useMap();
 
   useEffect(() => {
@@ -10,11 +10,11 @@ export const ClusterLegendControl = () => {
       const div = L.DomUtil.create("div", "container");
 
       const colors = [
-        { label: "Medical", color: "#ff5733" },
-        { label: "Fire", color: "#ff0000" },
-        { label: "Crime", color: "#000000" },
-        { label: "Natural Disaster", color: "#8e44ad" },
-        { label: "Other", color: "#3498db" },
+        { label: "Medical", color: "#ff5733", count: emergencyTypeCount["medical"] || 0 },
+        { label: "Fire", color: "#ff0000", count: emergencyTypeCount["fire"] || 0},
+        { label: "Crime", color: "#000000", count: emergencyTypeCount["crime"] || 0},
+        { label: "Natural Disaster", color: "#8e44ad", count: emergencyTypeCount["natural disaster"] || 0 },
+        { label: "Other", color: "#3498db", count: emergencyTypeCount["other"] || 0},
       ];
 
       div.innerHTML = `<div class="leaflet-bar bg-white p-2 rounded-md shadow-md" style="min-width: 150px;">
@@ -28,6 +28,7 @@ export const ClusterLegendControl = () => {
          <div class="w-5 h-5 p-2 mr-2 border border-[rgba(0,0,0,0.3)] rounded-md" style="background-color: ${color.color}"
           "></div>
         ${color.label}
+       ( ${color.count})
         </div>
       `
         )
@@ -42,5 +43,5 @@ export const ClusterLegendControl = () => {
     return () => {
       legendContainer.remove();
     };
-  }, [map]);
+  }, [map,emergencyTypeCount,selectedYear]);
 };
