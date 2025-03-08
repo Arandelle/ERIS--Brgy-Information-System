@@ -22,14 +22,17 @@ import { Spinner } from "./components/ReusableComponents/Spinner";
 import Hotlines from "./screens/Hotlines/Hotlines";
 import Certification from "./screens/Certification/Certification";
 import Templates from "./screens/Templates/Templates";
-import { toast } from "sonner";
-import { onChildAdded } from "firebase/database";
 import Reports from "./screens/Reports/Reports";
+import { useFetchData } from "./hooks/useFetchData";
+import soundFile from "./assets/sound/emergencySound.mp3";
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { data: notifications } = useFetchData(`admins/${user?.uid}/notifications`);
+  const [notifPrevLength, setNotifPrevLength] = useState(0);
+  const sound = new Audio(soundFile);
 
   // Check if user is logged in
   useEffect(() => {
@@ -49,39 +52,13 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  // // Listen for new notifications
-  // useEffect(() => {
-
-  //   if (!user) return;
-
-  //   const notificationsRef = ref(
-  //     database,
-  //     `admins/${user.uid}/notifications`
-  //   );
-
-  //   // Listen for new notifications
-  //   const unsubscribe = onChildAdded(notificationsRef, (snapshot) => {
-  //     const notification = snapshot.val();
-  //     if (notification) {
-  //       const {message, img, title} = notification;
-  //       toast(
-  //         <div className="flex items-center justify-center space-x-3 flex-row">
-  //         <img
-  //           className="w-12 h-12 rounded-full border-2 border-primary-500"
-  //           src={img}
-  //           alt="Notification avatar"
-  //         />
-  //         <div className="flex flex-col">
-  //           <p className="font-bold">{title}</p>
-  //           <p className="text-xs">{message}</p>
-  //         </div>
-  //       </div>
-  //       );
-  //     }
-  //   });
-
-  //   return () => unsubscribe(); // Cleanup listener on unmount
-  // }, [user]);
+  // Play sound when notifications change
+  useEffect(() => {
+    if (notifications.length > notifPrevLength) {
+      sound.play();
+    }
+    setNotifPrevLength(notifications.length);
+  }, [notifications]); // Runs only when notifications update
 
   if (loading) {
     return (
@@ -98,74 +75,19 @@ const App = () => {
         <div className="flex">
           <Routes>
             <Route path="*" element={<Navigate to="/" replace />} />
-            <Route
-              path="/"
-              element={
-                user && isAdmin ? <Navigate to="/dashboard" /> : <Login />
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={user && isAdmin ? <Dashboard /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/calendar"
-              element={user && isAdmin ? <MyCalendar /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/accounts/users"
-              element={
-                user && isAdmin ? (
-                  <UserList data="users" />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            />
-            <Route
-              path="/accounts/responders"
-              element={
-                user && isAdmin ? (
-                  <UserList data="responders" />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            />
-            <Route
-              path="/maps"
-              element={user && isAdmin ? <Map /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/announcement"
-              element={user && isAdmin ? <Announcement /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/hotlines"
-              element={user && isAdmin ? <Hotlines /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/certification"
-              element={
-                user && isAdmin ? <Certification /> : <Navigate to="/" />
-              }
-            />
-            <Route
-              path="/templates"
-              element={user && isAdmin ? <Templates /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/records"
-              element={user && isAdmin ? <Records /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/reports"
-              element={user && isAdmin ? <Reports /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/account-settings"
-              element={user && isAdmin ? <Setting /> : <Navigate to="/" />}
-            />
+            <Route path="/" element={user && isAdmin ? <Navigate to="/dashboard" /> : <Login />} />
+            <Route path="/dashboard" element={user && isAdmin ? <Dashboard /> : <Navigate to="/" />} />
+            <Route path="/calendar" element={user && isAdmin ? <MyCalendar /> : <Navigate to="/" />} />
+            <Route path="/accounts/users" element={user && isAdmin ? <UserList data="users" /> : <Navigate to="/" />} />
+            <Route path="/accounts/responders" element={user && isAdmin ? <UserList data="responders" /> : <Navigate to="/" />} />
+            <Route path="/maps" element={user && isAdmin ? <Map /> : <Navigate to="/" />} />
+            <Route path="/announcement" element={user && isAdmin ? <Announcement /> : <Navigate to="/" />} />
+            <Route path="/hotlines" element={user && isAdmin ? <Hotlines /> : <Navigate to="/" />} />
+            <Route path="/certification" element={user && isAdmin ? <Certification /> : <Navigate to="/" />} />
+            <Route path="/templates" element={user && isAdmin ? <Templates /> : <Navigate to="/" />} />
+            <Route path="/records" element={user && isAdmin ? <Records /> : <Navigate to="/" />} />
+            <Route path="/reports" element={user && isAdmin ? <Reports /> : <Navigate to="/" />} />
+            <Route path="/account-settings" element={user && isAdmin ? <Setting /> : <Navigate to="/" />} />
           </Routes>
         </div>
       </>
