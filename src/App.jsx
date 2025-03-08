@@ -103,7 +103,7 @@ const App = () => {
       <>
         <Toaster richColors Headless position="top-center" expand="true" />
         <div className="flex">
-          {showAlert && <AlertUi />}
+          {showAlert && user && isAdmin && <AlertUi />}
           <Routes>
             <Route path="*" element={<Navigate to="/" replace />} />
             <Route
