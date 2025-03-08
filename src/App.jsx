@@ -53,22 +53,23 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-    // Play sound when notifications change
-    useEffect(() => {
-      if (notifications.length > notifPrevLength) {
-       const handleVisibilityChange = () => {
-        if(!document.hidden){
-          sound.play()
-        }
-       };
-       document.addEventListener("visibilitychange", handleVisibilityChange);
-       return () => {
-         document.removeEventListener("visibilitychange", handleVisibilityChange);
-       };
-      }
-    
-      setNotifPrevLength(notifications.length);
-    }, [notifications]); // Runs only when notifications update
+  const playNotificationSound = (audio) => {
+    const context = new (window.AudioContext || window.webkitAudioContext)();
+    const track = context.createMediaElementSource(audio);
+    track.connect(context.destination);
+    context.resume().then(() => {
+      audio.play();
+    }).catch((error) => {
+      console.error("Failed to resume the audio context:", error);
+    });
+  };
+  
+  // Usage in the notifications effect
+  useEffect(() => {
+    if (notifications.length > notifPrevLength) {
+      playNotificationSound(sound);
+    }
+  }, [notifications]);
 
   if (loading) {
     return (
