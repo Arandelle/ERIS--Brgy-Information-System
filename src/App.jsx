@@ -32,7 +32,7 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
-  const {data: notifications} = useFetchData(`admins/${user?.uid}/notifications`);
+  const {data: emergencyRequest} = useFetchData(`emergencyRequest`);
   const [notifPrevLength , setNotifPrevLength] = useState(0);
 
   // Check if user is logged in
@@ -66,10 +66,18 @@ const App = () => {
   
   // Usage in the notifications effect
   useEffect(() => {
-    if (notifications.length > notifPrevLength) {
+
+    const pendingRequest = emergencyRequest.filter((emergency) => emergency.status === "pending");
+
+    console.log(pendingRequest)
+
+    if (pendingRequest.length > notifPrevLength) {
       playNotificationSound(sound);
     }
-  }, [notifications]);
+
+    setNotifPrevLength(pendingRequest.length);
+    console.log(notifPrevLength)
+  }, [emergencyRequest]);
 
   if (loading) {
     return (
