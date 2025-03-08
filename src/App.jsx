@@ -23,16 +23,17 @@ import Hotlines from "./screens/Hotlines/Hotlines";
 import Certification from "./screens/Certification/Certification";
 import Templates from "./screens/Templates/Templates";
 import Reports from "./screens/Reports/Reports";
-import { useFetchData } from "./hooks/useFetchData";
 import soundFile from "./assets/sound/emergencySound.mp3";
+import { useFetchData } from "./hooks/useFetchData";
+
 
 const App = () => {
+  const sound = new Audio(soundFile);
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { data: notifications } = useFetchData(`admins/${user?.uid}/notifications`);
-  const [notifPrevLength, setNotifPrevLength] = useState(0);
-  const sound = new Audio(soundFile);
+  const {data: notifications} = useFetchData(`admins/${user?.uid}/notifications`);
+  const [notifPrevLength , setNotifPrevLength] = useState(0);
 
   // Check if user is logged in
   useEffect(() => {
@@ -52,13 +53,22 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  // Play sound when notifications change
-  useEffect(() => {
-    if (notifications.length > notifPrevLength) {
-      sound.play();
-    }
-    setNotifPrevLength(notifications.length);
-  }, [notifications]); // Runs only when notifications update
+    // Play sound when notifications change
+    useEffect(() => {
+      if (notifications.length > notifPrevLength) {
+       const handleVisibilityChange = () => {
+        if(!document.hidden){
+          sound.play()
+        }
+       };
+       document.addEventListener("visibilitychange", handleVisibilityChange);
+       return () => {
+         document.removeEventListener("visibilitychange", handleVisibilityChange);
+       };
+      }
+    
+      setNotifPrevLength(notifications.length);
+    }, [notifications]); // Runs only when notifications update
 
   if (loading) {
     return (
@@ -75,19 +85,74 @@ const App = () => {
         <div className="flex">
           <Routes>
             <Route path="*" element={<Navigate to="/" replace />} />
-            <Route path="/" element={user && isAdmin ? <Navigate to="/dashboard" /> : <Login />} />
-            <Route path="/dashboard" element={user && isAdmin ? <Dashboard /> : <Navigate to="/" />} />
-            <Route path="/calendar" element={user && isAdmin ? <MyCalendar /> : <Navigate to="/" />} />
-            <Route path="/accounts/users" element={user && isAdmin ? <UserList data="users" /> : <Navigate to="/" />} />
-            <Route path="/accounts/responders" element={user && isAdmin ? <UserList data="responders" /> : <Navigate to="/" />} />
-            <Route path="/maps" element={user && isAdmin ? <Map /> : <Navigate to="/" />} />
-            <Route path="/announcement" element={user && isAdmin ? <Announcement /> : <Navigate to="/" />} />
-            <Route path="/hotlines" element={user && isAdmin ? <Hotlines /> : <Navigate to="/" />} />
-            <Route path="/certification" element={user && isAdmin ? <Certification /> : <Navigate to="/" />} />
-            <Route path="/templates" element={user && isAdmin ? <Templates /> : <Navigate to="/" />} />
-            <Route path="/records" element={user && isAdmin ? <Records /> : <Navigate to="/" />} />
-            <Route path="/reports" element={user && isAdmin ? <Reports /> : <Navigate to="/" />} />
-            <Route path="/account-settings" element={user && isAdmin ? <Setting /> : <Navigate to="/" />} />
+            <Route
+              path="/"
+              element={
+                user && isAdmin ? <Navigate to="/dashboard" /> : <Login />
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={user && isAdmin ? <Dashboard /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/calendar"
+              element={user && isAdmin ? <MyCalendar /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/accounts/users"
+              element={
+                user && isAdmin ? (
+                  <UserList data="users" />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+            <Route
+              path="/accounts/responders"
+              element={
+                user && isAdmin ? (
+                  <UserList data="responders" />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+            <Route
+              path="/maps"
+              element={user && isAdmin ? <Map /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/announcement"
+              element={user && isAdmin ? <Announcement /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/hotlines"
+              element={user && isAdmin ? <Hotlines /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/certification"
+              element={
+                user && isAdmin ? <Certification /> : <Navigate to="/" />
+              }
+            />
+            <Route
+              path="/templates"
+              element={user && isAdmin ? <Templates /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/records"
+              element={user && isAdmin ? <Records /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/reports"
+              element={user && isAdmin ? <Reports /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/account-settings"
+              element={user && isAdmin ? <Setting /> : <Navigate to="/" />}
+            />
           </Routes>
         </div>
       </>
