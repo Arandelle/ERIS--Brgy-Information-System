@@ -71,7 +71,6 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [position, setPosition] = useState([14.33289, 120.85065]); // set default position (to center the circle)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
   const [availableYears, setAvailableYears] = useState([]); // state to handle available years to reuse through out the map
-  const [hasPending, setHasPending] = useState(false);
   const [displayMode, setDisplayMode] = useState(''); // default state for display mode to reuse in other hooks
   const [showRespondersList, setShowResponderList] = useState(false); 
   const [selectedEmergency, setSelectedEmergency] = useState({}); 
@@ -80,7 +79,7 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [emergencyTypeCount, setEmergencyTypeCount] = useState({});
   
   useEffect(() => {
-    if (!emergencyRequest || emergencyRequest.length === 0) return;
+    if (!emergencyRequest || emergencyRequest.length === 0) return; // if no emergency request, stop execution
   
     // Filter emergencies for the selected year and pending/on-going statuses
     const filter = emergencyRequest.filter((emergency) => {
@@ -88,29 +87,31 @@ const MainMap = ({ maximize, setMaximize }) => {
       return year === selectedYear && (emergency.status === "pending" || emergency.status === "on-going");
     });
   
-    setFilteredEmergency(filter);
+    setFilteredEmergency(filter); // store filtered emergencies for further use (now it used for marker legend)
   
     // Check if there are any "pending" statuses in the filtered data
     const hasPendingStatus = filter.some((emergency) => emergency.status === "pending");
-    setHasPending(hasPendingStatus);
   
     // Dynamically set the display mode
-    if (hasPendingStatus) {
-      setDisplayMode("marker");
-    } else {
-      setDisplayMode("heat");
-    }
+    setDisplayMode((prevMode) => {
+      if(prevMode === "marker"){
+        return "marker"; // keep in marker mode if already selected, to prevent changing mode when in selected year has no pending emergency
+      };
+
+      return hasPendingStatus ? "marker" : "heat"; // default to heat if no pending status
+    })
   
-    // Count emergencyType occurrences
+    // Count emergency types and statuses for the selected year
     const typeCount = emergencyRequest.reduce((acc, emergency) => {
       const year = new Date(emergency.timestamp).getFullYear();
       if (year === selectedYear) {
-        acc[emergency.emergencyType] = (acc[emergency.emergencyType] || 0) + 1;
+        acc[emergency.emergencyType] = (acc[emergency.emergencyType] || 0) + 1; // {Fire: 1, medical: 2} etc
+        acc[emergency.status] = (acc[emergency.status] || 0) + 1 // {pending : 1, on-going: 2} etc
       }
       return acc;
-    }, {});
+    }, {}); // Start with an empty object as the initial value for accumulating counts
   
-    setEmergencyTypeCount(typeCount);
+    setEmergencyTypeCount(typeCount); // put it in state to reuse
   }, [emergencyRequest, selectedYear]);
   
   
@@ -165,7 +166,7 @@ const MainMap = ({ maximize, setMaximize }) => {
         ) : displayMode === "cluster" ? (
           <ClusterLegendControl emergencyTypeCount={emergencyTypeCount} selectedYear={selectedEmergency}/>
         ) : (
-          <MarkerLegendControl filteredEmergency={filteredEmergency} selectedYear={selectedYear}/>
+          <MarkerLegendControl filteredEmergency={filteredEmergency} selectedYear={selectedYear} emergencyTypeCount={emergencyTypeCount}/>
         )}
         <CustomScrollZoomHandler />
         <CoverageRadius center={position} radius={700} />

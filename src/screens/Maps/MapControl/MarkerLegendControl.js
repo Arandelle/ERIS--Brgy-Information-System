@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 
-export const MarkerLegendControl = ({filteredEmergency,selectedYear}) => {
+export const MarkerLegendControl = ({filteredEmergency,selectedYear,emergencyTypeCount}) => {
   const map = useMap();
 
   useEffect(() => {
@@ -10,8 +10,8 @@ export const MarkerLegendControl = ({filteredEmergency,selectedYear}) => {
       const div = L.DomUtil.create("div", "marker-legend");
 
       const colors = [
-        { label: "Pending", color: "#ff0000" },
-        { label: "On-going", color: "#28a745" },
+        { label: "Pending", color: "#ff0000", count: emergencyTypeCount["pending"] || 0},
+        { label: "On-going", color: "#28a745", count: emergencyTypeCount["on-going"] || 0},
       ];
 
       div.innerHTML = `<div class="leaflet-bar bg-white p-2 rounded-md shadow-md" style="min-width: 150px;">
@@ -27,6 +27,7 @@ export const MarkerLegendControl = ({filteredEmergency,selectedYear}) => {
              <div class="w-5 h-5 p-2 mr-2 border border-[rgba(0,0,0,0.3)] rounded-md" style="background-color: ${color.color}"
               "></div>
             ${color.label}
+            (${color.count})
             </div>
           `
                   )
