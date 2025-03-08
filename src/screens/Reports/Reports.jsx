@@ -7,7 +7,6 @@ import { exportToExcel } from "./exportToExcel";
 import { EmergencyTable, EmergencyChart } from "./PreviewData";
 import ReportInsights from "./ReportInsigths";
 import { handlePrint } from "./handlePrint";
-import { formatDate } from "../../helper/FormatDate";
 import UsersInsights from "./UsersInsights";
 import ExportPDF from "./ExportPDF";
 
@@ -96,7 +95,7 @@ const Reports = () => {
 
     setGenerateData((prev) => ({
       ...prev,
-      startDate: prev.startDate ?? formatDate(minTimestamp),
+      startDate: prev.startDate ?? minTimestamp,
       endDate: prev.endDate ?? maxTimestamp,
     }));
   }, [emergencyRequest]);
