@@ -71,7 +71,8 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [position, setPosition] = useState([14.33289, 120.85065]); // set default position (to center the circle)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
   const [availableYears, setAvailableYears] = useState([]); // state to handle available years to reuse through out the map
-  const [displayMode, setDisplayMode] = useState("heat"); // default state for display mode to reuse in other hooks
+  const [hasPending, setHasPending] = useState(false);
+  const [displayMode, setDisplayMode] = useState(''); // default state for display mode to reuse in other hooks
   const [showRespondersList, setShowResponderList] = useState(false); 
   const [selectedEmergency, setSelectedEmergency] = useState({}); 
 
@@ -81,6 +82,7 @@ const MainMap = ({ maximize, setMaximize }) => {
   useEffect(() => {
     if (!emergencyRequest || emergencyRequest.length === 0) return;
   
+    // Filter emergencies for the selected year and pending/on-going statuses
     const filter = emergencyRequest.filter((emergency) => {
       const year = new Date(emergency.timestamp).getFullYear();
       return year === selectedYear && (emergency.status === "pending" || emergency.status === "on-going");
@@ -88,18 +90,29 @@ const MainMap = ({ maximize, setMaximize }) => {
   
     setFilteredEmergency(filter);
   
+    // Check if there are any "pending" statuses in the filtered data
+    const hasPendingStatus = filter.some((emergency) => emergency.status === "pending");
+    setHasPending(hasPendingStatus);
+  
+    // Dynamically set the display mode
+    if (hasPendingStatus) {
+      setDisplayMode("marker");
+    } else {
+      setDisplayMode("heat");
+    }
+  
     // Count emergencyType occurrences
     const typeCount = emergencyRequest.reduce((acc, emergency) => {
       const year = new Date(emergency.timestamp).getFullYear();
-      if(year === selectedYear){
+      if (year === selectedYear) {
         acc[emergency.emergencyType] = (acc[emergency.emergencyType] || 0) + 1;
-      };
+      }
       return acc;
     }, {});
-
-    setEmergencyTypeCount(typeCount);
   
+    setEmergencyTypeCount(typeCount);
   }, [emergencyRequest, selectedYear]);
+  
   
 
   // useEffect(() => {

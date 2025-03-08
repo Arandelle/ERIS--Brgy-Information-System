@@ -25,15 +25,16 @@ import Templates from "./screens/Templates/Templates";
 import Reports from "./screens/Reports/Reports";
 import soundFile from "./assets/sound/emergencySound.mp3";
 import { useFetchData } from "./hooks/useFetchData";
-
+import AlertUi from "./screens/AlertUi";
 
 const App = () => {
   const sound = new Audio(soundFile);
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
-  const {data: emergencyRequest} = useFetchData(`emergencyRequest`);
-  const [notifPrevLength , setNotifPrevLength] = useState(0);
+  const { data: emergencyRequest } = useFetchData(`emergencyRequest`);
+  const [notifPrevLength, setNotifPrevLength] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
 
   // Check if user is logged in
   useEffect(() => {
@@ -57,26 +58,36 @@ const App = () => {
     const context = new (window.AudioContext || window.webkitAudioContext)();
     const track = context.createMediaElementSource(audio);
     track.connect(context.destination);
-    context.resume().then(() => {
-      audio.play();
-    }).catch((error) => {
-      console.error("Failed to resume the audio context:", error);
-    });
+    context
+      .resume()
+      .then(() => {
+        audio.play();
+      })
+      .catch((error) => {
+        console.error("Failed to resume the audio context:", error);
+      });
   };
-  
+
   // Usage in the notifications effect
   useEffect(() => {
-
-    const pendingRequest = emergencyRequest.filter((emergency) => emergency.status === "pending");
-
-    console.log(pendingRequest)
+    const pendingRequest = emergencyRequest.filter(
+      (emergency) => emergency.status === "pending"
+    );
 
     if (pendingRequest.length > notifPrevLength) {
       playNotificationSound(sound);
+      setShowAlert(true);
+      const timer = setTimeout(() => {
+        setShowAlert(false);
+      }, 10000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setShowAlert(false);
     }
 
     setNotifPrevLength(pendingRequest.length);
-    console.log(notifPrevLength)
+    setShowAlert(false);
   }, [emergencyRequest]);
 
   if (loading) {
@@ -92,6 +103,7 @@ const App = () => {
       <>
         <Toaster richColors Headless position="top-center" expand="true" />
         <div className="flex">
+          {showAlert && <AlertUi />}
           <Routes>
             <Route path="*" element={<Navigate to="/" replace />} />
             <Route
