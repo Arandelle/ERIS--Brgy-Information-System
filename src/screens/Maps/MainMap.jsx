@@ -71,7 +71,7 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [position, setPosition] = useState([14.33289, 120.85065]); // set default position (to center the circle)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
   const [availableYears, setAvailableYears] = useState([]); // state to handle available years to reuse through out the map
-  const [displayMode, setDisplayMode] = useState(''); // default state for display mode to reuse in other hooks
+  const [displayMode, setDisplayMode] = useState(); // default state for display mode to reuse in other hooks
   const [showRespondersList, setShowResponderList] = useState(false); 
   const [selectedEmergency, setSelectedEmergency] = useState({}); 
 
@@ -94,11 +94,11 @@ const MainMap = ({ maximize, setMaximize }) => {
   
     // Dynamically set the display mode
     setDisplayMode((prevMode) => {
-      if(prevMode === "marker"){
+      if(hasPendingStatus && !prevMode){
         return "marker"; // keep in marker mode if already selected, to prevent changing mode when in selected year has no pending emergency
-      };
+      }
 
-      return hasPendingStatus ? "marker" : "heat"; // default to heat if no pending status
+      return prevMode; // default to heat if no pending status
     })
   
     // Count emergency types and statuses for the selected year
