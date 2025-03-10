@@ -132,6 +132,7 @@ export const DisplayLayer = ({
           medical: "#ff5733",
           crime: "#000000",
           "natural disaster": "#8e44ad",
+          "public disturbance" : "#f1c40f",
           Unknown: "#6C757D",
         };
 
@@ -156,6 +157,7 @@ export const DisplayLayer = ({
       crime: "#000000",
       accident: "#f39c12",
       "natural disaster": "#8e44ad",
+      "public disturbance" : "#f1c40f",
       Other: "#3498db",
     };
 

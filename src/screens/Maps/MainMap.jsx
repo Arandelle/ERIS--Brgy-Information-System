@@ -98,7 +98,7 @@ const MainMap = ({ maximize, setMaximize }) => {
         return "marker"; // keep in marker mode if already selected, to prevent changing mode when in selected year has no pending emergency
       }
 
-      return prevMode; // default to heat if no pending status
+      return prevMode || "heat"; // default to heat if no pending status
     })
   
     // Count emergency types and statuses for the selected year

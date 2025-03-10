@@ -14,6 +14,7 @@ export const ClusterLegendControl = ({emergencyTypeCount,selectedYear}) => {
         { label: "Fire", color: "#ff0000", count: emergencyTypeCount["fire"] || 0},
         { label: "Crime", color: "#000000", count: emergencyTypeCount["crime"] || 0},
         { label: "Natural Disaster", color: "#8e44ad", count: emergencyTypeCount["natural disaster"] || 0 },
+        { label: "Public Disturbance", color: "#f1c40f", count: emergencyTypeCount["public disturbance"] || 0 },
         { label: "Other", color: "#3498db", count: emergencyTypeCount["other"] || 0},
       ];
 

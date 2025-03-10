@@ -232,13 +232,17 @@ const Records = () => {
                   <RenderDetails
                     data={[
                       {
-                        label: "User Name: ",
+                        label: "Sender Name: ",
                         value: recordDetails?.userName || "Anonymous",
                       },
                       {
                         label: "Responder Name: ",
                         value: recordDetails?.responderName,
                       },
+                      {
+                        label: "Sender Location",
+                        value: recordDetails?.senderLocation || recordDetails.location.geoCodeLocation
+                      }
                     ]}
                     
                   />
@@ -262,7 +266,7 @@ const Records = () => {
                   <RenderDetails
                     data={[
                       {
-                        label: "Geocode Location: ",
+                        label: "Emergency Location: ",
                         value:
                           recordDetails?.location?.geoCodeLocation ||
                           "No address available",
