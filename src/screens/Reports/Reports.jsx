@@ -237,6 +237,7 @@ const Reports = () => {
                         "Crime",
                         "Fire",
                         "Natural Disaster",
+                        "Public Disturbance",
                         "Other",
                       ]}
                     />
