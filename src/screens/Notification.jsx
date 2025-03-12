@@ -36,7 +36,7 @@ const Notification = () => {
       notifications.sort((a, b) => new Date(b.date) - new Date(a.date));
       setNotificationBadge(unseenCount); // Update the badge
     }
-  });
+  }, [notifications]);
 
   const handleDropdownToggle = () => {
     toggleDropdown();
