@@ -10,9 +10,9 @@ export const Spinner = ({ loading }) => {
 
   useEffect(() => {
     if (systemData) {
-      const imageUrl = systemData?.imageUrl;
-      setImage(imageUrl);
-      localStorage.setItem("image", imageUrl);
+      const fileUrl = systemData?.fileUrl;
+      setImage(fileUrl);
+      localStorage.setItem("image", fileUrl);
     }
   }, [systemData]);
 
