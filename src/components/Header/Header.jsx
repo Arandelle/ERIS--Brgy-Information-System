@@ -34,8 +34,8 @@ const Header = ({ toggleSideBar, isOpen }) => {
   // store the system data to localstorage to cache the data
   useEffect(() => {
     if(systemData){
-      const {imageUrl, title} = systemData;
-      const updatedSystem = {logo: imageUrl, title};
+      const {fileUrl, title} = systemData;
+      const updatedSystem = {logo: fileUrl, title};
       setSystem(updatedSystem);
       localStorage.setItem("system", JSON.stringify(updatedSystem));
     }

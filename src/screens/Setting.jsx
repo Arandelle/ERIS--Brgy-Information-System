@@ -12,11 +12,12 @@ import SwitchButton from "../components/ReusableComponents/SwitchButton";
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import handleErrorMessage from "../helper/handleErrorMessage";
 import useViewMedia from "../hooks/useViewMedia";
+import { useFetchSystemData } from "../hooks/useFetchSystemData";
 
 const Setting = () => {
   const { isModalOpen, currentMedia, openModal, closeModal } = useViewMedia();
   const user = auth.currentUser;
-  const { data: systemData, loading, setLoading } = useFetchData("systemData");
+  const {systemData, loading, setLoading} = useFetchSystemData();
   const { data: admin } = useFetchData("admins");
   const currentAdminDetails = admin.find((admin) => admin.id === user?.uid);
   const [systemState, setSystemState] = useState({
@@ -36,23 +37,18 @@ const Setting = () => {
   });
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  // create variable to get the specific data under systeData which is we use the id 'details'
-  const systemDataDetails = systemData.find((data) => data.id === "details");
-
   // render the systemState the systemData's data under the details
   useEffect(() => {
-    if (systemData && systemData.length > 0) {
-      if (systemDataDetails) {
+    if (systemData) {
         setSystemState((prevState) => ({
           ...prevState,
-          originalTitle: systemDataDetails.title,
-          title: systemDataDetails.title,
-          originalImageUrl: systemDataDetails.imageUrl,
-          previewImage: systemDataDetails.imageUrl,
+          originalTitle: systemData.title || "",
+          title: systemData.title,
+          originalImageUrl: systemData.fileUrl,
+          previewImage: systemData.fileUrl,
           isModified: false,
-          isOtpEnabled: systemDataDetails.isOtpEnabled,
+          isOtpEnabled: systemData.isOtpEnabled,
         }));
-      }
     }
   }, [systemData]);
 
@@ -124,7 +120,8 @@ const Setting = () => {
 
       const updatedData = {
         title: systemState.title,
-        image: systemState.logoImageFile,
+        file: systemState.logoImageFile,
+        fileType: "image"
       };
       await handleEditData("details", updatedData, "systemData");
       console.log("Data updated in database: ", updatedData);
@@ -146,7 +143,7 @@ const Setting = () => {
 
   const handleOtpEnable = async () => {
     try {
-      if (systemDataDetails.isOtpEnabled) {
+      if (systemData.isOtpEnabled) {
         const password = prompt("Please enter your password first before turning off the otp");
         if(!password){
           toast.warning("Password is required before proceeding");
@@ -156,7 +153,7 @@ const Setting = () => {
         const credential = EmailAuthProvider.credential(user.email, password);
         await reauthenticateWithCredential(user, credential);
         const newSytemData = {
-          ...systemDataDetails,
+          ...systemData,
           isOtpEnabled: false
         }
 
@@ -164,7 +161,7 @@ const Setting = () => {
         return;
       } else {
         const newSystemData = {
-          ...systemDataDetails,
+          ...systemData,
           isOtpEnabled: true,
         };
         await handleEditData("details", newSystemData, "systemData");
@@ -212,10 +209,10 @@ const Setting = () => {
               <div className="flex flex-col lg:flex-row space-y-4 items-start lg:items-center lg:justify-between w-3/4">
                 <div className="flex-1 basis-1/2 flex flex-row justify-start items-center space-x-4">
                   <img
-                    src={currentAdminDetails?.imageUrl}
+                    src={currentAdminDetails?.fileUrl}
                     className="w-16 h-16 lg:w-28 lg:h-28 rounded-full cursor-pointer"
                     loading="lazy"
-                    onClick={() => openModal(currentAdminDetails.imageUrl)}
+                    onClick={() => openModal(currentAdminDetails.fileUrl)}
                   />
                   <div className="flex flex-col flex-grow">
                     <p className="font-medium text-sm lg:text-lg dark:text-gray-200">
@@ -275,7 +272,7 @@ const Setting = () => {
                     src={
                       systemState.previewImage || systemState.originalImageUrl
                     }
-                    alt="System"
+                    alt="System Logo"
                     className="w-24 lg:w-40 rounded-full cursor-pointer"
                     loading="lazy"
                     onClick={() => openModal(systemState.previewImage)}

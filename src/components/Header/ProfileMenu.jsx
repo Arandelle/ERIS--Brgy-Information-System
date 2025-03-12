@@ -22,9 +22,9 @@ const Profile = () => {
   useEffect(() => {
 
     if(currentAdminDetails){
-      const {imageUrl} = currentAdminDetails;
-      setAdminProfile(imageUrl);
-      localStorage.setItem("adminProfile", imageUrl);
+      const {fileUrl} = currentAdminDetails;
+      setAdminProfile(fileUrl);
+      localStorage.setItem("adminProfile", fileUrl);
     }
   }, [currentAdminDetails])
 
