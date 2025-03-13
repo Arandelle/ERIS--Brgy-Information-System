@@ -28,6 +28,7 @@
     "express": "^4.21.2",
     "file-saver": "^2.0.5",
     "firebase": "^10.12.5",
+    "firebase-admin": "^13.2.0",
     "flowbite": "^2.3.0",
     "flowbite-datepicker": "^1.2.6",
     "html2canvas": "^1.4.1",

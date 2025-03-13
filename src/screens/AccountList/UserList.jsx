@@ -15,6 +15,9 @@ import ViewUserModal from "./ViewUserModal";
 import MediaModal from "../MediaModal";
 import useSearchParam from "../../hooks/useSearchParam";
 import useViewMedia from "../../hooks/useViewMedia";
+import { toast } from "sonner";
+import handleDeleteData from "../../hooks/handleDeleteData";
+import AskCard from "../../components/ReusableComponents/AskCard";
 
 const UserList = ({ data }) => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -23,6 +26,8 @@ const UserList = ({ data }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [addUser, setAddUser] = useState(null);
   const [userToViewInfo, setUserToViewInfo] = useState(null);
+  const [userToDelete, setUserToDelete] = useState("");
+  const [isDeleteUser, setIsDeleteUser] = useState(false);
   const { isModalOpen, currentMedia, openModal, closeModal } = useViewMedia();
   const [loading, setLoading] = useState(false);
 
@@ -75,6 +80,21 @@ const UserList = ({ data }) => {
     setUserToViewInfo(null);
   };
 
+  const handleDeleteUserClick = (user) => {
+    setUserToDelete(user);
+    setIsDeleteUser(prev => !prev)
+  }
+
+  const handleConfirmDeleteUser = async (id) => {
+    try{
+      await handleDeleteData(id, `users`);
+      setUserToDelete('')
+      setIsDeleteUser(prev => !prev);
+    }catch(error){
+      toast.error(error);
+    }
+  }
+
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">not yet set</p>;
 
@@ -88,7 +108,6 @@ const UserList = ({ data }) => {
   };
 
   const renderRow = (user) => {
-    const anonymous = <p className="italic text-nowrap text-xs">not yet set</p>;
     return (
       <>
         <td className="w-4 p-2 sm:p-4">
@@ -120,7 +139,7 @@ const UserList = ({ data }) => {
         <TableData data={user.mobileNum} />
         <TableData data={formatDate(user.createdAt)} />
         <td className="flex-1">
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center space-x-2">
             <IconButton
               icon={icons.view}
               color={"blue"}
@@ -130,6 +149,16 @@ const UserList = ({ data }) => {
               }}
               tooltip={"Show more details"}
               fontSize={"small"}
+            />
+            <IconButton 
+              icon={icons.delete}
+              color={"red"}
+              tooltip={`Delete ${data}`}
+              fontSize={"small"}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteUserClick(user);
+              }}
             />
           </div>
         </td>
@@ -166,6 +195,15 @@ const UserList = ({ data }) => {
 
           {isModalOpen && (
             <MediaModal currentMedia={currentMedia} closeModal={closeModal} />
+          )}
+
+          {isDeleteUser && (
+            <AskCard 
+              toggleModal={handleDeleteUserClick}
+              question={`Delete ${userToDelete.fullname} ? `}
+              confirmText={"Delete"}
+              onConfirm={() => handleConfirmDeleteUser(userToDelete.id)}
+            />
           )}
           <Table
             headers={HeaderData}
