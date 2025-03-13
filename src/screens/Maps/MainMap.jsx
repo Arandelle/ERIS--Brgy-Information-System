@@ -160,7 +160,7 @@ const MainMap = ({ maximize, setMaximize }) => {
           displayMode={displayMode}
           setDisplayMode={setDisplayMode}
         />
-        {showRespondersList && <ResponderListControl selectedEmergency={selectedEmergency}/>}
+        {showRespondersList && selectedEmergency.status === "pending" && <ResponderListControl selectedEmergency={selectedEmergency}/>}
         {displayMode === "heat" ? (
           <HeatLegendControl />
         ) : displayMode === "cluster" ? (

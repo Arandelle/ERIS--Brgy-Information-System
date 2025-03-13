@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import EmptyLogo from "../components/ReusableComponents/EmptyLogo";
 import { useFetchData } from "../hooks/useFetchData";
 import icons from "../assets/icons/Icons";
+import { toast } from "sonner";
+import handleDeleteData from "../hooks/handleDeleteData";
 
 const Notification = () => {
   const [notificationBadge, setNotificationBadge] = useState(0);
@@ -70,6 +72,14 @@ const Notification = () => {
     ? notifications
     : notifications.slice(0, 7);
 
+    const handleDeleteNotification = async (id) => {
+      try{
+        await handleDeleteData(id, `admins/${currentUser?.uid}/notifications`);
+      }catch(error){
+        toast.error(error)
+      }
+    } 
+
   return (
     <div>
       <div className="flex z-50">
@@ -122,6 +132,7 @@ const Notification = () => {
                     isNewlyOpened={isNewlyOpened}
                     notification={notification}
                     handleNotificationClick={handleNotificationClick}
+                    handleDeleteNotification={handleDeleteNotification}
                   />
                 );
               })
@@ -151,28 +162,24 @@ const NotificationItem = ({
   notification,
   isNewlyOpened,
   handleNotificationClick,
+  handleDeleteNotification
 }) => {
   const navigation = useNavigate();
   const { data: users } = useFetchData("users");
   const { data: responders } = useFetchData("responders");
 
-  const userDetails = useMemo(() => 
-    users?.find((user) => user.id === notification.userId), 
+  const userDetails = useMemo(
+    () => users?.find((user) => user.id === notification.userId),
     [users, notification.userId]
   );
 
-  const responderDetails = useMemo(() => 
-    responders?.find((responder) => responder.id === notification.userId), 
+  const responderDetails = useMemo(
+    () => responders?.find((responder) => responder.id === notification.userId),
     [responders, notification.userId]
   );
 
-  const image = useMemo(() => 
-    userDetails?.img || responderDetails?.img || "Unknown", 
-    [userDetails, responderDetails]
-  );
-
-  const customID = useMemo(() => 
-    userDetails?.customId || responderDetails?.customId || "Unknown", 
+  const image = useMemo(
+    () => userDetails?.img || responderDetails?.img || "Unknown",
     [userDetails, responderDetails]
   );
 
@@ -182,14 +189,14 @@ const NotificationItem = ({
     <a
       key={notification.id}
       href="#"
-      className={`${
+      className={`group ${
         !notification.isSeen && !isNewlyOpened
           ? "bg-white dark:bg-gray-600 hover:bg-gray-100 font-semibold"
           : "bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-900"
-      } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200`}
+      } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200 relative`}
       onClick={() => {
         handleNotificationClick(notification.id),
-        navigation(`/accounts/${dataType}`);
+          navigation(`/accounts/${dataType}`);
       }}
     >
       <div className="flex-shrink-0 relative">
@@ -213,7 +220,18 @@ const NotificationItem = ({
           </span>
         </div>
       </div>
+      {/* Delete Button */}
+      <button
+        className="absolute right-5 top-1/2 transform -translate-y-1/2 text-red-500 hover:text-red-700 hidden group-hover:block bg-white dark:bg-gray-700 p-2 rounded shadow-lg focus:outline-none"
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent parent onClick from firing
+          handleDeleteNotification(notification.id)
+        }}
+      >
+        Delete
+      </button>
     </a>
   );
 };
+
 export default Notification;
