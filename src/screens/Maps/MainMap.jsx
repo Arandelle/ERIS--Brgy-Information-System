@@ -21,8 +21,8 @@ import { MarkerLegendControl } from "./MapControl/MarkerLegendControl";
 import { ResponderListControl } from "./MapControl/ResponderListControl";
 import { useFetchData } from "../../hooks/useFetchData";
 import { MaximizeMapControl } from "./MapControl/MaximizeMapControl";
-import { EditMap } from "./MapControl/EditMap";
-import { EditMapModalControl } from "./MapControl/EditMapModalControl";
+import { EditMap } from "./EditMap/EditMap";
+import { EditMapModalControl } from "./EditMap/EditMapModalControl";
 import Modal from "../../components/ReusableComponents/Modal";
 import { InputField } from "../../components/ReusableComponents/InputField";
 
@@ -125,6 +125,7 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [emergencyTypeCount, setEmergencyTypeCount] = useState({});
   const [isEditMap, setIsEditMap] = useState(false);
   const [currentArea, setCurrentArea] = useState([]);
+  const [storedArea, setStoredArea] = useState([]);
   const [manualPointModal, setManualPointModal] = useState(false);
   const [latitudeInput, setLatitudeInput] = useState("");
   const [longitudeInput, setLongitudeInput] = useState("");
@@ -224,13 +225,25 @@ const MainMap = ({ maximize, setMaximize }) => {
 
   const clearAreas = () => {
     setCurrentArea([]);
-    setIsEditMap(false);
   };
 
   const removePoint = (index) => {
     const updatedArea = [...currentArea];
     updatedArea.splice(index, 1);
     setCurrentArea(updatedArea);
+  };
+
+  const saveAreas = () => {
+    if (currentArea.length >= 3) {
+      // close the area by adding the first point again
+      const closedArea = [...currentArea];
+      setStoredArea([...storedArea, closedArea]);
+      alert("Successfully saved");
+    } else {
+      alert("You need at least 3 points to create valid area");
+    }
+    setIsEditMap(false);
+    setCurrentArea([]);
   };
 
   if (!position) {
@@ -261,7 +274,11 @@ const MainMap = ({ maximize, setMaximize }) => {
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <MapEvents isEditMap={isEditMap} onMapClick={handleMapClick} />
         <MaximizeMapControl maximize={maximize} setMaximize={setMaximize} />
-        <EditMap isEditMap={isEditMap} setIsEditMap={setIsEditMap} />
+        <EditMap
+          isEditMap={isEditMap}
+          setIsEditMap={setIsEditMap}
+          saveAreas={saveAreas}
+        />
 
         {isEditMap && (
           <EditMapModalControl
@@ -269,7 +286,24 @@ const MainMap = ({ maximize, setMaximize }) => {
             clearAreas={clearAreas}
           />
         )}
+        
+        {/**render the stored or created points */}
+        {storedArea.map((area, index) => (
+          <Polygon
+            key={`area-${index}`}
+            positions={area}
+            pathOptions={{
+              fillColor: "red",
+              fillOpacity: 0.3,
+              color: "red",
+              weight: 2,
+            }}
+          >
+            <Popup>Restricted Area {index + 1}</Popup>
+          </Polygon>
+        ))}
 
+         {/** render the on-going creating points */}
         {currentArea.length > 0 && (
           <Polygon
             positions={currentArea}
@@ -282,6 +316,7 @@ const MainMap = ({ maximize, setMaximize }) => {
           />
         )}
         
+        {/** Display markers for the points of the current area */}
         {currentArea.map((point, index) => (
           <Marker key={`point-${index}`} position={point}>
             <Popup>
