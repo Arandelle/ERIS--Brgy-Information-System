@@ -9,15 +9,32 @@ export const EditMapModalControl = ({setManualPointModal,clearAreas}) => {
     const editMapButton = L.control({ position: "topleft" });
 
     editMapButton.onAdd = function () {
-      const div = L.DomUtil.create("div", "maximize-div");
+      const div = L.DomUtil.create("div", "editMap-div");
       div.innerHTML = `<div class="leaflet-bar p-2 border rounded cursor-pointer bg-white shadow-md" >
-        <button class="font-bold text-green-500">Add Point Manually</button> <br/>
-         <button class="font-bold text-red-500">Clear All Areas</button>
+        <button id="addPointBtn" class="font-bold text-green-500">Add Point Manually</button> <br/>
+         <button id="clearAreasBtn" class="font-bold text-red-500">Clear All Areas</button>
       </div>`;
 
-      L.DomEvent.on(div, "click", function () {
-        setManualPointModal(prev => !prev)
-      });
+      setTimeout(() => {
+        // get buttons and add event listeners
+        const addPointBtn = div.querySelector("#addPointBtn");
+        const clearAreasBtn = div.querySelector("#clearAreasBtn");
+
+        if(addPointBtn){
+            L.DomEvent.on(addPointBtn, "click", (e) => {
+                L.DomEvent.stopPropagation(e);
+                setManualPointModal(prev => !prev);
+            });
+        }
+
+        if(clearAreasBtn){
+            L.DomEvent.on(clearAreasBtn, "click", (e) => {
+                L.DomEvent.stopPropagation(e);
+                clearAreas();
+            });
+        }
+
+      }, 0); // ensure DOM elements exists before adding events
 
       L.DomEvent.disableClickPropagation(div);
       L.DomEvent.disableScrollPropagation(div);
@@ -30,7 +47,7 @@ export const EditMapModalControl = ({setManualPointModal,clearAreas}) => {
     return () => {
       editMapButton.remove();
     };
-  }, [map]);
+  }, [map, setManualPointModal, clearAreas]);
 
   return null;
 };
