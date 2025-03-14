@@ -59,7 +59,15 @@ const MapEvents = ({ isEditMap, onMapClick }) => {
   return null;
 };
 
-const RenderPointModal = ({manualPointModal, setManualPointModal, addManualPoint, latitudeInput,setLatitudeInput, longitudeInput, setLongitudeInput}) => {
+const RenderPointModal = ({
+  manualPointModal,
+  setManualPointModal,
+  addManualPoint,
+  latitudeInput,
+  setLatitudeInput,
+  longitudeInput,
+  setLongitudeInput,
+}) => {
   if (!manualPointModal) return null;
 
   return (
@@ -73,9 +81,7 @@ const RenderPointModal = ({manualPointModal, setManualPointModal, addManualPoint
             location is correctly identified on the map
           </p>
 
-          <form className="flex flex-col space-y-2"
-          onSubmit={addManualPoint}
-          >
+          <form className="flex flex-col space-y-2" onSubmit={addManualPoint}>
             <label className="text-gray-600">Latitude: </label>
             <InputField
               type="number"
@@ -92,7 +98,12 @@ const RenderPointModal = ({manualPointModal, setManualPointModal, addManualPoint
               onChange={(e) => setLongitudeInput(e.target.value)}
               required={true}
             />
-             <button type="submit" className="bg-blue-500 py-3 rounded-md text-white font-bold text-sm w-full">Add Point</button>
+            <button
+              type="submit"
+              className="bg-blue-500 py-3 rounded-md text-white font-bold text-sm w-full"
+            >
+              Add Point
+            </button>
           </form>
         </div>
       }
@@ -115,8 +126,8 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [isEditMap, setIsEditMap] = useState(false);
   const [currentArea, setCurrentArea] = useState([]);
   const [manualPointModal, setManualPointModal] = useState(false);
-  const [latitudeInput, setLatitudeInput] = useState('');
-  const [longitudeInput, setLongitudeInput] = useState('');
+  const [latitudeInput, setLatitudeInput] = useState("");
+  const [longitudeInput, setLongitudeInput] = useState("");
 
   useEffect(() => {
     if (!emergencyRequest || emergencyRequest.length === 0) return; // if no emergency request, stop execution
@@ -184,30 +195,43 @@ const MainMap = ({ maximize, setMaximize }) => {
     const longitude = parseFloat(longitudeInput);
 
     if (isNaN(latitude) || isNaN(longitude)) {
-      alert('Please enter valid numeric coordinates.');
+      alert("Please enter valid numeric coordinates.");
       return;
     }
 
-    if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
-      alert('Latitude must be between -90 and 90, and longitude between -180 and 180.');
+    if (
+      latitude < -90 ||
+      latitude > 90 ||
+      longitude < -180 ||
+      longitude > 180
+    ) {
+      alert(
+        "Latitude must be between -90 and 90, and longitude between -180 and 180."
+      );
       return;
     }
 
     setCurrentArea([...currentArea, [latitude, longitude]]);
-    setLatitudeInput('');
-    setLongitudeInput('');
+    setLatitudeInput("");
+    setLongitudeInput("");
     setManualPointModal(false);
 
     // Center map on the new point
-    if(mapRef.current){
-      mapRef.current.flyTo([latitude,longitude], 15);
+    if (mapRef.current) {
+      mapRef.current.flyTo([latitude, longitude], 15);
     }
   };
 
   const clearAreas = () => {
-    setCurrentArea([])
+    setCurrentArea([]);
     setIsEditMap(false);
-  }
+  };
+
+  const removePoint = (index) => {
+    const updatedArea = [...currentArea];
+    updatedArea.splice(index, 1);
+    setCurrentArea(updatedArea);
+  };
 
   if (!position) {
     return <div>Loading...</div>;
@@ -215,10 +239,17 @@ const MainMap = ({ maximize, setMaximize }) => {
 
   return (
     <div className="relative h-full">
-      {manualPointModal && <RenderPointModal manualPointModal={manualPointModal} setManualPointModal={setManualPointModal}
-        addManualPoint={addManualPoint} latitudeInput={latitudeInput} longitudeInput={longitudeInput} setLatitudeInput={setLatitudeInput} setLongitudeInput={setLongitudeInput}
-      />}
-
+      {manualPointModal && (
+        <RenderPointModal
+          manualPointModal={manualPointModal}
+          setManualPointModal={setManualPointModal}
+          addManualPoint={addManualPoint}
+          latitudeInput={latitudeInput}
+          longitudeInput={longitudeInput}
+          setLatitudeInput={setLatitudeInput}
+          setLongitudeInput={setLongitudeInput}
+        />
+      )}
       <MapContainer
         center={position}
         zoom={16}
@@ -230,10 +261,13 @@ const MainMap = ({ maximize, setMaximize }) => {
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <MapEvents isEditMap={isEditMap} onMapClick={handleMapClick} />
         <MaximizeMapControl maximize={maximize} setMaximize={setMaximize} />
-        <EditMap isEditMap={isEditMap} setIsEditMap={setIsEditMap}  />
+        <EditMap isEditMap={isEditMap} setIsEditMap={setIsEditMap} />
 
         {isEditMap && (
-          <EditMapModalControl setManualPointModal={setManualPointModal} clearAreas={clearAreas}/>
+          <EditMapModalControl
+            setManualPointModal={setManualPointModal}
+            clearAreas={clearAreas}
+          />
         )}
 
         {currentArea.length > 0 && (
@@ -247,13 +281,25 @@ const MainMap = ({ maximize, setMaximize }) => {
             }}
           />
         )}
-
+        
         {currentArea.map((point, index) => (
           <Marker key={`point-${index}`} position={point}>
             <Popup>
-              Point {index + 1}
-              <br />
-              Lat: {point[0].toFixed(6)}, Lng: {point[1].toFixed(6)}
+              <div>
+                <p>Point {index + 1}</p>
+                <p>
+                  Lat: {point[0].toFixed(6)}, Lng: {point[1].toFixed(6)}
+                </p>
+                <button
+                  onClick={(event) => {
+                    L.DomEvent.stopPropagation(event); // Prevent popup from closing
+                    removePoint(index);
+                  }}
+                  className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+                >
+                  Remove
+                </button>
+              </div>
             </Popup>
           </Marker>
         ))}
