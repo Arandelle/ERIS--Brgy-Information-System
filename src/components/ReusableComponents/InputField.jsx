@@ -6,6 +6,7 @@ export const InputField = ({
   onFocus,
   onBlur,
   className,
+  required
 }) => {
   return (
     <input
@@ -16,6 +17,7 @@ export const InputField = ({
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}
+      required={required}
     />
   );
 };
