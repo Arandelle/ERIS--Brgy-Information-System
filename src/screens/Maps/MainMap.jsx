@@ -26,6 +26,7 @@ import { EditMapModalControl } from "./EditMap/EditMapModalControl";
 import { RenderPointModal } from "./EditMap/RenderPointModal";
 import handleEditData from "../../hooks/handleEditData";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
+import { greenIcon } from "../../helper/iconUtils";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -286,7 +287,7 @@ const MainMap = ({ maximize, setMaximize }) => {
 
         {/** Display markers for the points of the current area */}
         {currentArea.map((point, index) => (
-          <Marker key={`point-${index}`} position={point}>
+          <Marker key={`point-${index}`} position={point} icon={greenIcon}>
             <Popup>
               <div>
                 <p>Point {index + 1}</p>
