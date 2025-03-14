@@ -205,7 +205,6 @@ const MainMap = ({ maximize, setMaximize }) => {
       };
 
       await handleEditData("details", coordinatesData, "systemData");
-      alert("Successfully saved");
     } else {
       alert("You need at least 3 points to create valid area");
     }
@@ -268,7 +267,7 @@ const MainMap = ({ maximize, setMaximize }) => {
               weight: 0.5,
             }}
           >
-            <Popup>Emergency Area</Popup>
+            {/* <Popup>Emergency Area</Popup> */}
           </Polygon>
         )}
 
