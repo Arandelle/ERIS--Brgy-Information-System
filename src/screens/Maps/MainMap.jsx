@@ -23,8 +23,8 @@ import { useFetchData } from "../../hooks/useFetchData";
 import { MaximizeMapControl } from "./MapControl/MaximizeMapControl";
 import { EditMap } from "./EditMap/EditMap";
 import { EditMapModalControl } from "./EditMap/EditMapModalControl";
-import Modal from "../../components/ReusableComponents/Modal";
-import { InputField } from "../../components/ReusableComponents/InputField";
+import { RenderPointModal } from "./EditMap/RenderPointModal";
+
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -57,58 +57,6 @@ const MapEvents = ({ isEditMap, onMapClick }) => {
   });
 
   return null;
-};
-
-const RenderPointModal = ({
-  manualPointModal,
-  setManualPointModal,
-  addManualPoint,
-  latitudeInput,
-  setLatitudeInput,
-  longitudeInput,
-  setLongitudeInput,
-}) => {
-  if (!manualPointModal) return null;
-
-  return (
-    <Modal
-      closeButton={() => setManualPointModal((prev) => !prev)}
-      title={"Add Exact Coordinates"}
-      children={
-        <div className="max-w-2xl space-y-6">
-          <p className="text-sm text-gray-600 dark:text-gray-300 italic">
-            Enter the exact latitude and longitude coordinates to ensure the
-            location is correctly identified on the map
-          </p>
-
-          <form className="flex flex-col space-y-2" onSubmit={addManualPoint}>
-            <label className="text-gray-600">Latitude: </label>
-            <InputField
-              type="number"
-              placeholder={"Enter latitude (e.g., 37.7749)"}
-              value={latitudeInput}
-              onChange={(e) => setLatitudeInput(e.target.value)}
-              required={true}
-            />
-            <label className="text-gray-600">Longitude: </label>
-            <InputField
-              type="number"
-              placeholder={"Enter longitude (e.g., -122.4194)"}
-              value={longitudeInput}
-              onChange={(e) => setLongitudeInput(e.target.value)}
-              required={true}
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 py-3 rounded-md text-white font-bold text-sm w-full"
-            >
-              Add Point
-            </button>
-          </form>
-        </div>
-      }
-    />
-  );
 };
 
 const MainMap = ({ maximize, setMaximize }) => {
@@ -233,7 +181,9 @@ const MainMap = ({ maximize, setMaximize }) => {
     setCurrentArea(updatedArea);
   };
 
+  console.log("current area lenght:", currentArea.length)
   const saveAreas = () => {
+    console.log("save current area: ", currentArea.length)
     if (currentArea.length >= 3) {
       // close the area by adding the first point again
       const closedArea = [...currentArea];
@@ -274,12 +224,15 @@ const MainMap = ({ maximize, setMaximize }) => {
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <MapEvents isEditMap={isEditMap} onMapClick={handleMapClick} />
         <MaximizeMapControl maximize={maximize} setMaximize={setMaximize} />
+
+        {/** display the button to trigger edit map or save map */}
         <EditMap
           isEditMap={isEditMap}
           setIsEditMap={setIsEditMap}
           saveAreas={saveAreas}
         />
 
+        {/** to display the control of buttons : add point manually and clear areas */}
         {isEditMap && (
           <EditMapModalControl
             setManualPointModal={setManualPointModal}

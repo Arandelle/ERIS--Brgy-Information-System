@@ -2,7 +2,7 @@ import { useMap } from "react-leaflet";
 import { useEffect } from "react";
 
 
-export const EditMap = ({ isEditMap, setIsEditMap,saveAreas }) => {
+export const EditMap = ({ isEditMap, setIsEditMap,saveAreas}) => {
   const map = useMap();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export const EditMap = ({ isEditMap, setIsEditMap,saveAreas }) => {
       </button>`;
 
       L.DomEvent.on(button, "click", function () {
-      isEditMap ? saveAreas() : setIsEditMap(prev => !prev)
+      isEditMap ? saveAreas() : setIsEditMap(prev => !prev);
       });
 
       L.DomEvent.disableClickPropagation(button);
@@ -31,7 +31,7 @@ export const EditMap = ({ isEditMap, setIsEditMap,saveAreas }) => {
     return () => {
       editMapButton.remove();
     };
-  }, [map, isEditMap]);
+  }, [map, isEditMap, saveAreas]);
 
   return null;
 };
