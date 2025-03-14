@@ -36,6 +36,8 @@ export const ClusterLegendControl = ({emergencyTypeCount,selectedYear}) => {
         .join("")}
     </div>
   `;
+     L.DomEvent.disableClickPropagation(div);
+      L.DomEvent.disableScrollPropagation(div);
   return div;
     };
 

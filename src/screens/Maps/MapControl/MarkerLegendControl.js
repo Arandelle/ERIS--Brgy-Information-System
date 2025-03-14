@@ -37,6 +37,8 @@ export const MarkerLegendControl = ({filteredEmergency,selectedYear,emergencyTyp
           
         </div>
       `;
+      L.DomEvent.disableClickPropagation(div);
+      L.DomEvent.disableScrollPropagation(div);
       return div;
     };
 

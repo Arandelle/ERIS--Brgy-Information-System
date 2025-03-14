@@ -44,6 +44,8 @@ export const DisplayModeControl = ({ displayMode, setDisplayMode }) => {
         });
       }, 100);
       
+      L.DomEvent.disableClickPropagation(div);
+      L.DomEvent.disableScrollPropagation(div)
       return div;
     };
     

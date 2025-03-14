@@ -38,7 +38,8 @@ export const HeatLegendControl = () => {
             .join("")}
         </div>
       `;
-
+      L.DomEvent.disableClickPropagation(div);
+      L.DomEvent.disableScrollPropagation(div)
       return div;
     };
 
