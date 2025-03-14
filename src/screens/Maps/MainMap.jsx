@@ -24,7 +24,8 @@ import { MaximizeMapControl } from "./MapControl/MaximizeMapControl";
 import { EditMap } from "./EditMap/EditMap";
 import { EditMapModalControl } from "./EditMap/EditMapModalControl";
 import { RenderPointModal } from "./EditMap/RenderPointModal";
-
+import handleEditData from "../../hooks/handleEditData";
+import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -62,6 +63,7 @@ const MapEvents = ({ isEditMap, onMapClick }) => {
 const MainMap = ({ maximize, setMaximize }) => {
   const mapRef = useRef(null);
   const { data: emergencyRequest } = useFetchData("emergencyRequest"); //fetch the emergency request from firebase
+  const { systemData } = useFetchSystemData();
   const [position, setPosition] = useState([14.33289, 120.85065]); // set default position (to center the circle)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
   const [availableYears, setAvailableYears] = useState([]); // state to handle available years to reuse through out the map
@@ -77,6 +79,17 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [manualPointModal, setManualPointModal] = useState(false);
   const [latitudeInput, setLatitudeInput] = useState("");
   const [longitudeInput, setLongitudeInput] = useState("");
+
+  console.log(systemData?.coordinates);
+
+  useEffect(() => {
+    if (systemData && systemData.coordinates) {
+      // Convert object to array
+      const formattedArea = Object.values(systemData.coordinates);
+
+      setStoredArea(formattedArea); // Now storedArea is an array of {lat, lng}
+    }
+  }, [systemData]);
 
   useEffect(() => {
     if (!emergencyRequest || emergencyRequest.length === 0) return; // if no emergency request, stop execution
@@ -181,13 +194,17 @@ const MainMap = ({ maximize, setMaximize }) => {
     setCurrentArea(updatedArea);
   };
 
-  console.log("current area lenght:", currentArea.length)
-  const saveAreas = () => {
-    console.log("save current area: ", currentArea.length)
+  const saveAreas = async () => {
     if (currentArea.length >= 3) {
-      // close the area by adding the first point again
-      const closedArea = [...currentArea];
-      setStoredArea([...storedArea, closedArea]);
+      const coordinatesData = {
+        coordinates: currentArea.reduce((acc, point, index) => {
+          acc[`Point ${index + 1}`] = { lat: point[0], lng: point[1] };
+
+          return acc;
+        }, {}),
+      };
+
+      await handleEditData("details", coordinatesData, "systemData");
       alert("Successfully saved");
     } else {
       alert("You need at least 3 points to create valid area");
@@ -239,24 +256,23 @@ const MainMap = ({ maximize, setMaximize }) => {
             clearAreas={clearAreas}
           />
         )}
-        
+
         {/**render the stored or created points */}
-        {storedArea.map((area, index) => (
+        {storedArea.length > 0 && (
           <Polygon
-            key={`area-${index}`}
-            positions={area}
+            positions={storedArea} // Now it's an array
             pathOptions={{
-              fillColor: "red",
-              fillOpacity: 0.3,
-              color: "red",
-              weight: 2,
+              fillColor: "#3388ff",
+              fillOpacity: 0.2,
+              color: "#3388ff",
+              weight: 0.5,
             }}
           >
-            <Popup>Restricted Area {index + 1}</Popup>
+            <Popup>Emergency Area</Popup>
           </Polygon>
-        ))}
+        )}
 
-         {/** render the on-going creating points */}
+        {/** render the on-going creating points */}
         {currentArea.length > 0 && (
           <Polygon
             positions={currentArea}
@@ -268,7 +284,7 @@ const MainMap = ({ maximize, setMaximize }) => {
             }}
           />
         )}
-        
+
         {/** Display markers for the points of the current area */}
         {currentArea.map((point, index) => (
           <Marker key={`point-${index}`} position={point}>
@@ -331,7 +347,7 @@ const MainMap = ({ maximize, setMaximize }) => {
           />
         )}
         <CustomScrollZoomHandler />
-        <CoverageRadius center={position} radius={700} />
+        {/* <CoverageRadius center={position} radius={700} /> */}
       </MapContainer>
     </div>
   );
