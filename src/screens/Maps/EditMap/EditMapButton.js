@@ -2,7 +2,7 @@ import { useMap } from "react-leaflet";
 import { useEffect } from "react";
 
 
-export const EditMap = ({ isEditMap, setIsEditMap,saveAreas}) => {
+export const EditMapButton = ({ isEditMap, setIsEditMap,saveAreas}) => {
   const map = useMap();
 
   useEffect(() => {
@@ -11,6 +11,7 @@ export const EditMap = ({ isEditMap, setIsEditMap,saveAreas}) => {
     editMapButton.onAdd = function () {
       const button = L.DomUtil.create("button", "maximize-button");
       button.innerHTML = `<button class="leaflet-bar p-2 border rounded cursor-pointer bg-white shadow-md" >
+    ${isEditMap ? `<p>Click the map to start</p>` : ``}
        <p class="cursor-pointer font-bold">
        ${isEditMap ? "Save Map" : "Edit Map"}
        </p>

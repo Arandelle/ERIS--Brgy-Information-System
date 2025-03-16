@@ -2,7 +2,7 @@ import { useMap } from "react-leaflet";
 import { useEffect } from "react";
 
 
-export const EditMapModalControl = ({setManualPointModal,clearAreas}) => {
+export const AddManualPointControl = ({setManualPointModal,clearAreas}) => {
   const map = useMap();
 
   useEffect(() => {

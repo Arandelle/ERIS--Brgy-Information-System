@@ -21,12 +21,17 @@ import { MarkerLegendControl } from "./MapControl/MarkerLegendControl";
 import { ResponderListControl } from "./MapControl/ResponderListControl";
 import { useFetchData } from "../../hooks/useFetchData";
 import { MaximizeMapControl } from "./MapControl/MaximizeMapControl";
-import { EditMap } from "./EditMap/EditMap";
-import { EditMapModalControl } from "./EditMap/EditMapModalControl";
+import { EditMapButton } from "./EditMap/EditMapButton";
+import { AddManualPointControl } from "./EditMap/AddManualPointControl";
 import { RenderPointModal } from "./EditMap/RenderPointModal";
 import handleEditData from "../../hooks/handleEditData";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import { greenIcon } from "../../helper/iconUtils";
+import AskCard from "../../components/ReusableComponents/AskCard";
+import { toast } from "sonner";
+import {EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
+import { auth } from "../../services/firebaseConfig";
+import handleErrorMessage from "../../helper/handleErrorMessage";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -63,6 +68,7 @@ const MapEvents = ({ isEditMap, onMapClick }) => {
 
 const MainMap = ({ maximize, setMaximize }) => {
   const mapRef = useRef(null);
+  const user = auth.currentUser;
   const { data: emergencyRequest } = useFetchData("emergencyRequest"); //fetch the emergency request from firebase
   const { systemData } = useFetchSystemData();
   const [position, setPosition] = useState([14.33289, 120.85065]); // set default position (to center the circle)
@@ -80,6 +86,7 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [manualPointModal, setManualPointModal] = useState(false);
   const [latitudeInput, setLatitudeInput] = useState("");
   const [longitudeInput, setLongitudeInput] = useState("");
+  const [isSaveMap, setIsSaveMap] = useState(false);
 
   console.log(systemData?.coordinates);
 
@@ -196,21 +203,40 @@ const MainMap = ({ maximize, setMaximize }) => {
   };
 
   const saveAreas = async () => {
-    if (currentArea.length >= 3) {
-      const coordinatesData = {
-        coordinates: currentArea.reduce((acc, point, index) => {
-          acc[`Point ${index + 1}`] = { lat: point[0], lng: point[1] };
+    try{
+      if (currentArea.length >= 3) {
+        const password = prompt("Please enter your password for security purposes");
+        if(!password){
+          toast.error("Please enter your password before proceeding");
+          return
+        }
+        if(!user){
+          toast.error("User not authenticated");
+          return;
+        }
+        // reauthenticate the user
+        const credential = EmailAuthProvider.credential(user.email, password);
+        await reauthenticateWithCredential(user, credential);
+  
+        const coordinatesData = {
+          coordinates: currentArea.reduce((acc, point, index) => {
+            acc[`Point ${index + 1}`] = { lat: point[0], lng: point[1] };
+  
+            return acc;
+          }, {}),
+        };
+  
+        await handleEditData("details", coordinatesData, "systemData");
+      } else {
+        alert("You need at least 3 points to create valid area");
+      }
 
-          return acc;
-        }, {}),
-      };
-
-      await handleEditData("details", coordinatesData, "systemData");
-    } else {
-      alert("You need at least 3 points to create valid area");
-    }
-    setIsEditMap(false);
-    setCurrentArea([]);
+      setIsEditMap(false);
+      setCurrentArea([]);
+      setIsSaveMap(false);
+    } catch(error){
+      handleErrorMessage(error)
+    };
   };
 
   if (!position) {
@@ -243,15 +269,15 @@ const MainMap = ({ maximize, setMaximize }) => {
         <MaximizeMapControl maximize={maximize} setMaximize={setMaximize} />
 
         {/** display the button to trigger edit map or save map */}
-        <EditMap
+        <EditMapButton
           isEditMap={isEditMap}
           setIsEditMap={setIsEditMap}
-          saveAreas={saveAreas}
+          saveAreas={() => setIsSaveMap(true)}
         />
 
         {/** to display the control of buttons : add point manually and clear areas */}
         {isEditMap && (
-          <EditMapModalControl
+          <AddManualPointControl
             setManualPointModal={setManualPointModal}
             clearAreas={clearAreas}
           />
@@ -349,6 +375,15 @@ const MainMap = ({ maximize, setMaximize }) => {
         <CustomScrollZoomHandler />
         {/* <CoverageRadius center={position} radius={700} /> */}
       </MapContainer>
+
+      {isSaveMap && (
+        <AskCard 
+          toggleModal={(prev) => setIsSaveMap(!prev)}
+          question={"Please double-check the updated map,as it will directly reflect on the user's map as well"}
+          confirmText={"Save Map"}
+          onConfirm={saveAreas}
+        />
+      )}
     </div>
   );
 };
