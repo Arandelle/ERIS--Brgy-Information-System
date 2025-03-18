@@ -4,19 +4,18 @@ import Toolbar from "../components/ToolBar";
 import { useState } from "react";
 import Table from "../components/Table";
 import Pagination from "../components/Pagination";
-import useSearchParam from "../hooks/useSearchParam";
 import { useFetchData } from "../hooks/useFetchData";
 import useFilteredData from "../components/SearchQuery";
 import usePagination from "../hooks/usePagination";
-import { formatDate } from "../helper/FormatDate";
+import { formatDateWithTime } from "../helper/FormatDate";
 
 const Audit = () => {
-  const { setSearchParams } = useSearchParam();
   const { data: userlogs } = useFetchData("usersLog");
   const { data: users = [] } = useFetchData("users");
   const { data: responders = [] } = useFetchData("responders");
+  const { data: admins = [] } = useFetchData("admins");
   const [searchQuery, setSearchQuery] = useState("");
-  const HeaderData = ["User Id","Fullname", "Date", "Action"];
+  const HeaderData = ["User Id","Fullname","Type", "Date", "Action"];
   // search field to get the value with
   const searchFields = ["date","fullname", "type", "userId"];
 
@@ -26,11 +25,15 @@ const Audit = () => {
     const responder = responders.find(
       (responder) => responder?.id === log?.userId
     );
+    const admin = admins.find(
+      (admin) => admin?.id === log?.userId
+    );
 
     return {
       ...log,
-      fullname: user?.fullname || responder?.fullname,
-      userId: user?.customId || responder?.customId ||  "N/A",
+      fullname: user?.fullname || responder?.fullname || admin?.fullname ||  "-",
+      userId: user?.customId || responder?.customId || admin?.id ||  "-",
+      type: user ? "resident" : responder ? "responder" : admin ?  "admin" : "-",
     };
   });
 
@@ -50,8 +53,9 @@ const Audit = () => {
        <>
         <TdStyle data={userLog.userId}/>
         <TdStyle data={userLog.fullname}/>
-        <TdStyle data={formatDate(userLog.date)}/>
         <TdStyle data={userLog.type}/>
+        <TdStyle data={formatDateWithTime(userLog.date)}/>
+        <TdStyle data={userLog.action}/>
        </>
       
     )

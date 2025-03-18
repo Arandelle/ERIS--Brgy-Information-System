@@ -41,8 +41,8 @@ export const useSidebarData = [
     link: "/account management",
     items: [
       {
-        title: "Users",
-        link: "/accounts/users",
+        title: "Residents",
+        link: "/accounts/residents",
       },
       {
         title: "Responders",

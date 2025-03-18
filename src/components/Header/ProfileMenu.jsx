@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
 import { useFetchData } from "../../hooks/useFetchData";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 const Profile = () => {
   const user = auth.currentUser;
@@ -29,8 +30,10 @@ const Profile = () => {
   }, [currentAdminDetails])
 
   const handleLogout = async () => {
+    const uid = auth.currentUser?.uid;
     try {
       await signOut(auth);
+      await logAuditTrail("Logout", uid);
       console.log("Logout");
       navigate("/");
     } catch (error) {
