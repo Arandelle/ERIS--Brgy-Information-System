@@ -147,5 +147,12 @@ export const useSidebarData = [
       <icons.chart className={`${style}`} />
     ),
     link: "/reports"
+  },
+  {
+    title: "Audit Trails",
+    icon: (
+      <icons.edit className={`${style}`} />
+    ),
+    link: "/audit-trails"
   }
 ];

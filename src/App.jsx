@@ -26,6 +26,7 @@ import Reports from "./screens/Reports/Reports";
 import soundFile from "./assets/sound/emergencySound.mp3";
 import { useFetchData } from "./hooks/useFetchData";
 import AlertUi from "./screens/AlertUi";
+import Audit from "./screens/Audit";
 
 const App = () => {
   const sound = new Audio(soundFile);
@@ -173,6 +174,10 @@ const App = () => {
             <Route
               path="/account-settings"
               element={user && isAdmin ? <Setting /> : <Navigate to="/" />}
+            />
+            <Route 
+              path="/audit-trails"
+              element={user && isAdmin ? <Audit /> : <Navigate to="/" />}
             />
           </Routes>
         </div>
