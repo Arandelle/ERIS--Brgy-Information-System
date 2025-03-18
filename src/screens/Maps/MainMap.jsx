@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import {EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
 import handleErrorMessage from "../../helper/handleErrorMessage";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -227,6 +228,7 @@ const MainMap = ({ maximize, setMaximize }) => {
         };
   
         await handleEditData("details", coordinatesData, "systemData");
+        await logAuditTrail("Update Map")
       } else {
         alert("You need at least 3 points to create valid area");
       }

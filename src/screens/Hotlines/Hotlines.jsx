@@ -16,6 +16,7 @@ import handleDeleteData from "../../hooks/handleDeleteData";
 import { toast } from "sonner";
 import handleEditData from "../../hooks/handleEditData";
 import useSearchParam from "../../hooks/useSearchParam";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 const Hotlines = () => {
   const {searchParams, setSearchParams} = useSearchParam();
@@ -102,6 +103,7 @@ const Hotlines = () => {
     };
 
     await handleAddData(hotlineData, "hotlines");
+    await logAuditTrail("Added hotline")
 
     setHotlinesState({});
     setHotlinesModal(false);
@@ -117,6 +119,7 @@ const Hotlines = () => {
   const handleConfirmDelete = async () => {
     try {
       await handleDeleteData(selectedId, "hotlines");
+      await logAuditTrail("Deleted hotline")
     } catch (error) {
       toast.error(`Error deleting ${error}`);
     }
@@ -148,6 +151,7 @@ const Hotlines = () => {
     };
 
     await handleEditData(id, hotlinesData, "hotlines");
+    await logAuditTrail("Update hotline");
     setHotlinesState({});
     setHotlinesModal(false);
     setSearchParams({});

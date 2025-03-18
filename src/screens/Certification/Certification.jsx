@@ -21,6 +21,7 @@ import ClearanceViewModal from "./ClearanceViewModal";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import useSendNotification from "../../hooks/useSendNotification";
 import useSearchParam from "../../hooks/useSearchParam";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 const Certification = () => {
   const {searchParam, setSearchParams} = useSearchParam();
@@ -207,6 +208,7 @@ const Certification = () => {
 
       await update(dataRef, clearanceData);
       sendNotification("users", "1W5pUkUVYlTBITVJo3xhYaeDoEi1", "certificateStatus", status);
+      await logAuditTrail(`Marked as ${status} the requested certificate`)
       toast.info(`Clearance request ${status}`);
       console.log(userData.userId, status);
     } catch (error) {
@@ -223,6 +225,7 @@ const Certification = () => {
 
   const handleDeleteConfirm = async () => {
     await handleDeleteData(selectedId, "requestClearance");
+    await logAuditTrail("Deleted request")
     setUserData({});
     setShowUpdateStatus({
       visible: false,

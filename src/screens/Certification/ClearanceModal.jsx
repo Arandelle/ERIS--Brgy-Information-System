@@ -4,6 +4,7 @@ import { InputField } from "../../components/ReusableComponents/InputField";
 import handleAddData from "../../hooks/handleAddData";
 import handleEditData from "../../hooks/handleEditData";
 import {useNavigate} from "react-router-dom";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
     };
 
     await handleAddData(requestData, "requestClearance");
+    await logAuditTrail("Added request certification")
     setClearanceData({});
     handleCloseModal();
   };
@@ -87,6 +89,7 @@ const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
     };
 
     await handleEditData(selectedId, updatedData, "requestClearance");
+    await logAuditTrail("Update Certification")
     handleCloseModal();
   };
 

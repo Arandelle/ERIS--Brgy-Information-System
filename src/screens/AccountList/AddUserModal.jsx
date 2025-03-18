@@ -16,6 +16,7 @@ import { generateUniqueBarangayID } from "../../helper/generateID";
 import Modal from "../../components/ReusableComponents/Modal";
 import useSendNotification from "../../hooks/useSendNotification";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 const AddUserModal = ({ addUser, setAddUser, label }) => {
   const navigation = useNavigate();
@@ -78,6 +79,7 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
         // send notification to the admin
         await sendNotification("admins", adminId, "createAccount", "admin", newNotification);
         await sendNotification(`${label}`, user.uid, "createAccount","user", newNotification);
+        await logAuditTrail(`Create ${data === "users" ? "Resident's" : "Responder's"} Account`);
 
         console.log("User created:", user);
 

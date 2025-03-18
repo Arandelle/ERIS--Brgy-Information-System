@@ -19,6 +19,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import useSearchParam from "../../hooks/useSearchParam";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 const Templates = () => {
   const {setSearchParams} = useSearchParam();
@@ -122,6 +123,7 @@ const Templates = () => {
   const handleConfirmDelete = async () => {
     try {
       await handleDeleteData(selectedTemplateId, "templateContent");
+      await logAuditTrail("Deleted template")
     } catch (error) {
       toast.error(`Error deleting ${error}`);
     }
@@ -253,6 +255,7 @@ const Templates = () => {
 
       // Update database
       await update(templatesRef, updatedTemplateData);
+      await logAuditTrail("Update template")
 
       setIsTemplateEdit(false);
       setSearchParams({})

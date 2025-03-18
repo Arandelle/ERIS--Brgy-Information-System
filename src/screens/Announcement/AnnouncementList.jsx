@@ -22,6 +22,7 @@ import MediaModal from "../MediaModal";
 import { auth } from "../../services/firebaseConfig";
 import useSearchParam from "../../hooks/useSearchParam";
 import useViewMedia from "../../hooks/useViewMedia";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 const Activities = () => {
   const { data: activity, setData: setActivity } = useFetchData("announcement");
@@ -108,6 +109,7 @@ const Activities = () => {
     };
 
     await handleAddData(postData, "announcement");
+    await logAuditTrail("Post awareness");
     setPostDetails({});
     setModal(false);
   };
@@ -134,6 +136,7 @@ const Activities = () => {
       userId: admin.uid,
     };
     await handleEditData(id, postData, "announcement");
+    await logAuditTrail("Edit a posted awareness");
     setPostDetails({});
     setModal(false);
   };
@@ -155,6 +158,7 @@ const Activities = () => {
 
     try {
       await handleDeleteData(selectedId, "announcement");
+      await logAuditTrail("Deleted a posted awareness")
     } catch (error) {
       // If deletion fails, restore the item to the list
       setActivity((prevActivity) => [...prevActivity, itemToDelete]);

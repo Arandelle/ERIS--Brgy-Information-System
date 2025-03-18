@@ -18,6 +18,7 @@ import useViewMedia from "../../hooks/useViewMedia";
 import { toast } from "sonner";
 import handleDeleteData from "../../hooks/handleDeleteData";
 import AskCard from "../../components/ReusableComponents/AskCard";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 const UserList = ({ data }) => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -88,6 +89,7 @@ const UserList = ({ data }) => {
   const handleConfirmDeleteUser = async (id) => {
     try{
       await handleDeleteData(id, `users`);
+      await logAuditTrail(`Deleted ${data === "users" ? "Resident's" : "Responder's"} account`)
       setUserToDelete('')
       setIsDeleteUser(prev => !prev);
     }catch(error){

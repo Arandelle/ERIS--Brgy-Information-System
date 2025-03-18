@@ -40,6 +40,7 @@ const HotlinesModal = ({
           <option value="medical">Medical</option>
           <option value="crime">Crime</option>
           <option value="natural disaster">Natural Disaster</option>
+          <option value="public disturbance">Public Disturbance</option>
           <option value="other">Other</option>
         </select>
          <InputField

@@ -6,6 +6,7 @@ import Modal from "../../components/ReusableComponents/Modal";
 import { InputField } from "../../components/ReusableComponents/InputField";
 import { useFetchData } from "../../hooks/useFetchData";
 import handleEditData from "../../hooks/handleEditData";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateId}) => {
   const editorRef = useRef(null);
@@ -30,6 +31,7 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
       };
 
       await handleAddData(certData, "templateContent");
+      await logAuditTrail("Added new template");
   
       setTemplateData({});
       setShowAddTemplate(false);
@@ -49,6 +51,7 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
       };
   
       await handleEditData(id, updatedTemplate, "templateContent");
+      await logAuditTrail("Update template content")
       setTemplateData({});
       setShowAddTemplate(false);
       setIsEdit(false);
