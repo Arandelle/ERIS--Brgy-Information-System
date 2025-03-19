@@ -208,7 +208,7 @@ const Certification = () => {
 
       await update(dataRef, clearanceData);
       sendNotification("users", "1W5pUkUVYlTBITVJo3xhYaeDoEi1", "certificateStatus", status);
-      await logAuditTrail(`Marked as ${status} the requested certificate`)
+      await logAuditTrail(`Certification ${capitalizeFirstLetter(status)}`)
       toast.info(`Clearance request ${status}`);
       console.log(userData.userId, status);
     } catch (error) {
@@ -225,7 +225,7 @@ const Certification = () => {
 
   const handleDeleteConfirm = async () => {
     await handleDeleteData(selectedId, "requestClearance");
-    await logAuditTrail("Deleted request")
+    await logAuditTrail("Certification Deleted")
     setUserData({});
     setShowUpdateStatus({
       visible: false,

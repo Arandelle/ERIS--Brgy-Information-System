@@ -17,7 +17,7 @@ const Audit = () => {
   const { data: admins = [] } = useFetchData("admins");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterData, setFilterData] = useState("");
-  const [actionLog, setActionLog] = useState({});
+  const [actionLog, setActionLog] = useState([]);
 
   const HeaderData = ["User Id","Fullname","Type", "Date", "Action"];
   const searchFields = ["date","fullname", "type", "userId"];
@@ -25,9 +25,10 @@ const Audit = () => {
   useEffect(() => {
     if(!userlogs && userlogs.length === 0) return;
 
-    const actions = [...new Set(userlogs.map((log) => log.action))];
+  // Extract unique actions from user logs, then sort them alphabetically
+    const actions = [...new Set(userlogs.map((log) => log.action).sort((a,b) => a.localeCompare(b)))];
     setActionLog(actions);
-  }, [userlogs]);
+  }, [userlogs  ]);
 
   // updated data to include the name of users and responder which not included in original list of emergencyHistory
   const updatedData = userlogs.map((log) => {
@@ -47,8 +48,10 @@ const Audit = () => {
     };
   });
 
+  // After filtering by search query, further filter by action type
+// If filterData is "All" or empty, include all logs; otherwise, match specific action
   const filteredData = useFilteredData(updatedData, searchQuery, searchFields).filter((log) => 
-  !filterData || log.action === filterData);
+  !filterData || filterData === "All" || log.action === filterData);
   
   const {currentPage,setCurrentPage, indexOfLastItem, indexOfFirstItem, currentItems, totalPages} = usePagination(filteredData)
 
@@ -78,12 +81,13 @@ const Audit = () => {
       content={
         <>
           <Toolbar
-            label="Audit Trails"
+            label="Users Logs"
             buttons={
               <SelectStyle 
                 value={filterData}
                 onChange={(e) => setFilterData(e.target.value)}
-                options={actionLog}
+                options={["All", ...actionLog]}
+                disabledOption={"Filter Logs"}
               />
             }
             searchQuery={searchQuery}
