@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import Toolbar from "../components/ToolBar";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import { useFetchData } from "../hooks/useFetchData";
 import useFilteredData from "../components/SearchQuery";
 import usePagination from "../hooks/usePagination";
 import { formatDateWithTime } from "../helper/FormatDate";
+import SelectStyle from "../components/ReusableComponents/SelectStyle";
 
 const Audit = () => {
   const { data: userlogs } = useFetchData("usersLog");
@@ -15,9 +16,18 @@ const Audit = () => {
   const { data: responders = [] } = useFetchData("responders");
   const { data: admins = [] } = useFetchData("admins");
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterData, setFilterData] = useState("");
+  const [actionLog, setActionLog] = useState({});
+
   const HeaderData = ["User Id","Fullname","Type", "Date", "Action"];
-  // search field to get the value with
   const searchFields = ["date","fullname", "type", "userId"];
+
+  useEffect(() => {
+    if(!userlogs && userlogs.length === 0) return;
+
+    const actions = [...new Set(userlogs.map((log) => log.action))];
+    setActionLog(actions);
+  }, [userlogs]);
 
   // updated data to include the name of users and responder which not included in original list of emergencyHistory
   const updatedData = userlogs.map((log) => {
@@ -37,7 +47,9 @@ const Audit = () => {
     };
   });
 
-  const filteredData = useFilteredData(updatedData, searchQuery, searchFields);
+  const filteredData = useFilteredData(updatedData, searchQuery, searchFields).filter((log) => 
+  !filterData || log.action === filterData);
+  
   const {currentPage,setCurrentPage, indexOfLastItem, indexOfFirstItem, currentItems, totalPages} = usePagination(filteredData)
 
   const renderRow = (userLog) => {
@@ -67,6 +79,13 @@ const Audit = () => {
         <>
           <Toolbar
             label="Audit Trails"
+            buttons={
+              <SelectStyle 
+                value={filterData}
+                onChange={(e) => setFilterData(e.target.value)}
+                options={actionLog}
+              />
+            }
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />

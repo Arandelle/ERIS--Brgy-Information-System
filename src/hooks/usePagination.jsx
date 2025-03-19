@@ -38,6 +38,8 @@ const usePagination = (data) => {
   return {
     currentPage,
     setCurrentPage,
+    indexOfLastItem, 
+    indexOfFirstItem,
     currentItems,
     totalPages,
   };
