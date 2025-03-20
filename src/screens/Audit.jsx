@@ -9,6 +9,7 @@ import useFilteredData from "../components/SearchQuery";
 import usePagination from "../hooks/usePagination";
 import { formatDateWithTime } from "../helper/FormatDate";
 import SelectStyle from "../components/ReusableComponents/SelectStyle";
+import useRemoveOldData from "../hooks/useRemoveOldData";
 
 const Audit = () => {
   const { data: userlogs } = useFetchData("usersLog");
@@ -21,6 +22,8 @@ const Audit = () => {
 
   const HeaderData = ["User Id","Fullname","Type", "Date", "Action"];
   const searchFields = ["date","fullname", "type", "userId"];
+
+  useRemoveOldData();
 
   useEffect(() => {
     if(!userlogs && userlogs.length === 0) return;
