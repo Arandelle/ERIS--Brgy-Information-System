@@ -33,14 +33,65 @@ const Header = ({ toggleSideBar, isOpen }) => {
 
   // store the system data to localstorage to cache the data
   useEffect(() => {
-    if(systemData){
-      const {fileUrl, title} = systemData;
-      const updatedSystem = {logo: fileUrl, title};
+    // First, try to load from localStorage on component mount
+    const cachedSystem = localStorage.getItem("system");
+    
+    if (cachedSystem) {
+      const { logo, title } = JSON.parse(cachedSystem);
+      
+      // Update document title from cache
+      if (title) {
+        document.title = title;
+      }
+      
+      // Update favicon from cache
+      if (logo) {
+        const favicon = document.querySelector("link[rel~='icon']");
+        if (favicon) {
+          favicon.href = logo;
+        } else {
+          const newFavicon = document.createElement("link");
+          newFavicon.rel = "icon";
+          newFavicon.href = logo;
+          document.head.appendChild(newFavicon);
+        }
+      }
+      
+      // Update your state if needed
+      setSystem({ logo, title });
+    }
+  }, []); // Empty dependency array to run only on mount
+  
+  // Then have your existing effect to handle updates from systemData
+  useEffect(() => {
+    if (systemData) {
+      const { fileUrl, title } = systemData;
+      
+      // Update the document title
+      if (title) {
+        document.title = title;
+      }
+      
+      // Update the favicon dynamically
+      if (fileUrl) {
+        const favicon = document.querySelector("link[rel~='icon']");
+        if (favicon) {
+          favicon.href = fileUrl;
+        } else {
+          const newFavicon = document.createElement("link");
+          newFavicon.rel = "icon";
+          newFavicon.href = fileUrl;
+          document.head.appendChild(newFavicon);
+        }
+      }
+      
+      // Cache the updated system data in localStorage
+      const updatedSystem = { logo: fileUrl, title };
       setSystem(updatedSystem);
       localStorage.setItem("system", JSON.stringify(updatedSystem));
     }
   }, [systemData]);
-
+  
   return (
     <div className="sticky top-0 z-50 px-4 lg:px-6 w-full py-2.5 border-b border-t border-gray-300 dark:border-gray-600 dark:bg-gray-800 bg-white">
       <div className="flex justify-between items-center">
