@@ -20,8 +20,8 @@ const Audit = () => {
   const [filterData, setFilterData] = useState("");
   const [actionLog, setActionLog] = useState([]);
 
-  const HeaderData = ["User Id","Fullname","Type", "Date", "Action"];
-  const searchFields = ["date","fullname", "type", "userId"];
+  const HeaderData = ["Executor Id","Fullname","Account Type", "Execute Date","Action", "Target ID"];
+  const searchFields = ["date","fullname", "type", "userId","targetId", "action","email"];
 
   useRemoveOldData();
 
@@ -35,22 +35,24 @@ const Audit = () => {
 
   // updated data to include the name of users and responder which not included in original list of emergencyHistory
   const updatedData = userlogs.map((log) => {
-    const user = users.find((user) => user?.id === log?.userId);
-    const responder = responders.find(
-      (responder) => responder?.id === log?.userId
-    );
-    const admin = admins.find(
-      (admin) => admin?.id === log?.userId
-    );
 
+    const executor = users.find((user) => user?.id === log?.userId) ||
+                     responders.find((responder) => responder?.id === log?.userId) ||
+                     admins.find((admin) => admin?.id === log?.userId);
+  
+    const target = users.find((user) => user?.id === log?.targetId) ||
+                   responders.find((responder) => responder?.id === log?.targetId) ||
+                   admins.find((admin) => admin?.id === log?.targetId);
+  
     return {
       ...log,
-      fullname: user?.fullname || responder?.fullname || admin?.fullname ||  "-",
-      userId: user?.customId || responder?.customId || admin?.id ||  "-",
-      type: user ? "resident" : responder ? "responder" : admin ?  "admin" : "-",
+      fullname: executor?.fullname || "-",
+      userId: executor?.customId || "-",
+      type: executor ? (users.includes(executor) ? "resident" : responders.includes(executor) ? "responder" : "admin") : "-",
+      targetId: target?.customId || "-",  // Get custom ID for the target
     };
   });
-
+  
   // After filtering by search query, further filter by action type
 // If filterData is "All" or empty, include all logs; otherwise, match specific action
   const filteredData = useFilteredData(updatedData, searchQuery, searchFields).filter((log) => 
@@ -62,9 +64,11 @@ const Audit = () => {
 
     const TdStyle = ({data}) => {
         return (
-            <td className="px-6 py-4 max-w-16 text-ellipsis overflow-hidden whitespace-nowrap">
-                {data}
-            </td>
+          <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
+          <div className="truncate max-w-[100px] sm:max-w-[200px]">
+            {data}
+          </div>
+        </td>
         )
     }
     return(
@@ -74,6 +78,7 @@ const Audit = () => {
         <TdStyle data={userLog.type}/>
         <TdStyle data={formatDateWithTime(userLog.date)}/>
         <TdStyle data={userLog.action}/>
+        <TdStyle data={userLog.targetId}/>
        </>
       
     )

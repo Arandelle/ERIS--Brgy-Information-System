@@ -68,7 +68,7 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
         await set(accountRef, userData); // Save the user's data to the right user account (uid)
 
         await auth.updateCurrentUser(currentUser); // restore the admin
-        navigation("/accounts/users");
+        navigation(`/accounts/${label}`); // Redirect to the user list page
 
         const adminId = currentUser.uid;
         const newNotification = {
@@ -79,7 +79,7 @@ const AddUserModal = ({ addUser, setAddUser, label }) => {
         // send notification to the admin
         await sendNotification("admins", adminId, "createAccount", "admin", newNotification);
         await sendNotification(`${label}`, user.uid, "createAccount","user", newNotification);
-        await logAuditTrail(`Create ${data === "users" ? "Resident's" : "Responder's"} Account`);
+        await logAuditTrail(`Create ${label}' Account`, user.uid);
 
         console.log("User created:", user);
 

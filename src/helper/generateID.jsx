@@ -3,7 +3,8 @@ export async function generateUniqueBarangayID(type) {
     const prefixType = {
       responders: "RS",
       users: "BM",
-      emergency: "ER"
+      emergency: "ER",
+      admins: "AD",
     }
     const prefix = prefixType[type];
     const date = new Date();

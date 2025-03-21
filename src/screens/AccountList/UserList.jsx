@@ -95,7 +95,7 @@ const UserList = ({ data }) => {
 
     try{
       await handleDeleteData(id, data);
-      await logAuditTrail(`Deleted ${data === "users" ? "Resident's" : "Responder's"} account`)
+      await logAuditTrail(`Deleted ${data}' account`);
       setUserToDelete('')
       setIsDeleteUser(prev => !prev);
     }catch(error){

@@ -9,7 +9,7 @@ const Table = ({ headers = [], data, renderRow, emptyMessage = "No records found
           <thead className="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-800 dark:bg-opacity-70 dark:text-gray-400">
             <tr>
               {headers.map((header, index) => (
-                <th key={index} className={`px-6 py-3 sm:text-sm ${header === "Action" && "text-center"}`}>
+                <th key={index} className={`px-6 py-3 sm:text-sm ${header === "Action" ? "text-center" : "text-start"}`}>
                   {header}
                 </th>
               ))}
