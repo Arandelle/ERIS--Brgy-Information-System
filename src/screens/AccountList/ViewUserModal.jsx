@@ -24,8 +24,8 @@ const ViewUserModal = ({ userToViewInfo,handleCloseViewUser }) => {
           <div className="border-b-2 py-4 max-w-lg md:w-[32rem]">
             <div className="space-x-4 flex flex-row items-center ">
              <div className="rounded-full border-2 border-gray-500"> 
-             <img src={userToViewInfo.img} className="rounded-full h-24 w-24 cursor-pointer"
-              onClick={() => openModal(userToViewInfo.img)}
+             <img src={userToViewInfo.fileUrl || userToViewInfo.img} className="rounded-full h-24 w-24 cursor-pointer"
+              onClick={() => openModal(userToViewInfo.fileUrl || userToViewInfo.img)}
              />
              </div>
                <div>

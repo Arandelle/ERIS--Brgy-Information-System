@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import handleDeleteData from "../../hooks/handleDeleteData";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import logAuditTrail from "../../hooks/useAuditTrail";
+import { auth } from "../../services/firebaseConfig";
 
 const UserList = ({ data }) => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -87,8 +88,13 @@ const UserList = ({ data }) => {
   }
 
   const handleConfirmDeleteUser = async (id) => {
+    if (id === auth.currentUser.uid) {
+      toast.error("You cannot delete your own account");
+      return;
+    };
+
     try{
-      await handleDeleteData(id, `users`);
+      await handleDeleteData(id, data);
       await logAuditTrail(`Deleted ${data === "users" ? "Resident's" : "Responder's"} account`)
       setUserToDelete('')
       setIsDeleteUser(prev => !prev);
@@ -98,7 +104,7 @@ const UserList = ({ data }) => {
   }
 
   const TableData = ({ data }) => {
-    const nullValue = <p className="italic text-nowrap text-xs">not yet set</p>;
+    const nullValue = <p className="italic text-nowrap text-xs">-</p>;
 
     return (
       <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
@@ -124,9 +130,9 @@ const UserList = ({ data }) => {
         <th className="flex items-center px-2 py-2 sm:px-4 sm:py-4 text-gray-900 whitespace-nowrap dark:text-white">
           <img
             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full cursor-pointer"
-            src={user?.img}
+            src={user.fileUrl || user?.img}
             alt="anonymous"
-            onClick={() => openModal(user.img)}
+            onClick={() => openModal(user.fileUrl || user.img)}
           />
           <div className="ps-2 sm:ps-3">
             <p>{user.fullname ?? "null"}</p>

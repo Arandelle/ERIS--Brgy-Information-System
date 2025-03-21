@@ -122,6 +122,16 @@ const App = () => {
               element={user && isAdmin ? <MyCalendar /> : <Navigate to="/" />}
             />
             <Route
+              path="/accounts/admins"
+              element={
+                user && isAdmin ? (
+                  <UserList data="admins" />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+            <Route
               path="/accounts/residents"
               element={
                 user && isAdmin ? (

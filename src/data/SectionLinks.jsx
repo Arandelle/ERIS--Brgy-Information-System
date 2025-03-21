@@ -8,6 +8,10 @@ export const SectionLinks = [
     link: "/accounts/users",
   },
   {
+    title: "Users Lists",
+    link: "/accounts/users",
+  },
+  {
     title: "Responders Lists",
     link: "/accounts/responders",
   },
@@ -24,8 +28,28 @@ export const SectionLinks = [
     link: "/announcement",
   },
   {
-    title: "Records",
+    title: "Hotline",
+    link: "/hotlines",
+  },
+  {
+    title: "Templates",
+    link: "/templates",
+  },
+  {
+    title: "Certification",
+    link: "/certification",
+  },
+  {
+    title: "Emergency List",
     link: "/records",
+  },
+  {
+    title: "Reports",
+    link: "/reports",
+  },
+  {
+    title: "Audit Trails",
+    link: "/audit-trails",
   },
 {
     title: "Account Settings",
