@@ -192,7 +192,7 @@ export const DashboardCard = ({
                   {title === "Total Responses" ||
                   title === "Today's Emergency" ? (
                     percentage !== 0 ? (
-                      `${Math.abs(percentage)}% ${isIncrease ? "↑" : "↓"}`
+                      `${Math.abs(percentage >= 100 ? 100 : percentage)}% ${isIncrease ? "↑" : "↓"}`
                     ) : (
                       "0%"
                     )

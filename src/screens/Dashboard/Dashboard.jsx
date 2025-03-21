@@ -46,9 +46,9 @@ const Dashboard = () => {
 
         // total emergencies counts regardless of status
         if (emergencyDate >= today) {
-          counts.awaitingResponse.current++;
+          counts.pending.current++;
         } else if (emergencyDate >= yesterday && emergencyDate < today) {
-          counts.awaitingResponse.previous++;
+          counts.pending.previous++;
         }
 
         if (isResolved) {
@@ -83,7 +83,7 @@ const Dashboard = () => {
         return counts;
       },
       {
-        awaitingResponse: {
+        pending: {
           current: 0, // Today's awaiting
           previous: 0, // Yesterday's awaiting
         },
@@ -132,11 +132,11 @@ const Dashboard = () => {
             />
             <DashboardCard
               title="Today's Emergency"
-              value={counts.awaitingResponse.current}
+              value={counts.pending.current}
               img={emergency}
               onClick={() => handleNavigate("/maps")}
               hasOption={false}
-              counts={counts.awaitingResponse}
+              counts={counts.pending}
             />
             <DashboardCard
               title="On-Going Emergency"
