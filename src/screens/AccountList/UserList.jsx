@@ -89,7 +89,7 @@ const UserList = ({ data }) => {
   }
 
   const handleConfirmDeleteUser = async (id) => {
-    const API_URL = "https://eris-backend-h1qkmmwr0-arandelle-paguintos-projects.vercel.app";
+    const API_URL = "https://eris-backend-2iklmespu-arandelle-paguintos-projects.vercel.app";
     
     if (!API_URL) {
       console.error("❌ API_URL is undefined! Check your environment variables.");
