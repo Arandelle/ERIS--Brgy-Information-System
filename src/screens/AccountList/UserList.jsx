@@ -23,7 +23,7 @@ import { auth } from "../../services/firebaseConfig";
 import axios from "axios";
 
 const UserList = ({ data }) => {
-  const API_URL = import.meta.env.VITE_API_PORT;
+  const API_URL = import.meta.env.VITE_API_URL;
   const { searchParams, setSearchParams } = useSearchParam();
   const userId = searchParams.get("uid");
   const { data: userData = [] } = useFetchData(data);
