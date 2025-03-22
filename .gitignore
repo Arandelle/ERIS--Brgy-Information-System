@@ -25,6 +25,7 @@ dist-ssr
 
 # Ignore Firebase service account file
 src/services/firebase-service.json
+/backend/firebase-service.json
 
 # Environment files
 .env
