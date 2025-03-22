@@ -23,7 +23,7 @@ import { auth } from "../../services/firebaseConfig";
 import axios from "axios";
 
 const UserList = ({ data }) => {
-  const API_URL = 'https://eris-backend-3m5omgfml-arandelle-paguintos-projects.vercel.app';
+  const API_URL = 'https://eris-backend-96c0k7vc2-arandelle-paguintos-projects.vercel.app';
   const { searchParams, setSearchParams } = useSearchParam();
   const userId = searchParams.get("uid");
   const { data: userData = [] } = useFetchData(data);
@@ -100,6 +100,8 @@ const UserList = ({ data }) => {
       const response = await axios.post(`${API_URL}/api/delete-user`, {
         uid: id
       });
+
+      console.log(`${API_URL}/api/delete-user`, response.data);
 
       if(response.data.success){
         toast.success(response.data.message);
