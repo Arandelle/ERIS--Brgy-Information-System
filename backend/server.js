@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
@@ -25,6 +26,11 @@ const serviceAccount = {
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
+
+console.log("PRIVATE_KEY:", process.env.PRIVATE_KEY ? "Loaded" : "Missing");
+console.log("PROJECT_ID:", process.env.PROJECT_ID ? "Loaded" : "Missing");
+console.log("PORT:", process.env.PORT);
+
 
 // Endpoint to disable a user account
 app.post('/api/disable-user', async (req, res) => {
