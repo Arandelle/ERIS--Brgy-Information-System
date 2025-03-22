@@ -23,7 +23,7 @@ import { auth } from "../../services/firebaseConfig";
 import axios from "axios";
 
 const UserList = ({ data }) => {
-  const API_URL = 'https://eris-backend-41vor10a3-arandelle-paguintos-projects.vercel.app';
+  const API_URL = 'https://eris-backend-3m5omgfml-arandelle-paguintos-projects.vercel.app';
   const { searchParams, setSearchParams } = useSearchParam();
   const userId = searchParams.get("uid");
   const { data: userData = [] } = useFetchData(data);
