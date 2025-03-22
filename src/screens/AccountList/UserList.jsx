@@ -23,7 +23,7 @@ import { auth } from "../../services/firebaseConfig";
 import axios from "axios";
 
 const UserList = ({ data }) => {
-  const API_URL = 'https://eris-backend-ib6fw8rwj-arandelle-paguintos-projects.vercel.app';
+  const API_URL = import.meta.env.VITE_API_PORT;
   const { searchParams, setSearchParams } = useSearchParam();
   const userId = searchParams.get("uid");
   const { data: userData = [] } = useFetchData(data);
@@ -98,10 +98,10 @@ const UserList = ({ data }) => {
     setLoading(true);
   
     try {
-      console.log("About to send delete request to:", `${API_URL}/api/delete-user`);
+      console.log("About to send delete request to:", `${API_URL}/api/disable-user`);
       console.log("With data:", { uid: id });
       
-      const response = await axios.post(`${API_URL}/api/delete-user`, {
+      const response = await axios.post(`${API_URL}/api/disable-user`, {
         uid: id
       });
     
