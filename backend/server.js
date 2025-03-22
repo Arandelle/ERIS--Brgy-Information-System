@@ -5,19 +5,20 @@ const admin = require("firebase-admin");
 
 const app = express();
 
+const corsOptions = {
+  origin: [
+    "https://eris-bagtas.vercel.app",
+    "https://eris-brgy-information-system.vercel.app",
+    "http://localhost:3000"
+  ],
+  methods: ["GET", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
+
 // ✅ Allow CORS only from your frontend
-app.use(
-  cors({
-    origin: [
-      "https://eris-bagtas.vercel.app",
-      "https://eris-brgy-information-system.vercel.app",
-      "http://localhost:3000" // For local development
-    ],
-    methods: ["GET", "POST", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
-  })
-);
+app.use(cors(corsOptions));
 // ✅ Middleware
 app.use(express.json());
 
@@ -82,15 +83,12 @@ app.post("/api/enable-user", async (req, res) => {
 
 // Delete User
 // Delete User
-app.delete("/api/delete-user", async (req, res) => {
+app.delete("/api/delete-user", cors(corsOptions), async (req, res) => {
   try {
-    // For DELETE requests, the data is typically in req.query or req.params
-    // But axios.delete sends it in req.body when you use the data option
     const { uid } = req.body;
-    
-    // Add some debug logging
+
     console.log("Delete user request received:", req.body);
-    
+
     if (!uid) return res.status(400).json({ error: "User ID is required" });
 
     await admin.auth().deleteUser(uid);
@@ -102,8 +100,10 @@ app.delete("/api/delete-user", async (req, res) => {
   }
 });
 
+
 // Explicit handler for OPTIONS requests (preflight)
-app.options("*", (req, res) => {
+// Explicitly handle OPTIONS requests (preflight)
+app.options("*", cors(corsOptions), (req, res) => {
   res.status(200).end();
 });
 // ✅ Start the Server
