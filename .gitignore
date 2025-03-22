@@ -29,3 +29,4 @@ src/services/firebase-service.json
 # Environment files
 .env
 node_modules
+.vercel
