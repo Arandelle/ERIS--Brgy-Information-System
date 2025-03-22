@@ -90,6 +90,7 @@ const UserList = ({ data }) => {
 
   const handleConfirmDeleteUser = async (id) => {
     const API_URL = "https://eris-backend-h1qkmmwr0-arandelle-paguintos-projects.vercel.app";
+    
     if (!API_URL) {
       console.error("❌ API_URL is undefined! Check your environment variables.");
       toast.error("Server error: API URL is missing.");
@@ -110,12 +111,24 @@ const UserList = ({ data }) => {
     setLoading(true);
   
     try {
-      const apiEndpoint = `${API_URL}/api/disable-user`; // This should now correctly point to your backend
+      // Get the current user's ID token
+      const token = await auth.currentUser.getIdToken(true);
+      
+      const apiEndpoint = `${API_URL}/api/disable-user`;
   
       console.log("📡 Sending request to:", apiEndpoint);
       console.log("📝 With data:", { uid: id });
   
-      const response = await axios.post(apiEndpoint, { uid: id });
+      // Send the token in the Authorization header
+      const response = await axios.post(
+        apiEndpoint, 
+        { uid: id },
+        { 
+          headers: { 
+            Authorization: `Bearer ${token}` 
+          } 
+        }
+      );
   
       console.log("✅ Success:", response.data);
       toast.success(response.data?.message || "User disabled successfully.");
@@ -128,7 +141,6 @@ const UserList = ({ data }) => {
       setIsDeleteUser(false);
     }
   };
-  
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">-</p>;
 
