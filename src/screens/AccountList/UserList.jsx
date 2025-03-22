@@ -20,8 +20,10 @@ import handleDeleteData from "../../hooks/handleDeleteData";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import logAuditTrail from "../../hooks/useAuditTrail";
 import { auth } from "../../services/firebaseConfig";
+import axios from "axios";
 
 const UserList = ({ data }) => {
+  const API_URL = 'https://eris-brgy-information-system-bdk1cwsvr.vercel.app';
   const { searchParams, setSearchParams } = useSearchParam();
   const userId = searchParams.get("uid");
   const { data: userData = [] } = useFetchData(data);
@@ -94,6 +96,15 @@ const UserList = ({ data }) => {
     };
 
     try{
+      // call the end point
+      const response = await axios.post(`${API_URL}/api/delete-user`, {
+        uid: id
+      });
+
+      if(response.data.success){
+        toast.success(response.data.message);
+      }
+
       await handleDeleteData(id, data);
       await logAuditTrail(`Deleted ${data}' account`);
       setUserToDelete('')
