@@ -98,23 +98,29 @@ const UserList = ({ data }) => {
     setLoading(true);
   
     try {
-      // Changed from axios.delete to axios.post
+      console.log("About to send delete request to:", `${API_URL}/api/delete-user`);
+      console.log("With data:", { uid: id });
+      
       const response = await axios.post(`${API_URL}/api/delete-user`, {
         uid: id
       });
-  
+    
       console.log("Delete response:", response.data);
-  
-      if (response.data.success) {
-        toast.success(response.data.message || "User deleted successfully");
-        await handleDeleteData(id, data);
-        await logAuditTrail(`Deleted ${data}'s account`);
-      } else {
-        toast.error(response.data.message || "Failed to delete user");
-      }
+      
+      // Rest of your success handling
     } catch (error) {
-      console.error("Error deleting user:", error);
-      toast.error(error.response?.data?.message || "An error occurred");
+      console.error("Error object:", error);
+      console.error("Error message:", error.message);
+      console.error("Error response data:", error.response?.data);
+      console.error("Error response status:", error.response?.status);
+      
+      // More informative error message
+      toast.error(
+        error.response?.data?.error || 
+        error.response?.data?.message || 
+        error.message || 
+        "An error occurred"
+      );
     } finally {
       setLoading(false);
       setUserToDelete('');
