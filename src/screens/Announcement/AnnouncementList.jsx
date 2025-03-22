@@ -269,7 +269,7 @@ const Activities = () => {
                 />
               </>
             }
-            label={"Emergency Announcement"}
+            label={"Emergency Awareness"}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
