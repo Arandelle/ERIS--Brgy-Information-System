@@ -90,43 +90,45 @@ const UserList = ({ data }) => {
   }
 
   const handleConfirmDeleteUser = async (id) => {
-    if (id === auth.currentUser.uid) {
-      toast.error("You cannot delete your own account");
+    if (!API_URL) {
+      console.error("❌ API_URL is undefined! Check your environment variables.");
+      toast.error("Server error: API URL is missing.");
+      return;
+    }
+  
+    if (!id) {
+      console.error("❌ User ID is undefined! Cannot disable user.");
+      toast.error("User ID is missing.");
+      return;
+    }
+  
+    if (id === auth.currentUser?.uid) {
+      toast.error("You cannot delete your own account.");
       return;
     }
   
     setLoading(true);
   
     try {
-      console.log("About to send delete request to:", `${API_URL}/api/disable-user`);
-      console.log("With data:", { uid: id });
-      
-      const response = await axios.post(`${API_URL}/api/disable-user`, {
-        uid: id
-      });
-    
-      console.log("Delete response:", response.data);
-      
-      // Rest of your success handling
+      const apiEndpoint = `${API_URL}/api/disable-user`; // This should now correctly point to your backend
+  
+      console.log("📡 Sending request to:", apiEndpoint);
+      console.log("📝 With data:", { uid: id });
+  
+      const response = await axios.post(apiEndpoint, { uid: id });
+  
+      console.log("✅ Success:", response.data);
+      toast.success(response.data?.message || "User disabled successfully.");
     } catch (error) {
-      console.error("Error object:", error);
-      console.error("Error message:", error.message);
-      console.error("Error response data:", error.response?.data);
-      console.error("Error response status:", error.response?.status);
-      
-      // More informative error message
-      toast.error(
-        error.response?.data?.error || 
-        error.response?.data?.message || 
-        error.message || 
-        "An error occurred"
-      );
+      console.error("❌ Error disabling user:", error);
+      toast.error(error.response?.data?.error || error.message || "An error occurred.");
     } finally {
       setLoading(false);
       setUserToDelete('');
       setIsDeleteUser(false);
     }
   };
+  
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">-</p>;
 
