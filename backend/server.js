@@ -16,6 +16,12 @@ const corsOptions = {
   credentials: true,
 };
 
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'https://eris-bagtas.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.status(200).send();
+});
 
 // ✅ Allow CORS only from your frontend
 app.use(cors(corsOptions));
@@ -122,6 +128,11 @@ app.post("/api/delete-user", cors(corsOptions), async (req, res) => {
     console.error("❌ Error deleting user:", error);
     res.status(500).json({ success: false, error: error.message });
   }
+});
+
+app.get('/api/test-cors', (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'https://eris-bagtas.vercel.app');
+  res.status(200).json({ message: 'CORS is working!' });
 });
 
 
