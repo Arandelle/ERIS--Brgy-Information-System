@@ -93,30 +93,34 @@ const UserList = ({ data }) => {
     if (id === auth.currentUser.uid) {
       toast.error("You cannot delete your own account");
       return;
-    };
-
-    try{
-      // call the end point
+    }
+  
+    setLoading(true);
+  
+    try {
+      // Changed from axios.delete to axios.post
       const response = await axios.post(`${API_URL}/api/delete-user`, {
         uid: id
       });
-
-      console.log(`${API_URL}/api/delete-user`, response.data);
-
-      if(response.data.success){
-        toast.success(response.data.message);
+  
+      console.log("Delete response:", response.data);
+  
+      if (response.data.success) {
+        toast.success(response.data.message || "User deleted successfully");
+        await handleDeleteData(id, data);
+        await logAuditTrail(`Deleted ${data}'s account`);
+      } else {
+        toast.error(response.data.message || "Failed to delete user");
       }
-
-      await handleDeleteData(id, data);
-      await logAuditTrail(`Deleted ${data}' account`);
-      setUserToDelete('')
-      setIsDeleteUser(prev => !prev);
-    }catch(error){
-      toast.error(error);
-      console.error(error);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error(error.response?.data?.message || "An error occurred");
+    } finally {
+      setLoading(false);
+      setUserToDelete('');
+      setIsDeleteUser(false);
     }
-  }
-
+  };
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">-</p>;
 
@@ -187,6 +191,7 @@ const UserList = ({ data }) => {
       </>
     );
   };
+  
 
   return (
     <HeaderAndSideBar
@@ -207,7 +212,7 @@ const UserList = ({ data }) => {
             setSearchQuery={setSearchQuery}
           />
           {addUser && <AddUserModal addUser={handleAddingUser} label={data} />}
-          {((userToViewInfo && userId) || loading) && (
+          {((userToViewInfo && userId)) && (
             <ViewUserModal
               userToViewInfo={userToViewInfo}
               handleCloseViewUser={handleCloseViewUser}

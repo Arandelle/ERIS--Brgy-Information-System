@@ -81,9 +81,16 @@ app.post("/api/enable-user", async (req, res) => {
 });
 
 // Delete User
+// Delete User
 app.delete("/api/delete-user", async (req, res) => {
   try {
+    // For DELETE requests, the data is typically in req.query or req.params
+    // But axios.delete sends it in req.body when you use the data option
     const { uid } = req.body;
+    
+    // Add some debug logging
+    console.log("Delete user request received:", req.body);
+    
     if (!uid) return res.status(400).json({ error: "User ID is required" });
 
     await admin.auth().deleteUser(uid);
