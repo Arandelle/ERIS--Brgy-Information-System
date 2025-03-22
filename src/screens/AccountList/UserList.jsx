@@ -23,7 +23,7 @@ import { auth } from "../../services/firebaseConfig";
 import axios from "axios";
 
 const UserList = ({ data }) => {
-  const API_URL = 'https://eris-backend-96c0k7vc2-arandelle-paguintos-projects.vercel.app';
+  const API_URL = 'https://eris-backend-2of6dsiia-arandelle-paguintos-projects.vercel.app';
   const { searchParams, setSearchParams } = useSearchParam();
   const userId = searchParams.get("uid");
   const { data: userData = [] } = useFetchData(data);
@@ -93,34 +93,30 @@ const UserList = ({ data }) => {
     if (id === auth.currentUser.uid) {
       toast.error("You cannot delete your own account");
       return;
-    }
-  
-    setLoading(true);  // Show loading state
-  
-    try {
-      const response = await axios.delete(`${API_URL}/api/delete-user`, {
-        data: { uid: id },
+    };
+
+    try{
+      // call the end point
+      const response = await axios.post(`${API_URL}/api/delete-user`, {
+        uid: id
       });
-  
-      console.log("Delete response:", response.data);
-  
-      if (response.data.success) {
-        toast.success(response.data.message || "User deleted successfully");
-        await handleDeleteData(id, data);
-        await logAuditTrail(`Deleted ${data}'s account`);
-      } else {
-        toast.error(response.data.message || "Failed to delete user");
+
+      console.log(`${API_URL}/api/delete-user`, response.data);
+
+      if(response.data.success){
+        toast.success(response.data.message);
       }
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      toast.error(error.response?.data?.message || "An error occurred");
-    } finally {
-      setLoading(false);  // Remove loading state
-      setUserToDelete('');
-      setIsDeleteUser(false);
+
+      await handleDeleteData(id, data);
+      await logAuditTrail(`Deleted ${data}' account`);
+      setUserToDelete('')
+      setIsDeleteUser(prev => !prev);
+    }catch(error){
+      toast.error(error);
+      console.error(error);
     }
-  };
-  
+  }
+
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">-</p>;
 
