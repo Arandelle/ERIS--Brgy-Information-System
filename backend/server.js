@@ -8,11 +8,14 @@ const app = express();
 // ✅ Allow CORS only from your frontend
 app.use(
   cors({
-    origin: "https://eris-brgy-information-system.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    origin: [
+      "https://eris-bagtas.vercel.app",
+      "https://eris-brgy-information-system.vercel.app",
+      "http://localhost:3000" // For local development
+    ],
+    methods: ["GET", "POST", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // Enable credentials if you're using cookies/auth
-    maxAge: 86400 // Cache preflight requests for 24 hours
+    credentials: true
   })
 );
 // ✅ Middleware
