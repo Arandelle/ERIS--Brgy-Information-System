@@ -89,46 +89,28 @@ const UserList = ({ data }) => {
   }
 
   const handleConfirmDeleteUser = async (userId) => {
-    console.log("Deleting user with ID:", userId); // Debugging
-  
     try {
-      const response = await fetch(
-        `https://eris-api-backend-djvy2cgr5-arandelle-paguintos-projects.vercel.app/api/delete-user/${userId}`, 
-        {
-          method: "DELETE",
-          // Add these headers for more comprehensive debugging
-          headers: {
-            'Content-Type': 'application/json',
-            // If you have authentication, add Authorization header here
-          }
+      const response = await fetch(`https://eris-api-backend-33l1v8a7u-arandelle-paguintos-projects.vercel.app//api/delete-user/${userId}`, {
+        method: "DELETE",
+        credentials: 'include', // Important for CORS
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any additional headers if needed
         }
-      );
+      });
   
-      console.log("Response Status:", response.status); // Log HTTP status code
-      console.log("Response OK:", response.ok); // Log if response is successful
-  
-      const text = await response.text(); // Read response as text
-      console.log("Raw Response:", text); 
-  
-      try {
-        const data = JSON.parse(text); // Try to parse JSON
-        console.log("Parsed Data:", data);
-
-        if (!response.ok) throw new Error(data.message || 'Unknown error');
-  
-        console.log("✅ User deleted:", data.message);
-      } catch (parseError) {
-        console.error("❌ Error parsing response:", parseError);
-        console.error("Raw text that failed to parse:", text);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Deletion failed');
       }
+  
+      const data = await response.json();
+      console.log("✅ User deleted:", data.message);
     } catch (error) {
       console.error("❌ Error deleting user:", error);
-      // Log more details about the error
-      console.error("Error name:", error.name);
-      console.error("Error message:", error.message);
+      // Handle error (show user message, etc.)
     }
   };
-  
   
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">-</p>;
