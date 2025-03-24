@@ -100,7 +100,7 @@ app.post("/api/delete-user", cors(corsOptions), async (req, res) => {
   }
 });
 
-app.get('/api/test-cors', (req, res) => {
+app.get('/', (req, res) => {
   res.header('Access-Control-Allow-Origin', 'https://eris-bagtas.vercel.app');
   res.status(200).json({ message: 'CORS is working!' });
 });

@@ -88,37 +88,47 @@ const UserList = ({ data }) => {
     setIsDeleteUser(prev => !prev)
   }
 
-  const handleConfirmDeleteUser = async (id) => {
-  
-    if (!id) {
-      console.error("❌ User ID is undefined! Cannot disable user.");
-      toast.error("User ID is missing.");
-      return;
-    }
-  
-    if (id === auth.currentUser?.uid) {
-      toast.error("You cannot delete your own account.");
-      return;
-    }
-  
-    setLoading(true);
+  const handleConfirmDeleteUser = async (userId) => {
+    console.log("Deleting user with ID:", userId); // Debugging
   
     try {
-      console.log("Deleting user with UID:", id);
-      axios.post("https://eris-backend-63gw71iqb-arandelle-paguintos-projects.vercel.app/api/delete-user", { uid: id })
-        .then(response => console.log("✅ User deleted:", response))
-        .catch(error => console.error("❌ Error deleting user:", error.response?.data || error));
-      
+      const response = await fetch(
+        `https://eris-api-backend-djvy2cgr5-arandelle-paguintos-projects.vercel.app/api/delete-user/${userId}`, 
+        {
+          method: "DELETE",
+          // Add these headers for more comprehensive debugging
+          headers: {
+            'Content-Type': 'application/json',
+            // If you have authentication, add Authorization header here
+          }
+        }
+      );
+  
+      console.log("Response Status:", response.status); // Log HTTP status code
+      console.log("Response OK:", response.ok); // Log if response is successful
+  
+      const text = await response.text(); // Read response as text
+      console.log("Raw Response:", text); 
+  
+      try {
+        const data = JSON.parse(text); // Try to parse JSON
+        console.log("Parsed Data:", data);
 
+        if (!response.ok) throw new Error(data.message || 'Unknown error');
+  
+        console.log("✅ User deleted:", data.message);
+      } catch (parseError) {
+        console.error("❌ Error parsing response:", parseError);
+        console.error("Raw text that failed to parse:", text);
+      }
     } catch (error) {
       console.error("❌ Error deleting user:", error);
-      toast.error(error.response?.data?.error || error.message || "An error occurred.");
-    } finally {
-      setLoading(false);
-      setUserToDelete('');
-      setIsDeleteUser(false);
+      // Log more details about the error
+      console.error("Error name:", error.name);
+      console.error("Error message:", error.message);
     }
   };
+  
   
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">-</p>;
