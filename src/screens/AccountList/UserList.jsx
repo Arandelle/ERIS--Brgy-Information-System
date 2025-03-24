@@ -89,7 +89,7 @@ const UserList = ({ data }) => {
   }
 
   const handleConfirmDeleteUser = async (id) => {
-    const API_URL = "https://eris-backend-7b6dp7uaq-arandelle-paguintos-projects.vercel.app";
+    const API_URL = "https://eris-backend-7b6dp7uaq-arandelle-paguintos-projects.vercel.app" || "http://localhost:5000";
     
     if (!API_URL) {
       console.error("❌ API_URL is undefined! Check your environment variables.");
@@ -111,8 +111,6 @@ const UserList = ({ data }) => {
     setLoading(true);
   
     try {
-      // Get the current user's ID token
-      const token = await auth.currentUser.getIdToken(true);
       
       const apiEndpoint = `${API_URL}/api/disable-user`;
   
@@ -125,11 +123,6 @@ const UserList = ({ data }) => {
       const response = await axios.post(
         apiEndpoint, 
         { uid: id },
-        { 
-          headers: { 
-            Authorization: `Bearer ${token}` 
-          } 
-        }
       );
   
       console.log("✅ Success:", response.data);

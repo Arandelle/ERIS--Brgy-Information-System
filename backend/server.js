@@ -9,7 +9,7 @@ const corsOptions = {
   origin: [
     "https://eris-bagtas.vercel.app",
     "https://eris-brgy-information-system.vercel.app",
-    "http://localhost:5175"
+    "http://localhost:5173"
   ],
   methods: ["GET", "POST", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -56,33 +56,10 @@ admin.initializeApp({
 
 console.log("✅ Firebase Initialized");
 
-
-const authenticateAdmin = async (req, res, next) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized - No token provided' });
-    }
-
-    const token = authHeader.split('Bearer ')[1];
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    
-    // Optional: Check if the user has admin rights
-    // const isAdmin = decodedToken.customClaims?.admin === true;
-    // if (!isAdmin) return res.status(403).json({ error: 'Forbidden - Admin access required' });
-    
-    req.user = decodedToken;
-    next();
-  } catch (error) {
-    console.error('Authentication error:', error);
-    return res.status(401).json({ error: 'Unauthorized - Invalid token' });
-  }
-};
-
 // ✅ API Routes
 
 // Disable User
-app.post("/api/disable-user",authenticateAdmin, async (req, res) => {
+app.post("/api/disable-user", async (req, res) => {
   try {
     const { uid } = req.body;
     if (!uid) return res.status(400).json({ error: "User ID is required" });
