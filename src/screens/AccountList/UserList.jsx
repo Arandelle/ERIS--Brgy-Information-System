@@ -89,13 +89,6 @@ const UserList = ({ data }) => {
   }
 
   const handleConfirmDeleteUser = async (id) => {
-    const API_URL = "https://eris-backend-7b6dp7uaq-arandelle-paguintos-projects.vercel.app" || "http://localhost:5000";
-    
-    if (!API_URL) {
-      console.error("❌ API_URL is undefined! Check your environment variables.");
-      toast.error("Server error: API URL is missing.");
-      return;
-    }
   
     if (!id) {
       console.error("❌ User ID is undefined! Cannot disable user.");
@@ -111,24 +104,14 @@ const UserList = ({ data }) => {
     setLoading(true);
   
     try {
+      console.log("Deleting user with UID:", id);
+      axios.post("https://eris-backend-63gw71iqb-arandelle-paguintos-projects.vercel.app/api/delete-user", { uid: id })
+        .then(response => console.log("✅ User deleted:", response))
+        .catch(error => console.error("❌ Error deleting user:", error.response?.data || error));
       
-      const apiEndpoint = `${API_URL}/api/disable-user`;
-  
-      console.log("📡 Sending request to:", apiEndpoint);
-      console.log("📝 With data:", { uid: id });
 
-      await axios.get(`${API_URL}/api/test-cors`);
-  
-      // Send the token in the Authorization header
-      const response = await axios.post(
-        apiEndpoint, 
-        { uid: id },
-      );
-  
-      console.log("✅ Success:", response.data);
-      toast.success(response.data?.message || "User disabled successfully.");
     } catch (error) {
-      console.error("❌ Error disabling user:", error);
+      console.error("❌ Error deleting user:", error);
       toast.error(error.response?.data?.error || error.message || "An error occurred.");
     } finally {
       setLoading(false);
@@ -136,6 +119,7 @@ const UserList = ({ data }) => {
       setIsDeleteUser(false);
     }
   };
+  
   const TableData = ({ data }) => {
     const nullValue = <p className="italic text-nowrap text-xs">-</p>;
 

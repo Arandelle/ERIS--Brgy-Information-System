@@ -16,13 +16,6 @@ const corsOptions = {
   credentials: true,
 };
 
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://eris-bagtas.vercel.app');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.status(200).send();
-});
-
 // ✅ Allow CORS only from your frontend
 app.use(cors(corsOptions));
 // ✅ Middleware
