@@ -90,7 +90,7 @@ const UserList = ({ data }) => {
 
   const handleConfirmDeleteUser = async (userId) => {
     try {
-      const response = await fetch(`https://eris-api-backend-m0hfsbei4-arandelle-paguintos-projects.vercel.app//api/delete-user/${userId}`, {
+      const response = await fetch(`https://eris-api-backend-m0hfsbei4-arandelle-paguintos-projects.vercel.app/api/delete-user/${userId}`, {
         method: "DELETE",
         credentials: 'include', // Important for CORS
         headers: {
