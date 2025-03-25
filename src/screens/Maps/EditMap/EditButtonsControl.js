@@ -2,7 +2,7 @@ import { useMap } from "react-leaflet";
 import { useEffect } from "react";
 
 
-export const EditButtonsControl = ({saveAreas,setManualPointModal,clearAreas, setIsEditMap}) => {
+export const EditButtonsControl = ({saveAreas,setManualPointModal,clearAreas, cancelEditMap}) => {
   const map = useMap();
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export const EditButtonsControl = ({saveAreas,setManualPointModal,clearAreas, se
         if(cancelBtn){
           L.DomEvent.on(cancelBtn, "click", (e) => {
               L.DomEvent.stopPropagation(e);
-              setIsEditMap(prev => !prev);
+              cancelEditMap();
           });
       }
 

@@ -202,6 +202,11 @@ const MainMap = ({ maximize, setMaximize }) => {
     setCurrentArea([]);
   };
 
+  const cancelEditMap = () => {
+    setIsEditMap(false);
+    setCurrentArea([]);
+  };
+
   const removePoint = (index) => {
     const updatedArea = [...currentArea];
     updatedArea.splice(index, 1);
@@ -296,7 +301,7 @@ const MainMap = ({ maximize, setMaximize }) => {
             saveAreas={() => setIsSaveMap(true)}
             setManualPointModal={setManualPointModal}
             clearAreas={clearAreas}
-            setIsEditMap={setIsEditMap}
+            cancelEditMap={cancelEditMap}
           />
         )}
 
