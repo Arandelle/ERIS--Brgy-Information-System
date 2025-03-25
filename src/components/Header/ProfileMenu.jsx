@@ -32,8 +32,9 @@ const Profile = () => {
   const handleLogout = async () => {
     const uid = auth.currentUser?.uid;
     try {
+      const savedId = uid
       await signOut(auth);
-      await logAuditTrail("Logout", uid);
+      await logAuditTrail("Logout", null, savedId);
       console.log("Logout");
       navigate("/");
     } catch (error) {

@@ -205,7 +205,7 @@ const UserList = ({ data }) => {
           {isLockUser && (
             <AskCard 
               toggleModal={handleLockUserClick}
-              question={`${userToLock.isLocked ? "Unlock" : "Lock"} user ${userToLock.customId} ? `}
+              question={`${userToLock.isLocked ? "Unlock" : "Lock"} account ${userToLock.customId} ? `}
               confirmText={`${userToLock.isLocked ? "Unlock" : "Lock"} ${data}`}
               onConfirm={() => handleConfirmLockUser(userToLock.id, userToLock.isLocked)}
             />

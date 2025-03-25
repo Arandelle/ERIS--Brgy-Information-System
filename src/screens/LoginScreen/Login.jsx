@@ -17,6 +17,7 @@ import Spinner from "../../components/ReusableComponents/Spinner";
 import ForgetPassword from "./ForgetPassword";
 import OtpForm from "./OtpForm";
 import handleErrorMessage from "../../helper/handleErrorMessage";
+import logAuditTrail from "../../hooks/useAuditTrail";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -112,6 +113,7 @@ export default function Login() {
         toast.success("Login successful");
         navigate("/dashboard");
         setLoading(false);
+        await logAuditTrail("Logged in");
       }
       }
       setLoading(false);
@@ -149,6 +151,7 @@ export default function Login() {
           toast.success("Login successful");
           navigate("/dashboard");
           setLoading(false);
+          await logAuditTrail("Logged in");
         } else {
           toast.error("You do not have admin privileges");
           await auth.signOut();
