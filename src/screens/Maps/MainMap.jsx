@@ -22,14 +22,14 @@ import { ResponderListControl } from "./MapControl/ResponderListControl";
 import { useFetchData } from "../../hooks/useFetchData";
 import { MaximizeMapControl } from "./MapControl/MaximizeMapControl";
 import { EditMapButton } from "./EditMap/EditMapButton";
-import { AddManualPointControl } from "./EditMap/AddManualPointControl";
+import { EditButtonsControl } from "./EditMap/EditButtonsControl";
 import { RenderPointModal } from "./EditMap/RenderPointModal";
 import handleEditData from "../../hooks/handleEditData";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import { greenIcon } from "../../helper/iconUtils";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import { toast } from "sonner";
-import {EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
+import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
 import handleErrorMessage from "../../helper/handleErrorMessage";
 import logAuditTrail from "../../hooks/useAuditTrail";
@@ -159,6 +159,7 @@ const MainMap = ({ maximize, setMaximize }) => {
     setCurrentArea([...currentArea, [lat, lng]]);
   };
 
+  // add manually the coordinates of the point
   const addManualPoint = (e) => {
     e.preventDefault();
 
@@ -203,42 +204,44 @@ const MainMap = ({ maximize, setMaximize }) => {
     setCurrentArea(updatedArea);
   };
 
+  // save the edited map
   const saveAreas = async () => {
-    try{
+    try {
       if (currentArea.length >= 3) {
-        const password = prompt("Please enter your password for security purposes");
-        if(!password){
+        const password = prompt(
+          "Please enter your password for security purposes"
+        );
+        if (!password) {
           toast.error("Please enter your password before proceeding");
-          return
+          return;
         }
-        if(!user){
+        if (!user) {
           toast.error("User not authenticated");
           return;
         }
         // reauthenticate the user
         const credential = EmailAuthProvider.credential(user.email, password);
         await reauthenticateWithCredential(user, credential);
-  
+
         const coordinatesData = {
           coordinates: currentArea.reduce((acc, point, index) => {
             acc[`Point ${index + 1}`] = { lat: point[0], lng: point[1] };
-  
+
             return acc;
           }, {}),
         };
-  
-        await handleEditData("details", coordinatesData, "systemData");
-        await logAuditTrail("Update Map")
-      } else {
-        alert("You need at least 3 points to create valid area");
-      }
 
-      setIsEditMap(false);
-      setCurrentArea([]);
+        await handleEditData("details", coordinatesData, "systemData");
+        await logAuditTrail("Update Map");
+        setIsEditMap(false);
+        setCurrentArea([]);
+      } else {
+        toast.warning("You need at least 3 points to create valid area");
+      }
       setIsSaveMap(false);
-    } catch(error){
-      handleErrorMessage(error)
-    };
+    } catch (error) {
+      handleErrorMessage(error);
+    }
   };
 
   if (!position) {
@@ -274,14 +277,15 @@ const MainMap = ({ maximize, setMaximize }) => {
         <EditMapButton
           isEditMap={isEditMap}
           setIsEditMap={setIsEditMap}
-          saveAreas={() => setIsSaveMap(true)}
         />
 
         {/** to display the control of buttons : add point manually and clear areas */}
         {isEditMap && (
-          <AddManualPointControl
+          <EditButtonsControl
+            saveAreas={() => setIsSaveMap(true)}
             setManualPointModal={setManualPointModal}
             clearAreas={clearAreas}
+            setIsEditMap={setIsEditMap}
           />
         )}
 
@@ -319,9 +323,10 @@ const MainMap = ({ maximize, setMaximize }) => {
             <Popup>
               <div>
                 <p>Point {index + 1}</p>
-                <p>
-                  Lat: {point[0].toFixed(6)}, Lng: {point[1].toFixed(6)}
-                </p>
+                <div className="space-y-2 flex flex-col my-2">
+                  <span>Latitude: {point[0].toFixed(6)}</span>
+                  <span>Longitude: {point[1].toFixed(6)}</span>
+                </div>
                 <button
                   onClick={(event) => {
                     L.DomEvent.stopPropagation(event); // Prevent popup from closing
@@ -379,9 +384,11 @@ const MainMap = ({ maximize, setMaximize }) => {
       </MapContainer>
 
       {isSaveMap && (
-        <AskCard 
+        <AskCard
           toggleModal={(prev) => setIsSaveMap(!prev)}
-          question={"Please double-check the updated map,as it will directly reflect on the user's map as well"}
+          question={
+            "Please double-check the updated map,as it will directly reflect on the user's map as well"
+          }
           confirmText={"Save Map"}
           onConfirm={saveAreas}
         />

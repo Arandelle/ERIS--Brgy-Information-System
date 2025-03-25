@@ -4,6 +4,7 @@ import { useFetchData } from "../../../hooks/useFetchData";
 import { push, ref, serverTimestamp, update } from "firebase/database";
 import { database } from "../../../services/firebaseConfig";
 import logAuditTrail from "../../../hooks/useAuditTrail";
+import { toast } from "sonner";
 
 export const ResponderListControl = ({selectedEmergency}) => {
   const map = useMap();
@@ -88,7 +89,7 @@ export const ResponderListControl = ({selectedEmergency}) => {
   
           await update(ref(database), updates);
           await logAuditTrail("Deployed Responder")
-          alert("Successfully deployed!");
+          toast.info("Successfully deployed!");
 
     }catch(error){
         console.error(error);
