@@ -5,6 +5,7 @@ import handleAddData from "../../hooks/handleAddData";
 import handleEditData from "../../hooks/handleEditData";
 import {useNavigate} from "react-router-dom";
 import logAuditTrail from "../../hooks/useAuditTrail";
+import { generateUniqueBarangayID } from "../../helper/generateID";
 
 const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
   const navigate = useNavigate();
@@ -28,13 +29,18 @@ const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
     "px-4 py-2 text-sm border-gray-300 rounded-md focus:outline-none focus:ring-0 focus:ring-gray-400 focus:border-gray-400 dark:placeholder:text-gray-200 dark:text-gray-200 dark:bg-gray-600 w-full";
 
   const handleRequestClearance = async () => {
+    const customId = await generateUniqueBarangayID("certification");
     const requestData = {
       ...clearanceData,
       status: "pending",
+      customId,
     };
 
-    await handleAddData(requestData, "requestClearance");
-    await logAuditTrail("Added request certification")
+    const certificationUid = await handleAddData(requestData, "requestClearance"); // get the uid of new data
+
+    if(certificationUid){
+      await logAuditTrail("Added request certification", certificationUid);
+    }
     setClearanceData({});
     handleCloseModal();
   };
@@ -89,7 +95,7 @@ const ClearanceModal = ({ handleCloseModal, isEdit, selectedId, userData }) => {
     };
 
     await handleEditData(selectedId, updatedData, "requestClearance");
-    await logAuditTrail("Update Certification")
+    await logAuditTrail("Update Certification", selectedId)
     handleCloseModal();
   };
 

@@ -24,7 +24,7 @@ const handleAddData = async (data, type) => {
     } catch (error) {
       console.error(`Error uploading ${fileType} image: `, error);
       toast.error(`Error uploading image: ${error}`);
-      return;
+      return null;
     }
   }
 
@@ -58,12 +58,16 @@ const handleAddData = async (data, type) => {
   const dataRef = ref(database, `${type}`);
 
   try {
-    await push(dataRef, dataBasedOnType[type]);
+    const newRef = push(dataRef, dataBasedOnType[type]); // push the data and get the reference
+    const newKey = newRef.key; // get the key of the new data
     toast.success(
       `${type.charAt(0).toUpperCase() + type.slice(1)} submitted successfully!`
     );
+
+    return newKey;  
   } catch (error) {
     toast.error(`Error adding ${type}: ${error}`);
+    return null;
   }
 };
 

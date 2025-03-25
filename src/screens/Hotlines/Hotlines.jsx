@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import handleEditData from "../../hooks/handleEditData";
 import useSearchParam from "../../hooks/useSearchParam";
 import logAuditTrail from "../../hooks/useAuditTrail";
+import { generateUniqueBarangayID } from "../../helper/generateID";
 
 const Hotlines = () => {
   const {searchParams, setSearchParams} = useSearchParam();
@@ -98,12 +99,15 @@ const Hotlines = () => {
   };
 
   const handleAddHotlines = async () => {
+    const customId = await generateUniqueBarangayID("hotlines");
     const hotlineData = {
       ...hotlineState,
+      customId
     };
-
-    await handleAddData(hotlineData, "hotlines");
-    await logAuditTrail("Added hotline")
+    const hotlineUid = await handleAddData(hotlineData, "hotlines"); // get the uid of the added data
+    if(hotlineUid) {
+      await logAuditTrail("Added hotline", hotlineUid);
+    }
 
     setHotlinesState({});
     setHotlinesModal(false);
@@ -151,7 +155,7 @@ const Hotlines = () => {
     };
 
     await handleEditData(id, hotlinesData, "hotlines");
-    await logAuditTrail("Update hotline");
+    await logAuditTrail("Update hotline", id);
     setHotlinesState({});
     setHotlinesModal(false);
     setSearchParams({});

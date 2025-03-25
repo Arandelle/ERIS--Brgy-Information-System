@@ -7,6 +7,7 @@ import { InputField } from "../../components/ReusableComponents/InputField";
 import { useFetchData } from "../../hooks/useFetchData";
 import handleEditData from "../../hooks/handleEditData";
 import logAuditTrail from "../../hooks/useAuditTrail";
+import { generateUniqueBarangayID } from "../../helper/generateID";
 
 const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateId}) => {
   const editorRef = useRef(null);
@@ -21,17 +22,21 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
     (template) => template.id === selectedTemplateId
   );
 
+  // add new template data or content, not the template itself (title, type, content) but styles or header/footer is not included
   const saveTemplate = async () => {
     if (editorRef.current) {
       const content = editorRef.current.getContent();
-
+      const customId = await generateUniqueBarangayID("templates");
       const certData = {
         ...templateData,
         content,
+        customId
       };
 
-      await handleAddData(certData, "templateContent");
-      await logAuditTrail("Added new template");
+      const templateUid = await handleAddData(certData, "templateContent");
+      if(templateUid ){
+        await logAuditTrail("Added new template", templateUid);
+      }
   
       setTemplateData({});
       setShowAddTemplate(false);
@@ -51,7 +56,7 @@ const TemplateModal = ({ setShowAddTemplate, isEdit,setIsEdit, selectedTemplateI
       };
   
       await handleEditData(id, updatedTemplate, "templateContent");
-      await logAuditTrail("Update template content")
+      await logAuditTrail("Update template content", id)
       setTemplateData({});
       setShowAddTemplate(false);
       setIsEdit(false);

@@ -78,6 +78,7 @@ const handleEditData = async (id,data, type) => {
           },
           hotlines: {
             ...dataWithDateAndTimestamp,
+            email: data.email || "",
           },
           templateContent: {
             ...dataWithDateAndTimestamp,

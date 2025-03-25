@@ -137,7 +137,7 @@ const Templates = () => {
     setSearchParams(!isTemplateEdit ? "edit template" : "")
   };
 
-  // save the template Data
+  // save the template style (images, headers, etc.)
   const handleSaveTemplate = async () => {
     const templatesRef = ref(database, "templates/document1");
 
@@ -255,7 +255,7 @@ const Templates = () => {
 
       // Update database
       await update(templatesRef, updatedTemplateData);
-      await logAuditTrail("Update template")
+      await logAuditTrail("Update template style");
 
       setIsTemplateEdit(false);
       setSearchParams({})

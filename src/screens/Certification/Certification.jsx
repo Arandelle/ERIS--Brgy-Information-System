@@ -16,7 +16,7 @@ import { generateFullTemplate } from "../Templates/generateTemplate";
 import handleDeleteData from "../../hooks/handleDeleteData";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import { ref, update } from "firebase/database";
-import { database } from "../../services/firebaseConfig";
+import { auth, database } from "../../services/firebaseConfig";
 import ClearanceViewModal from "./ClearanceViewModal";
 import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import useSendNotification from "../../hooks/useSendNotification";
@@ -24,6 +24,7 @@ import useSearchParam from "../../hooks/useSearchParam";
 import logAuditTrail from "../../hooks/useAuditTrail";
 
 const Certification = () => {
+  const user = auth.currentUser;
   const {searchParam, setSearchParams} = useSearchParam();
   const [searchQuery, setSearchQuery] = useState("");
   const {sendNotification} = useSendNotification();
@@ -207,10 +208,10 @@ const Certification = () => {
       };
 
       await update(dataRef, clearanceData);
-      sendNotification("users", "1W5pUkUVYlTBITVJo3xhYaeDoEi1", "certificateStatus", status);
-      await logAuditTrail(`Certification ${capitalizeFirstLetter(status)}`)
+     { userData?.userId && sendNotification("users", `${userData.userId}`, "certificateStatus", status)}
+      await logAuditTrail(`Certification ${capitalizeFirstLetter(status)}`, selectedId)
       toast.info(`Clearance request ${status}`);
-      console.log(userData.userId, status);
+      console.log(userData.id, status);
     } catch (error) {
       toast.error(`Error updating: ${error}`);
     }
@@ -274,7 +275,7 @@ const Certification = () => {
         <select
           className={`text-xs sm:text-sm ${textColor[userData.status]} bg-transparent border-none`}
           value={userData.status}
-          onClick={() => handleChangeStatusClick(userData)}
+          onClick={() =>{ handleChangeStatusClick(userData) , setUserData(userData)}}
           onChange={(e) => handleUpdateClearanceStatus(e.target.value)}
           disabled={rejected || done}
         >

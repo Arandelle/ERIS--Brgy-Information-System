@@ -23,6 +23,7 @@ import { auth } from "../../services/firebaseConfig";
 import useSearchParam from "../../hooks/useSearchParam";
 import useViewMedia from "../../hooks/useViewMedia";
 import logAuditTrail from "../../hooks/useAuditTrail";
+import { generateUniqueBarangayID } from "../../helper/generateID";
 
 const Activities = () => {
   const { data: activity, setData: setActivity } = useFetchData("announcement");
@@ -103,13 +104,20 @@ const Activities = () => {
   };
 
   const handleAddAnnouncement = async () => {
+    const customId = await generateUniqueBarangayID("awareness");
     const postData = {
       ...postDetails,
       userId: admin.uid,
+      customId,
     };
 
-    await handleAddData(postData, "announcement");
-    await logAuditTrail("Post awareness");
+    const newDocId = await handleAddData(postData, "announcement"); // get the new Id
+
+    if(newDocId) {
+      await logAuditTrail("Post awareness", newDocId);
+      toast.info(newDocId)
+    }
+
     setPostDetails({});
     setModal(false);
   };
@@ -136,7 +144,7 @@ const Activities = () => {
       userId: admin.uid,
     };
     await handleEditData(id, postData, "announcement");
-    await logAuditTrail("Edit a posted awareness");
+    await logAuditTrail("Edit a posted awareness", id);
     setPostDetails({});
     setModal(false);
   };
@@ -158,7 +166,7 @@ const Activities = () => {
 
     try {
       await handleDeleteData(selectedId, "announcement");
-      await logAuditTrail("Deleted a posted awareness")
+      await logAuditTrail("Deleted a posted awareness", selectedId);
     } catch (error) {
       // If deletion fails, restore the item to the list
       setActivity((prevActivity) => [...prevActivity, itemToDelete]);
