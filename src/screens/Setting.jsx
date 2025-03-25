@@ -13,11 +13,13 @@ import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import handleErrorMessage from "../helper/handleErrorMessage";
 import useViewMedia from "../hooks/useViewMedia";
 import { useFetchSystemData } from "../hooks/useFetchSystemData";
+import Modal from "../components/ReusableComponents/Modal";
+import { InputField } from "../components/ReusableComponents/InputField";
 
 const Setting = () => {
   const { isModalOpen, currentMedia, openModal, closeModal } = useViewMedia();
   const user = auth.currentUser;
-  const {systemData, loading, setLoading} = useFetchSystemData();
+  const { systemData, loading, setLoading } = useFetchSystemData();
   const { data: admin } = useFetchData("admins");
   const currentAdminDetails = admin.find((admin) => admin.id === user?.uid);
   const [systemState, setSystemState] = useState({
@@ -37,18 +39,21 @@ const Setting = () => {
   });
   const [showProfileModal, setShowProfileModal] = useState(false);
 
+  const [password, setPassword] = useState("");
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+
   // render the systemState the systemData's data under the details
   useEffect(() => {
     if (systemData) {
-        setSystemState((prevState) => ({
-          ...prevState,
-          originalTitle: systemData.title || "",
-          title: systemData.title,
-          originalImageUrl: systemData.fileUrl,
-          previewImage: systemData.fileUrl,
-          isModified: false,
-          isOtpEnabled: systemData.isOtpEnabled,
-        }));
+      setSystemState((prevState) => ({
+        ...prevState,
+        originalTitle: systemData.title || "",
+        title: systemData.title,
+        originalImageUrl: systemData.fileUrl,
+        previewImage: systemData.fileUrl,
+        isModified: false,
+        isOtpEnabled: systemData.isOtpEnabled,
+      }));
     }
   }, [systemData]);
 
@@ -121,7 +126,7 @@ const Setting = () => {
       const updatedData = {
         title: systemState.title,
         file: systemState.logoImageFile,
-        fileType: "image"
+        fileType: "image",
       };
       await handleEditData("details", updatedData, "systemData");
       console.log("Data updated in database: ", updatedData);
@@ -144,21 +149,7 @@ const Setting = () => {
   const handleOtpEnable = async () => {
     try {
       if (systemData.isOtpEnabled) {
-        const password = prompt("Please enter your password first before turning off the otp");
-        if(!password){
-          toast.warning("Password is required before proceeding");
-          return;
-        }
-        // reauthenticate the user
-        const credential = EmailAuthProvider.credential(user.email, password);
-        await reauthenticateWithCredential(user, credential);
-        const newSytemData = {
-          ...systemData,
-          isOtpEnabled: false
-        }
-
-        await handleEditData("details", newSytemData, "systemData");
-        return;
+        setShowPasswordModal(true);
       } else {
         const newSystemData = {
           ...systemData,
@@ -166,6 +157,28 @@ const Setting = () => {
         };
         await handleEditData("details", newSystemData, "systemData");
       }
+    } catch (error) {
+      handleErrorMessage(error);
+    }
+  };
+
+  const handleOtpEnableConfirm = async () => {
+    try {
+      if (!password) {
+        toast.warning("Password is required before proceeding");
+        return;
+      }
+      // reauthenticate the user
+      const credential = EmailAuthProvider.credential(user.email, password);
+      await reauthenticateWithCredential(user, credential);
+      const newSytemData = {
+        ...systemData,
+        isOtpEnabled: false,
+      };
+      await handleEditData("details", newSytemData, "systemData");
+      setShowPasswordModal(false);
+      setPassword("");
+      return;
     } catch (error) {
       handleErrorMessage(error);
     }
@@ -294,34 +307,43 @@ const Setting = () => {
                 </div>
               </section>
               {/**Save Button */}
-            <div className="py-4 place-self-end">
-              <button
-                className={`py-2 px-4 rounded-md text-sm text-white ${
-                  systemState.isModified ? "bg-blue-500" : "bg-gray-500"
-                }`}
-                disabled={!systemState.isModified}
-                onClick={handleUpdateData}
-              >
-                Save update
-              </button>
+              <div className="py-4 place-self-end">
+                <button
+                  className={`py-2 px-4 rounded-md text-sm text-white ${
+                    systemState.isModified ? "bg-blue-500" : "bg-gray-500"
+                  }`}
+                  disabled={!systemState.isModified}
+                  onClick={handleUpdateData}
+                >
+                  Save update
+                </button>
+              </div>
             </div>
-            </div>
-            
-           <section className="border-b py-2 space-y-1">
-              <p className="font-medium text-lg dark:text-gray-200">Authentication</p>
+
+            <section className="border-b py-2 space-y-1">
+              <p className="font-medium text-lg dark:text-gray-200">
+                Authentication
+              </p>
               <p className="text-gray-500 dark:text-gray-400 text-sm">
                 Manage your system authentication
               </p>
               <section className="flex flex-row items-center lg:p-8">
-             
-                  <div className={`flex-1 basis-1/2 font-bold ${systemState.isOtpEnabled ? "text-blue-800" : "text-gray-500"}`}>Allow OTP Login</div>
-                  <div className="flex-1 basis-1/2" disabled>
-                    <SwitchButton onChange={() => handleOtpEnable()} isOtpEnabled={systemState.isOtpEnabled} />
-                  </div>
-                </section>  
-           </section>          
+                <div
+                  className={`flex-1 basis-1/2 font-bold ${
+                    systemState.isOtpEnabled ? "text-blue-800" : "text-gray-500"
+                  }`}
+                >
+                  Allow OTP Login
+                </div>
+                <div className="flex-1 basis-1/2" disabled>
+                  <SwitchButton
+                    onChange={() => handleOtpEnable()}
+                    isOtpEnabled={systemState.isOtpEnabled}
+                  />
+                </div>
+              </section>
+            </section>
           </div>
-          
 
           {showProfileModal && (
             <ProfileModal
@@ -336,6 +358,38 @@ const Setting = () => {
 
           {isModalOpen && (
             <MediaModal currentMedia={currentMedia} closeModal={closeModal} />
+          )}
+
+          {showPasswordModal && (
+            <Modal
+              title="Enter your password"
+              closeButton={() => setShowPasswordModal(false)}
+              children={
+                <div className="max-w-2xl space-y-6">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 italic">
+                    Please enter your password to save the changes
+                  </p>
+
+                  <div className="flex flex-col space-y-2">
+                    <label className="text-gray-600">Password: </label>
+                    <InputField
+                      type="password"
+                      placeholder={"Enter your password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required={true}
+                    />
+                    <button
+                      type="submit"
+                      className="bg-blue-500 py-3 rounded-md text-white font-bold text-sm w-full"
+                      onClick={handleOtpEnableConfirm}
+                    >
+                      Save Map
+                    </button>
+                  </div>
+                </div>
+              }
+            />
           )}
         </div>
       }
