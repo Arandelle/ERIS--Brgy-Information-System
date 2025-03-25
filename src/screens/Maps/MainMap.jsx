@@ -33,6 +33,8 @@ import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
 import handleErrorMessage from "../../helper/handleErrorMessage";
 import logAuditTrail from "../../hooks/useAuditTrail";
+import { InputField } from "../../components/ReusableComponents/InputField";
+import Modal from "../../components/ReusableComponents/Modal";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -88,6 +90,8 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [latitudeInput, setLatitudeInput] = useState("");
   const [longitudeInput, setLongitudeInput] = useState("");
   const [isSaveMap, setIsSaveMap] = useState(false);
+  const [password, setPassword] = useState("");
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   console.log(systemData?.coordinates);
 
@@ -208,37 +212,44 @@ const MainMap = ({ maximize, setMaximize }) => {
   const saveAreas = async () => {
     try {
       if (currentArea.length >= 3) {
-        const password = prompt(
-          "Please enter your password for security purposes"
-        );
-        if (!password) {
-          toast.error("Please enter your password before proceeding");
-          return;
-        }
-        if (!user) {
-          toast.error("User not authenticated");
-          return;
-        }
-        // reauthenticate the user
-        const credential = EmailAuthProvider.credential(user.email, password);
-        await reauthenticateWithCredential(user, credential);
-
-        const coordinatesData = {
-          coordinates: currentArea.reduce((acc, point, index) => {
-            acc[`Point ${index + 1}`] = { lat: point[0], lng: point[1] };
-
-            return acc;
-          }, {}),
-        };
-
-        await handleEditData("details", coordinatesData, "systemData");
-        await logAuditTrail("Update Map");
-        setIsEditMap(false);
-        setCurrentArea([]);
+        setShowPasswordModal(true);
       } else {
         toast.warning("You need at least 3 points to create valid area");
       }
       setIsSaveMap(false);
+    } catch (error) {
+      handleErrorMessage(error);
+    }
+  };
+
+  const saveAreasWithPassword = async () => {
+    try {
+      if (!user) {
+        toast.error("User not authenticated");
+        return;
+      }
+      if(!password){
+        toast.error("Please enter your password");
+        return;
+      }
+      // reauthenticate the user
+      const credential = EmailAuthProvider.credential(user.email, password);
+      await reauthenticateWithCredential(user, credential);
+
+      const coordinatesData = {
+        coordinates: currentArea.reduce((acc, point, index) => {
+          acc[`Point ${index + 1}`] = { lat: point[0], lng: point[1] };
+
+          return acc;
+        }, {}),
+      };
+
+      await handleEditData("details", coordinatesData, "systemData");
+      await logAuditTrail("Update Map");
+      setIsEditMap(false);
+      setCurrentArea([]);
+      setShowPasswordModal(false);
+      setPassword("");
     } catch (error) {
       handleErrorMessage(error);
     }
@@ -391,6 +402,38 @@ const MainMap = ({ maximize, setMaximize }) => {
           }
           confirmText={"Save Map"}
           onConfirm={saveAreas}
+        />
+      )}
+
+      {showPasswordModal && (
+        <Modal 
+          title={"Enter your password"}
+          closeButton={() => setShowPasswordModal(false)}
+          children={
+            <div className="max-w-2xl space-y-6">
+              <p className="text-sm text-gray-600 dark:text-gray-300 italic">
+                Please enter your password to save the changes
+              </p>
+
+              <div className="flex flex-col space-y-2">
+                <label className="text-gray-600">Password: </label>
+                <InputField
+                  type="password"
+                  placeholder={"Enter your password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required={true}
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-500 py-3 rounded-md text-white font-bold text-sm w-full"
+                  onClick={saveAreasWithPassword}
+                >
+                  Save Map
+                </button>
+              </div>
+            </div>
+          }
         />
       )}
     </div>
