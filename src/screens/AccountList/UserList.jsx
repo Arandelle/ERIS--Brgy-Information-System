@@ -16,11 +16,9 @@ import MediaModal from "../MediaModal";
 import useSearchParam from "../../hooks/useSearchParam";
 import useViewMedia from "../../hooks/useViewMedia";
 import { toast } from "sonner";
-import handleDeleteData from "../../hooks/handleDeleteData";
+import handleEditData from "../../hooks/handleEditData";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import logAuditTrail from "../../hooks/useAuditTrail";
-import { auth } from "../../services/firebaseConfig";
-import axios from "axios";
 
 const UserList = ({ data }) => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -29,8 +27,8 @@ const UserList = ({ data }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [addUser, setAddUser] = useState(null);
   const [userToViewInfo, setUserToViewInfo] = useState(null);
-  const [userToDelete, setUserToDelete] = useState("");
-  const [isDeleteUser, setIsDeleteUser] = useState(false);
+  const [userToLock, setUserToDelete] = useState("");
+  const [isLockUser, setIsDeleteUser] = useState(false);
   const { isModalOpen, currentMedia, openModal, closeModal } = useViewMedia();
   const [loading, setLoading] = useState(false);
 
@@ -61,7 +59,6 @@ const UserList = ({ data }) => {
     </div>,
     "Name",
     "ID",
-    "Address",
     "Gender",
     "Phone",
     "Created",
@@ -83,32 +80,20 @@ const UserList = ({ data }) => {
     setUserToViewInfo(null);
   };
 
-  const handleDeleteUserClick = (user) => {
+  const handleLockUserClick = (user) => {
     setUserToDelete(user);
     setIsDeleteUser(prev => !prev)
   }
 
-  const handleConfirmDeleteUser = async (userId) => {
-    try {
-      const response = await fetch(`https://eris-api-backend-m0hfsbei4-arandelle-paguintos-projects.vercel.app/api/delete-user/${userId}`, {
-        method: "DELETE",
-        credentials: 'include', // Important for CORS
-        headers: {
-          'Content-Type': 'application/json',
-          // Add any additional headers if needed
-        }
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Deletion failed');
-      }
-  
-      const data = await response.json();
-      console.log("✅ User deleted:", data.message);
-    } catch (error) {
-      console.error("❌ Error deleting user:", error);
-      // Handle error (show user message, etc.)
+  const handleConfirmLockUser = async (userId, isLocked) => {
+    try{
+      setLoading(true);
+      await handleEditData(userId, {isLocked: !isLocked}, data);
+      logAuditTrail(`${isLocked ? "Unlocked" : "Locked"} ${data}' account`,userId);
+      setIsDeleteUser(false);
+      setLoading(false);
+    }catch(error){
+      console.log(error)
     }
   };
   
@@ -125,6 +110,9 @@ const UserList = ({ data }) => {
   };
 
   const renderRow = (user) => {
+
+    const isLocked = user.isLocked;
+
     return (
       <>
         <td className="w-4 p-2 sm:p-4">
@@ -143,15 +131,14 @@ const UserList = ({ data }) => {
             alt="anonymous"
             onClick={() => openModal(user.fileUrl || user.img)}
           />
-          <div className="ps-2 sm:ps-3">
-            <p>{user.fullname ?? "null"}</p>
+          <div className="ps-2 sm:ps-3 relative">
+            <p>{user.fullname ?? "---"}</p>
             <p className="font-normal text-gray-500 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[200px]">
               {user.email}
             </p>
           </div>
         </th>
         <TableData data={user.customId} />
-        <TableData data={user.address} />
         <TableData data={user.gender} />
         <TableData data={user.mobileNum} />
         <TableData data={formatDate(user.createdAt)} />
@@ -168,13 +155,13 @@ const UserList = ({ data }) => {
               fontSize={"small"}
             />
             <IconButton 
-              icon={icons.delete}
-              color={"red"}
-              tooltip={`Delete ${data}`}
+              icon={isLocked ? icons.lock : icons.lockOpen}
+              color={isLocked ? "gray" : "green"}
+              tooltip={`${isLocked ? "Unlock" : "Lock"} ${data}`}
               fontSize={"small"}
               onClick={(e) => {
                 e.stopPropagation();
-                handleDeleteUserClick(user);
+                handleLockUserClick(user);
               }}
             />
           </div>
@@ -215,12 +202,12 @@ const UserList = ({ data }) => {
             <MediaModal currentMedia={currentMedia} closeModal={closeModal} />
           )}
 
-          {isDeleteUser && (
+          {isLockUser && (
             <AskCard 
-              toggleModal={handleDeleteUserClick}
-              question={`Delete ${userToDelete.fullname} ? `}
-              confirmText={"Delete"}
-              onConfirm={() => handleConfirmDeleteUser(userToDelete.id)}
+              toggleModal={handleLockUserClick}
+              question={`${userToLock.isLocked ? "Unlock" : "Lock"} user ${userToLock.customId} ? `}
+              confirmText={`${userToLock.isLocked ? "Unlock" : "Lock"} ${data}`}
+              onConfirm={() => handleConfirmLockUser(userToLock.id, userToLock.isLocked)}
             />
           )}
           <Table

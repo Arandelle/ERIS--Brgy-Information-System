@@ -60,6 +60,12 @@ const handleEditData = async (id,data, type) => {
             ...dataWithDateAndTimestamp,
             fileUrl
           },
+          users:{
+            ...dataWithDateAndTimestamp,
+          },
+          responders:{
+            ...dataWithDateAndTimestamp,
+          },
           systemData: {
             ...dataWithDateAndTimestamp,
             fileUrl
@@ -86,7 +92,7 @@ const handleEditData = async (id,data, type) => {
 
         await update(dataRef, dataBasedOnType[type]);
 
-        toast.success(`${type?.toLowerCase()} updated successfully`);
+        toast.info(`Successfully updated`);
 
       } else {
         toast.error(`${type} not found`);

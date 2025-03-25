@@ -13,6 +13,8 @@ const usePagination = (data) => {
       // Get status priority, default to -1 if status is missing
       const statusA = sortedStatus[a.status] ?? -1;
       const statusB = sortedStatus[b.status] ?? -1;
+      if (a.isLocked && !b.isLocked) return 1;  // a is locked, b is not → a goes below
+      if (!a.isLocked && b.isLocked) return -1;
 
       // Compare status priority
       const statusDiff = statusB - statusA;

@@ -28,6 +28,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LoginIcon from '@mui/icons-material/Login';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -36,6 +37,7 @@ const icons = {
     email: EmailIcon,
     clock: AccessTimeFilledIcon,
     lock: LockIcon,
+    lockOpen: LockOpenIcon,
     login: LoginIcon,
     arrowRight: ArrowRightIcon,
     arrowDropDown: ArrowDropDown,

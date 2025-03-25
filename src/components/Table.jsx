@@ -21,7 +21,7 @@ const Table = ({ headers = [], data, renderRow, emptyMessage = "No records found
               {data.map((item, index) => (
                 <tr
                   key={index}
-                  className={`border-b dark:border-gray-700 bg-white hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-gray-700`}
+                  className={`border-b dark:border-gray-700 bg-white ${item.isLocked && "opacity-50"} hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-gray-700`}
                 >
                   {renderRow(item)}
                 </tr>
