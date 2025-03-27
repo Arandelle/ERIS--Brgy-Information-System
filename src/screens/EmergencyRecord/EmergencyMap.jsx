@@ -75,7 +75,7 @@ const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
 
   return (
     <div
-      className="w-[95%] lg:w-2/3 h-2/3 relative"
+      className="w-[95%] lg:w-2/3 h-3/4 relative"
       onClick={(e) => e.stopPropagation()}
     >
       <MapContainer

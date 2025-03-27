@@ -200,7 +200,7 @@ const AddRecordModal = ({ setAddRecordModal }) => {
           className="flex items-center fixed inset-0 justify-center z-50 h-screen w-screen"
           onClick={() => setOpenMap(false)}
         >
-        <p className="absolute bottom-24 text-white font-bold">Click the Map to set the location</p>
+        <p className="absolute bottom-16 text-white font-bold">Click the Map to set the location</p>
           <EmergencyMap
             setEmergencyData={setEmergencyData}
             setOpenMap={setOpenMap}
