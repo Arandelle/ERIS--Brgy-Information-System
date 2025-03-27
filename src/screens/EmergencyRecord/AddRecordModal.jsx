@@ -50,7 +50,7 @@ const AddRecordModal = ({ setAddRecordModal }) => {
 
   const saveEmergencyData = async () => {
     try {
-    const {dateResolved, responseTime, date, responderId,location } = emergencyData;
+    const {dateResolved, responseTime, date, responderId, location } = emergencyData;
     if(!dateResolved || !responseTime || !date || !responderId || !location) {
         toast.error("Please provide the neccessary details");
         return;
@@ -180,7 +180,7 @@ const AddRecordModal = ({ setAddRecordModal }) => {
                 onClick={() => setOpenMap(true)}
               >
                 {emergencyData.location
-                  ? `Latitude: ${emergencyData.location.latitude}, Longitude: ${emergencyData.location.longitude}`
+                  ? `${emergencyData.location.geoCodeLocation}`
                   : "Select Location"}
               </button>
 
@@ -199,6 +199,7 @@ const AddRecordModal = ({ setAddRecordModal }) => {
           className="flex items-center fixed inset-0 justify-center z-50 h-screen w-screen"
           onClick={() => setOpenMap(false)}
         >
+        <p className="absolute bottom-24 text-white font-bold">Click the Map to set the location</p>
           <EmergencyMap
             setEmergencyData={setEmergencyData}
             setOpenMap={setOpenMap}

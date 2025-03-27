@@ -10,37 +10,63 @@ import "leaflet/dist/leaflet.css";
 import { greenIcon } from "../../helper/iconUtils";
 
 const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
-  const [position, setPosition] = useState([14.33289, 120.85065]);
+  const [position] = useState([14.33289, 120.85065]);
   const [emergencyMarker, setEmergencyMarker] = useState([]);
+  const [locationDetails, setLocationDetails] = useState({});
 
   const MapEvents = ({ onMapClick }) => {
-    useMapEvent({
-      click: (e) => {
-        onMapClick(e);
-      },
+    useMapEvent("click", (e) => {
+      onMapClick(e);
     });
+    return null;
   };
 
-  const handleMarkLocation = (e) => {
+  const handleMarkLocation = async (e) => {
     const { lat, lng } = e.latlng;
     setEmergencyMarker([lat, lng]);
+
+    try {
+      // Enhanced Nominatim request with more detailed parameters
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&extratags=1`
+      );
+      const data = await response.json();
+
+      if (data && data.address) {
+        const details = {
+          geoCodeLocation: data.display_name || "",
+          latitude: lat.toFixed(6),
+          longitude: lng.toFixed(6),
+        };
+
+        setLocationDetails(details);
+      }
+    } catch (error) {
+      console.error("Error fetching geocode:", error);
+      setLocationDetails({
+        geoCodeLocation: "Unable to fetch location details",
+        latitude: lat.toFixed(6),
+        longitude: lng.toFixed(6),
+      });
+    }
   };
 
   const saveData = () => {
-    if (emergencyMarker) {
+    if (emergencyMarker.length > 0) {
       setEmergencyData((prev) => ({
         ...prev,
-        location: {
-          latitude: emergencyMarker[0],
-          longitude: emergencyMarker[1],
-        },
+        location: locationDetails,
+        locationOfResponder: position
       }));
+      setOpenMap(false);
     }
-    setOpenMap(false);
   };
 
   return (
-    <div className="w-2/3 h-2/3 relative" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="w-[95%] lg:w-2/3 h-2/3 relative"
+      onClick={(e) => e.stopPropagation()}
+    >
       <MapContainer
         center={position}
         zoom={16}
@@ -52,11 +78,10 @@ const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
           <Marker position={emergencyMarker} icon={greenIcon}>
             <Popup>
               <div className="flex flex-col space-y-2">
-                <span className="font-bold">
-                  Your selected emergency location
-                </span>
-                <span> Latitude: {emergencyMarker[0]}</span>
-                <span> Longitude: {emergencyMarker[1]}</span>
+                <span className="font-bold">Emergency Location Details</span>
+                <span>Full Address: {locationDetails.geoCodeLocation}</span>
+                <span>Latitude: {locationDetails.latitude}</span>
+                <span>Longitude: {locationDetails.longitude}</span>
               </div>
             </Popup>
           </Marker>
@@ -67,7 +92,7 @@ const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
           className="absolute top-20 left-2 z-50 py-2 px-4 rounded-md text-sm bg-blue-500 text-white"
           onClick={saveData}
         >
-          Save
+          Save Location
         </button>
       )}
     </div>

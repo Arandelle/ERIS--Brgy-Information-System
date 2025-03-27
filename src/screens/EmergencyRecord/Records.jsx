@@ -38,7 +38,7 @@ const Records = () => {
 
     return {
       ...emergency,
-      userName: user?.fullname,
+      userName: user?.fullname || emergency.fullname,
       responderName: responder ? responder.fullname : "Waiting for responder",
       userID: user?.customId || "--",
       responderID: responder?.customId || "--",
