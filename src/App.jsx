@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 import Map from "./screens/Maps/Map";
 import Login from "./screens/LoginScreen/Login";
-import Records from "./screens/Records";
+import Records from "./screens/EmergencyRecord/Records";
 import Announcement from "./screens/Announcement/AnnouncementList";
 import Setting from "./screens/Setting";
 import { Toaster } from "sonner";

@@ -41,6 +41,9 @@ const handleAddData = async (data, type) => {
       fileUrl,
       fileType
     },
+    emergencyRequest: {
+      ...data
+    },
     hotlines: {
       ...dataWithDateAndTimestamp,
     },

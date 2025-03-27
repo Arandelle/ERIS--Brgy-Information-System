@@ -367,24 +367,26 @@ const Setting = () => {
               children={
                 <div className="max-w-2xl space-y-6">
                   <p className="text-sm text-gray-600 dark:text-gray-300 italic">
-                    Please enter your password to save the changes
+                   For security purposes, please enter your password to save the changes
                   </p>
 
-                  <div className="flex flex-col space-y-2">
-                    <label className="text-gray-600">Password: </label>
-                    <InputField
-                      type="password"
-                      placeholder={"Enter your password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required={true}
-                    />
+                  <div className="flex flex-col space-y-4">
+                   <div className="space-y-2">
+                      <label className="text-gray-600">Password: </label>
+                      <InputField
+                        type="password"
+                        placeholder={"Enter your password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required={true}
+                      />
+                   </div>
                     <button
                       type="submit"
-                      className="bg-blue-500 py-3 rounded-md text-white font-bold text-sm w-full"
+                      className="bg-blue-500 py-2 rounded-md text-white font-bold text-sm w-full"
                       onClick={handleOtpEnableConfirm}
                     >
-                      Save Map
+                      Save Changes
                     </button>
                   </div>
                 </div>
