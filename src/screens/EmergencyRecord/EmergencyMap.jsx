@@ -47,8 +47,8 @@ const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
       if (data && data.address) {
         const details = {
           geoCodeLocation: data.display_name || "",
-          latitude: lat.toFixed(6),
-          longitude: lng.toFixed(6),
+          latitude: lat,
+          longitude: lng,
         };
 
         setLocationDetails(details);
@@ -57,8 +57,8 @@ const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
       console.error("Error fetching geocode:", error);
       setLocationDetails({
         geoCodeLocation: "Unable to fetch location details",
-        latitude: lat.toFixed(6),
-        longitude: lng.toFixed(6),
+        latitude: lat,
+        longitude: lng,
       });
     }
   };
@@ -68,7 +68,6 @@ const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
       setEmergencyData((prev) => ({
         ...prev,
         location: locationDetails,
-        locationOfResponder: position
       }));
       setOpenMap(false);
     }

@@ -51,6 +51,10 @@ const ViewModal = ({
                 label: "Responder ID: ",
                 value: recordDetails?.responderID || "--",
               },
+              {
+                label: "Emergency Type ",
+                value: recordDetails?.emergencyType.toUpperCase() || "--",
+              },
             ]}
           />
           <RenderDetails

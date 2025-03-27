@@ -60,6 +60,7 @@ const AddRecordModal = ({ setAddRecordModal }) => {
         ...emergencyData,
         status: "resolved",
         emergencyId: customId,
+        timestamp: new Date(emergencyData.date).getTime(),
       };
       const emergencyUid = await handleAddData(newData, "emergencyRequest");
       await logAuditTrail("Add emergency record", emergencyUid);
