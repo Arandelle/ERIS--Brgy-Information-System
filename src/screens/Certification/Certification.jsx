@@ -5,7 +5,7 @@ import Table from "../../components/Table";
 import Pagination from "../../components/Pagination";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import icons from "../../assets/icons/Icons";
-import useFilteredData from "../../components/SearchQuery";
+import useFilteredData from "../../hooks/useFilteredData";
 import usePagination from "../../hooks/usePagination";
 import IconButton from "../../components/ReusableComponents/IconButton";
 import { useFetchData } from "../../hooks/useFetchData";

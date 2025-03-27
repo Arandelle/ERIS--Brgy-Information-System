@@ -6,7 +6,7 @@ import Table from "../../components/Table";
 import Pagination from "../../components/Pagination";
 import { useFetchData } from "../../hooks/useFetchData";
 import { useState } from "react";
-import useFilteredData from "../../components/SearchQuery";
+import useFilteredData from "../../hooks/useFilteredData";
 import usePagination from "../../hooks/usePagination";
 import IconButton from "../../components/ReusableComponents/IconButton";
 import HotlinesModal from "./HotlinesModal";

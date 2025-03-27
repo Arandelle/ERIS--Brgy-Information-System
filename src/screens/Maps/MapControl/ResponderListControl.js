@@ -88,7 +88,7 @@ export const ResponderListControl = ({selectedEmergency}) => {
           });
   
           await update(ref(database), updates);
-          await logAuditTrail("Deployed Responder")
+          await logAuditTrail("Deployed Responder", responderData.id);
           toast.info("Successfully deployed!");
 
     }catch(error){

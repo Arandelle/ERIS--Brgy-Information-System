@@ -5,7 +5,7 @@ import { useState } from "react";
 import Table from "../components/Table";
 import Pagination from "../components/Pagination";
 import { useFetchData } from "../hooks/useFetchData";
-import useFilteredData from "../components/SearchQuery";
+import useFilteredData from "../hooks/useFilteredData";
 import usePagination from "../hooks/usePagination";
 import { formatDateWithTime } from "../helper/FormatDate";
 import SelectStyle from "../components/ReusableComponents/SelectStyle";
@@ -27,7 +27,8 @@ const Audit = () => {
   const HeaderData = ["Executor Id","Fullname","Account Type", "Execute Date","Action", "Target ID"];
   const searchFields = ["date","fullname", "type", "userId","targetId", "action","email"];
 
-  useRemoveOldData();
+  // removes data in 7 days
+  useRemoveOldData("usersLog");
 
   useEffect(() => {
     if(!userlogs && userlogs.length === 0) return;

@@ -2,27 +2,27 @@ import React, { useEffect } from "react";
 import { useFetchData } from "./useFetchData";
 import handleDeleteData from "./handleDeleteData";
 
-const useRemoveOldData = () => {
-  const { data: userLogs } = useFetchData("usersLog");
+const useRemoveOldData = (dataType) => {
+  const { data: arrayData } = useFetchData(dataType);
 
   useEffect(() => {
-    if (userLogs.length > 0) {
+    if (arrayData.length > 0) {
       const now = new Date();
-      const ninetyDaysAgo = new Date(now.getTime() - 90 * 60 * 60 * 1000); // old data in 90 days
+      const ninetyDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // old data in 7 days
 
       // Filter logs older than 1 day
-      const oldLogs = userLogs.filter((log) => new Date(log.date) < ninetyDaysAgo);
+      const oldLogs = arrayData.filter((log) => new Date(log.date) < ninetyDaysAgo);
 
       // Remove old logs concurrently
       Promise.all(
         oldLogs.map(async (log) => {
-          await handleDeleteData(log.id, "usersLog");
+          await handleDeleteData(log.id, dataType);
         })
       )
         .then(() => console.log("All old data was removed"))
         .catch((error) => console.error(error));
     }
-  }, [userLogs]);
+  }, [arrayData]);
 
   return null;
 };

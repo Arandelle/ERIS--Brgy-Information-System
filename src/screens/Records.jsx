@@ -6,7 +6,7 @@ import { capitalizeFirstLetter } from "../helper/CapitalizeFirstLetter";
 import Toolbar from "../components/ToolBar";
 import Pagination from "../components/Pagination";
 import usePagination from "../hooks/usePagination";
-import useFilteredData from "../components/SearchQuery";
+import useFilteredData from "../hooks/useFilteredData";
 import { formatDateWithTime } from "../helper/FormatDate";
 import IconButton from "../components/ReusableComponents/IconButton";
 import icons from "../assets/icons/Icons";

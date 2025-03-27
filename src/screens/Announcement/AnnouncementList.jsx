@@ -17,7 +17,7 @@ import AnnouncementModal from "./AnnouncementModal";
 import QuestionModal from "../../components/ReusableComponents/AskCard";
 import DetailsAnnouncement from "./DetailsAnnouncement";
 import usePagination from "../../hooks/usePagination";
-import useFilteredData from "../../components/SearchQuery";
+import useFilteredData from "../../hooks/useFilteredData";
 import MediaModal from "../MediaModal";
 import { auth } from "../../services/firebaseConfig";
 import useSearchParam from "../../hooks/useSearchParam";

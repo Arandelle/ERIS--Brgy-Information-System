@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useFetchData } from "../../hooks/useFetchData";
-import useFilteredData from "../../components/SearchQuery";
+import useFilteredData from "../../hooks/useFilteredData";
 import usePagination from "../../hooks/usePagination";
 import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import Toolbar from "../../components/ToolBar";
