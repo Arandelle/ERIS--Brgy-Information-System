@@ -6,7 +6,7 @@ import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { formatDateWithTime } from "../../helper/FormatDate";
 import { blueIcon, redIcon, greenIcon } from "../../helper/iconUtils";
-
+import { handleEmergencyDone } from "./Functions/MarkAsDone";
 
 export const DisplayLayer = ({
   emergencyRequest,
@@ -14,7 +14,7 @@ export const DisplayLayer = ({
   setAvailableYears,
   displayMode,
   setShowResponderList,
-  setSelectedEmergency
+  setSelectedEmergency,
 }) => {
   const map = useMap();
   const [emergencyData, setEmergencyData] = useState([]);
@@ -132,7 +132,7 @@ export const DisplayLayer = ({
           medical: "#ff5733",
           crime: "#000000",
           "natural disaster": "#8e44ad",
-          "public disturbance" : "#f1c40f",
+          "public disturbance": "#f1c40f",
           Unknown: "#6C757D",
         };
 
@@ -157,7 +157,7 @@ export const DisplayLayer = ({
       crime: "#000000",
       accident: "#f39c12",
       "natural disaster": "#8e44ad",
-      "public disturbance" : "#f1c40f",
+      "public disturbance": "#f1c40f",
       Other: "#3498db",
     };
 
@@ -185,21 +185,40 @@ export const DisplayLayer = ({
       const id = point.details.id;
       const emergencyId = point.details.emergencyId;
       const date = point.details.timestamp;
+      const responderId = point.details.responderId;
 
-      marker.bindPopup(`<b>ID: ${emergencyId}</b><br>
-                        Type: ${emergencyType}<br>
-                        Status: ${status}<br>
-                        Date: ${formatDateWithTime(date)}<br>
-                        Coordinates: ${point.lat.toFixed(
-                          4
-                        )}, ${point.lng.toFixed(4)}<br>`).on('popupopen', function(){
-                          setShowResponderList(true);
-                          setSelectedEmergency(point.details)
-                        }).on('popupclose', function(){
-                          setShowResponderList(false);
-                          setSelectedEmergency(null);
-                        });
+      marker
+        .bindPopup(
+          `<div class="flex flex-col space-y-2">
+            <span>ID: ${emergencyId}</span>
+            <span> Type: ${emergencyType}</span>
+            <span> Status: ${status}</span>
+            <span> Date: ${formatDateWithTime(date)}</span>
+            <span> Coordinates: ${point.lat.toFixed(4)},${point.lng.toFixed(4)}</span>
+            <span>${status === "on-going"? 
+            `<button class="bg-green-500 mt-2 p-2 rounded text-white"
+             id=${emergencyId}
+            >
+            Mark as Done</button>` : "" } </span>
+          </div>`
+        )
+        .on("popupopen", function () {
+          setShowResponderList(true);
+          setSelectedEmergency(point.details);
 
+          // add event listener to the button after popup opens
+          const button = document.getElementById(emergencyId);
+
+          if(button){
+            button.addEventListener("click", () => {
+              handleEmergencyDone(point.details, responderId);
+            })
+          }
+        })
+        .on("popupclose", function () {
+          setShowResponderList(false);
+          setSelectedEmergency(null);
+        });
 
       cluster.bindPopup(`<b>ID: ${emergencyId}</b><br>
                         Type: ${emergencyType}<br>

@@ -20,6 +20,7 @@ const Audit = () => {
   const { data: hotline = [] } = useFetchData("hotlines");
   const { data: clearance = [] } = useFetchData("requestClearance");
   const { data: template = [] } = useFetchData("templateContent");
+  const { data: emergency = [] } = useFetchData("emergencyRequest");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterData, setFilterData] = useState("");
 
@@ -69,7 +70,8 @@ const Audit = () => {
         ) ||
         hotline.find((hotline) => hotline?.id === log?.targetId) ||
         clearance.find((clearance) => clearance?.id === log?.targetId) ||
-        template.find((template) => template?.id === log?.targetId);
+        template.find((template) => template?.id === log?.targetId) ||
+        emergency.find((emergency) => emergency?.id === log?.targetId);
 
       return {
         ...log,
@@ -82,7 +84,7 @@ const Audit = () => {
             ? "responder"
             : "admin"
           : "-",
-        targetId: target?.customId || "-", // Get custom ID for the target
+        targetId: target?.customId || target?.emergencyId ||  "-", // Get custom ID for the target
       };
     });
   }, [
