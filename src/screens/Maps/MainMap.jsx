@@ -271,10 +271,7 @@ const MainMap = ({ maximize, setMaximize }) => {
 
   if (!position || loading) {
     return (
-      <div className="h-1/2 flex items-center justify-center">
-        {" "}
         <Spinner loading={loading || !position} />
-      </div>
     );
   }
 
@@ -390,7 +387,9 @@ const MainMap = ({ maximize, setMaximize }) => {
         />
 
         {showRespondersList && selectedEmergency.status === "pending" && (
-          <ResponderListControl selectedEmergency={selectedEmergency} />
+          <ResponderListControl selectedEmergency={selectedEmergency} 
+            setLoading={setLoading}
+          />
         )}
 
         {displayMode === "heat" ? (

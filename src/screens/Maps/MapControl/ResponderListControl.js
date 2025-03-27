@@ -6,7 +6,7 @@ import { database } from "../../../services/firebaseConfig";
 import logAuditTrail from "../../../hooks/useAuditTrail";
 import { toast } from "sonner";
 
-export const ResponderListControl = ({selectedEmergency}) => {
+export const ResponderListControl = ({selectedEmergency, setLoading = false}) => {
   const map = useMap();
   const { data: responders } = useFetchData("responders");
 
@@ -19,6 +19,7 @@ export const ResponderListControl = ({selectedEmergency}) => {
     if(!selectedEmergency) return alert("No emergency found");
 
     try{
+        setLoading(true);
         // Create history entry
         const historyRef = ref(database, `responders/${responderData.id}/history`);
         const newHistoryEntry = {
@@ -93,6 +94,8 @@ export const ResponderListControl = ({selectedEmergency}) => {
 
     }catch(error){
         console.error(error);
+    } finally{
+      setLoading(false);
     }
   }
 
