@@ -15,6 +15,7 @@ export const DisplayLayer = ({
   displayMode,
   setShowResponderList,
   setSelectedEmergency,
+  setMarkAsDoneModal
 }) => {
   const map = useMap();
   const [emergencyData, setEmergencyData] = useState([]);
@@ -211,7 +212,11 @@ export const DisplayLayer = ({
 
           if(button){
             button.addEventListener("click", () => {
-              handleEmergencyDone(point.details, responderId);
+              setMarkAsDoneModal({
+                done: true,
+                emergency: point.details,
+                responderId: responderId,
+              });
             })
           }
         })

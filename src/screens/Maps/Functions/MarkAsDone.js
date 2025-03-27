@@ -10,9 +10,10 @@ import { database } from "../../../services/firebaseConfig";
 import logAuditTrail from "../../../hooks/useAuditTrail";
 import { toast } from "sonner";
 
-export const handleEmergencyDone = async (emergency, responderId) => {
+export const handleEmergencyDone = async (emergency, responderId, setLoading = false) => {
   try {
     if (responderId) {
+      setLoading(true);
       const responderDataRef = ref(
         database,
         `responders/${responderId}/pendingEmergency`
@@ -69,5 +70,7 @@ export const handleEmergencyDone = async (emergency, responderId) => {
     }
   } catch (error) {
     console.error("Error", error);
+  } finally {
+    setLoading(false);
   }
 };

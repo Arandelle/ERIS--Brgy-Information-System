@@ -35,6 +35,8 @@ import handleErrorMessage from "../../helper/handleErrorMessage";
 import logAuditTrail from "../../hooks/useAuditTrail";
 import { InputField } from "../../components/ReusableComponents/InputField";
 import Modal from "../../components/ReusableComponents/Modal";
+import { Spinner } from "../../components/ReusableComponents/Spinner";
+import { handleEmergencyDone } from "./Functions/MarkAsDone";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -92,6 +94,13 @@ const MainMap = ({ maximize, setMaximize }) => {
   const [isSaveMap, setIsSaveMap] = useState(false);
   const [password, setPassword] = useState("");
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [markAsDoneModal, setMarkAsDoneModal] = useState({
+    done: false,
+    emergency: null,
+    responderId: null,
+  });
 
   console.log(systemData?.coordinates);
 
@@ -233,7 +242,7 @@ const MainMap = ({ maximize, setMaximize }) => {
         toast.error("User not authenticated");
         return;
       }
-      if(!password){
+      if (!password) {
         toast.error("Please enter your password");
         return;
       }
@@ -260,8 +269,13 @@ const MainMap = ({ maximize, setMaximize }) => {
     }
   };
 
-  if (!position) {
-    return <div>Loading...</div>;
+  if (!position || loading) {
+    return (
+      <div className="h-1/2 flex items-center justify-center">
+        {" "}
+        <Spinner loading={loading || !position} />
+      </div>
+    );
   }
 
   return (
@@ -290,10 +304,7 @@ const MainMap = ({ maximize, setMaximize }) => {
         <MaximizeMapControl maximize={maximize} setMaximize={setMaximize} />
 
         {/** display the button to trigger edit map or save map */}
-        <EditMapButton
-          isEditMap={isEditMap}
-          setIsEditMap={setIsEditMap}
-        />
+        <EditMapButton isEditMap={isEditMap} setIsEditMap={setIsEditMap} />
 
         {/** to display the control of buttons : add point manually and clear areas */}
         {isEditMap && (
@@ -364,6 +375,7 @@ const MainMap = ({ maximize, setMaximize }) => {
           displayMode={displayMode}
           setShowResponderList={setShowResponderList}
           setSelectedEmergency={setSelectedEmergency}
+          setMarkAsDoneModal={setMarkAsDoneModal}
         />
         {availableYears.length > 0 && (
           <YearSelectorControl
@@ -399,6 +411,7 @@ const MainMap = ({ maximize, setMaximize }) => {
         {/* <CoverageRadius center={position} radius={700} /> */}
       </MapContainer>
 
+      {/** Modal to show the question if edited map is correct */}
       {isSaveMap && (
         <AskCard
           toggleModal={(prev) => setIsSaveMap(!prev)}
@@ -409,9 +422,26 @@ const MainMap = ({ maximize, setMaximize }) => {
           onConfirm={saveAreas}
         />
       )}
+      {/**Modal to show the question if emergency is done */}
+      {markAsDoneModal.done && (
+        <AskCard
+          toggleModal={(prev) => setMarkAsDoneModal(!prev)}
+          question={"Are you sure you want to mark this emergency as done?"}
+          confirmText={"Mark as Done"}
+          onConfirm={() =>
+           { handleEmergencyDone(
+              markAsDoneModal.emergency,
+              markAsDoneModal.responderId,
+              setLoading
+            ),
+            setMarkAsDoneModal({ done: false, emergency: null, responderId: null })}
+          }
+        />
+      )}
 
+      {/** modal for admin to input their password to proceed to save the map */}
       {showPasswordModal && (
-        <Modal 
+        <Modal
           title={"Enter your password"}
           closeButton={() => setShowPasswordModal(false)}
           children={

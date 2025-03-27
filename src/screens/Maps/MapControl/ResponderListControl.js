@@ -47,8 +47,8 @@ export const ResponderListControl = ({selectedEmergency}) => {
             },
             [`emergencyRequest/${selectedEmergency.id}/status`]: "on-going",
             [`emergencyRequest/${selectedEmergency.id}/locationOfResponder`]: {
-              latitude: responderData.location.latitude,
-              longitude: responderData.location.longitude,
+              latitude: responderData?.location?.latitude || 14.33289,
+              longitude: responderData?.location?.longitude || 120.85065,
             },
             [`emergencyRequest/${selectedEmergency.id}/responderId`]: responderData.id,
             [`emergencyRequest/${selectedEmergency.id}/responseTime`]:
@@ -57,8 +57,8 @@ export const ResponderListControl = ({selectedEmergency}) => {
               "on-going",
             [`users/${selectedEmergency.userId}/emergencyHistory/${selectedEmergency.id}/locationOfResponder`]:
               {
-                latitude: responderData.location.latitude,
-                longitude: responderData.location.longitude,
+               latitude: responderData?.location?.latitude || 14.33289,
+              longitude: responderData?.location?.longitude || 120.85065,
               },
             [`users/${selectedEmergency.userId}/emergencyHistory/${selectedEmergency.id}/responderId`]:
               responderData.id,
@@ -66,8 +66,8 @@ export const ResponderListControl = ({selectedEmergency}) => {
               new Date().toISOString(),
             [`users/${selectedEmergency.userId}/activeRequest/responderId`]: responderData.id,
             [`users/${selectedEmergency.userId}/activeRequest/locationOfResponder`]: {
-              latitude: responderData.location.latitude,
-              longitude: responderData.location.longitude,
+              latitude: responderData?.location?.latitude || 14.33289,
+              longitude: responderData?.location?.longitude || 120.85065,
             },
           };
   
