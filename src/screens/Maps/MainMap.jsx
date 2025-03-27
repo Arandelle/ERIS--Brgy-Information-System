@@ -37,6 +37,7 @@ import { InputField } from "../../components/ReusableComponents/InputField";
 import Modal from "../../components/ReusableComponents/Modal";
 import { Spinner } from "../../components/ReusableComponents/Spinner";
 import { handleEmergencyDone } from "./Functions/MarkAsDone";
+import colors from "../../assets/Colors/colors";
 
 const CoverageRadius = ({ center, radius }) => {
   const map = useMap();
@@ -318,10 +319,11 @@ const MainMap = ({ maximize, setMaximize }) => {
           <Polygon
             positions={storedArea} // Now it's an array
             pathOptions={{
-              fillColor: "#3388ff",
-              fillOpacity: 0.2,
-              color: "#3388ff",
-              weight: 0.5,
+              fillColor: colors.blue[400], // color inside
+              fillOpacity: 0.2, // opacity of color inside
+              color: colors.red[500], // line stroke color
+              weight: 2, // line thickness
+              dashArray: "3, 5" // dash pattern 3px and 5px gaps
             }}
           >
             {/* <Popup>Emergency Area</Popup> */}
@@ -333,10 +335,11 @@ const MainMap = ({ maximize, setMaximize }) => {
           <Polygon
             positions={currentArea}
             pathOptions={{
-              fillColor: "green",
+              fillColor: colors.green[600],
               fillOpacity: 0.3,
-              color: "red",
-              weight: 2,
+              color: "green",
+              weight: 1,
+              dashArray: "8,9"
             }}
           />
         )}

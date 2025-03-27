@@ -10,6 +10,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import { greenIcon } from "../../helper/iconUtils";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
+import colors from "../../assets/Colors/colors"
 
 const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
   const [position] = useState([14.33289, 120.85065]);
@@ -102,10 +103,11 @@ const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
           <Polygon
           positions={mapCoordinates}
           pathOptions={{
-              fillColor: "#3388ff",
+              fillColor: colors.blue[400], 
               fillOpacity: 0.2,
-              color: "#3388ff",
-              weight: 0.5,
+              color: colors.red[500],
+              weight: 2,
+              dashArray: "3, 5" // define the dash pattern 3px dashes and 5px gap
             }}
           >
           </Polygon>
