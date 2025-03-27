@@ -1,18 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MapContainer,
   Marker,
+  Polygon,
   Popup,
   TileLayer,
   useMapEvent,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { greenIcon } from "../../helper/iconUtils";
+import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 
 const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
   const [position] = useState([14.33289, 120.85065]);
   const [emergencyMarker, setEmergencyMarker] = useState([]);
   const [locationDetails, setLocationDetails] = useState({});
+  const [mapCoordinates, setMapCoordinates] = useState([]);
+  const {systemData} = useFetchSystemData();
+
+  useEffect(() => {
+    if(systemData && systemData.coordinates){
+      const formattedCoordinates = Object.values(systemData.coordinates);
+      setMapCoordinates(formattedCoordinates);
+    };
+  }, [systemData]);
 
   const MapEvents = ({ onMapClick }) => {
     useMapEvent("click", (e) => {
@@ -85,6 +96,19 @@ const EmergencyMap = ({ setEmergencyData, setOpenMap }) => {
               </div>
             </Popup>
           </Marker>
+        )}
+
+        {mapCoordinates.length > 0 && (
+          <Polygon
+          positions={mapCoordinates}
+          pathOptions={{
+              fillColor: "#3388ff",
+              fillOpacity: 0.2,
+              color: "#3388ff",
+              weight: 0.5,
+            }}
+          >
+          </Polygon>
         )}
       </MapContainer>
       {emergencyMarker.length > 0 && (

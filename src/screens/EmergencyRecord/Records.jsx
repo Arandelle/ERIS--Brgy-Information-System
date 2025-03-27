@@ -115,7 +115,7 @@ const Records = () => {
     return (
       <>
         <RowDataStyle data={recordDetails?.emergencyId} />
-        <RowDataStyle data={recordDetails?.userName} />
+        <RowDataStyle data={recordDetails?.userName || recordDetails?.fullname} />
         <RowDataStyle data={recordDetails?.location?.geoCodeLocation} />
         <RowDataStyle data={formatDateWithTime(recordDetails?.date)} />
         <RowDataStyle data={recordDetails?.status} status />

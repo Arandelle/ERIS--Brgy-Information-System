@@ -75,7 +75,7 @@ const MainMap = ({ maximize, setMaximize }) => {
   const mapRef = useRef(null);
   const user = auth.currentUser;
   const { data: emergencyRequest } = useFetchData("emergencyRequest"); //fetch the emergency request from firebase
-  const { systemData } = useFetchSystemData();
+  const { systemData } = useFetchSystemData(); // use for getting the coordinates of map
   const [position, setPosition] = useState([14.33289, 120.85065]); // set default position (to center the circle)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Year selection state
   const [availableYears, setAvailableYears] = useState([]); // state to handle available years to reuse through out the map
@@ -103,7 +103,7 @@ const MainMap = ({ maximize, setMaximize }) => {
   });
 
   console.log(systemData?.coordinates);
-
+  // get the coordinates of map
   useEffect(() => {
     if (systemData && systemData.coordinates) {
       // Convert object to array
