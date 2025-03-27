@@ -53,8 +53,8 @@ export const DisplayLayer = ({
         const year = new Date(request.timestamp).getFullYear();
 
         if (year === selectedYear) {
-          const lat = request.location.latitude;
-          const lng = request.location.longitude;
+          const lat = Number(request.location.latitude);
+          const lng = Number(request.location.longitude);
           const key = `${lat},${lng}`;
 
           // Update count for this location
