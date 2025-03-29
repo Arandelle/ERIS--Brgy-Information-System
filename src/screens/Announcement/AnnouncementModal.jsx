@@ -30,7 +30,7 @@ const AnnouncementModal = ({
   return (
     <Modal
       closeButton={handleModal}
-      title={`${isEdit ? "Edit" : "Create new"} Announcement`}
+      title={`${isEdit ? "Edit" : "Create"} emergency awareness`}
       children={
         <div className="flex flex-col space-y-4 max-w-lg">
            <p className="text-sm text-gray-600 dark:text-gray-300 italic">Post accurate emergency response tips to ensure community safety and preparedness. Post awareness updates and news regularly to keep everyone informed about potential hazards and safety protocols.</p>

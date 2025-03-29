@@ -44,7 +44,7 @@ const DetailsAnnouncement = ({
 
   return (
     <>
-      <Modal closeButton={closeButton} title={"Post Details"}>
+      <Modal closeButton={closeButton} title={"Emergency Awareness Details"}>
         <DetailRow
           label={announcementDetails?.fileType === "image" ? "Image" : "Video"}
           value={announcementDetails?.description}

@@ -15,7 +15,7 @@ const MediaModal = ({ currentMedia, mediaType = "image", closeModal }) => {
       {mediaType === "image" ? (
         <img src={currentMedia} className="max-w-[90%] max-h-[90%] z-50" />
       ) : mediaType === "video" ? (
-        <video controls autoPlay className="max-w-full h-auto z-50">
+        <video controls autoPlay className="max-w-full h-2/3 z-50">
           <source src={currentMedia} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
