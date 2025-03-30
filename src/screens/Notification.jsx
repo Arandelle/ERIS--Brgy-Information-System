@@ -214,7 +214,7 @@ const NotificationItem = ({
           <p>{notification.message}</p>
         </div>
         <div className="flex justify-between text-xs text-blue-400 dark:text-gray-400">
-          <span>{getTimeDifference(notification.timestamp)}</span>
+          <span>{getTimeDifference(notification.date)}</span>
           <span className="text-gray-500 dark:text-green-400">
             {formatDate(notification.date)}
           </span>
