@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../../components/ReusableComponents/Modal";
 import { InputField } from "../../components/ReusableComponents/InputField";
 import SelectStyle, {
@@ -44,17 +44,44 @@ export const InputStyle = ({
 };
 
 const AddRecordModal = ({ setAddRecordModal }) => {
-  const [emergencyData, setEmergencyData] = useState({emergencyType: "medical"});
+  const [emergencyData, setEmergencyData] = useState({
+    emergencyType: "medical",
+  });
   const [openMap, setOpenMap] = useState(false);
   const { data: responder } = useFetchData("responders");
 
+  // Set default responder when data is available
+  useEffect(() => {
+    if (responder && responder.length > 0) {
+      setEmergencyData((prev) => ({
+        ...prev,
+        responderId: responder[0].id, // Set first responder as default
+      }));
+    }
+  }, [responder]);
+
   const saveEmergencyData = async () => {
     try {
-    const {dateResolved, responseTime, date, responderId, location } = emergencyData;
-    if(!dateResolved || !responseTime || !date || !responderId || !location) {
+      const { dateResolved, responseTime, date, responderId, location } =
+        emergencyData;
+      if (
+        !dateResolved ||
+        !responseTime ||
+        !date ||
+        !responderId ||
+        !location
+      ) {
         toast.error("Please provide the neccessary details");
         return;
-    }
+      }
+      if (date > responseTime || date > dateResolved) {
+        toast.warning("Date reported should be earlier");
+        return;
+      } else if (responseTime > dateResolved) {
+        toast.warning("Response time should be earlier than date resolved");
+        return;
+      }
+
       const customId = await generateUniqueBarangayID("emergency");
       const newData = {
         ...emergencyData,
@@ -116,26 +143,26 @@ const AddRecordModal = ({ setAddRecordModal }) => {
                   disabledOption="Emergency Type"
                 />
                 <div className="space-y-2">
-                <label className="text-gray-600 text-sm">Responder</label>
-                    <SelectStyleInObject
-                      label={"Responder"}
-                      value={emergencyData.responderId}
-                      onChange={(e) =>
-                        setEmergencyData({
-                          ...emergencyData,
-                          responderId: e.target.value,
-                        })
-                      }
-                      options={
-                        responder
-                          ? responder.map((res) => ({
-                              label: res.fullname,
-                              value: res.id,
-                            }))
-                          : []
-                      }
-                      disabledOption="Select a Responder"
-                    />
+                  <label className="text-gray-600 text-sm">Responder</label>
+                  <SelectStyleInObject
+                    label={"Responder"}
+                    value={emergencyData.responderId}
+                    onChange={(e) =>
+                      setEmergencyData({
+                        ...emergencyData,
+                        responderId: e.target.value,
+                      })
+                    }
+                    options={
+                      responder
+                        ? responder.map((res) => ({
+                            label: res.fullname,
+                            value: res.id,
+                          }))
+                        : []
+                    }
+                    disabledOption="Select a Responder"
+                  />
                 </div>
               </div>
               <div className="flex flex-col space-y-4 flex-1">
@@ -200,7 +227,9 @@ const AddRecordModal = ({ setAddRecordModal }) => {
           className="flex items-center fixed inset-0 justify-center z-50 h-screen w-screen"
           onClick={() => setOpenMap(false)}
         >
-        <p className="absolute bottom-16 text-white font-bold">Click the Map to set the location</p>
+          <p className="absolute bottom-16 text-white font-bold">
+            Click the Map to set the location
+          </p>
           <EmergencyMap
             setEmergencyData={setEmergencyData}
             setOpenMap={setOpenMap}
