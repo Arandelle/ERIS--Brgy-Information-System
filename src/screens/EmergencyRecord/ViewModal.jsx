@@ -117,7 +117,7 @@ const ViewModal = ({
               },
               {
                 label: "Response Message",
-                value: recordDetails?.messageLog || "--",
+                value: recordDetails?.messageLog || recordDetails?.reportReason || "--",
               },
             ]}
           />

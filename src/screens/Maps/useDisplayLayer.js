@@ -6,7 +6,6 @@ import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { formatDateWithTime } from "../../helper/FormatDate";
 import { blueIcon, redIcon, greenIcon } from "../../helper/iconUtils";
-import { handleEmergencyDone } from "./Functions/MarkAsDone";
 
 export const DisplayLayer = ({
   emergencyRequest,
@@ -48,7 +47,7 @@ export const DisplayLayer = ({
         request.location &&
         request.location.latitude &&
         request.location.longitude &&
-        request.timestamp
+        request.timestamp && request.status !== "reported"
       ) {
         const year = new Date(request.timestamp).getFullYear();
 
