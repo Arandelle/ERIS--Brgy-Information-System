@@ -36,7 +36,7 @@ const Profile = () => {
       await signOut(auth);
       await logAuditTrail("Logout", null, savedId);
       console.log("Logout");
-      navigate("/");
+      navigate("/admin");
     } catch (error) {
       console.error("Logout error:", error);
     }

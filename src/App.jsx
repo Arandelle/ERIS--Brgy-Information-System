@@ -109,14 +109,19 @@ const App = () => {
         <div className="flex">
           {showAlert && user && isAdmin && <AlertUi />}
           <Routes>
-            <Route path="*" element={<Navigate to="/" replace />} />
-            <Route path="/privacy-policy" element={<PrivayPolicy/>}/>
-            <Route path="/deletion-account" element={<DeleteAccount/>}/>
-            <Route path="/admin" element={!user && !isAdmin ? <Login/> : <Navigate to="/dashboard" />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/privacy-policy" element={<PrivayPolicy />} />
+            <Route path="/deletion-account" element={<DeleteAccount />} />
+            <Route
+              path="/admin"
+              element={
+                !user && !isAdmin ? <Login /> : <Navigate to="/dashboard" />
+              }
+            />
             <Route
               path="/"
               element={
-                user && isAdmin ? <Navigate to="/dashboard" /> : <Login />
+                user && isAdmin ? <Navigate to="/dashboard" /> : <NotFound />
               }
             />
             <Route
@@ -191,7 +196,7 @@ const App = () => {
               path="/account-settings"
               element={user && isAdmin ? <Setting /> : <Navigate to="/" />}
             />
-            <Route 
+            <Route
               path="/audit-trails"
               element={user && isAdmin ? <Audit /> : <Navigate to="/" />}
             />
