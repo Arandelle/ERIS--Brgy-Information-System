@@ -115,7 +115,7 @@ export default function PrivacyPolicy() {
       id: "contact",
       title: "Contact Us",
       content: "If you have any questions about this Privacy Policy, please contact us at:",
-      footer: "eris.support@example.com"
+      footer: "topaguintsarandell@gmail.com"
     }
   ];
 
