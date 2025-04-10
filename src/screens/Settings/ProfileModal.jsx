@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Modal from "../components/ReusableComponents/Modal";
-import { InputField } from "../components/ReusableComponents/InputField";
-import handleEditData from "../hooks/handleEditData";
-import { toast } from "sonner";
-import { auth } from "../services/firebaseConfig";
-import icons from "../assets/icons/Icons";
+import Modal from "../../components/ReusableComponents/Modal";
+import { InputField } from "../../components/ReusableComponents/InputField";
+import handleEditData from "../../hooks/handleEditData";
+import { auth } from "../../services/firebaseConfig";
+import icons from "../../assets/icons/Icons";
 import ChangePassModal from "./ChangePassModal";
 
 const ProfileModal = ({

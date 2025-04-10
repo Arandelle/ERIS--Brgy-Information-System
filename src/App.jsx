@@ -12,7 +12,7 @@ import Map from "./screens/Maps/Map";
 import Login from "./screens/LoginScreen/Login";
 import Records from "./screens/EmergencyRecord/Records";
 import Announcement from "./screens/Announcement/AnnouncementList";
-import Setting from "./screens/Setting";
+import Setting from "./screens/Settings/Setting";
 import { Toaster } from "sonner";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, database } from "./services/firebaseConfig";

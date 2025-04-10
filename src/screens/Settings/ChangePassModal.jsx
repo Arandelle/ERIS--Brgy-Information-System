@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ProfileModalStyle } from "./ProfileModal";
-import { InputField } from "../components/ReusableComponents/InputField";
-import { auth } from "../services/firebaseConfig";
+import { InputField } from "../../components/ReusableComponents/InputField";
+import { auth } from "../../services/firebaseConfig";
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth";
 import { toast } from "sonner";
 
