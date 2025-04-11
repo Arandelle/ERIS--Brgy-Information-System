@@ -1,10 +1,8 @@
 import { useState } from "react";
 import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
-import icons from "../../assets/icons/Icons";
 import { auth } from "../../services/firebaseConfig";
 import { useFetchData } from "../../hooks/useFetchData";
 import { toast } from "sonner";
-import ButtonStyle from "../../components/ReusableComponents/Button";
 import ProfileModal from "./ProfileModal";
 import MediaModal from "../MediaModal";
 import handleEditData from "../../hooks/handleEditData";
@@ -16,10 +14,11 @@ import Modal from "../../components/ReusableComponents/Modal";
 import { InputField } from "../../components/ReusableComponents/InputField";
 import SystemSettings from "./SystemSettings";
 import useSystemState from "./useSystemState";
+import ProfileSettings from "./ProfileSettings";
 
 const Setting = () => {
   const { isModalOpen, currentMedia, openModal, closeModal } = useViewMedia();
-  const {systemState, setSystemState, setLoading} = useSystemState();
+  const { systemState, setSystemState, setLoading } = useSystemState();
   const user = auth.currentUser;
   const { data: admin } = useFetchData("admins");
   const currentAdminDetails = admin.find((admin) => admin.id === user?.uid);
@@ -150,37 +149,14 @@ const Setting = () => {
               </p>
             </div>
             {/**Profile Container */}
-            <div className="px-1 py-6 border-b flex flex-col lg:flex-row lg:justify-between">
-              <div className="flex flex-col lg:flex-row space-y-4 items-start lg:items-center lg:justify-between w-3/4">
-                <div className="flex-1 basis-1/2 flex flex-row justify-start items-center space-x-4">
-                  <img
-                    src={currentAdminDetails?.fileUrl}
-                    className="w-16 h-16 lg:w-28 lg:h-28 rounded-full cursor-pointer"
-                    loading="lazy"
-                    onClick={() => openModal(currentAdminDetails.fileUrl)}
-                  />
-                  <div className="flex flex-col flex-grow">
-                    <p className="font-medium text-sm lg:text-lg dark:text-gray-200">
-                      {currentAdminDetails?.fullname}
-                    </p>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">
-                      {user?.email}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex-1 ">
-                  <ButtonStyle
-                    icon={icons.edit}
-                    color={"gray"}
-                    fontSize={"small"}
-                    label={"Edit Profile"}
-                    onClick={handleEditProfile}
-                  />
-                </div>
-              </div>
-            </div>
+            <ProfileSettings
+              currentAdminDetails={currentAdminDetails}
+              openModal={openModal}
+              handleEditProfile={handleEditProfile}
+              user={user}
+            />
             {/**System container */}
-            <SystemSettings 
+            <SystemSettings
               handleImageChange={handleImageChange}
               handleUpdateData={handleUpdateData}
               openModal={openModal}
@@ -233,11 +209,12 @@ const Setting = () => {
               children={
                 <div className="max-w-2xl space-y-6">
                   <p className="text-sm text-gray-600 dark:text-gray-300 italic">
-                   For security purposes, please enter your password to save the changes
+                    For security purposes, please enter your password to save
+                    the changes
                   </p>
 
                   <div className="flex flex-col space-y-4">
-                   <div className="space-y-2">
+                    <div className="space-y-2">
                       <label className="text-gray-600">Password: </label>
                       <InputField
                         type="password"
@@ -246,7 +223,7 @@ const Setting = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required={true}
                       />
-                   </div>
+                    </div>
                     <button
                       type="submit"
                       className="bg-blue-500 py-2 rounded-md text-white font-bold text-sm w-full"
