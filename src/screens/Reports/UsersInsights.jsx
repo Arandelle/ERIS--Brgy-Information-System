@@ -7,6 +7,7 @@ const UsersInsights = ({ filteredData, generateData }) => {
       return {
         totalUsers: 0,
         averageNewUsersPerDay: 0,
+        daysDiff: 0,
         trend: "neutral",
         mostCommonLocation: "N/A",
         peakRegistrationTimes: "N/A",
@@ -29,12 +30,12 @@ const UsersInsights = ({ filteredData, generateData }) => {
       endDate = new Date(Math.max(...filteredData.map(user => new Date(user.timestamp))));
     }
 
-    // Calculate days in range
+    // Calculate days in range - ensure minimum of 1 day
     const daysDiff = startDate && endDate ? 
       Math.max(1, Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24))) : 1;
 
-    // Average new users per day
-    const averageNewUsersPerDay = (totalUsers / daysDiff).toFixed(1);
+    // Average new users per day (keep as precise number)
+    const averageNewUsersPerDay = totalUsers / daysDiff;
 
     // Determine trend (similar logic to emergency insights)
     let trend = "neutral";
@@ -94,6 +95,7 @@ const UsersInsights = ({ filteredData, generateData }) => {
     return {
       totalUsers,
       averageNewUsersPerDay,
+      daysDiff,
       trend,
       mostCommonLocation,
       peakRegistrationTimes,
@@ -110,11 +112,39 @@ const UsersInsights = ({ filteredData, generateData }) => {
     neutral: "→"
   };
 
+  // Determine the appropriate time unit to display based on the date range
+  const getTimeUnitDisplay = () => {
+    const { averageNewUsersPerDay, daysDiff } = insights;
+    
+    // Format with appropriate precision (2 decimal places max)
+    const formatNumber = (num) => {
+      return Number.parseFloat(num).toFixed(
+        num >= 10 ? 0 : num >= 1 ? 1 : 2
+      );
+    };
+    
+    // Select the most appropriate time unit
+    if (daysDiff >= 60) {
+      // For ranges over 60 days, show per month
+      const perMonth = averageNewUsersPerDay * 30;
+      return `${formatNumber(perMonth)} per month`;
+    } else if (daysDiff >= 14) {
+      // For ranges over 14 days, show per week
+      const perWeek = averageNewUsersPerDay * 7;
+      return `${formatNumber(perWeek)} per week`;
+    } else {
+      // For shorter ranges, show per day
+      return `${formatNumber(averageNewUsersPerDay)} per day`;
+    }
+  };
+
   // Generates meaningful explanatory text based on the insights
   const generateMeaning = () => {
     if (!filteredData || filteredData.length === 0) {
       return "No data available for the selected filters. Try adjusting your date range.";
     }
+
+    const userRateDisplay = getTimeUnitDisplay();
 
     return (
       <div className="text-sm space-y-2">
@@ -127,7 +157,14 @@ const UsersInsights = ({ filteredData, generateData }) => {
             </span>
           }
         </p>
-        <p><span className="font-medium">Daily New Users:</span> {insights.averageNewUsersPerDay} per day</p>
+        <p>
+          <span className="font-medium">New Users:</span> {userRateDisplay}
+          {insights.daysDiff > 1 && (
+            <span className="text-gray-500 text-xs ml-1">
+              (based on {insights.daysDiff} day{insights.daysDiff !== 1 ? 's' : ''} of data)
+            </span>
+          )}
+        </p>
         {insights.comparisonToAverage !== 0 && (
           <p>
             <span className="font-medium">Compared to Baseline:</span> 
