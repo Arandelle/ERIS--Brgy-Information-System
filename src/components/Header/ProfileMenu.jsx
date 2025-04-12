@@ -10,29 +10,30 @@ import logAuditTrail from "../../hooks/useAuditTrail";
 const Profile = () => {
   const user = auth.currentUser;
   const navigate = useNavigate();
-  const {data: admin} = useFetchData("admins");
+  const { data: admin } = useFetchData("admins");
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
   const currentAdminDetails = admin.find((admin) => admin.id === user?.uid);
-  const [adminProfile, setAdminProfile] = useState(localStorage.getItem("adminProfile") || "")
+  const [adminProfile, setAdminProfile] = useState(
+    localStorage.getItem("adminProfile") || ""
+  );
 
   const [isOpen, setIsOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
 
   useEffect(() => {
-
-    if(currentAdminDetails){
-      const {fileUrl} = currentAdminDetails;
+    if (currentAdminDetails) {
+      const { fileUrl } = currentAdminDetails;
       setAdminProfile(fileUrl);
       localStorage.setItem("adminProfile", fileUrl);
     }
-  }, [currentAdminDetails])
+  }, [currentAdminDetails]);
 
   const handleLogout = async () => {
     const uid = auth.currentUser?.uid;
     try {
-      const savedId = uid
+      const savedId = uid;
       await signOut(auth);
       await logAuditTrail("Logout", null, savedId);
       console.log("Logout");
@@ -80,7 +81,7 @@ const Profile = () => {
               {currentAdminDetails?.fullname}
             </span>
             <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-             {user?.email}
+              {user?.email}
             </span>
           </div>
 
@@ -90,6 +91,11 @@ const Profile = () => {
               onClick={() => handleMenuItemClick("/account-settings")}
             >
               Account Settings
+            </li>
+            <li className="block py-2 text-gray-500 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white cursor-pointer"
+              onClick={() => handleMenuItemClick("/privacy-policy")}
+            >
+              Privacy Policy
             </li>
 
             <li>

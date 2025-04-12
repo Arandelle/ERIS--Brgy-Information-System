@@ -110,7 +110,7 @@ const App = () => {
           {showAlert && user && isAdmin && <AlertUi />}
           <Routes>
             <Route path="*" element={<NotFound />} />
-            <Route path="/privacy-policy" element={<PrivayPolicy />} />
+            <Route path="/privacy-policy" element={<PrivayPolicy isAdmin={Boolean(user && isAdmin)}/>} />
             <Route path="/deletion-account" element={<DeleteAccount />} />
             <Route
               path="/admin"
