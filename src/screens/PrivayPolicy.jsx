@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ref, get, set } from 'firebase/database';
-import { database } from '../services/firebaseConfig';
+import {database} from "../services/firebaseConfig";
 
 export default function PrivacyPolicy({ isAdmin = false }) {
   const [expanded, setExpanded] = useState({});
@@ -9,6 +9,7 @@ export default function PrivacyPolicy({ isAdmin = false }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editingSections, setEditingSections] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState("");
 
   useEffect(() => {
     // Load privacy policy from Firebase when component mounts
@@ -19,14 +20,18 @@ export default function PrivacyPolicy({ isAdmin = false }) {
         const snapshot = await get(policyRef);
         
         if (snapshot.exists()) {
-          setSections(snapshot.val());
+          const data = snapshot.val();
+          setSections(data.sections || defaultSections);
+          setLastUpdated(data.lastUpdated || formatDate(new Date()));
         } else {
           // If no data exists, use the default sections
           setSections(defaultSections);
+          setLastUpdated(formatDate(new Date()));
         }
       } catch (error) {
         console.error("Error fetching privacy policy:", error);
         setSections(defaultSections);
+        setLastUpdated(formatDate(new Date()));
       } finally {
         setIsLoading(false);
       }
@@ -42,6 +47,11 @@ export default function PrivacyPolicy({ isAdmin = false }) {
     }
   }, [isEditing, sections]);
 
+  const formatDate = (date) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(date).toLocaleDateString('en-US', options);
+  };
+
   const toggleSection = (section) => {
     setExpanded(prev => ({
       ...prev,
@@ -52,9 +62,18 @@ export default function PrivacyPolicy({ isAdmin = false }) {
   const handleSave = async () => {
     setIsSaving(true);
     try {
+      const currentDate = new Date();
+      const formattedDate = formatDate(currentDate);
+      
       const policyRef = ref(database, 'privacy-policy');
-      await set(policyRef, editingSections);
+      // Save both the sections and the last updated date
+      await set(policyRef, {
+        sections: editingSections,
+        lastUpdated: formattedDate
+      });
+      
       setSections(editingSections);
+      setLastUpdated(formattedDate);
       setIsEditing(false);
     } catch (error) {
       console.error("Error saving privacy policy:", error);
@@ -202,7 +221,7 @@ export default function PrivacyPolicy({ isAdmin = false }) {
           {/* Content */}
           <div className="px-6 py-6">
             <div className="mb-8">
-              <p className="text-sm text-gray-500 text-right">Last Updated: April 12, 2025</p>
+              <p className="text-sm text-gray-500 text-right">Last Updated: {lastUpdated}</p>
             </div>
             
             {(isEditing ? editingSections : sections).map((section, sectionIndex) => (
