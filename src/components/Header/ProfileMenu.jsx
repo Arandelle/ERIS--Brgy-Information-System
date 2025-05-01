@@ -98,6 +98,12 @@ const Profile = () => {
               Privacy Policy
             </li>
 
+            <li className="block py-2 text-gray-500 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white cursor-pointer"
+              onClick={() => handleMenuItemClick("/terms-of-service")}
+            >
+             Terms of Service
+            </li>
+
             <li>
               <a
                 href="#"

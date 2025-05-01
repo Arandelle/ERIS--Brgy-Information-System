@@ -51,8 +51,16 @@ export const SectionLinks = [
     title: "Audit Trails",
     link: "/audit-trails",
   },
-{
+  {
     title: "Account Settings",
     link: "/account-settings",
-},
+  },
+  {
+    title: "Privacy policy",
+    link: "/privacy-policy",
+  },
+  {
+    title: "Terms of service",
+    link: "/terms-of-service",
+  },
 ];

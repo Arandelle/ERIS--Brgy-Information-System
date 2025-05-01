@@ -30,6 +30,8 @@ import Audit from "./screens/Audit";
 import PrivayPolicy from "./screens/PrivayPolicy";
 import DeleteAccount from "./screens/DeleteAccount";
 import NotFound from "./screens/NotFound";
+import TermsOfUse from "./screens/Term_of_Service";
+import TermsOfService from "./screens/Term_of_Service";
 
 const App = () => {
   const sound = new Audio(soundFile);
@@ -111,6 +113,7 @@ const App = () => {
           <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/privacy-policy" element={<PrivayPolicy isAdmin={Boolean(user && isAdmin)}/>} />
+            <Route path="/terms-of-service" element={<TermsOfService isAdmin={Boolean(user && isAdmin)}/>} />
             <Route path="/deletion-account" element={<DeleteAccount />} />
             <Route
               path="/admin"
