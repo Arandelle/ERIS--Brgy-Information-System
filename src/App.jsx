@@ -27,11 +27,9 @@ import soundFile from "./assets/sound/emergencySound.mp3";
 import { useFetchData } from "./hooks/useFetchData";
 import AlertUi from "./screens/AlertUi";
 import Audit from "./screens/Audit";
-import PrivayPolicy from "./screens/PrivayPolicy";
 import DeleteAccount from "./screens/DeleteAccount";
 import NotFound from "./screens/NotFound";
-import TermsOfUse from "./screens/Term_of_Service";
-import TermsOfService from "./screens/Term_of_Service";
+import TermsAndPrivacy from "./screens/Terms_And_Policy";
 
 const App = () => {
   const sound = new Audio(soundFile);
@@ -112,8 +110,8 @@ const App = () => {
           {showAlert && user && isAdmin && <AlertUi />}
           <Routes>
             <Route path="*" element={<NotFound />} />
-            <Route path="/privacy-policy" element={<PrivayPolicy isAdmin={Boolean(user && isAdmin)}/>} />
-            <Route path="/terms-of-service" element={<TermsOfService isAdmin={Boolean(user && isAdmin)}/>} />
+            <Route path="/privacy-policy" element={<TermsAndPrivacy isAdmin={Boolean(user && isAdmin)} TermsOrPrivacy="privacy-policy"/>} />
+            <Route path="/terms-of-service" element={<TermsAndPrivacy isAdmin={Boolean(user && isAdmin)} TermsOrPrivacy="terms-of-service"/>} />
             <Route path="/deletion-account" element={<DeleteAccount />} />
             <Route
               path="/admin"

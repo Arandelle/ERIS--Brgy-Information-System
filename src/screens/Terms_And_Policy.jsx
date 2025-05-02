@@ -4,7 +4,7 @@ import { database } from "../services/firebaseConfig";
 import { formatDate } from "../helper/FormatDate";
 import Spinner from "../components/ReusableComponents/Spinner";
 
-export default function PrivacyPolicy({ isAdmin = false }) {
+export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "privacy-policy" }) {
   const [expanded, setExpanded] = useState({});
   const [sections, setSections] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -14,32 +14,35 @@ export default function PrivacyPolicy({ isAdmin = false }) {
   const [lastUpdated, setLastUpdated] = useState("");
 
   useEffect(() => {
-    // Load privacy policy from Firebase when component mounts
-    const fetchPrivacyPolicy = async () => {
+    // Load Terms of service from Firebase when component mounts
+    const fetchTermsAndService = async () => {
       setIsLoading(true);
       try {
-        const policyRef = ref(database, "privacy-policy");
+        const policyRef = ref(database, TermsOrPrivacy);
         const snapshot = await get(policyRef);
 
         if (snapshot.exists()) {
           const data = snapshot.val();
-          setSections(data.sections || defaultSections);
+
+          const fallbackSection = Array.isArray(data.sections) ? data.sections : defaultSections[TermsOrPrivacy] || [];
+
+          setSections(fallbackSection);
           setLastUpdated(data.lastUpdated || formatDate(new Date()));
         } else {
           // If no data exists, use the default sections
-          setSections(defaultSections);
+          setSections(defaultSections[TermsOrPrivacy]);
           setLastUpdated(formatDate(new Date()));
         }
       } catch (error) {
-        console.error("Error fetching privacy policy:", error);
-        setSections(defaultSections);
+        console.error(`Error fetching ${TermsOrPrivacy}:`, error);
+        setSections(defaultSections[TermsOrPrivacy]);
         setLastUpdated(formatDate(new Date()));
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchPrivacyPolicy();
+    fetchTermsAndService();
   }, []);
 
   useEffect(() => {
@@ -62,7 +65,7 @@ export default function PrivacyPolicy({ isAdmin = false }) {
       const currentDate = new Date();
       const formattedDate = formatDate(currentDate);
 
-      const policyRef = ref(database, "privacy-policy");
+      const policyRef = ref(database, TermsOrPrivacy);
       // Save both the sections and the last updated date
       await set(policyRef, {
         sections: editingSections,
@@ -73,7 +76,7 @@ export default function PrivacyPolicy({ isAdmin = false }) {
       setLastUpdated(formattedDate);
       setIsEditing(false);
     } catch (error) {
-      console.error("Error saving privacy policy:", error);
+      console.error(`Error saving ${TermsOrPrivacy}:`, error);
       alert("Failed to save changes. Please try again.");
     } finally {
       setIsSaving(false);
@@ -216,7 +219,7 @@ export default function PrivacyPolicy({ isAdmin = false }) {
                     onClick={() => setIsEditing(true)}
                     className="bg-white text-blue-600 px-4 py-1 rounded hover:bg-gray-100"
                   >
-                    Edit Privacy Policy
+                    Edit {TermsOrPrivacy === "privacy-policy" ? "Privacy Policy" : "Terms of Service"}
                   </button>
                 )}
               </div>
@@ -225,7 +228,7 @@ export default function PrivacyPolicy({ isAdmin = false }) {
               ERIS: Emergency Response and Information System
             </h1>
             <h2 className="text-xl text-white text-center mt-2">
-              Privacy Policy
+            {TermsOrPrivacy === "privacy-policy" ? "Privacy Policy" : "Terms of Service"}
             </h2>
           </div>
 
@@ -536,112 +539,222 @@ export default function PrivacyPolicy({ isAdmin = false }) {
 }
 
 // Default sections data structure - used if no data exists in Firebase
-const defaultSections = [
+const defaultSectionsOfTOS = [
   {
     id: "introduction",
     title: "Introduction",
     content:
-      "This Privacy Policy explains how ERIS (Emergency Response and Information System) collects, uses, and protects your personal information when you use our mobile application. By downloading, installing, or using ERIS, you agree to the collection and use of information as described in this policy.",
+      "Welcome to the Barangay Emergency Response and Information System, a system designed to provide emergency response services to residents of the barangay. By downloading, installing, or using our system, you agree to be bound by these Terms of Service.",
   },
   {
-    id: "information-collect",
-    title: "Information We Collect",
-    content: [
-      {
-        subtitle: "Account Information",
-        items: [
-          "Email address (required for login)",
-          "Password (securely stored)",
-        ],
-      },
-      {
-        subtitle: "Profile Information (Optional)",
-        items: ["Full name", "Age", "Home address", "Gender", "Phone number"],
-      },
-      {
-        subtitle: "Emergency Reports",
-        items: [
-          "Report details and descriptions",
-          "Images and videos (optional)",
-          "Location data (required for emergency tracking)",
-          "Timestamp of submission",
-        ],
-      },
-      {
-        subtitle: "Barangay Certificate Requests",
-        items: [
-          "Type of certificate requested (clearance, indigency, etc.)",
-          "Personal information required for certificate processing",
-        ],
-      },
-    ],
-  },
-  {
-    id: "how-we-use",
-    title: "How We Use Your Information",
-    content: "We use the collected information for the following purposes:",
-    items: [
-      "To create and manage your ERIS account",
-      "To process and respond to emergency reports",
-      "To facilitate barangay certificate requests",
-      "To improve the functionality and performance of the app",
-      "To communicate with you regarding your reports and requests",
-      "To ensure appropriate emergency response by sharing location data with relevant authorities",
-    ],
-  },
-  {
-    id: "data-storage",
-    title: "Data Storage and Security",
+    id: "eligibility",
+    title: "Eligibility",
     content:
-      "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet or electronic storage is 100% secure, and we cannot guarantee absolute security.",
+      "You must be a resident of the barangay to use the primary features of this App. Users must be at least 13 years of age to create an account, with users under 18 requiring parental or guardian consent.",
   },
   {
-    id: "information-sharing",
-    title: "Information Sharing",
-    content: "We may share your information with:",
+    id: "account-registration",
+    title: "Account Registration",
+    content:
+      "To access emergency services, you must create an account providing:",
     items: [
-      "Local barangay officials and emergency responders (for emergency response coordination)",
-      "Government agencies (when required for certificate issuance)",
-      "Service providers who assist in app functionality and hosting",
+      "Email",
+      "Password",
+      "Fullname",
+      "Phone Number (optional)",
+      "Residential address within the barangay (optional)",
+      "Profile Photo (optional)",
     ],
     footer:
-      "We will not sell, trade, or rent your personal information to third parties for marketing purposes.",
+      "You are responsible for maintaining the confidentiality of your account credentials and for all activities conducted through your account.",
   },
   {
-    id: "user-rights",
-    title: "User Rights",
-    content: "You have the right to:",
+    id: "legitimate-use",
+    title: "Legitimate Use",
+    content:
+      "This App is designed for genuine emergency situations. You agree to:",
     items: [
-      "Access the personal information we hold about you",
-      "Correct inaccurate or incomplete information",
-      "Delete your account and associated data (subject to legal requirements)",
-      "Withdraw consent for optional data collection",
-      "Request an export of your data",
+      "Only submit legitimate emergency assistance requests",
+      "Provide accurate information when creating requests",
+      "Not use the App for pranks, false alarms, or non-emergency purposes",
+      "Not use the App to harass, threaten, or alarm others",
+    ],
+    footer:
+      "False or prank emergency requests may result in account suspension, termination, and possible legal consequences under local ordinances regarding misuse of emergency services.",
+  },
+  {
+    id: "location-services",
+    title: "Location Services",
+    content:
+      "Our emergency response features require access to your device's location services when submitting assistance requests. You acknowledge that:",
+    items: [
+      "Location tracking is essential for emergency responders to reach you",
+      "Your location will be shared with authorized barangay emergency personnel during active emergency requests",
+      "Your location data during emergency situations may be stored for service improvement and record-keeping purposes",
     ],
   },
   {
-    id: "data-retention",
-    title: "Data Retention",
+    id: "media-uploads",
+    title: "Media Uploads",
     content:
-      "We retain your information for as long as your account remains active or as needed to provide services. We may retain certain information as required by law or for legitimate business purposes.",
+      "The App allows you to upload photos and videos related to emergency situations. By uploading media, you:",
+    items: [
+      "Certify that you have the right to share this content",
+      "Grant the barangay authorities permission to use this media for emergency response purposes",
+      "Understand that uploaded media may be used as evidence in investigations or legal proceedings",
+      "Agree not to upload inappropriate, false, or misleading content",
+    ],
   },
   {
-    id: "childrens-privacy",
-    title: "Children's Privacy",
+    id: "service-limitation",
+    title: "Service Limitation",
     content:
-      "ERIS is not intended for use by individuals under the age of 13. We do not knowingly collect personal information from children under 13. If we discover we have collected information from a child under 13, we will delete that information immediately.",
+      "While we strive to provide reliable emergency services, you acknowledge:",
+    items: [
+      "Response times may vary based on responder availability and circumstances",
+      "Service availability depends on network connectivity and device functionality",
+      "The App is supplementary to, not a replacement for, national emergency services (like 911)",
+      "In life-threatening situations, users should contact national emergency services in addition to using the App",
+    ],
   },
   {
-    id: "changes",
-    title: "Changes to This Privacy Policy",
-    content:
-      'We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date. You are advised to review this Privacy Policy periodically for any changes.',
+    id: "termination",
+    title: "Termination",
+    content: "We reserve the right to suspend or terminate your account if:",
+    items: [
+      "You submit false emergency requests",
+      "You violate these Terms of Service",
+      "You misuse the App for harassment or other prohibited purposes",
+      "You provide false personal information",
+      "Your continued use poses a risk to community safety",
+    ],
   },
   {
-    id: "contact",
-    title: "Contact Us",
+    id: "modification",
+    title: "Modifications",
     content:
-      "If you have any questions about this Privacy Policy, please contact us at:",
-    footer: "topaguintsarandell@gmail.com",
+      'We may modify these Terms of Service at any time by posting the revised terms in the App. Your continued use of the App following any changes constitutes acceptance of those changes.',
+  },
+  {
+    id: "governing-law",
+    title: "Governing Law",
+    content:
+      "These Terms shall be governed by and construed in accordance with the laws of the Philippines, without regard to its conflict of law provisions.",
   },
 ];
+
+const defaultSectionsOfPP = [
+    {
+      id: "introduction",
+      title: "Introduction",
+      content:
+        "This Privacy Policy explains how ERIS (Emergency Response and Information System) collects, uses, and protects your personal information when you use our mobile application. By downloading, installing, or using ERIS, you agree to the collection and use of information as described in this policy.",
+    },
+    {
+      id: "information-collect",
+      title: "Information We Collect",
+      content: [
+        {
+          subtitle: "Account Information",
+          items: [
+            "Email address (required for login)",
+            "Password (securely stored)",
+          ],
+        },
+        {
+          subtitle: "Profile Information (Optional)",
+          items: ["Full name", "Age", "Home address", "Gender", "Phone number"],
+        },
+        {
+          subtitle: "Emergency Reports",
+          items: [
+            "Report details and descriptions",
+            "Images and videos (optional)",
+            "Location data (required for emergency tracking)",
+            "Timestamp of submission",
+          ],
+        },
+        {
+          subtitle: "Barangay Certificate Requests",
+          items: [
+            "Type of certificate requested (clearance, indigency, etc.)",
+            "Personal information required for certificate processing",
+          ],
+        },
+      ],
+    },
+    {
+      id: "how-we-use",
+      title: "How We Use Your Information",
+      content: "We use the collected information for the following purposes:",
+      items: [
+        "To create and manage your ERIS account",
+        "To process and respond to emergency reports",
+        "To facilitate barangay certificate requests",
+        "To improve the functionality and performance of the app",
+        "To communicate with you regarding your reports and requests",
+        "To ensure appropriate emergency response by sharing location data with relevant authorities",
+      ],
+    },
+    {
+      id: "data-storage",
+      title: "Data Storage and Security",
+      content:
+        "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet or electronic storage is 100% secure, and we cannot guarantee absolute security.",
+    },
+    {
+      id: "information-sharing",
+      title: "Information Sharing",
+      content: "We may share your information with:",
+      items: [
+        "Local barangay officials and emergency responders (for emergency response coordination)",
+        "Government agencies (when required for certificate issuance)",
+        "Service providers who assist in app functionality and hosting",
+      ],
+      footer:
+        "We will not sell, trade, or rent your personal information to third parties for marketing purposes.",
+    },
+    {
+      id: "user-rights",
+      title: "User Rights",
+      content: "You have the right to:",
+      items: [
+        "Access the personal information we hold about you",
+        "Correct inaccurate or incomplete information",
+        "Delete your account and associated data (subject to legal requirements)",
+        "Withdraw consent for optional data collection",
+        "Request an export of your data",
+      ],
+    },
+    {
+      id: "data-retention",
+      title: "Data Retention",
+      content:
+        "We retain your information for as long as your account remains active or as needed to provide services. We may retain certain information as required by law or for legitimate business purposes.",
+    },
+    {
+      id: "childrens-privacy",
+      title: "Children's Privacy",
+      content:
+        "ERIS is not intended for use by individuals under the age of 13. We do not knowingly collect personal information from children under 13. If we discover we have collected information from a child under 13, we will delete that information immediately.",
+    },
+    {
+      id: "changes",
+      title: "Changes to This Privacy Policy",
+      content:
+        'We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date. You are advised to review this Privacy Policy periodically for any changes.',
+    },
+    {
+      id: "contact",
+      title: "Contact Us",
+      content:
+        "If you have any questions about this Privacy Policy, please contact us at:",
+      footer: "topaguintsarandell@gmail.com",
+    },
+  ];
+
+const defaultSections = {
+    "privacy-policy" : [...defaultSectionsOfPP],
+    "terms-of-service": [...defaultSectionsOfTOS]
+};
+  
