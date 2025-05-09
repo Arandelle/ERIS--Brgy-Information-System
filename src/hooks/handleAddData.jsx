@@ -46,6 +46,8 @@ const handleAddData = async (data, type) => {
     },
     hotlines: {
       ...dataWithDateAndTimestamp,
+      fileUrl,
+      fileType
     },
     templateContent: {
       ...dataWithDateAndTimestamp,

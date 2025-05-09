@@ -9,19 +9,36 @@ const HotlinesModal = ({
   handleHotlinesModal,
   handleAddHotlines,
   handleUpdateHotlines,
+  handleImageChange,
   isEdit,
   selectedId,
   hotlineState,
   setHotlinesState,
+  prevImage
 }) => {
-
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    const {organization, name, contact, email, description} = hotlineState;
-    const completeData = organization && name && (contact || email) && description;
+    const { organization, name, contact, email, description } = hotlineState;
+    const completeData =
+      organization && name && (contact || email) && description;
     setIsComplete(completeData);
-  }, [hotlineState.category, hotlineState.organization, hotlineState.name, hotlineState.contact, hotlineState.email, hotlineState.description]);
+  }, [
+    hotlineState.category,
+    hotlineState.organization,
+    hotlineState.name,
+    hotlineState.contact,
+    hotlineState.email,
+    hotlineState.description,
+  ]);
+
+  useEffect(() => {
+    if (hotlineState.file) {
+      const objectUrl = URL.createObjectURL(hotlineState.file);
+
+      return () => URL.revokeObjectURL(objectUrl); // clean up on unmount or file change
+    }
+  }, [hotlineState.file]);
 
   return (
     <Modal
@@ -29,49 +46,109 @@ const HotlinesModal = ({
       title={"Hotlines Number and Contact"}
       children={
         <div className="flex flex-col space-y-4 max-w-lg">
-        <p className="text-sm text-gray-600 dark:text-gray-300 italic">Regularly review and update contact information to ensure its accuracy.
-        Ensure that any personal information added complies with relevant privacy policies and regulations.</p>
-        <select className="w-full text-gray-600 p-2 border border-gray-300 rounded-md cursor-pointer"
-        value={hotlineState.category}
-        onChange={(e) => setHotlinesState(prev => ({...prev, category: e.target.value}))}
-        >
-          <option value="" disabled>Select Category</option>
-          <option value="fire">Fire</option>
-          <option value="medical">Medical</option>
-          <option value="crime">Crime</option>
-          <option value="natural disaster">Natural Disaster</option>
-          <option value="public disturbance">Public Disturbance</option>
-          <option value="other">Other</option>
-        </select>
-         <InputField
+          <p className="text-sm text-gray-600 dark:text-gray-300 italic">
+            Regularly review and update contact information to ensure its
+            accuracy. Ensure that any personal information added complies with
+            relevant privacy policies and regulations.
+          </p>
+          <select
+            className="w-full text-gray-600 p-2 border border-gray-300 rounded-md cursor-pointer"
+            value={hotlineState.category}
+            onChange={(e) =>
+              setHotlinesState((prev) => ({
+                ...prev,
+                category: e.target.value,
+              }))
+            }
+          >
+            <option value="" disabled>
+              Select Category
+            </option>
+            <option value="fire">Fire</option>
+            <option value="medical">Medical</option>
+            <option value="crime">Crime</option>
+            <option value="natural disaster">Natural Disaster</option>
+            <option value="public disturbance">Public Disturbance</option>
+            <option value="other">Other</option>
+          </select>
+          <InputField
             type="text"
             placeholder="Organizations"
             value={hotlineState.organization}
-            onChange={(e) => setHotlinesState(prev => ({...prev, organization: e.target.value}))}
+            onChange={(e) =>
+              setHotlinesState((prev) => ({
+                ...prev,
+                organization: e.target.value,
+              }))
+            }
           />
           <InputField
             type="text"
             placeholder="Name"
             value={hotlineState.name}
-            onChange={(e) => setHotlinesState(prev => ({...prev, name: e.target.value}))}
+            onChange={(e) =>
+              setHotlinesState((prev) => ({ ...prev, name: e.target.value }))
+            }
           />
-          <InputField type="number" placeholder="Contact" 
+          <InputField
+            type="number"
+            placeholder="Contact"
             value={hotlineState.contact}
-            onChange={(e) => setHotlinesState(prev => ({...prev, contact: e.target.value}))}
+            onChange={(e) =>
+              setHotlinesState((prev) => ({ ...prev, contact: e.target.value }))
+            }
           />
-          <InputField type="email" placeholder="Email (Optional)  " 
+          <InputField
+            type="email"
+            placeholder="Email (Optional)  "
             value={hotlineState.email}
-            onChange={(e) => setHotlinesState(prev => ({...prev, email: e.target.value}))}
+            onChange={(e) =>
+              setHotlinesState((prev) => ({ ...prev, email: e.target.value }))
+            }
           />
-          <TextArea placeholder={"Description"} value={hotlineState.description}
-            onChange={(e) => setHotlinesState(prev => ({...prev, description: e.target.value}))}
+          <TextArea
+            placeholder={"Description"}
+            value={hotlineState.description}
+            onChange={(e) =>
+              setHotlinesState((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
+            }
           />
+
+          <label className="bg-green-500 py-2 px-4 text-md text-white rounded-md mr-auto shadow-sm cursor-pointer">
+            Upload Cover Photo
+            <InputField
+              type="file"
+              className={"hidden"}
+              onChange={handleImageChange}
+            />
+          </label>
+
+          {prevImage && (
+            <img
+              src={prevImage}
+              className=" h-20 w-20 self-center"
+            />
+          )}
+
           {/**Buttons */}
           <div className="flex items-center space-x-2 self-end">
             <button
               type="button"
-              className={`text-sm text-white py-2 px-4 rounded-md ${!isComplete ? "bg-gray-500 cursor-not-allowed" : isEdit ?  "bg-green-500" : "bg-blue-500" }`}
-              onClick={isEdit ? () => handleUpdateHotlines(selectedId) : handleAddHotlines}
+              className={`text-sm text-white py-2 px-4 rounded-md ${
+                !isComplete
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : isEdit
+                  ? "bg-green-500"
+                  : "bg-blue-500"
+              }`}
+              onClick={
+                isEdit
+                  ? () => handleUpdateHotlines(selectedId)
+                  : handleAddHotlines
+              }
               disabled={!isComplete}
             >
               Save

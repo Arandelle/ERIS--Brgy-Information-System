@@ -20,7 +20,7 @@ import logAuditTrail from "../../hooks/useAuditTrail";
 import { generateUniqueBarangayID } from "../../helper/generateID";
 
 const Hotlines = () => {
-  const {searchParams, setSearchParams} = useSearchParam();
+  const { searchParams, setSearchParams } = useSearchParam();
   const { data: hotlines = [] } = useFetchData("hotlines");
   const [hotlinesModal, setHotlinesModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,13 +31,31 @@ const Hotlines = () => {
     email: "",
     description: "",
     category: "",
+    file: null,
+    fileType: null,
   });
+  const [prevImage, setPrevImage] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const searchField = ["category","organization","name", "contact","email", "description"];
-  const HotlineHeaders = ["Category","Organizations", "Name", "PhoneNumber", "Description", "Action"];
+  const searchField = [
+    "category",
+    "organization",
+    "name",
+    "contact",
+    "email",
+    "description",
+  ];
+  const HotlineHeaders = [
+    "Media",
+    "Category",
+    "Organizations",
+    "Name",
+    "PhoneNumber",
+    "Description",
+    "Action",
+  ];
 
   const filteredData = useFilteredData(hotlines, searchQuery, searchField);
 
@@ -50,24 +68,30 @@ const Hotlines = () => {
     totalPages,
   } = usePagination(filteredData);
 
-  const TableData = ({data}) => {
+  const TableData = ({ data, isMedia = false}) => {
     const nullValue = <p className="italic text-nowrap text-xs">null</p>;
     return (
       <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
-      <div className="truncate max-w-[100px] sm:max-w-[200px]">
-        {data || nullValue}
-      </div>
-    </td>
-    )
-  }
+       {isMedia ? (
+          <img src={data} alt="Media" className="h-12 w-12 rounded-full border"/>
+        ) : (
+          <div className="truncate max-w-[100px] sm:max-w-[200px]">
+          {data || nullValue}
+        </div>
+        )}
+        
+      </td>
+    );
+  };
 
   const renderRow = (hotlines) => {
     return (
       <>
-       <TableData data={hotlines.category} />
-        <TableData data={hotlines.organization}/>
+        <TableData data={hotlines.fileUrl} isMedia={true}/>
+        <TableData data={hotlines.category} />
+        <TableData data={hotlines.organization} />
         <TableData data={hotlines.name} />
-        <TableData data={hotlines.contact}/>
+        <TableData data={hotlines.contact} />
         <TableData data={hotlines.description} />
         <td className="">
           <div className="flex items-center justify-center space-x-4">
@@ -90,50 +114,83 @@ const Hotlines = () => {
       </>
     );
   };
+    const handleImageChange = (e) => {
+      const file = e.target.files[0];
+  
+      if (!file) return;
+  
+      const fileSizeLimit = file.type.startsWith("image/")
+        ? 5 * 1024 * 1024
+        : 25 * 1024 * 1024;
+
+      if (file.size > fileSizeLimit) {
+        toast.warning("File size exceeds the limit.");
+        return;
+      }
+      if(file.type.startsWith("video/")){
+        toast.warning("File type is not valid");
+        return;
+      }
+  
+      if (file.type.startsWith("image/")) {
+        setHotlinesState({
+          ...hotlineState,
+          file: file,
+          fileType: file.type.startsWith("image/") && "image",
+        });
+        setPrevImage(URL.createObjectURL(file));
+      } else {
+        toast.error(
+          "Invalid file type or size. Please try to upload an image under 5mb"
+        );
+      }
+    };
+  
 
   const handleHotlinesModal = () => {
     setHotlinesModal(!hotlinesModal);
     setIsEdit(false);
     setHotlinesState({});
-    setSearchParams(!hotlinesModal ? "Add new" : {})
+    setPrevImage("");
+    setSearchParams(!hotlinesModal ? "Add new" : {});
   };
 
   const handleAddHotlines = async () => {
     const customId = await generateUniqueBarangayID("hotlines");
     const hotlineData = {
       ...hotlineState,
-      customId
+      customId,
     };
     const hotlineUid = await handleAddData(hotlineData, "hotlines"); // get the uid of the added data
-    if(hotlineUid) {
+    if (hotlineUid) {
       await logAuditTrail("Added hotline", hotlineUid);
     }
 
     setHotlinesState({});
     setHotlinesModal(false);
-    setSearchParams({})
+    setSearchParams({});
   };
 
   const handleDeleteModal = (id) => {
     setSelectedId(id);
     setShowDeleteModal(true);
-    setSearchParams({uid: id})
+    setSearchParams({ uid: id });
   };
 
   const handleConfirmDelete = async () => {
     try {
       await handleDeleteData(selectedId, "hotlines");
-      await logAuditTrail("Deleted hotline")
+      await logAuditTrail("Deleted hotline");
     } catch (error) {
       toast.error(`Error deleting ${error}`);
     }
 
     setShowDeleteModal(false);
-    setSearchParams({})
+    setSearchParams({});
   };
 
   const handleEditClick = (hotlines) => {
-    setSearchParams({"edit/uid" : hotlines.id})
+    setSearchParams({ "edit/uid": hotlines.id });
     setHotlinesModal(true);
     setHotlinesState((prev) => ({
       ...prev,
@@ -146,6 +203,7 @@ const Hotlines = () => {
     }));
     setSelectedId(hotlines.id);
     setIsEdit(true);
+    setPrevImage(hotlines.fileUrl);
     console.log(selectedId);
   };
 
@@ -185,10 +243,12 @@ const Hotlines = () => {
               handleHotlinesModal={handleHotlinesModal}
               handleAddHotlines={handleAddHotlines}
               handleUpdateHotlines={handleUpdateHotlines}
+              handleImageChange={handleImageChange}
               isEdit={isEdit}
               selectedId={selectedId}
               hotlineState={hotlineState}
               setHotlinesState={setHotlinesState}
+              prevImage={prevImage}
             />
           )}
 
@@ -200,7 +260,10 @@ const Hotlines = () => {
                   Do you want to delete
                   <span className="text-primary-500 text-bold">
                     {" "}
-                    {hotlines.find((item) => item.id === selectedId)?.organization}
+                    {
+                      hotlines.find((item) => item.id === selectedId)
+                        ?.organization
+                    }
                   </span>{" "}
                   ?{" "}
                 </span>
