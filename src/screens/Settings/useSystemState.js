@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 
 const useSystemState = () => {
@@ -9,11 +9,10 @@ const useSystemState = () => {
     previewImage: "",
     originalImageUrl: "",
     logoImageFile: null,
-    isModified: false,
     isOtpEnabled: true,
   });
 
-  // render the systemState the systemData's data under the details
+  // Initialize systemState with fetched data
   useEffect(() => {
     if (systemData) {
       setSystemState((prevState) => ({
@@ -22,29 +21,25 @@ const useSystemState = () => {
         title: systemData.title,
         originalImageUrl: systemData.fileUrl,
         previewImage: systemData.fileUrl,
-        isModified: false,
         isOtpEnabled: systemData.isOtpEnabled,
       }));
     }
   }, [systemData]);
 
-  // Check if the system data has been modified
-  useEffect(() => {
-    const { title, logoImageFile } = systemState;
-    if (title !== systemState.originalTitle || logoImageFile) {
-      setSystemState((prevState) => ({
-        ...prevState,
-        isModified: true,
-      }));
-    } else {
-      setSystemState((prevState) => ({
-        ...prevState,
-        isModified: false,
-      }));
-    }
-  }, [systemState]);
+  // Derived value: check if system state is modified
+  const isModified = useMemo(() => {
+    return (
+      systemState.title !== systemState.originalTitle ||
+      !!systemState.logoImageFile
+    );
+  }, [systemState.title, systemState.originalTitle, systemState.logoImageFile]);
 
-  return { systemState, setSystemState, loading, setLoading };
+  return { 
+    systemState: { ...systemState, isModified }, 
+    setSystemState, 
+    loading, 
+    setLoading 
+  };
 };
 
 export default useSystemState;

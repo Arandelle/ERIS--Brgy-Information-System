@@ -15,10 +15,12 @@ import { InputField } from "../../components/ReusableComponents/InputField";
 import SystemSettings from "./SystemSettings";
 import useSystemState from "./useSystemState";
 import ProfileSettings from "./ProfileSettings";
+import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 
 const Setting = () => {
   const { isModalOpen, currentMedia, openModal, closeModal } = useViewMedia();
-  const { systemState, setSystemState, setLoading } = useSystemState();
+  const { systemState,loading, setLoading } = useSystemState();
+  const {systemData} = useFetchSystemData();
   const user = auth.currentUser;
   const { data: admin } = useFetchData("admins");
   const currentAdminDetails = admin.find((admin) => admin.id === user?.uid);
@@ -38,64 +40,6 @@ const Setting = () => {
     setShowProfileModal(!showProfileModal);
   };
 
-  // Handle image change
-  const handleImageChange = (e, type) => {
-    const file = e.target.files[0];
-    if (
-      file &&
-      file.type.startsWith("image/") &&
-      file.size <= 5 * 1024 * 1024
-    ) {
-      if (type === "logo") {
-        setSystemState((prevState) => ({
-          ...prevState,
-          logoImageFile: file,
-          previewImage: URL.createObjectURL(file),
-        }));
-      } else if (type === "profile") {
-        setAdminData({
-          ...adminData,
-          imageFile: file,
-          prevImage: URL.createObjectURL(file),
-        });
-      }
-    } else {
-      toast.error(
-        "Invalid file type or size. Please upload an image under 5MB."
-      );
-    }
-  };
-
-  // Update the system data
-  const handleUpdateData = async () => {
-    setLoading(true);
-
-    // Upload the image to the storage
-    try {
-      let imageUrl = systemState.originalImageUrl; // retain the existing image url
-
-      const updatedData = {
-        title: systemState.title,
-        file: systemState.logoImageFile,
-        fileType: "image",
-      };
-      await handleEditData("details", updatedData, "systemData");
-      console.log("Data updated in database: ", updatedData);
-
-      setSystemState((prevState) => ({
-        ...prevState,
-        originalTitle: systemState.title,
-        originalImageUrl: imageUrl,
-        previewImage: imageUrl,
-        isModified: false,
-      }));
-      setLoading(false);
-    } catch (error) {
-      toast.error(`Error: ${error}`);
-      console.error("Error", error);
-      setLoading(false);
-    }
-  };
 
   const handleOtpEnable = async () => {
     try {
@@ -157,8 +101,8 @@ const Setting = () => {
             />
             {/**System container */}
             <SystemSettings
-              handleImageChange={handleImageChange}
-              handleUpdateData={handleUpdateData}
+              loading={loading}
+              setLoading={setLoading}
               openModal={openModal}
             />
 
@@ -193,7 +137,6 @@ const Setting = () => {
               currentAdminDetails={currentAdminDetails}
               adminData={adminData}
               setAdminData={setAdminData}
-              handleImageChange={handleImageChange}
               setLoading={setLoading}
             />
           )}

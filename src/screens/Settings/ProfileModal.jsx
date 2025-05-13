@@ -11,12 +11,40 @@ const ProfileModal = ({
   currentAdminDetails,
   adminData,
   setAdminData,
-  handleImageChange,
   setLoading,
 }) => {
   const user = auth.currentUser;
   const [profileModal, setProfileModal] = useState(true);
   const [passwordModal, setPasswordModal] = useState(false);
+
+  
+    // Handle image change
+    const handleImageChange = (e, type) => {
+      const file = e.target.files[0];
+      if (
+        file &&
+        file.type.startsWith("image/") &&
+        file.size <= 5 * 1024 * 1024
+      ) {
+        if (type === "logo") {
+          setSystemState((prevState) => ({
+            ...prevState,
+            logoImageFile: file,
+            previewImage: URL.createObjectURL(file),
+          }));
+        } else if (type === "profile") {
+          setAdminData({
+            ...adminData,
+            imageFile: file,
+            prevImage: URL.createObjectURL(file),
+          });
+        }
+      } else {
+        toast.error(
+          "Invalid file type or size. Please upload an image under 5MB."
+        );
+      }
+    };
 
   useEffect(() => {
     if (currentAdminDetails) {
@@ -29,6 +57,7 @@ const ProfileModal = ({
   }, [currentAdminDetails]);
 
   const hanldeUpdateProfile = async (id) => {
+    setLoading(true);
     const updatedData = {
       fileUrl: adminData.fileUrl, // get the image url from state
       file: adminData.imageFile, // get the image file from state
