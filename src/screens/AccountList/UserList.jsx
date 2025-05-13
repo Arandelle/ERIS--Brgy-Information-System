@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import handleEditData from "../../hooks/handleEditData";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import logAuditTrail from "../../hooks/useAuditTrail";
+import { auth } from "../../services/firebaseConfig";
 
 const UserList = ({ data }) => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -31,6 +32,7 @@ const UserList = ({ data }) => {
   const [isLockUser, setIsDeleteUser] = useState(false);
   const { isModalOpen, currentMedia, openModal, closeModal } = useViewMedia();
   const [loading, setLoading] = useState(false);
+  const currentUserId = auth.currentUser.uid;
 
   const searchField = [
     "fullname",
@@ -85,15 +87,22 @@ const UserList = ({ data }) => {
     setIsDeleteUser(prev => !prev)
   }
 
-  const handleConfirmLockUser = async (userId, isLocked) => {
+  const handleConfirmLockUser = async (targetId, isLocked) => {
     try{
       setLoading(true);
-      await handleEditData(userId, {isLocked: !isLocked}, data);
-      logAuditTrail(`${isLocked ? "Unlocked" : "Locked"} ${data}' account`,userId);
+      if(targetId === currentUserId){
+        toast.warning("You can't lock your own account");
+        setLoading(false);
+        return;
+      }
+      await handleEditData(targetId, {isLocked: !isLocked}, data);
+      logAuditTrail(`${isLocked ? "Unlocked" : "Locked"} ${data}' account`,targetId);
       setIsDeleteUser(false);
       setLoading(false);
     }catch(error){
       console.log(error)
+    } finally{
+      setLoading(false)
     }
   };
   

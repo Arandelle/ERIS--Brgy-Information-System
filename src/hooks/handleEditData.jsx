@@ -54,11 +54,13 @@ const handleEditData = async (id,data, type) => {
           date: data.date || new Date().toISOString(),
           timestamp: serverTimestamp(),
         };
-      
+        
+        const formattedFileUrl = fileUrl || null;
+
         const dataBasedOnType = {
           admins: {
             ...dataWithDateAndTimestamp,
-            fileUrl
+            fileUrl: formattedFileUrl
           },
           users:{
             ...dataWithDateAndTimestamp,
@@ -68,18 +70,18 @@ const handleEditData = async (id,data, type) => {
           },
           systemData: {
             ...dataWithDateAndTimestamp,
-            fileUrl
+            fileUrl: formattedFileUrl
           },
           announcement: {
             ...dataWithDateAndTimestamp,
-            fileUrl,
+            fileUrl: formattedFileUrl,
             fileType,
             isEdited: true,
           },
           hotlines: {
             ...dataWithDateAndTimestamp,
             email: data.email || "",
-            fileUrl,
+            fileUrl: formattedFileUrl,
             fileType,
           },
           templateContent: {

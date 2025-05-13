@@ -64,7 +64,7 @@ const Audit = () => {
       const target =
         users.find((user) => user?.id === log?.targetId) ||
         responders.find((responder) => responder?.id === log?.targetId) ||
-        admins.find((admin) => admin?.id === log?.targetId) ||
+        admins.find((user) => user?.id === log?.targetId) ||
         announcement.find(
           (announcement) => announcement?.id === log?.targetId
         ) ||

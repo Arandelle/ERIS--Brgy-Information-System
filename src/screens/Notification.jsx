@@ -167,6 +167,12 @@ const NotificationItem = ({
   const navigation = useNavigate();
   const { data: users } = useFetchData("users");
   const { data: responders } = useFetchData("responders");
+  const { data: admins } = useFetchData("admins");
+
+  const adminDetails = useMemo(
+    () => admins?.find((admin) => admin.id === notification.userId),
+    [admins, notification.userId]
+  );
 
   const userDetails = useMemo(
     () => users?.find((user) => user.id === notification.userId),
@@ -179,11 +185,11 @@ const NotificationItem = ({
   );
 
   const image = useMemo(
-    () => userDetails?.img || responderDetails?.img || "Unknown",
-    [userDetails, responderDetails]
+    () => userDetails?.img || responderDetails?.img || adminDetails?.img || "Unknown",
+    [userDetails, responderDetails, adminDetails]
   );
 
-  const dataType = userDetails ? "users" : "responders";
+  const dataType = userDetails ? "residents" : responderDetails ? "responders" : "admins";
 
   return (
     <a

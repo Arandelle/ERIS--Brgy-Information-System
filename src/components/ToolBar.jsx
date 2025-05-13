@@ -1,3 +1,5 @@
+import { capitalizeFirstLetter } from "../helper/CapitalizeFirstLetter";
+
 const Toolbar = ({buttons, label = "", searchQuery, setSearchQuery}) => {
 
   return (
@@ -7,7 +9,7 @@ const Toolbar = ({buttons, label = "", searchQuery, setSearchQuery}) => {
       </div>
 
       <h2 className="text-md lg:text-lg font-bold text-gray-600 dark:text-green-500 text-center w-full sm:w-auto">
-       {label}
+       {capitalizeFirstLetter(label === "users" ? "residents" : label)}
       </h2>
 
       <div className="relative w-full sm:w-auto">

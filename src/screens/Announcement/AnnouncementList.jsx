@@ -115,7 +115,6 @@ const Activities = () => {
 
     if(newDocId) {
       await logAuditTrail("Post awareness", newDocId);
-      toast.info(newDocId)
     }
 
     setPostDetails({});
