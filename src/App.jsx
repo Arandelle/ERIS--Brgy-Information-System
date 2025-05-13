@@ -116,7 +116,7 @@ const App = () => {
             <Route
               path="/admin"
               element={
-                !user && !isAdmin ? <Login /> : <Navigate to="/dashboard" />
+                !user || !isAdmin ? <Login /> : <Navigate to="/dashboard" />
               }
             />
             <Route

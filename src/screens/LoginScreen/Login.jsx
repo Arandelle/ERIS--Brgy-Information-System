@@ -82,14 +82,16 @@ export default function Login() {
         email,
         password
       );
-
       const user = userCredentials.user; // Get the user object from the credentials
 
       if (user) {
         // check the systemData, if isOtpEnabled is true proceed to send otp else login
         if(systemData?.isOtpEnabled){
+        const savedId = auth.currentUser?.uid;
         // Generate OTP and send it to the user's email
         await signOut(auth); // sign out the user before sending the otp
+        await logAuditTrail("Logout", null, savedId);
+        navigate("/admin");
         const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
         const templateParams = {
           to_email: email,
@@ -103,11 +105,12 @@ export default function Login() {
           import.meta.env.VITE_EMAILJS_USER_ID
         );
         toast.success("OTP sent successfully");
-
+        
         // Save the generated OTP for verification
         setGeneratedOtp(otpCode.toString());
         setOtpSent(true);
         setEmailToMask(maskedEmail(email));
+        
       } else {
         // if isOtpEnable is false if will proceed here
         toast.success("Login successful");

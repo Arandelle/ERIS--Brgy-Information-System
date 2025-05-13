@@ -16,14 +16,15 @@ const OtpForm = ({handleVerify, emailToMask, setOtpInput, otpInput}) => {
       </h1>
       <div className="flex flex-row space-x-2 ">
         <input
-          class=""
+          class="border-0 rounded-md uppercase text-sm w-full shadow-md"
           type="text"
-          placeholder="Enter OTP"
+          placeholder="1 2 3 4 5 6"
           value={otpInput}
           onChange={(e) => setOtpInput(e.target.value)}
+          maxLength={6}
         />
         <button
-          className="w-full bg-blue-800 text-white text-bold py-2 px-4 rounded"
+          className="bg-blue-800 text-white text-bold py-2 px-4 rounded shadow-md"
           type="submit"
         >
           Verify
