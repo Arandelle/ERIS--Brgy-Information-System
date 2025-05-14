@@ -7,7 +7,7 @@ import {
   sendPasswordResetEmail,
   signOut,
 } from "firebase/auth";
-import { get,ref } from "firebase/database";
+import { get, ref } from "firebase/database";
 import { auth, database } from "../../services/firebaseConfig";
 import Modal from "../../components/ReusableComponents/Modal";
 import icons from "../../assets/icons/Icons";
@@ -71,7 +71,6 @@ export default function Login() {
     setForgotPass(false);
   };
 
-
   const handleSubmitWithOtp = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -84,10 +83,35 @@ export default function Login() {
       );
       const user = userCredentials.user; // Get the user object from the credentials
 
-      if (user) {
-        // check the systemData, if isOtpEnabled is true proceed to send otp else login
-        if(systemData?.isOtpEnabled){
-        const savedId = auth.currentUser?.uid;
+      if (!user.emailVerified) {
+        await signOut(auth);
+        toast.error("Please verify your email first");
+        navigate("/dashboard");
+        return;
+      }
+
+      // first fetch directly the admin using the uid to get the object and check if it's isLocked
+      const adminRef = ref(database, `admins/${user.uid}`);
+      const snapshot = await get(adminRef);
+
+      if (snapshot.exists()) {
+        const adminData = snapshot.val();
+        if (adminData.isLocked) {
+          await signOut(auth); // Logout
+          toast.error("Your account is locked.");
+          setLoading(false);
+          return;
+        }
+      } else {
+        toast.error("Admin data not found.");
+        await signOut(auth);
+        setLoading(false);
+        return;
+      }
+
+      // proceed if not locked
+      // check the systemData, if isOtpEnabled is true proceed to send otp else login
+      if (systemData?.isOtpEnabled) {
         // Generate OTP and send it to the user's email
         await signOut(auth); // sign out the user before sending the otp
         await logAuditTrail("Logout", null, savedId);
@@ -105,19 +129,17 @@ export default function Login() {
           import.meta.env.VITE_EMAILJS_USER_ID
         );
         toast.success("OTP sent successfully");
-        
+
         // Save the generated OTP for verification
         setGeneratedOtp(otpCode.toString());
         setOtpSent(true);
         setEmailToMask(maskedEmail(email));
-        
       } else {
         // if isOtpEnable is false if will proceed here
         toast.success("Login successful");
         navigate("/dashboard");
         setLoading(false);
         await logAuditTrail("Logged in");
-      }
       }
       setLoading(false);
     } catch (error) {
@@ -127,7 +149,7 @@ export default function Login() {
       setResetPassSent(false);
     }
   };
-   
+
   // verify the otp sent to the email
   const handleVerify = async (event) => {
     event.preventDefault();
@@ -201,74 +223,76 @@ export default function Login() {
           }}
         ></div>
         {!otpSent && (
-          <div
-          className={`w-full max-w-md`}
-        >
-          <form action="" onSubmit={handleSubmitWithOtp} className={`space-y-4`}>
-            <div className="space-y-2">
-              <h1 className="text-2xl text-center dark:text-gray-300">
-                Welcome Admin! Login your Account.
-              </h1>
+          <div className={`w-full max-w-md`}>
+            <form
+              action=""
+              onSubmit={handleSubmitWithOtp}
+              className={`space-y-4`}
+            >
+              <div className="space-y-2">
+                <h1 className="text-2xl text-center dark:text-gray-300">
+                  Welcome Admin! Login your Account.
+                </h1>
 
-              {resetPassSent && (
-                <div className="place-self-center m-4">
-                  <p className="p-2 text-red-600 dark:text-gray-300 whitespace-nowrap">
-                    We have sent a reset password link to your email{" "}
-                    <span className="italic font-bold">{emailToMask}</span>
-                  </p>
-                </div>
-              )}
-              <InputStyle
-                label={"Email: "}
-                iconName={"email"}
-                type={"email"}
-                placeholder={"admin@example.com"}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="dark:text-gray-400">
-                  Password:
-                </label>
-                <a
-                  href="#"
-                  className="text-sm underline dark:text-gray-400"
-                  onClick={handleForgotPass}
-                >
-                  Forgot Password?
-                </a>
+                {resetPassSent && (
+                  <div className="place-self-center m-4">
+                    <p className="p-2 text-red-600 dark:text-gray-300 whitespace-nowrap">
+                      We have sent a reset password link to your email{" "}
+                      <span className="italic font-bold">{emailToMask}</span>
+                    </p>
+                  </div>
+                )}
+                <InputStyle
+                  label={"Email: "}
+                  iconName={"email"}
+                  type={"email"}
+                  placeholder={"admin@example.com"}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
-              <InputStyle
-                type={"password"}
-                iconName={"lock"}
-                placeholder={"Enter your password"}
-                value={password}
-                onChange={(e) => setPass(e.target.value)}
-              />
-            </div>
-            <div>
-              <button
-                className="flex flex-row space-x-2 items-center justify-center w-full bg-blue-800 dark:bg-blue-500 text-white dark:text-gray-100 text-bold p-2 rounded shadow-lg"
-                type="submit"
-              >
-                <icons.login fontSize="small" />
-                <p>Login</p>
-              </button>
-            </div>
-          </form>
-        </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="password" className="dark:text-gray-400">
+                    Password:
+                  </label>
+                  <a
+                    href="#"
+                    className="text-sm underline dark:text-gray-400"
+                    onClick={handleForgotPass}
+                  >
+                    Forgot Password?
+                  </a>
+                </div>
+                <InputStyle
+                  type={"password"}
+                  iconName={"lock"}
+                  placeholder={"Enter your password"}
+                  value={password}
+                  onChange={(e) => setPass(e.target.value)}
+                />
+              </div>
+              <div>
+                <button
+                  className="flex flex-row space-x-2 items-center justify-center w-full bg-blue-800 dark:bg-blue-500 text-white dark:text-gray-100 text-bold p-2 rounded shadow-lg"
+                  type="submit"
+                >
+                  <icons.login fontSize="small" />
+                  <p>Login</p>
+                </button>
+              </div>
+            </form>
+          </div>
         )}
-              {/*Input for verfication  */}
-      {otpSent && (
-        <OtpForm
-          handleVerify={handleVerify}
-          emailToMask={emailToMask}
-          setOtpInput={setOtpInput}
-          otpInput={otpInput}
-        />
-      )}
+        {/*Input for verfication  */}
+        {otpSent && (
+          <OtpForm
+            handleVerify={handleVerify}
+            emailToMask={emailToMask}
+            setOtpInput={setOtpInput}
+            otpInput={otpInput}
+          />
+        )}
       </main>
       {forgotPass && (
         <Modal
