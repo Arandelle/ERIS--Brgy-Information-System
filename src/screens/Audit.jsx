@@ -96,6 +96,7 @@ const Audit = () => {
     hotline,
     clearance,
     template,
+    emergency
   ]);
 
   // After filtering by search query, further filter by action type
