@@ -341,7 +341,7 @@ export default function AccountDeletion() {
           {/* Footer */}
           <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
             <p className="text-sm text-center text-gray-500">
-              Need help? Contact our support team at <a href="mailto:topaguintsarandell@gmail.com" className="text-blue-600 hover:underline">topaguintsarandell@gmail.com</a>
+              Need help? Contact our support team at <a href="mailto:eris-support@gmail.com" className="text-blue-600 hover:underline">eris-support@gmail.com</a>
             </p>
           </div>
         </div>

@@ -39,7 +39,7 @@ const App = () => {
   const { data: emergencyRequest } = useFetchData(`emergencyRequest`);
   const [notifPrevLength, setNotifPrevLength] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
-
+  
   // Check if user is logged in
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -100,7 +100,14 @@ const App = () => {
         <Spinner loading={loading} />
       </div>
     );
-  }
+  };
+
+  const origin = window.location.origin;
+  const isErisDomain =
+    origin === "https://eris-admin.com" ||
+    origin === "https://www.eris-admin.com" || // include www if used
+    origin === "http://localhost:5173"; 
+
 
   return (
     <Router>
@@ -110,19 +117,41 @@ const App = () => {
           {showAlert && user && isAdmin && <AlertUi />}
           <Routes>
             <Route path="*" element={<NotFound />} />
-            <Route path="/privacy-policy" element={<TermsAndPrivacy isAdmin={Boolean(user && isAdmin)} TermsOrPrivacy="privacy-policy"/>} />
-            <Route path="/terms-of-service" element={<TermsAndPrivacy isAdmin={Boolean(user && isAdmin)} TermsOrPrivacy="terms-of-service"/>} />
+             <Route
+              path="/"
+              element={
+                user && isAdmin ? (
+                  <Navigate to="/dashboard" />
+                ) : isErisDomain ? (
+                  <Login />
+                ) : (
+                  <NotFound />
+                )
+              }
+            />
+            <Route
+              path="/privacy-policy"
+              element={
+                <TermsAndPrivacy
+                  isAdmin={Boolean(user && isAdmin)}
+                  TermsOrPrivacy="privacy-policy"
+                />
+              }
+            />
+            <Route
+              path="/terms-of-service"
+              element={
+                <TermsAndPrivacy
+                  isAdmin={Boolean(user && isAdmin)}
+                  TermsOrPrivacy="terms-of-service"
+                />
+              }
+            />
             <Route path="/deletion-account" element={<DeleteAccount />} />
             <Route
               path="/admin"
               element={
                 !user || !isAdmin ? <Login /> : <Navigate to="/dashboard" />
-              }
-            />
-            <Route
-              path="/"
-              element={
-                user && isAdmin ? <Navigate to="/dashboard" /> : <NotFound />
               }
             />
             <Route

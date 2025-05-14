@@ -127,6 +127,8 @@ const Setting = () => {
                     isOtpEnabled={systemState.isOtpEnabled}
                   />
                 </div>
+
+                <div>Delete My Account</div>
               </section>
             </section>
           </div>
