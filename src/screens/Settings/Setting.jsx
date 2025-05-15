@@ -16,8 +16,10 @@ import SystemSettings from "./SystemSettings";
 import useSystemState from "./useSystemState";
 import ProfileSettings from "./ProfileSettings";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
+import { useNavigate } from "react-router-dom";
 
 const Setting = () => {
+  const navigate = useNavigate();
   const { isModalOpen, currentMedia, openModal, closeModal } = useViewMedia();
   const { systemState,loading, setLoading } = useSystemState();
   const {systemData} = useFetchSystemData();
@@ -127,8 +129,23 @@ const Setting = () => {
                     isOtpEnabled={systemState.isOtpEnabled}
                   />
                 </div>
+              </section>
+            </section>
 
-                <div>Delete My Account</div>
+            <section className="border-b py-2 space-y-1">
+              <p className="text-lg font-bold text-red-600 dark:text-red-400">
+                Delete Account
+              </p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
+                Once you delete your account, there is no going back. Please be certain.
+              </p>
+              <section className="flex lg:p-8">
+                <button
+                  className={`text-red-700 bg-gray-100 border border-gray-300 rounded-md py-1 px-4 hover:bg-red-700 hover:text-white`}
+                  onClick={() => navigate("/deletion-account")}
+                >
+                  Delete my account
+                </button>
               </section>
             </section>
           </div>
