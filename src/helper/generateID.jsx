@@ -9,6 +9,7 @@ export async function generateUniqueBarangayID(type) {
       hotlines: "HL",
       certification: "CT",
       templates: "TP",
+      anonymous: "AN"
     }
     const prefix = prefixType[type];
     const date = new Date();
