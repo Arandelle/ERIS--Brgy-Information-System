@@ -32,6 +32,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LoginIcon from '@mui/icons-material/Login';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 
 const icons = {
     email: EmailIcon,
@@ -67,7 +68,8 @@ const icons = {
     document: DescriptionIcon,
     print: PrintIcon,
     cancel: CancelIcon,
-    chart: BarChartIcon
+    chart: BarChartIcon,
+    anonymous: PersonSearchIcon
 }
 
 export default icons;

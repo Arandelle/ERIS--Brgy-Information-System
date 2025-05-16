@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 
 const usePagination = (data) => {
+  
   const sortedData = useMemo(() => {
     const sortedStatus = {
       "resolved": 1,
@@ -13,12 +14,18 @@ const usePagination = (data) => {
       // Get status priority, default to -1 if status is missing
       const statusA = sortedStatus[a.status] ?? -1;
       const statusB = sortedStatus[b.status] ?? -1;
+
+       // Compare status priority
+      const statusDiff = statusB - statusA;
+      if (statusDiff !== 0) return statusDiff; // Prioritize status order
+      
+      if (a.anonymized && !b.anonymized) return 1;
+      if (!a.anonymized && b.anonymized) return -1;
+      
       if (a.isLocked && !b.isLocked) return 1;  // a is locked, b is not → a goes below
       if (!a.isLocked && b.isLocked) return -1;
 
-      // Compare status priority
-      const statusDiff = statusB - statusA;
-      if (statusDiff !== 0) return statusDiff; // Prioritize status order
+      
 
       // If status is the same or missing, sort by timestamp (latest first)
       return new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt);

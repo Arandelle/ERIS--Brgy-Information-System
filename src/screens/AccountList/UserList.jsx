@@ -121,6 +121,12 @@ const UserList = ({ data }) => {
   const renderRow = (user) => {
 
     const isLocked = user.isLocked;
+    const isAnonymized = user.anonymized;
+    const FallbackImage = icons.anonymous;
+
+    const displayValue = (value, isAnonymized = false) => {
+      return value ? value : isAnonymized ? "Anonymized" : "----"
+    }
 
     return (
       <>
@@ -134,22 +140,29 @@ const UserList = ({ data }) => {
           </div>
         </td>
         <th className="flex items-center px-2 py-2 sm:px-4 sm:py-4 text-gray-900 whitespace-nowrap dark:text-white">
+        {!isAnonymized ? (
           <img
             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full cursor-pointer"
             src={user.fileUrl || user?.img}
             alt="anonymous"
             onClick={() => openModal(user.fileUrl || user.img)}
           />
+        ) : (
+          <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-100">
+            <FallbackImage className="text-dark"/>
+          </div>
+        )}
+          
           <div className="ps-2 sm:ps-3 relative">
-            <p>{user.fullname ?? "---"}</p>
+            <p>{displayValue(user.fullname, isAnonymized)}</p>
             <p className="font-normal text-gray-500 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[200px]">
               {user.email}
             </p>
           </div>
         </th>
         <TableData data={user.customId} />
-        <TableData data={user.gender} />
-        <TableData data={user.mobileNum} />
+        <TableData data={displayValue(user.gender, isAnonymized)} />
+        <TableData data={displayValue(user.mobileNum, isAnonymized)} />
         <TableData data={formatDate(user.createdAt)} />
         <td className="flex-1">
           <div className="flex items-center justify-center space-x-2">
