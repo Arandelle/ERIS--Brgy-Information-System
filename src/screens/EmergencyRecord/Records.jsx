@@ -43,6 +43,8 @@ const Records = () => {
       userID: user?.customId || "--",
       responderID: responder?.customId || "--",
       responderImage: responder?.img || "",
+      isUserAnonymized : user?.anonymized,
+      isResponderAnonymized : responder?.anonymized,
     };
   });
 
@@ -98,6 +100,10 @@ const Records = () => {
 
     const defaultStyle = "text-gray-500";
 
+     const displayValue = (value, isAnonymized = false) => {
+        return value && !isAnonymized ? value : isAnonymized ? "Anonymized" : "----";
+      };
+
     const RowDataStyle = ({ data, status }) => {
       const statusStyle = getStatusStyles[data] || defaultStyle;
 
@@ -115,18 +121,20 @@ const Records = () => {
     return (
       <>
         <RowDataStyle data={recordDetails?.emergencyId} />
-        <RowDataStyle data={recordDetails?.userName || recordDetails?.fullname} />
-        <RowDataStyle data={recordDetails?.location?.geoCodeLocation} />
+        <RowDataStyle
+          data={displayValue(recordDetails?.userName || recordDetails?.fullname, recordDetails.isUserAnonymized)}
+        />
+        <RowDataStyle data={displayValue(recordDetails?.location?.geoCodeLocation, recordDetails.isUserAnonymized)} />
         <RowDataStyle data={formatDateWithTime(recordDetails?.date)} />
         <RowDataStyle data={recordDetails?.status} status />
         <td className="px-6 py-4">
           <Tooltip
-            title={recordDetails?.responderName || "No responder assigned"}
+            title={displayValue(recordDetails?.responderName, recordDetails.isResponderAnonymized) || "No responder assigned"}
             placement="top"
             arrow
           >
             <div className="flex items-center justify-center">
-              {recordDetails?.responderImage ? (
+              {recordDetails?.responderImage && !recordDetails.isResponderAnonymized ? (
                 <img
                   src={recordDetails.responderImage}
                   alt="responder"
@@ -210,9 +218,7 @@ const Records = () => {
           )}
 
           {addRecordModal && (
-            <AddRecordModal 
-              setAddRecordModal={setAddRecordModal}
-            />
+            <AddRecordModal setAddRecordModal={setAddRecordModal} />
           )}
         </>
       }

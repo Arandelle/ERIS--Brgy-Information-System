@@ -125,7 +125,7 @@ const UserList = ({ data }) => {
     const FallbackImage = icons.anonymous;
 
     const displayValue = (value, isAnonymized = false) => {
-      return value ? value : isAnonymized ? "Anonymized" : "----"
+      return value && !isAnonymized ? value : isAnonymized ? "Anonymized" : "----"
     }
 
     return (

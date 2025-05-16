@@ -28,7 +28,7 @@ const ViewUserModal = ({ userToViewInfo, handleCloseViewUser }) => {
   };
 
   const displayValue = (value, isAnonymized = false) => {
-    return value ? value : isAnonymized ? "Anonymized" : "----";
+    return value && !isAnonymized ? value : isAnonymized ? "Anonymized" : "----";
   };
 
   const FallbackImage = icons.anonymous;

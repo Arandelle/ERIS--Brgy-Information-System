@@ -2,32 +2,35 @@ import React from "react";
 import { formatDateWithTime } from "../../helper/FormatDate";
 import Modal from "../../components/ReusableComponents/Modal";
 
-const ViewModal = ({
-    isView,
-    setIsView,
-    setSearchParams,
-    recordDetails
-}) => {
+const ViewModal = ({ isView, setIsView, setSearchParams, recordDetails }) => {
 
-    const RenderDetails = ({ data }) => {
-        const filteredData = data.filter(
-          ({ value }) => value != null && value !== ""
-        );
-        if (filteredData.length === 0) return null;
-    
-        return (
-          <div
-            className={`bg-gray-100 dark:bg-gray-800 p-2 text-sm text-gray-500 dark:text-gray-300 border-l-2 border-l-gray-500 dark:border-gray-300 rounded-r-md space-y-1`}
-          >
-            {filteredData.map(({ label, value }, index) => (
-              <div key={index} className="flex flex-row">
-                <p className="w-1/2">{label}</p>
-                <p className="flex-1 font-bold">{value}</p>
-              </div>
-            ))}
+    const displayValue = (value, isAnonymized = false) => {
+      return value && !isAnonymized
+        ? value
+        : isAnonymized
+        ? "Anonymized"
+        : "----";
+    };
+
+  const RenderDetails = ({ data }) => {
+    const filteredData = data.filter(
+      ({ value }) => value != null && value !== ""
+    );
+    if (filteredData.length === 0) return null;
+
+    return (
+      <div
+        className={`bg-gray-100 dark:bg-gray-800 p-2 text-sm text-gray-500 dark:text-gray-300 border-l-2 border-l-gray-500 dark:border-gray-300 rounded-r-md space-y-1`}
+      >
+        {filteredData.map(({ label, value }, index) => (
+          <div key={index} className="flex flex-row">
+            <p className="w-1/2">{label}</p>
+            <p className="flex-1 font-bold">{value}</p>
           </div>
-        );
-      };
+        ))}
+      </div>
+    );
+  };
 
   return (
     <Modal
@@ -61,17 +64,19 @@ const ViewModal = ({
             data={[
               {
                 label: "Sender Name: ",
-                value: recordDetails?.userName || "--",
+                value: displayValue(recordDetails?.userName, recordDetails?.isUserAnonymized) || "--",
               },
               {
                 label: "Responder Name: ",
-                value: recordDetails?.responderName,
+                value: displayValue(recordDetails?.responderName, recordDetails?.isResponderAnonymized),
               },
               {
                 label: "Sender Location",
                 value:
+                  displayValue(
                   recordDetails?.senderLocation ||
-                  recordDetails?.location?.geoCodeLocation || "--",
+                  recordDetails?.location?.geoCodeLocation ||
+                  "--", recordDetails?.isUserAnonymized),
               },
             ]}
           />
@@ -95,17 +100,15 @@ const ViewModal = ({
             data={[
               {
                 label: "Emergency Location: ",
-                value:
-                  recordDetails?.location?.geoCodeLocation ||
-                  "--",
+                value: displayValue(recordDetails?.location?.geoCodeLocation || "--", recordDetails?.isUserAnonymized),
               },
               {
                 label: "Latitude: ",
-                value: recordDetails?.location?.latitude || "--",
+                value: displayValue(recordDetails?.location?.latitude || "--", recordDetails?.isUserAnonymized)
               },
               {
                 label: "Longitude",
-                value: recordDetails?.location?.longitude || "--",
+                value: displayValue(recordDetails?.location?.longitude || "--", recordDetails?.isUserAnonymized)
               },
             ]}
           />
@@ -113,11 +116,14 @@ const ViewModal = ({
             data={[
               {
                 label: "Description",
-                value: recordDetails?.description || "--",
+                value: displayValue(recordDetails?.description || "--", recordDetails?.isUserAnonymized)
               },
               {
                 label: "Response Message",
-                value: recordDetails?.messageLog || recordDetails?.reportReason || "--",
+                value:
+                  displayValue(recordDetails?.messageLog ||
+                  recordDetails?.reportReason ||
+                  "--", recordDetails?.isResponderAnonymized)
               },
             ]}
           />
