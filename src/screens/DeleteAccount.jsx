@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../services/firebaseConfig";
-import { getDatabase, ref, get, update } from "firebase/database";
-import handleEditData from "../hooks/handleEditData";
+import { auth, database } from "../services/firebaseConfig";
+import { getDatabase, ref, get, set } from "firebase/database";
 import { generateUniqueBarangayID } from "../helper/generateID";
-import logAuditTrail from "../hooks/useAuditTrail";
 
 export default function AccountDeletion() {
   const [step, setStep] = useState(1);
@@ -53,30 +51,28 @@ export default function AccountDeletion() {
 
   // Determine the user type by checking different collections
   const determineUserType = async (userId) => {
-    const db = getDatabase();
     
     try {
       // Check if user exists in admins collection
-      const adminRef = ref(db, `admins/${userId}`);
+      const adminRef = ref(database, `admins/${userId}`);
       const adminSnapshot = await get(adminRef);
-      if (adminSnapshot.exists()) return 'admins';
+      if (adminSnapshot.exists()) return 'admin';
       
       // Check if user exists in responders collection
-      const responderRef = ref(db, `responders/${userId}`);
+      const responderRef = ref(database, `responders/${userId}`);
       const responderSnapshot = await get(responderRef);
-      if (responderSnapshot.exists()) return 'responders';
+      if (responderSnapshot.exists()) return 'responder';
       
       // Default to regular user
-      return 'users';
+      return 'user';
     } catch (error) {
       console.error('Error determining user type:', error);
-      return 'users'; // Default to user type if error occurs
+      return 'user'; // Default to user type if error occurs
     }
   };
 
   // Function to anonymize user data
   const anonymizeUserData = async (userId, userType) => {
-    const db = getDatabase();
     
     // Generate a anonymized ID with timestamp to ensure uniqueness
     const anonymousId = await generateUniqueBarangayID("anonymous");
@@ -85,49 +81,42 @@ export default function AccountDeletion() {
       // Determine the path based on user type
       let dataPath;
       switch(userType) {
-        case 'admins':
+        case 'admin':
           dataPath = `admins/${userId}`;
           break;
-        case 'responders':
+        case 'responder':
           dataPath = `responders/${userId}`;
           break;
-        case 'users':
+        case 'user':
         default:
           dataPath = `users/${userId}`;
           break;
       }
 
       // Get current user data
-      const userRef = ref(db, dataPath);
+      const userRef = ref(database, dataPath);
       const snapshot = await get(userRef);
       
       if (snapshot.exists()) {
         const userData = snapshot.val();
         
-        // Create anonymized version of the data
+        // Create minimal anonymized version - only keep essential non-PII data
         const anonymizedData = {
-          ...userData,
-          // Replace PII with anonymized values
-          email: `${anonymousId}@eris.com`,
-          img: null,
-          mobileNum: null,
-          fullname: `Anonymized`,
-          address: 'Anonymous Address',
-          location: null,
-          gender: "Anonymized gender",
-          age: "Anonymized age",
-
-          // Keep any non-PII data like created timestamps, preferences, etc.
+          // Keep only necessary non-PII fields
+          customId: userData.customId || anonymousId,
+          createdAt: userData.createdAt || new Date().toISOString(),
+          timestamp: userData.timestamp || Date.now(),
+          id: userId,
           
-          // Add metadata about anonymization
+          // Add anonymization metadata
+          email: `${anonymousId}@eris.com`,
           anonymized: true,
           anonymizedAt: new Date().toISOString(),
           deletionReason: reason,
-          originalUserId: userId
         };
 
-        // Use your existing handleEditData function to update the record
-        await handleEditData(userId, anonymizedData, userType);
+        // overide all data to new data
+        await set(userRef, anonymizedData);
         
         console.log(`User data anonymized for ${userType} with ID: ${userId}`);
         return true;
@@ -163,9 +152,8 @@ export default function AccountDeletion() {
  
       // Delete the Firebase auth account
       await auth.currentUser.delete();
-      await logAuditTrail("Deleted an account", userId);
-      setSuccess(true);
 
+      setSuccess(true);
     } catch (err) {
       console.error("Account deletion error:", err);
       
@@ -224,7 +212,7 @@ export default function AccountDeletion() {
               </p>
               <div className="mt-6 text-center">
                 <a
-                  href="/deletion-account"
+                  href="/"
                   className="text-blue-600 hover:text-blue-800 text-sm"
                 >
                   Return to Home Page
@@ -345,10 +333,10 @@ export default function AccountDeletion() {
                     </h3>
                     <ul className="list-disc pl-5 space-y-1">
                       <li>
-                        All your personal information will be anonymized
+                        Most of your personal information will be removed
                       </li>
-                      <li>Your emergency reports history will be anonymized</li>
-                      <li>Your certificate requests will be deleted</li>
+                      <li>Only minimal anonymous data will be retained</li>
+                      <li>Your account login will be permanently deleted</li>
                       <li>You won't be able to recover your account</li>
                     </ul>
                   </div>
@@ -453,10 +441,10 @@ export default function AccountDeletion() {
                 </p>
 
                 <ul className="list-disc pl-5 space-y-2 text-gray-700 mb-6">
-                  <li>Anonymize your personal information in our database</li>
-                  <li>Remove your account credentials</li>
-                  <li>Anonymize any emergency reports you've submitted</li>
-                  <li>Delete your certificate requests and history</li>
+                  <li>Remove most of your personal data from our database</li>
+                  <li>Keep only minimal statistical data in anonymous form</li>
+                  <li>Delete your account credentials permanently</li>
+                  <li>Remove your certificate requests and history</li>
                 </ul>
 
                 <div className="mt-6 flex justify-center">
