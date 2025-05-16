@@ -87,6 +87,18 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
     setIsEditing(false);
   };
 
+  const addSection = () =>{
+    const updatedSection = [...editingSections];
+    updatedSection.push({
+      id: "New section",
+      title: "New Section",
+      content: "Update this",
+      items: [],
+      footer: ""
+    });
+    setEditingSections(updatedSection);
+  }
+
   const updateSectionTitle = (index, newTitle) => {
     const updated = [...editingSections];
     updated[index].title = newTitle;
@@ -523,6 +535,8 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
                 </div>
               )
             )}
+
+           {isEditing && <button onClick={addSection} className="bg-blue-800 text-white py-1 px-4 rounded-md">Add New Section</button> } 
           </div>
 
           {/* Footer */}
