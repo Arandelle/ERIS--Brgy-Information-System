@@ -3,6 +3,7 @@ import { ref, get, set } from "firebase/database";
 import { database } from "../services/firebaseConfig";
 import { formatDate } from "../helper/FormatDate";
 import Spinner from "../components/ReusableComponents/Spinner";
+import AskCard from "../components/ReusableComponents/AskCard";
 
 export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "privacy-policy" }) {
   const [expanded, setExpanded] = useState({});
@@ -12,6 +13,8 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
   const [editingSections, setEditingSections] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
   const [lastUpdated, setLastUpdated] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [sectionToDelete, setSectionToDelete] = useState(null);
 
   useEffect(() => {
     // Load Terms of service from Firebase when component mounts
@@ -43,7 +46,7 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
     };
 
     fetchTermsAndService();
-  }, []);
+  }, [TermsOrPrivacy]);
 
   useEffect(() => {
     // When entering edit mode, create a copy of sections for editing
@@ -87,17 +90,38 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
     setIsEditing(false);
   };
 
-  const addSection = () =>{
+  const addSection = () => {
     const updatedSection = [...editingSections];
+    const newId = `section-${Date.now()}`;
     updatedSection.push({
-      id: "New section",
+      id: newId,
       title: "New Section",
-      content: "Update this",
+      content: "",
       items: [],
       footer: ""
     });
     setEditingSections(updatedSection);
-  }
+    // Auto-expand the new section
+    setExpanded(prev => ({
+      ...prev,
+      [newId]: true
+    }));
+  };
+
+  const deleteSection = (index) => {
+    setSectionToDelete(index);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteSection = () => {
+    if (sectionToDelete !== null) {
+      const updated = [...editingSections];
+      updated.splice(sectionToDelete, 1);
+      setEditingSections(updated);
+      setShowDeleteModal(false);
+      setSectionToDelete(null);
+    }
+  };
 
   const updateSectionTitle = (index, newTitle) => {
     const updated = [...editingSections];
@@ -164,23 +188,22 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
   const addNestedContent = (sectionIndex) => {
     const updated = [...editingSections];
     if (!Array.isArray(updated[sectionIndex].content)) {
-      // Convert string content to array if needed
-      if (typeof updated[sectionIndex].content === "string") {
-        const oldContent = updated[sectionIndex].content;
-        updated[sectionIndex].content = [];
-        if (oldContent) {
-          updated[sectionIndex].content.push({
-            subtitle: "General",
-            items: [oldContent],
-          });
-        }
-      } else {
-        updated[sectionIndex].content = [];
+      // Store current string content if it exists
+      const oldContent = updated[sectionIndex].content;
+      // Initialize content as array
+      updated[sectionIndex].content = [];
+      
+      // If there was old string content, add it as first subsection
+      if (oldContent && oldContent.trim() !== "") {
+        updated[sectionIndex].content.push({
+          subtitle: "General",
+          items: [oldContent],
+        });
       }
     }
 
     updated[sectionIndex].content.push({
-      subtitle: "New Section",
+      subtitle: "New Subsection",
       items: ["New item"],
     });
 
@@ -193,17 +216,40 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
     setEditingSections(updated);
   };
 
+  const removeNestedContent = (sectionIndex, contentIndex) => {
+    const updated = [...editingSections];
+    updated[sectionIndex].content.splice(contentIndex, 1);
+    
+    // If there are no more subsections, convert content back to string
+    if (updated[sectionIndex].content.length === 0) {
+      updated[sectionIndex].content = "";
+    }
+    
+    setEditingSections(updated);
+  };
+
+  // Convert content array to string (useful when only one subsection exists)
+  const convertToSimpleContent = (sectionIndex) => {
+    const updated = [...editingSections];
+    const contentArray = updated[sectionIndex].content;
+    
+    if (Array.isArray(contentArray) && contentArray.length === 1 && contentArray[0].items.length === 1) {
+      updated[sectionIndex].content = contentArray[0].items[0];
+    }
+    
+    setEditingSections(updated);
+  };
+
   if (isLoading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center">
-        {" "}
         <Spinner loading={isLoading} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 w-full">
+      <div className="min-h-screen bg-gray-50 w-full">
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="bg-white shadow rounded-lg overflow-hidden">
           {/* Header */}
@@ -240,7 +286,7 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
               ERIS: Emergency Response and Information System
             </h1>
             <h2 className="text-xl text-white text-center mt-2">
-            {TermsOrPrivacy === "privacy-policy" ? "Privacy Policy" : "Terms of Service"}
+              {TermsOrPrivacy === "privacy-policy" ? "Privacy Policy" : "Terms of Service"}
             </h2>
           </div>
 
@@ -258,92 +304,179 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
                   key={section.id || sectionIndex}
                   className="mb-6 border-b border-gray-200 pb-4"
                 >
-                  <div
-                    className="flex justify-between items-center cursor-pointer"
-                    onClick={() => toggleSection(section.id)}
-                  >
-                    {isEditing ? (
-                      <input
-                        className="text-lg font-medium text-gray-900 border-b border-gray-300 w-full mr-4 p-1"
-                        value={section.title}
-                        onChange={(e) =>
-                          updateSectionTitle(sectionIndex, e.target.value)
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    ) : (
-                      <h3 className="text-lg font-medium text-gray-900">
-                        {section.title}
-                      </h3>
-                    )}
-                    <span className="text-blue-500">
-                      {expanded[section.id] ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
-                            clipRule="evenodd"
+                  <div className="flex justify-between items-center">
+                    <div
+                      className="flex-grow cursor-pointer"
+                      onClick={() => toggleSection(section.id)}
+                    >
+                      {isEditing ? (
+                        <div className="flex items-center">
+                          <input
+                            className="text-lg font-medium text-gray-900 border-b border-gray-300 w-full mr-4 p-1"
+                            value={section.title}
+                            onChange={(e) =>
+                              updateSectionTitle(sectionIndex, e.target.value)
+                            }
+                            onClick={(e) => e.stopPropagation()}
                           />
-                        </svg>
+                        </div>
                       ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
+                        <h3 className="text-lg font-medium text-gray-900">
+                          {section.title}
+                        </h3>
                       )}
-                    </span>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      {isEditing && (
+                        <button
+                          onClick={() => deleteSection(sectionIndex)}
+                          className="text-red-500 hover:text-red-700 mr-3"
+                          title="Delete Section"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                      )}
+                      <span 
+                        className="text-blue-500 cursor-pointer"
+                        onClick={() => toggleSection(section.id)}
+                      >
+                        {expanded[section.id] ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        )}
+                      </span>
+                    </div>
                   </div>
 
                   {(expanded[section.id] || section.id === "introduction") && (
                     <div className="mt-2 text-gray-600">
-                      {isEditing && typeof section.content === "string" ? (
-                        <textarea
-                          className="w-full p-2 border border-gray-300 rounded mt-2"
-                          value={section.content}
-                          rows={4}
-                          onChange={(e) =>
-                            updateSectionContent(sectionIndex, e.target.value)
-                          }
-                        />
-                      ) : typeof section.content === "string" ? (
+                      {/* Text content handling (either string content or converting to complex content) */}
+                      {isEditing ? (
+                        <div className="mb-4">
+                          {typeof section.content === "string" ? (
+                            <div className="flex flex-col">
+                              <textarea
+                                className="w-full p-2 border border-gray-300 rounded mt-2"
+                                value={section.content || ""}
+                                rows={4}
+                                onChange={(e) =>
+                                  updateSectionContent(sectionIndex, e.target.value)
+                                }
+                                placeholder="Enter section content (optional)"
+                              />
+                              <div className="mt-2">
+                                <button
+                                  onClick={() => addNestedContent(sectionIndex)}
+                                  className="text-blue-500 hover:text-blue-700 inline-flex items-center"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 mr-1"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                  Add Subsections Instead
+                                </button>
+                              </div>
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : typeof section.content === "string" && section.content ? (
                         <p className="mt-2">{section.content}</p>
                       ) : null}
 
+                      {/* Complex subsections with items */}
                       {Array.isArray(section.content) &&
                         section.content.map((item, contentIndex) => (
-                          <div key={contentIndex} className="mt-4">
-                            {isEditing ? (
-                              <input
-                                className="font-medium text-gray-800 border-b border-gray-300 w-full p-1"
-                                value={item.subtitle}
-                                onChange={(e) =>
-                                  updateNestedSubtitle(
-                                    sectionIndex,
-                                    contentIndex,
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : (
-                              <h4 className="font-medium text-gray-800">
-                                {item.subtitle}
-                              </h4>
-                            )}
+                          <div key={contentIndex} className="mt-4 border-l-2 border-gray-200 pl-4">
+                            <div className="flex justify-between items-center">
+                              {isEditing ? (
+                                <input
+                                  className="font-medium text-gray-800 border-b border-gray-300 w-full p-1"
+                                  value={item.subtitle}
+                                  onChange={(e) =>
+                                    updateNestedSubtitle(
+                                      sectionIndex,
+                                      contentIndex,
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              ) : (
+                                <h4 className="font-medium text-gray-800">
+                                  {item.subtitle}
+                                </h4>
+                              )}
+                              
+                              {isEditing && (
+                                <button
+                                  onClick={() => removeNestedContent(sectionIndex, contentIndex)}
+                                  className="text-red-500 hover:text-red-700 ml-2"
+                                  title="Remove Subsection"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M6 18L18 6M6 6l12 12"
+                                    />
+                                  </svg>
+                                </button>
+                              )}
+                            </div>
+                            
                             <ul className="list-disc pl-5 mt-2">
-                              {item.items.map((listItem, itemIndex) => (
+                              {item.items && item.items.map((listItem, itemIndex) => (
                                 <li key={itemIndex} className="mt-1">
                                   {isEditing ? (
                                     <div className="flex items-center">
@@ -422,7 +555,7 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
                         ))}
 
                       {isEditing && Array.isArray(section.content) && (
-                        <div className="mt-4">
+                        <div className="mt-4 flex space-x-4">
                           <button
                             onClick={() => addNestedContent(sectionIndex)}
                             className="text-blue-500 hover:text-blue-700 inline-flex items-center"
@@ -441,114 +574,194 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
                             </svg>
                             Add Subsection
                           </button>
+                          
+                          {Array.isArray(section.content) && section.content.length === 1 && (
+                            <button
+                              onClick={() => convertToSimpleContent(sectionIndex)}
+                              className="text-blue-500 hover:text-blue-700 inline-flex items-center"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4 mr-1"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                              Convert to Simple Content
+                            </button>
+                          )}
                         </div>
                       )}
 
-                      {section.items && (
-                        <ul className="list-disc pl-5 mt-2">
-                          {section.items.map((item, itemIndex) => (
-                            <li key={itemIndex} className="mt-1">
-                              {isEditing ? (
-                                <div className="flex items-center">
-                                  <input
-                                    className="flex-grow p-1 border-b border-gray-300"
-                                    value={item}
-                                    onChange={(e) =>
-                                      updateListItem(
-                                        sectionIndex,
-                                        itemIndex,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                  <button
-                                    onClick={() =>
-                                      removeListItem(sectionIndex, itemIndex)
-                                    }
-                                    className="ml-2 text-red-500 hover:text-red-700"
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="h-4 w-4"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
+                      {/* Direct items list (without subsections) */}
+                      {section.items && section.items.length > 0 && (
+                        <div className="mt-4">
+                          <ul className="list-disc pl-5 mt-2">
+                            {section.items.map((item, itemIndex) => (
+                              <li key={itemIndex} className="mt-1">
+                                {isEditing ? (
+                                  <div className="flex items-center">
+                                    <input
+                                      className="flex-grow p-1 border-b border-gray-300"
+                                      value={item}
+                                      onChange={(e) =>
+                                        updateListItem(
+                                          sectionIndex,
+                                          itemIndex,
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                    <button
+                                      onClick={() =>
+                                        removeListItem(sectionIndex, itemIndex)
+                                      }
+                                      className="ml-2 text-red-500 hover:text-red-700"
                                     >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M6 18L18 6M6 6l12 12"
-                                      />
-                                    </svg>
-                                  </button>
-                                </div>
-                              ) : (
-                                item
-                              )}
-                            </li>
-                          ))}
-                          {isEditing && (
-                            <li className="mt-2">
-                              <button
-                                onClick={() => addListItem(sectionIndex)}
-                                className="text-blue-500 hover:text-blue-700 inline-flex items-center"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-4 w-4 mr-1"
-                                  viewBox="0 0 20 20"
-                                  fill="currentColor"
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M6 18L18 6M6 6l12 12"
+                                        />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                ) : (
+                                  item
+                                )}
+                              </li>
+                            ))}
+                            {isEditing && (
+                              <li className="mt-2">
+                                <button
+                                  onClick={() => addListItem(sectionIndex)}
+                                  className="text-blue-500 hover:text-blue-700 inline-flex items-center"
                                 >
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                    clipRule="evenodd"
-                                  />
-                                </svg>
-                                Add Item
-                              </button>
-                            </li>
-                          )}
-                        </ul>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 mr-1"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                  Add Item
+                                </button>
+                              </li>
+                            )}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {/* Add items button if no items exist yet */}
+                      {isEditing && (!section.items || section.items.length === 0) && (
+                        <div className="mt-4">
+                          <button
+                            onClick={() => addListItem(sectionIndex)}
+                            className="text-blue-500 hover:text-blue-700 inline-flex items-center"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4 mr-1"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            Add List Items
+                          </button>
+                        </div>
                       )}
 
-                      {section.footer &&
-                        (isEditing ? (
-                          <div className="mt-4">
-                            <input
-                              className="w-full p-1 border-b border-gray-300 text-gray-700"
-                              value={section.footer}
-                              onChange={(e) =>
-                                updateSectionFooter(
-                                  sectionIndex,
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                        ) : (
-                          <p className="mt-4 text-gray-700">{section.footer}</p>
-                        ))}
+                      {/* Footer text */}
+                      {isEditing ? (
+                        <div className="mt-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Section Footer (optional)
+                          </label>
+                          <input
+                            className="w-full p-2 border border-gray-300 rounded"
+                            value={section.footer || ""}
+                            placeholder="Add a footer note (optional)"
+                            onChange={(e) =>
+                              updateSectionFooter(
+                                sectionIndex,
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                      ) : section.footer ? (
+                        <p className="mt-4 text-gray-700 italic">{section.footer}</p>
+                      ) : null}
                     </div>
                   )}
                 </div>
               )
             )}
 
-           {isEditing && <button onClick={addSection} className="bg-blue-800 text-white py-1 px-4 rounded-md">Add New Section</button> } 
+            {isEditing && (
+              <button 
+                onClick={addSection} 
+                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Add New Section
+              </button>
+            )} 
           </div>
 
           {/* Footer */}
           <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
             <p className="text-sm text-center text-gray-500">
-              © 2025 ERIS - Emergency Response and Information System. All
+              © {new Date().getFullYear()} ERIS - Emergency Response and Information System. All
               rights reserved.
             </p>
           </div>
         </div>
       </div>
-    </div>
+
+      {showDeleteModal &&(
+        <AskCard 
+          toggleModal={() => setShowDeleteModal(!showDeleteModal)}
+          question={"Delete this section?"}
+          confirmText={"Delete"}
+          onConfirm={confirmDeleteSection}
+        />
+      )}
+      </div>
   );
 }
 
