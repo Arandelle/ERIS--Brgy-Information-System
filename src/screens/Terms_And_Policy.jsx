@@ -4,6 +4,7 @@ import { database } from "../services/firebaseConfig";
 import { formatDate } from "../helper/FormatDate";
 import Spinner from "../components/ReusableComponents/Spinner";
 import AskCard from "../components/ReusableComponents/AskCard";
+import logAuditTrail from "../hooks/useAuditTrail";
 
 export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "privacy-policy" }) {
   const [expanded, setExpanded] = useState({});
@@ -78,6 +79,7 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
       setSections(editingSections);
       setLastUpdated(formattedDate);
       setIsEditing(false);
+      await logAuditTrail(`Update the ${TermsOrPrivacy}`);
     } catch (error) {
       console.error(`Error saving ${TermsOrPrivacy}:`, error);
       alert("Failed to save changes. Please try again.");
