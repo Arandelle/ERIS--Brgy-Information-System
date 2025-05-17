@@ -17,6 +17,8 @@ const ViewUserModal = ({ userToViewInfo, handleCloseViewUser }) => {
     createdAt,
     profileComplete,
     anonymized,
+    anonymizedAt,
+    deletionReason
   } = userToViewInfo;
   const FetchDataStyle = ({ label, data }) => {
     return (
@@ -52,7 +54,7 @@ const ViewUserModal = ({ userToViewInfo, handleCloseViewUser }) => {
                   />
                 ) : (
                   <div className="flex items-center justify-center w-24 h-24 rounded-full bg-gray-100">
-                    <FallbackImage className="text-dark"/>
+                      <FallbackImage style={{ fontSize: '48px', color: '#333' }} />
                   </div>
                 )}
               </div>
@@ -87,6 +89,18 @@ const ViewUserModal = ({ userToViewInfo, handleCloseViewUser }) => {
               label="Created on"
               data={formatDateWithTime(createdAt)}
             />
+            {anonymized && (
+              <>
+                <FetchDataStyle
+                label="Deleted On"
+                data={formatDateWithTime(anonymizedAt)}
+              />
+               <FetchDataStyle
+                label="Reason"
+                data={deletionReason}
+              />
+              </>
+            )}
             {profileComplete && (
               <p className="text-red-500">Not yet completed</p>
             )}

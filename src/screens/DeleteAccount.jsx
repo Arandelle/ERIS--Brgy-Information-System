@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, database } from "../services/firebaseConfig";
-import { getDatabase, ref, get, set } from "firebase/database";
+import { ref, get, set } from "firebase/database";
 import { generateUniqueBarangayID } from "../helper/generateID";
+import logAuditTrail from "../hooks/useAuditTrail";
 
 export default function AccountDeletion() {
   const [step, setStep] = useState(1);
@@ -149,6 +150,7 @@ export default function AccountDeletion() {
       
       // Anonymize the user data before deleting account
       await anonymizeUserData(userId, userType);
+      await logAuditTrail("Deleted its own account", userId);
  
       // Delete the Firebase auth account
       await auth.currentUser.delete();

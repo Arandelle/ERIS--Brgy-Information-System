@@ -219,7 +219,7 @@ const NotificationItem = ({
           />
         ) : (
           <div className="w-12 h-12 rounded-full flex items-center justify-center">
-              <FallbackImage fontSize="large"/>
+              <FallbackImage fontSize="large" className="text-gray-500 dark:text-gray-50"/>
           </div>
         )}
 
