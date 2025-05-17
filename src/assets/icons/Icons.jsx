@@ -33,6 +33,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import Face5Icon from '@mui/icons-material/Face5';
 
 const icons = {
     email: EmailIcon,
@@ -69,7 +70,8 @@ const icons = {
     print: PrintIcon,
     cancel: CancelIcon,
     chart: BarChartIcon,
-    anonymous: PersonSearchIcon
+    anonymous: PersonSearchIcon,
+    face: Face5Icon
 }
 
 export default icons;

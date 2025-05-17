@@ -1,5 +1,5 @@
 import { Tooltip } from "@mui/material";
-import { useState, useEffect,useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { auth, database } from "../services/firebaseConfig";
 import { ref, update } from "firebase/database";
 import { getTimeDifference } from "../helper/TimeDiff";
@@ -72,13 +72,13 @@ const Notification = () => {
     ? notifications
     : notifications.slice(0, 7);
 
-    const handleDeleteNotification = async (id) => {
-      try{
-        await handleDeleteData(id, `admins/${currentUser?.uid}/notifications`);
-      }catch(error){
-        toast.error(error)
-      }
-    } 
+  const handleDeleteNotification = async (id) => {
+    try {
+      await handleDeleteData(id, `admins/${currentUser?.uid}/notifications`);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
 
   return (
     <div>
@@ -157,12 +157,11 @@ const Notification = () => {
   );
 };
 
-
 const NotificationItem = ({
   notification,
   isNewlyOpened,
   handleNotificationClick,
-  handleDeleteNotification
+  handleDeleteNotification,
 }) => {
   const navigation = useNavigate();
   const { data: users } = useFetchData("users");
@@ -184,12 +183,18 @@ const NotificationItem = ({
     [responders, notification.userId]
   );
 
-  const image = useMemo(
-    () => userDetails?.img || responderDetails?.img || adminDetails?.img || "Unknown",
-    [userDetails, responderDetails, adminDetails]
-  );
+  const image = useMemo(() => {
+    const img = userDetails?.img || responderDetails?.img || adminDetails?.img;
+    return img && img.trim() !== "" ? img : null;
+  }, [userDetails, responderDetails, adminDetails]);
 
-  const dataType = userDetails ? "residents" : responderDetails ? "responders" : "admins";
+  const FallbackImage = icons.face
+
+  const dataType = userDetails
+    ? "residents"
+    : responderDetails
+    ? "responders"
+    : "admins";
 
   return (
     <a
@@ -206,11 +211,18 @@ const NotificationItem = ({
       }}
     >
       <div className="flex-shrink-0 relative">
-        <img
-          className="w-12 h-12 rounded-full border-2 border-primary-500"
-          src={image}
-          alt="Notification avatar"
-        />
+        {image ? (
+          <img
+            className="w-12 h-12 rounded-full border-2 border-primary-500"
+            src={image}
+            alt="Notification avatar"
+          />
+        ) : (
+          <div className="w-12 h-12 rounded-full flex items-center justify-center">
+              <FallbackImage fontSize="large"/>
+          </div>
+        )}
+
         {!notification.isSeen && !isNewlyOpened && (
           <span className="absolute top-0 right-0 block h-3 w-3 bg-red-500 rounded-full border-2 border-white dark:border-gray-700"></span>
         )}
@@ -231,7 +243,7 @@ const NotificationItem = ({
         className="absolute right-5 top-1/2 transform -translate-y-1/2 text-red-500 hover:text-red-700 hidden group-hover:block bg-white dark:bg-gray-700 p-2 rounded shadow-lg focus:outline-none"
         onClick={(e) => {
           e.stopPropagation(); // Prevent parent onClick from firing
-          handleDeleteNotification(notification.id)
+          handleDeleteNotification(notification.id);
         }}
       >
         Delete
