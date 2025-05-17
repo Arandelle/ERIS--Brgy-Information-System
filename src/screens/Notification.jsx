@@ -228,8 +228,9 @@ const NotificationItem = ({
         )}
       </div>
       <div className="pl-4 w-full">
-        <div className="text-sm mb-1 text-gray-600 dark:text-gray-300">
-          <p>{notification.message}</p>
+        <div className="mb-1 text-gray-600 dark:text-gray-300">
+          <p className="text-md font-bold">{notification.title}</p>
+          <p className="text-sm font-thin">{notification.message}</p>
         </div>
         <div className="flex justify-between text-xs text-blue-400 dark:text-gray-400">
           <span>{getTimeDifference(notification.date)}</span>

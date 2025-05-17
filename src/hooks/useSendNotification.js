@@ -16,7 +16,7 @@ const useSendNotification = () => {
       isSeen: false,
       date: new Date().toISOString(),
       timestamp: serverTimestamp(),
-      adminId: currentUser?.uid
+      adminId: newNotificationData?.userId
     };
 
     const notificationMessage = {
@@ -56,6 +56,15 @@ const useSendNotification = () => {
           message: `Welcome! Your account has been created successfully.`,
           icon: "account-check"
         }
+      },
+      deletionAccount: {
+        admins : {
+           ...mainNotificationData,
+        ...newNotificationData,
+        title: "Deletion Account",
+        message: "User deleted its account"
+        }
+       
       }
     };
 
@@ -76,7 +85,8 @@ const useSendNotification = () => {
       await push(notificationRef, notificationData);
     console.log(`${dataType}/${userId}/notifications `);
     } catch (error) {
-      toast.error("Error", "Error submitting notification");
+      toast.error(`Error submitting: ${error}`);
+      console.error(error)
     }
   };
 

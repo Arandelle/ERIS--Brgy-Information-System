@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, database } from "../services/firebaseConfig";
 import { ref, get, set } from "firebase/database";
 import { generateUniqueBarangayID } from "../helper/generateID";
 import logAuditTrail from "../hooks/useAuditTrail";
+import { useFetchData } from "../hooks/useFetchData";
+import useSendNotification from "../hooks/useSendNotification";
 
 export default function AccountDeletion() {
   const [step, setStep] = useState(1);
@@ -14,6 +16,14 @@ export default function AccountDeletion() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const {data: admins} = useFetchData("admins");
+  const {sendNotification} = useSendNotification();
+
+  useEffect(() => {
+    if(admins && admins.length > 0){
+      console.log(admins)
+    }
+  });
 
   const reasons = [
     "I don't use the app anymore",
@@ -131,49 +141,71 @@ export default function AccountDeletion() {
     }
   };
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    setError("");
+ const handleSubmit = async () => {
+  setLoading(true);
+  setError("");
 
-    try {
-      // First sign in to verify credentials
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-      const userId = user.uid;
-      
-      // Determine the user type
-      const userType = await determineUserType(userId);
-      
-      // Anonymize the user data before deleting account
-      await anonymizeUserData(userId, userType);
-      await logAuditTrail("Deleted its own account", userId);
- 
-      // Delete the Firebase auth account
-      await auth.currentUser.delete();
+  try {
+    // 1. Sign in
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    const userId = user.uid;
 
-      setSuccess(true);
-    } catch (err) {
-      console.error("Account deletion error:", err);
-      
-      if (err.code === 'auth/requires-recent-login') {
-        setError(
-          "For security reasons, please log out and log back in before deleting your account."
-        );
-      } else if (err.code === 'auth/wrong-password') {
-        setError("Incorrect password. Please try again.");
-      } else {
-        setError(
-          "Error deleting account: " + (err.message || "Please try again later")
-        );
+    // 2. Determine user type
+    const userType = await determineUserType(userId);
+
+    // ✅ 3. Fetch admins WHILE authenticated
+    const adminsSnapshot = await get(ref(database, "admins"));
+    const adminList = [];
+    const adminData = adminsSnapshot.val();
+
+    if (adminData && !adminData.anonymized) {
+      for (const id in adminData) {
+        adminList.push({ id, ...adminData[id] });
       }
-    } finally {
-      setLoading(false);
+
+      // ✅ 4. Send notifications before deleting user
+      await Promise.all(
+        adminList.map(async (admin) => {
+          const newNotification = {
+            type: userType,
+            userId: userId,
+          };
+          console.log("Sending to:", admin.id);
+          await sendNotification("admins", admin.id, "deletionAccount","admins", newNotification);
+        })
+      );
     }
-  };
+
+    // 5. Anonymize user data before deleting account
+    await anonymizeUserData(userId, userType);
+    await logAuditTrail("Deleted its own account", userId);
+
+    // 6. Delete auth account
+    await auth.currentUser.delete();
+
+    setSuccess(true);
+  } catch (err) {
+    console.error("Account deletion error:", err);
+
+    if (err.code === "auth/requires-recent-login") {
+      setError(
+        "For security reasons, please log out and log back in before deleting your account."
+      );
+    } else if (err.code === "auth/wrong-password") {
+      setError("Incorrect password. Please try again.");
+    } else {
+      setError("Error deleting account: " + (err.message || "Please try again later"));
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   if (success) {
     return (
