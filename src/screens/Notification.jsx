@@ -90,10 +90,13 @@ const Notification = () => {
         break;
 
       case "users":
-        navigation("/accounts/users");
+        navigation("/accounts/residents");
         break;
       case "admins":
         navigation("/accounts/admins");
+        break;
+      case "certification":
+        navigation("/certification");
         break;
 
       default:

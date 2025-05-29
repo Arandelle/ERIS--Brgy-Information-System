@@ -16,7 +16,7 @@ const useSendNotification = () => {
       isSeen: false,
       date: new Date().toISOString(),
       timestamp: serverTimestamp(),
-      adminId: newNotificationData?.userId
+      adminId: currentUser.uid || newNotificationData?.userId
     };
 
     const notificationMessage = {
@@ -48,7 +48,7 @@ const useSendNotification = () => {
           ...newNotificationData,
           title: "Account Created",
           message: `You have successfully created an account for ${newNotificationData?.type}`,
-          type: newNotificationData.type
+          type: newNotificationData?.type
         },
         user: {
           ...mainNotificationData,
@@ -84,7 +84,7 @@ const useSendNotification = () => {
 
       // ensure notificationData is not undefined before pushing
       await push(notificationRef, notificationData);
-    console.log(`${dataType}/${userId}/notifications `);
+    console.log(`${dataType}/${userId}/notifications`);
     } catch (error) {
       toast.error(`Error submitting: ${error}`);
       console.error(error)

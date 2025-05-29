@@ -208,12 +208,13 @@ const Certification = () => {
       };
 
       await update(dataRef, clearanceData);
-     { userData?.userId && sendNotification("users", `${userData.userId}`, "certificateStatus", status)}
+      await sendNotification("users", `${userData.userId}`, "certificateStatus", status)
       await logAuditTrail(`Certification ${capitalizeFirstLetter(status)}`, selectedId)
       toast.info(`Clearance request ${status}`);
-      console.log(userData.id, status);
+      console.log(userData.userId, status);
     } catch (error) {
       toast.error(`Error updating: ${error}`);
+      console.log(error)
     }
 
     setShowUpdateStatus({
@@ -236,12 +237,21 @@ const Certification = () => {
   };
 
 
-  const handleIfDoneOrDelete = (choice) => {
-    if(choice === "done"){
+  const handleIfDoneOrDelete = async (choice) => {
+
+    try{
+       if(choice === "done"){
       handleUpdateClearanceStatus(choice);
+      await sendNotification("users", `${userData?.userId}`, "certificateStatus", choice);
+
     } else if (choice === "Delete"){
       handleDeleteConfirm();
     }
+    }catch(error){
+      toast.error(error)
+    }
+
+   
   };
 
   const handleCloseModal = () => {
