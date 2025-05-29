@@ -48,6 +48,7 @@ const useSendNotification = () => {
           ...newNotificationData,
           title: "Account Created",
           message: `You have successfully created an account for ${newNotificationData?.type}`,
+          type: newNotificationData.type
         },
         user: {
           ...mainNotificationData,
