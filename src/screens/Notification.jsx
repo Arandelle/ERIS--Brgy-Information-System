@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import handleDeleteData from "../hooks/handleDeleteData";
 
 const Notification = () => {
-   const navigation = useNavigate();
+  const navigation = useNavigate();
   const [notificationBadge, setNotificationBadge] = useState(0);
   const [openedNotifications, setOpenedNotifications] = useState([]);
   const [viewAll, setViewAll] = useState(false);
@@ -63,42 +63,45 @@ const Notification = () => {
     setOpenedNotifications((prev) => [...prev, notification.id]);
     // Navigate based on notification type
     navigateByType(notification);
-    toggleDropdown()
+    toggleDropdown();
   };
 
   const navigateByType = (notification) => {
-  const { type, data } = notification;
+    const { type, data } = notification;
 
-  switch (type) {
-    case 'responders':
-      navigation('/accounts/responders');
-      break;
-      
-    case 'reported':
-      // Navigate to records with filter applied for reported items
-      navigation('/records');
-      break;
-      
-    case 'emergency':
-      // Navigate to specific emergency record
-      navigation('/records', { 
-        state: { 
-          viewRecord: data?.emergencyId,
-          emergencyId: data?.emergencyId 
-        } 
-      });
-      break;
-      
-    case 'users':
-      navigation('/accounts/users');
-      break;
-      
-    default:
-      // Default navigation or dashboard
-      navigation('/dashboard');
-      break;
-  }
-};
+    switch (type) {
+      case "responders":
+        navigation("/accounts/responders");
+        break;
+
+      case "reported":
+        // Navigate to records with filter applied for reported items
+        navigation("/records");
+        break;
+
+      case "emergency":
+        // Navigate to specific emergency record
+        navigation("/records", {
+          state: {
+            viewRecord: data?.emergencyId,
+            emergencyId: data?.emergencyId,
+          },
+        });
+        break;
+
+      case "users":
+        navigation("/accounts/users");
+        break;
+      case "admins":
+        navigation("/accounts/admins");
+        break;
+
+      default:
+        // Default navigation or dashboard
+        navigation("/dashboard");
+        break;
+    }
+  };
 
   const handleDropdownClose = () => {
     // Reset the badge count
@@ -225,7 +228,7 @@ const NotificationItem = ({
     return img && img.trim() !== "" ? img : null;
   }, [userDetails, responderDetails, adminDetails]);
 
-  const FallbackImage = icons.face
+  const FallbackImage = icons.face;
 
   return (
     <a
@@ -237,7 +240,7 @@ const NotificationItem = ({
           : "bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-900"
       } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200 relative`}
       onClick={() => {
-        handleNotificationClick(notification)
+        handleNotificationClick(notification);
       }}
     >
       <div className="flex-shrink-0 relative">
@@ -249,7 +252,10 @@ const NotificationItem = ({
           />
         ) : (
           <div className="w-12 h-12 rounded-full flex items-center justify-center">
-              <FallbackImage fontSize="large" className="text-gray-500 dark:text-gray-50"/>
+            <FallbackImage
+              fontSize="large"
+              className="text-gray-500 dark:text-gray-50"
+            />
           </div>
         )}
 
