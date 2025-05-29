@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import handleDeleteData from "../hooks/handleDeleteData";
 
 const Notification = () => {
+   const navigation = useNavigate();
   const [notificationBadge, setNotificationBadge] = useState(0);
   const [openedNotifications, setOpenedNotifications] = useState([]);
   const [viewAll, setViewAll] = useState(false);
@@ -48,19 +49,56 @@ const Notification = () => {
     }
   };
 
-  const handleNotificationClick = (notificationId) => {
+  const handleNotificationClick = (notification) => {
     const user = auth.currentUser;
     const notificationUpdateRef = ref(
       database,
-      `admins/${user?.uid}/notifications/${notificationId}`
+      `admins/${user?.uid}/notifications/${notification.id}`
     );
 
     // Mark the notification as seen in Firebase
     update(notificationUpdateRef, { isSeen: true });
 
     // Update the local state to reflect the notification has been seen
-    setOpenedNotifications((prev) => [...prev, notificationId]);
+    setOpenedNotifications((prev) => [...prev, notification.id]);
+    // Navigate based on notification type
+    navigateByType(notification);
+    toggleDropdown()
   };
+
+  const navigateByType = (notification) => {
+  const { type, data } = notification;
+
+  switch (type) {
+    case 'responders':
+      navigation('/accounts/responders');
+      break;
+      
+    case 'reported':
+      // Navigate to records with filter applied for reported items
+      navigation('/records');
+      break;
+      
+    case 'emergency':
+      // Navigate to specific emergency record
+      navigation('/records', { 
+        state: { 
+          viewRecord: data?.emergencyId,
+          emergencyId: data?.emergencyId 
+        } 
+      });
+      break;
+      
+    case 'users':
+      navigation('/accounts/users');
+      break;
+      
+    default:
+      // Default navigation or dashboard
+      navigation('/dashboard');
+      break;
+  }
+};
 
   const handleDropdownClose = () => {
     // Reset the badge count
@@ -163,7 +201,6 @@ const NotificationItem = ({
   handleNotificationClick,
   handleDeleteNotification,
 }) => {
-  const navigation = useNavigate();
   const { data: users } = useFetchData("users");
   const { data: responders } = useFetchData("responders");
   const { data: admins } = useFetchData("admins");
@@ -190,12 +227,6 @@ const NotificationItem = ({
 
   const FallbackImage = icons.face
 
-  const dataType = userDetails
-    ? "residents"
-    : responderDetails
-    ? "responders"
-    : "admins";
-
   return (
     <a
       key={notification.id}
@@ -206,8 +237,7 @@ const NotificationItem = ({
           : "bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-900"
       } flex items-center py-4 px-5 border-b hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-700 transition-colors duration-200 relative`}
       onClick={() => {
-        handleNotificationClick(notification.id),
-          navigation(`/accounts/${dataType}`);
+        handleNotificationClick(notification)
       }}
     >
       <div className="flex-shrink-0 relative">
