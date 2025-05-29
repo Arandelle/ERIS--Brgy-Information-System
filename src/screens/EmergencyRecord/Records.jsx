@@ -17,6 +17,7 @@ import useViewMedia from "../../hooks/useViewMedia";
 import ButtonStyle from "../../components/ReusableComponents/Button";
 import ViewModal from "./ViewModal";
 import AddRecordModal from "./AddRecordModal";
+import FilterModal from "./FilterModal"; // Import the new FilterModal
 
 const Records = () => {
   const { setSearchParams } = useSearchParam();
@@ -28,6 +29,8 @@ const Records = () => {
   const [selectedId, setSelectedId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [addRecordModal, setAddRecordModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [statusFilters, setStatusFilters] = useState([]); // New state for status filters
 
   // updated data to include the name of users and responder which not included in original list of emergencyHistory
   const updatedData = emergencyHistory.map((emergency) => {
@@ -43,8 +46,10 @@ const Records = () => {
       userID: user?.customId || "--",
       responderID: responder?.customId || "--",
       responderImage: responder?.img || "",
-      isUserAnonymized : user?.anonymized,
-      isResponderAnonymized : responder?.anonymized,
+      isUserAnonymized: user?.anonymized,
+      isResponderAnonymized: responder?.anonymized,
+      userReporter: emergency.reported && Object.values(emergency.reported)[0]?.userId === user?.id && user?.fullname,
+      responderReporter: emergency.reported && Object.values(emergency.reported)[0]?.userId === responder?.id && responder?.fullname
     };
   });
 
@@ -64,8 +69,13 @@ const Records = () => {
     "location.geoCodeLocation",
   ];
 
-  // to updated the value of filteredData which is the searchQuery
-  const filteredData = useFilteredData(updatedData, searchQuery, searchFields);
+  // First apply search filter
+  const searchFilteredData = useFilteredData(updatedData, searchQuery, searchFields);
+
+  // Then apply status filter
+  const filteredData = statusFilters.length > 0 
+    ? searchFilteredData.filter(item => statusFilters.includes(item.status))
+    : searchFilteredData;
 
   const {
     currentPage,
@@ -100,9 +110,9 @@ const Records = () => {
 
     const defaultStyle = "text-gray-500";
 
-     const displayValue = (value, isAnonymized = false) => {
-        return value && !isAnonymized ? value : isAnonymized ? "Anonymized" : "----";
-      };
+    const displayValue = (value, isAnonymized = false) => {
+      return value && !isAnonymized ? value : isAnonymized ? "Anonymized" : "----";
+    };
 
     const RowDataStyle = ({ data, status }) => {
       const statusStyle = getStatusStyles[data] || defaultStyle;
@@ -170,6 +180,24 @@ const Records = () => {
     setAddRecordModal(true);
   };
 
+  const filterData = () => {
+    setShowFilterModal(true);
+  };
+
+  // Handle applying status filters
+  const handleApplyStatusFilter = (selectedStatuses) => {
+    setStatusFilters(selectedStatuses);
+    setCurrentPage(1); // Reset to first page when filter is applied
+  };
+
+  // Get the filter button label based on active filters
+  const getFilterButtonLabel = () => {
+    if (statusFilters.length === 0) {
+      return "Filter";
+    }
+    return `Filter (${statusFilters.length})`;
+  };
+
   return (
     <HeaderAndSideBar
       content={
@@ -184,12 +212,49 @@ const Records = () => {
                   fontSize={"small"}
                   onClick={handleAddRecord}
                 />
+                <ButtonStyle
+                  icon={icons.filter}
+                  label={getFilterButtonLabel()}
+                  color={statusFilters.length > 0 ? "blue" : "gray"}
+                  fontSize={"small"}
+                  onClick={filterData}
+                />
               </>
             }
             label={"Emergency Records"}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
+          
+          {/* Show active filters indicator */}
+          {statusFilters.length > 0 && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-blue-800">
+                    Active Filters:
+                  </span>
+                  <div className="flex gap-2">
+                    {statusFilters.map((status) => (
+                      <span
+                        key={status}
+                        className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full capitalize"
+                      >
+                        {status}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleApplyStatusFilter([])}
+                  className="text-sm text-blue-600 hover:text-blue-800 underline"
+                >
+                  Clear All
+                </button>
+              </div>
+            </div>
+          )}
+
           <Table
             headers={HeaderData}
             data={currentItems}
@@ -219,6 +284,15 @@ const Records = () => {
 
           {addRecordModal && (
             <AddRecordModal setAddRecordModal={setAddRecordModal} />
+          )}
+
+          {showFilterModal && (
+            <FilterModal
+              isOpen={showFilterModal}
+              onClose={() => setShowFilterModal(false)}
+              onApplyFilter={handleApplyStatusFilter}
+              currentFilters={statusFilters}
+            />
           )}
         </>
       }

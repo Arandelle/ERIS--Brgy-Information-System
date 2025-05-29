@@ -122,11 +122,26 @@ const ViewModal = ({ isView, setIsView, setSearchParams, recordDetails }) => {
                 label: "Response Message",
                 value:
                   displayValue(recordDetails?.messageLog ||
-                  recordDetails?.reportReason ||
                   "--", recordDetails?.isResponderAnonymized)
               },
             ]}
           />
+          {recordDetails.reported &&  Object.values(recordDetails.reported)[0]?.reason && (
+            <RenderDetails
+            data={[
+              {
+                label: "Reported By: ",
+                value: displayValue(recordDetails?.userReporter || recordDetails?.responderReporter || "--", recordDetails?.isUserAnonymized)
+              },
+              {
+                label: "Reported: ",
+                value: displayValue(Object.values(recordDetails.reported)[0]?.reason || "--", recordDetails?.isUserAnonymized)
+              },
+            ]}
+          />
+          )
+          }
+          
         </div>
       }
     />
