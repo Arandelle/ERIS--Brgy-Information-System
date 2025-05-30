@@ -16,7 +16,7 @@ const useSendNotification = () => {
       isSeen: false,
       date: new Date().toISOString(),
       timestamp: serverTimestamp(),
-      adminId: currentUser.uid || newNotificationData?.userId
+      adminId: currentUser.uid || newNotificationData?.userId,
     };
 
     const notificationMessage = {
@@ -48,25 +48,32 @@ const useSendNotification = () => {
           ...newNotificationData,
           title: "Account Created",
           message: `You have successfully created an account for ${newNotificationData?.type}`,
-          type: newNotificationData?.type
+          type: newNotificationData?.type,
         },
         user: {
           ...mainNotificationData,
           ...newNotificationData,
           title: "Account Created",
           message: `Welcome! Your account has been created successfully.`,
-          icon: "account-check"
-        }
+          icon: "account-check",
+        },
       },
       deletionAccount: {
-        admins : {
-           ...mainNotificationData,
-        ...newNotificationData,
-        title: "Deletion Account",
-        message: "User deleted its account"
-        }
-       
-      }
+        admins: {
+          ...mainNotificationData,
+          ...newNotificationData,
+          title: "Deletion Account",
+          message: "User deleted its account",
+        },
+      },
+
+      incidentReportAction: {
+          ...mainNotificationData,
+          ...newNotificationData,
+          title: "Incident Report Update",
+          message: "We have an update to your incident report!",
+          icon: "bell-alert", 
+      },
     };
 
     try {
@@ -84,10 +91,10 @@ const useSendNotification = () => {
 
       // ensure notificationData is not undefined before pushing
       await push(notificationRef, notificationData);
-    console.log(`${dataType}/${userId}/notifications`);
+      console.log(`${dataType}/${userId}/notifications`);
     } catch (error) {
       toast.error(`Error submitting: ${error}`);
-      console.error(error)
+      console.error(error);
     }
   };
 

@@ -12,12 +12,14 @@ import icons from "../assets/icons/Icons";
 import { ref, update } from "firebase/database";
 import { database } from "../services/firebaseConfig";
 import { toast } from "sonner";
+import useSendNotification from "../hooks/useSendNotification";
 
 const IncidentReport = () => {
   const { data: reportedData = [] } = useFetchData("reportedData");
   const { data: user = [] } = useFetchData("users");
   const { data: responder = [] } = useFetchData("responders");
   const { data: emergency = [] } = useFetchData("emergencyRequest");
+  const {sendNotification} = useSendNotification();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedReport, setSelectedReport] = useState(null);
@@ -123,7 +125,7 @@ const IncidentReport = () => {
         status: "resolved",
         actionDate: new Date().toISOString(),
       });
-
+      await sendNotification("users", selectedReport.userId,"incidentReportAction", null, {"incidentId": selectedReport.id})
       toast.success("Action submitted successfully!");
       setShowActionModal(false);
       setActionMsg("");
