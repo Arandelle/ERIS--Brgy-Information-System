@@ -141,7 +141,7 @@ export const useSidebarData = [
   {
     title: "Emergency List",
     icon: (
-      <icons.clock className={`${style}`} />
+      <icons.medical className={`${style}`} />
     ),
     link: "/records",
   },
@@ -155,8 +155,16 @@ export const useSidebarData = [
   {
     title: "Audit Trails",
     icon: (
-      <icons.edit className={`${style}`} />
+      <icons.clock className={`${style}`} />
     ),
     link: "/audit-trails"
+  },
+   {
+    title: "Incident Report",
+    icon: (
+      <icons.report className={`${style}`} />
+    ),
+    link: "/incident-report"
   }
+
 ];

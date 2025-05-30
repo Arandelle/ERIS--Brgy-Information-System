@@ -30,6 +30,7 @@ import Audit from "./screens/Audit";
 import DeleteAccount from "./screens/DeleteAccount";
 import NotFound from "./screens/NotFound";
 import TermsAndPrivacy from "./screens/Terms_And_Policy";
+import IncidentReport from "./screens/IncidentReport";
 
 const App = () => {
   const sound = new Audio(soundFile);
@@ -229,6 +230,10 @@ const App = () => {
             <Route
               path="/audit-trails"
               element={user && isAdmin ? <Audit /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/incident-report"
+              element={user && isAdmin ? <IncidentReport /> : <Navigate to="/" />}
             />
           </Routes>
         </div>

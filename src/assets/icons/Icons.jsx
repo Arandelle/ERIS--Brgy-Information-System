@@ -34,6 +34,9 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import Face5Icon from '@mui/icons-material/Face5';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import MessageIcon from '@mui/icons-material/Message';
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 
 const icons = {
     email: EmailIcon,
@@ -71,7 +74,10 @@ const icons = {
     cancel: CancelIcon,
     chart: BarChartIcon,
     anonymous: PersonSearchIcon,
-    face: Face5Icon
+    face: Face5Icon,
+    report: ReportProblemIcon,
+    message: MessageIcon,
+    medical: MedicalServicesIcon
 }
 
 export default icons;
