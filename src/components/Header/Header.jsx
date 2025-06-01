@@ -7,6 +7,7 @@ import { Tooltip } from "@mui/material";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import icons from "../../assets/icons/Icons";
 import { useNavigate } from "react-router-dom";
+import {ChatButton} from "./ChatButton";
 
 const Header = ({ toggleSideBar, isOpen }) => {
   const navigate = useNavigate();
@@ -163,22 +164,7 @@ const Header = ({ toggleSideBar, isOpen }) => {
           </Tooltip>
 
           {/** chat feature */}
-          <Tooltip
-            title={<span className="text-sm">Show Chats</span>}
-            placement="bottom"
-            arrow
-          >
-           <button
-              onClick={() => navigate("/chats")}
-              type="button"
-              className={`p-2 mr-1 ${
-                isOpen ? "text-blue-600" : "text-gray-500"
-              } rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600`}
-            >
-              <span className="sr-only">View Chat</span>
-              <icons.message />
-            </button>
-          </Tooltip>
+         <ChatButton navigate={navigate} isOpen={isOpen} icons={icons} />
 
           {/* Theme button */}
           <Tooltip
