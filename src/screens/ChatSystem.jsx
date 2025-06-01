@@ -555,7 +555,7 @@ const ChatSystem = () => {
               </div>
             )}
           </div>
-          <TestUserChatSimulator />
+          {/* <TestUserChatSimulator /> */}
         </div>
       }
     />
