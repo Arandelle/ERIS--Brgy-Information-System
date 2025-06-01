@@ -31,6 +31,7 @@ import DeleteAccount from "./screens/DeleteAccount";
 import NotFound from "./screens/NotFound";
 import TermsAndPrivacy from "./screens/Terms_And_Policy";
 import IncidentReport from "./screens/IncidentReport";
+import ChatSystem from "./screens/ChatSystem";
 
 const App = () => {
   const sound = new Audio(soundFile);
@@ -234,6 +235,10 @@ const App = () => {
             <Route
               path="/incident-report"
               element={user && isAdmin ? <IncidentReport /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/chats"
+              element={user && isAdmin ? <ChatSystem /> : <Navigate to="/" />}
             />
           </Routes>
         </div>

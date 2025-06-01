@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Modal from "../../components/ReusableComponents/Modal";
 import { useFetchData } from "../../hooks/useFetchData";
 import ButtonStyle from "../../components/ReusableComponents/Button";
@@ -20,27 +21,49 @@ const DetailsAnnouncement = ({
   );
 
   const DetailRow = ({ label, value, isLink, isImage }) => {
-    return (
-      <div className="flex flex-row max-w-lg dark:text-gray-300">
-        <p className="flex-1 basis-1/4">{label}: </p>
+  const [showMore, setShowMore] = useState(false);
+  const maxLength = 150; // max characters to show before truncating
 
-        {isLink ? (
-          <a className="flex-1 basis-3/4 text-blue-500" href={value}>
-            {announcementDetails?.title} <icons.view />
+  const toggleShowMore = () => setShowMore((prev) => !prev);
+
+  return (
+    <div className="flex flex-col max-w-lg dark:text-gray-300 mb-3">
+      <p className="font-semibold">{label}:</p>
+      {isLink ? (
+        value ? (
+          <a className="text-blue-500" href={value} target="_blank" rel="noopener noreferrer">
+            {value} <icons.view />
           </a>
-        ) : isImage ? (
-          <p
-            className="flex-1 basis-3/4 cursor-pointer bg-gray-100 p-2 rounded-md shadow-md dark:text-gray-800"
-            onClick={() => openModal(announcementDetails?.fileUrl, announcementDetails?.fileType)}
-          >
-            {`${announcementDetails?.title}`}
-          </p>
         ) : (
-          <p className="flex-1 basis-3/4">{value}</p>
-        )}
-      </div>
-    );
-  };
+          <p>---</p>
+        )
+      ) : isImage ? (
+        <p
+          className="cursor-pointer bg-gray-100 p-2 rounded-md shadow-md dark:text-gray-800"
+          onClick={() => openModal(announcementDetails?.fileUrl, announcementDetails?.fileType)}
+        >
+          {`${announcementDetails?.title}`}
+        </p>
+      ) : (
+        <>
+          <p className="whitespace-pre-wrap">
+            {showMore || value?.length <= maxLength
+              ? value
+              : `${value?.slice(0, maxLength)}...`}
+          </p>
+          {value?.length > maxLength && (
+            <button
+              onClick={toggleShowMore}
+              className="text-sm text-blue-600 hover:underline w-fit"
+            >
+              {showMore ? "See less" : "See more"}
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
 
   return (
     <>
@@ -58,7 +81,7 @@ const DetailsAnnouncement = ({
           label={"Date"}
           value={formatDateWithTime(announcementDetails?.date)}
         />
-        <DetailRow label={"Links"} value={announcementDetails?.links} isLink />
+        <DetailRow label={announcementDetails?.links ? "Link: " : "No available link"} value={announcementDetails?.links} isLink />
   
         <DetailRow
           label={"Last Edit"}

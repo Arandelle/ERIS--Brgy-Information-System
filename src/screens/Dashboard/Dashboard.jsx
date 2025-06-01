@@ -14,7 +14,6 @@ import CertificateList from "../Certification/CertificateList";
 import { DashboardCard } from "./DashboardCard";
 import  BarChart  from "../Charts/BarChart";
 import  PieChart  from "../Charts/PieChart";
-import ChatSystem from "../ChatSystem";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -168,9 +167,7 @@ const Dashboard = () => {
               </div> 
               <div className="col-span-4 lg:col-span-2 row-span-4">
                 <PieChart />
-              </div> 
-
-              <ChatSystem />
+              </div>
             </>
           </div>
           <div className="h-svh">

@@ -27,9 +27,10 @@ import { generateUniqueBarangayID } from "../../helper/generateID";
 
 const Activities = () => {
   const { data: activity, setData: setActivity } = useFetchData("announcement");
-  const { searhParams, setSearchParams } = useSearchParam();
+  const { searchParams, setSearchParams } = useSearchParam();
   const admin = auth.currentUser;
-  const { isModalOpen, currentMedia,mediaType, openModal, closeModal } = useViewMedia();
+  const { isModalOpen, currentMedia, mediaType, openModal, closeModal } =
+    useViewMedia();
   const [postDetails, setPostDetails] = useState({
     title: "",
     description: "",
@@ -45,6 +46,7 @@ const Activities = () => {
   const [isDelete, setIsDelete] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const searchField = ["title", "description", "links"];
 
@@ -70,82 +72,118 @@ const Activities = () => {
 
   const handleModal = () => {
     setModal(!modal);
-    setPostDetails({});
+
+    // Properly reset postDetails to initial state
+    setPostDetails({
+      title: "",
+      description: "",
+      links: "",
+      date: "",
+      file: null,
+      fileType: null,
+    });
+
     setPrevImage("");
-    setIsEdit(false); // Indicating that we are adding a new announcement
-    setSelectedId(""); // Clear any selected id
-    setSearchParams(!modal ? "newAnnouncement" : {}); // clear the url params
+    setIsEdit(false);
+    setSelectedId("");
+    setSearchParams(!modal ? "newAnnouncement" : {});
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const file = e.target.files[0];
 
-    if (!file) return;
+  if (!file) return;
 
-    const fileSizeLimit = file.type.startsWith("image/")
-      ? 5 * 1024 * 1024
-      : 25 * 1024 * 1024;
-    if (file.size > fileSizeLimit) {
-      toast.warning("File size exceeds the limit.");
-      return;
-    }
-    if (file.type.startsWith("image/") || file.type.startsWith("video/")) {
-      setPostDetails({
-        ...postDetails,
-        file: file,
-        fileType: file.type.startsWith("image/") ? "image" : "video",
-      });
-      setPrevImage(URL.createObjectURL(file));
-    } else {
-      toast.error(
-        "Invalid file type or size. Please try to upload an image under 5mb"
-      );
-    }
-  };
+  // Validate file type first
+  const isImage = file.type.startsWith("image/");
+  const isVideo = file.type.startsWith("video/");
+  
+  if (!isImage && !isVideo) {
+    toast.error("Invalid file type. Please upload an image or video.");
+    return;
+  }
+
+  // Check file size based on type
+  const fileSizeLimit = isImage ? 5 * 1024 * 1024 : 25 * 1024 * 1024;
+  if (file.size > fileSizeLimit) {
+    const limitText = isImage ? "5MB" : "25MB";
+    toast.warning(`File size exceeds the ${limitText} limit.`);
+    return;
+  }
+
+  // Update postDetails with new file
+  setPostDetails({
+    ...postDetails,
+    file: file,
+    fileType: isImage ? "image" : "video",
+  });
+  
+  setPrevImage(URL.createObjectURL(file));
+};
 
   const handleAddAnnouncement = async () => {
-    const customId = await generateUniqueBarangayID("awareness");
-    const postData = {
-      ...postDetails,
-      userId: admin.uid,
-      customId,
-    };
+    setLoading(true);
+    try {
+      const customId = await generateUniqueBarangayID("awareness");
+      const postData = {
+        ...postDetails,
+        userId: admin.uid,
+        customId,
+      };
 
-    const newDocId = await handleAddData(postData, "announcement"); // get the new Id
+      const newDocId = await handleAddData(postData, "announcement"); // get the new Id
 
-    if(newDocId) {
-      await logAuditTrail("Post awareness", newDocId);
+      if (newDocId) {
+        await logAuditTrail("Post awareness", newDocId);
+      }
+
+      setPostDetails({});
+      setModal(false);
+    } catch (error) {
+      toast.warning(`Failed to post awareness ${error}`);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
-
-    setPostDetails({});
-    setModal(false);
   };
 
   const handleEditClick = (post) => {
     setSearchParams({ "edit/uid": post.id });
     setModal(true);
+
+    // Don't spread postDetails - create a fresh object
     setPostDetails({
-      ...postDetails,
       title: post.title,
       description: post.description,
       links: post.links || "",
-      fileType: post.fileType || "image"
+      date: post.date || "",
+      file: null, // Explicitly set to null
+      fileType: post.fileType || null, // Don't default to "image" if there's no file
     });
-    setPrevImage(post.fileUrl);
+
+    // Set preview image to existing image URL or empty string
+    setPrevImage(post.fileUrl || "");
     setIsEdit(true);
     setSelectedId(post.id);
     setShowDetails(false);
   };
 
   const handleEditAnnouncement = async (id) => {
-    const postData = {
-      ...postDetails,
-      userId: admin.uid,
-    };
-    await handleEditData(id, postData, "announcement");
-    await logAuditTrail("Edit a posted awareness", id);
-    setPostDetails({});
-    setModal(false);
+    setLoading(true);
+    try {
+      const postData = {
+        ...postDetails,
+        userId: admin.uid,
+      };
+      await handleEditData(id, postData, "announcement");
+      await logAuditTrail("Edit a posted awareness", id);
+      setPostDetails({});
+      setModal(false);
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteClick = (id) => {
@@ -260,6 +298,17 @@ const Activities = () => {
     );
   };
 
+  if (loading) {
+    return (
+      <HeaderAndSideBar
+        content={
+          <div className="flex items-center text-gray-500 justify-center h-svh">
+            Loading please wait...
+          </div>
+        }
+      />
+    );
+  }
   return (
     <HeaderAndSideBar
       content={
@@ -311,7 +360,11 @@ const Activities = () => {
           )}
 
           {isModalOpen && (
-            <MediaModal currentMedia={currentMedia} mediaType={mediaType} closeModal={closeModal} />
+            <MediaModal
+              currentMedia={currentMedia}
+              mediaType={mediaType}
+              closeModal={closeModal}
+            />
           )}
 
           {isDelete && (
