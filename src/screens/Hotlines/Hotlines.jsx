@@ -70,10 +70,20 @@ const Hotlines = () => {
 
   const TableData = ({ data, isMedia = false}) => {
     const nullValue = <p className="italic text-nowrap text-xs">null</p>;
+
+    const FallbackIcon = icons.call;
+
     return (
       <td className="px-2 py-2 sm:px-4 sm:py-4 text-xs sm:text-sm">
        {isMedia ? (
-          <img src={data} alt="Media" className="h-12 w-12 rounded-full border"/>
+          data ? (
+             <img src={data} alt="Hotline image fallback" className="h-12 w-12 rounded-full border"/>
+          ) : (
+            <div className="h-12 w-12 rounded-full border flex items-center justify-center text-blue-800 bg-blue-100">
+              <FallbackIcon />
+            </div>
+          )
+         
         ) : (
           <div className="truncate max-w-[100px] sm:max-w-[200px]">
           {data || nullValue}

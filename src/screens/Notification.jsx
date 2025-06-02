@@ -76,7 +76,7 @@ const Notification = () => {
 
       case "reported":
         // Navigate to records with filter applied for reported items
-        navigation("/records");
+        navigation("/incident-report");
         break;
 
       case "emergency":

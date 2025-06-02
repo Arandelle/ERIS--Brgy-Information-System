@@ -51,6 +51,7 @@ const IncidentReport = () => {
   }, [reportedData, user, responder]);
 
   const headerData = [
+    "ID",
     "Reporter",
     "Reported",
     "Reason",
@@ -66,6 +67,7 @@ const IncidentReport = () => {
     "userFullname",
     "responderFullname",
     "emergencyId",
+    "incidentID"
   ];
 
   const filteredData = useFilteredData(enrichedData, searchQuery, searchField);
@@ -173,6 +175,7 @@ const IncidentReport = () => {
 
     return (
       <>
+       <TableData data={report.incidentID} />
         <TableData data={report.userFullname} />
         <TableData data={report.responderFullname} />
         <TableData data={report.reason} />

@@ -81,6 +81,18 @@ const Setting = () => {
     }
   };
 
+  if(loading){
+      return (
+      <HeaderAndSideBar
+        content={
+          <div className="flex items-center text-gray-500 justify-center h-svh">
+            Loading please wait...
+          </div>
+        }
+      />
+    );
+  }
+
   return (
     <HeaderAndSideBar
       content={

@@ -547,10 +547,10 @@ export default function AccountDeletion() {
             <p className="text-sm text-center text-gray-500">
               Need help? Contact our support team at{" "}
               <a
-                href="mailto:eris-support@gmail.com"
+                href="mailto:helpme.eris@gmail.com"
                 className="text-blue-600 hover:underline"
               >
-                eris-support@gmail.com
+                helpme.eris@gmail.com
               </a>
             </p>
           </div>

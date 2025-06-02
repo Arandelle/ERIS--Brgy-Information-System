@@ -59,8 +59,8 @@ const ProfileModal = ({
   const hanldeUpdateProfile = async (id) => {
     setLoading(true);
     const updatedData = {
-      fileUrl: adminData.fileUrl, // get the image url from state
-      file: adminData.imageFile, // get the image file from state
+      fileUrl: adminData.fileUrl || "", // get the image url from state
+      file: adminData.imageFile || null, // get the image file from state
       fullname: adminData.fullname, // get the fullname from state
       fileType: "image"
     };
