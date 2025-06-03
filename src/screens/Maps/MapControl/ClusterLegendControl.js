@@ -20,7 +20,7 @@ export const ClusterLegendControl = ({emergencyTypeCount,selectedYear}) => {
 
       div.innerHTML = `<div class="leaflet-bar bg-white p-2 rounded-md shadow-md" style="min-width: 150px;">
       <div class="mb-2 p-1 text-center font-semibold">
-        Color Legend
+        Legend
       </div>
       ${colors
         .map(

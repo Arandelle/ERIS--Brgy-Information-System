@@ -39,12 +39,12 @@ const SystemSettings = ({ setLoading, openModal }) => {
   };
 
   const handleBrngyChange = (e) => {
-    const {value} = e.target;
+    const { value } = e.target;
     setSystemState({
       ...systemState,
-      location: value
-    })
-  }
+      location: value,
+    });
+  };
 
   // Handle image change
   const handleImageChange = (e, type) => {
@@ -104,10 +104,11 @@ const SystemSettings = ({ setLoading, openModal }) => {
         <div className="flex flex-row items-center">
           <LabelStyle label={"Barangay"} />
           <div className="flex-1 basis-1/2">
-            <select 
-            value={systemState.location}
-            onChange={(e) => handleBrngyChange(e)}
-            className="rounded-lg shadow-sm border-2 cursor-pointer border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm">
+            <select
+              value={systemState.location}
+              onChange={(e) => handleBrngyChange(e)}
+              className="rounded-lg shadow-sm border-2 cursor-pointer border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm"
+            >
               {barangayData.map((b, index) => (
                 <option key={index} value={b}>
                   {b}

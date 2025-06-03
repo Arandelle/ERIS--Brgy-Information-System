@@ -14,7 +14,7 @@ export const DisplayLayer = ({
   displayMode,
   setShowResponderList,
   setSelectedEmergency,
-  setMarkAsDoneModal
+  setMarkAsDoneModal,
 }) => {
   const map = useMap();
   const [emergencyData, setEmergencyData] = useState([]);
@@ -47,7 +47,8 @@ export const DisplayLayer = ({
         request.location &&
         request.location.latitude &&
         request.location.longitude &&
-        request.timestamp && request.status !== "reported"
+        request.timestamp &&
+        request.status !== "reported"
       ) {
         const year = new Date(request.timestamp).getFullYear();
 
@@ -117,6 +118,7 @@ export const DisplayLayer = ({
             (emergencyCounts[emergencyType] || 0) + 1;
         });
 
+        // find dominant emergency type
         let dominantType = "Unknown";
         let maxCount = 0;
 
@@ -133,17 +135,51 @@ export const DisplayLayer = ({
           crime: "#000000",
           "natural disaster": "#8e44ad",
           "public disturbance": "#f1c40f",
-          Unknown: "#6C757D",
+          Unknown: "#6C757D", // Changed from "red" to proper hex
         };
 
+        // Fixed priority order
+        const colorOrder = [
+          "fire",
+          "medical",
+          "crime",
+          "natural disaster",
+          "public disturbance",
+          "Unknown",
+        ];
+
+        // check if cluster had mixed emergency type
+        const presentTypes = Object.keys(emergencyCounts);
+        const isMixedCluster = presentTypes.length > 1;
+
+        function generateGradient(emergencyCounts, dominantType) {
+          const presentTypes = Object.keys(emergencyCounts);
+          const sortedTypes = colorOrder.filter((type) =>
+            presentTypes.includes(type)
+          );
+
+          // move dominant type to the start
+          const reorderedTypes = [
+            dominantType,
+            ...sortedTypes.filter((t) => t != dominantType),
+          ];
+
+          const colors = reorderedTypes.map((type) => typeColors[type]);
+          return `linear-gradient(45deg, ${colors.join(",")})`;
+        }
+
         const count = cluster.getChildCount();
-        const bgColor = typeColors[dominantType] || "Unknown";
+
+        // generate bg style based on cluster composition
+        const bgStyle = isMixedCluster
+          ? generateGradient(emergencyCounts, dominantType)
+          : typeColors[dominantType] || typeColors["Unknown"];
 
         return L.divIcon({
-          html: `<div style="background-color: ${bgColor}; color: white; border-radius: 50%;
-                     height: 40px; width: 40px; display: flex; align-items: center;
-                     justify-content: center; font-weight: bold; border: 2px solid white;
-                     box-shadow: 0 0 5px rgba(0,0,0,0.3);">${count}</div>`,
+          html: `<div style="background: ${bgStyle}; color: white; border-radius: 50%;
+                 height: 40px; width: 40px; display: flex; align-items: center;
+                 justify-content: center; font-weight: bold; border: 2px solid white;
+                 box-shadow: 0 0 5px rgba(0,0,0,0.3);">${count}</div>`,
           className: "",
           iconSize: L.point(40, 40),
         });
@@ -194,12 +230,17 @@ export const DisplayLayer = ({
             <span> Type: ${emergencyType}</span>
             <span> Status: ${status}</span>
             <span> Date: ${formatDateWithTime(date)}</span>
-            <span> Coordinates: ${point.lat.toFixed(4)},${point.lng.toFixed(4)}</span>
-            <span>${status === "on-going"? 
-            `<button class="bg-green-500 mt-2 p-2 rounded text-white"
+            <span> Coordinates: ${point.lat.toFixed(4)},${point.lng.toFixed(
+            4
+          )}</span>
+            <span>${
+              status === "on-going"
+                ? `<button class="bg-green-500 mt-2 p-2 rounded text-white"
              id=${emergencyId}
             >
-            Mark as Done</button>` : "" } </span>
+            Mark as Done</button>`
+                : ""
+            } </span>
           </div>`
         )
         .on("popupopen", function () {
@@ -209,14 +250,14 @@ export const DisplayLayer = ({
           // add event listener to the button after popup opens
           const button = document.getElementById(emergencyId);
 
-          if(button){
+          if (button) {
             button.addEventListener("click", () => {
               setMarkAsDoneModal({
                 done: true,
                 emergency: point.details,
                 responderId: responderId,
               });
-            })
+            });
           }
         })
         .on("popupclose", function () {
