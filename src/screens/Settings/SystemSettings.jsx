@@ -2,78 +2,77 @@ import React from "react";
 import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar";
 import useSystemState from "./useSystemState";
 import handleEditData from "../../hooks/handleEditData";
+import { barangayData } from "../../data/BarangayData";
 
-const SystemSettings = ({ setLoading, openModal}) => {
+const SystemSettings = ({ setLoading, openModal }) => {
   const { systemState, setSystemState, loading } = useSystemState();
 
-    // Update the system data
-    const handleUpdateData = async () => {
-      setLoading(true);
-  
-      // Upload the image to the storage
-      try {
-        let imageUrl = systemState.originalImageUrl; // retain the existing image url
-  
-        const updatedData = {
-          title: systemState.title,
-          file: systemState.logoImageFile,
-          fileType: "image",
-        };
-        await handleEditData("details", updatedData, "systemData");
-        console.log("Data updated in database: ", updatedData);
-  
-        setSystemState((prevState) => ({
-          ...prevState,
-          originalTitle: systemState.title,
-          originalImageUrl: imageUrl,
-          previewImage: imageUrl,
-          isModified: false,
-        }));
-        setLoading(false);
-      } catch (error) {
-        toast.error(`Error: ${error}`);
-        console.error("Error", error);
-        setLoading(false);
-      }
-    };
-  
-  // Handle title change
-  const handleTitleChange = (e) => {
-    const { value } = e.target;
-    setSystemState((prevState) => ({
-      ...prevState,
-      title: value,
-    }));
+  // Update the system data
+  const handleUpdateData = async () => {
+    setLoading(true);
+
+    // Upload the image to the storage
+    try {
+      let imageUrl = systemState.originalImageUrl; // retain the existing image url
+
+      const updatedData = {
+        location: systemState.location,
+        file: systemState.logoImageFile,
+        fileType: "image",
+      };
+      await handleEditData("details", updatedData, "systemData");
+      console.log("Data updated in database: ", updatedData);
+
+      setSystemState((prevState) => ({
+        ...prevState,
+        location: systemState.location,
+        originalImageUrl: imageUrl,
+        previewImage: imageUrl,
+        isModified: false,
+      }));
+      setLoading(false);
+    } catch (error) {
+      toast.error(`Error: ${error}`);
+      console.error("Error", error);
+      setLoading(false);
+    }
   };
 
-    // Handle image change
-    const handleImageChange = (e, type) => {
-      const file = e.target.files[0];
-      if (
-        file &&
-        file.type.startsWith("image/") &&
-        file.size <= 5 * 1024 * 1024
-      ) {
-        if (type === "logo") {
-          setSystemState((prevState) => ({
-            ...prevState,
-            logoImageFile: file,
-            previewImage: URL.createObjectURL(file),
-          }));
-        } else if (type === "profile") {
-          setAdminData({
-            ...adminData,
-            imageFile: file,
-            prevImage: URL.createObjectURL(file),
-          });
-        }
-      } else {
-        toast.error(
-          "Invalid file type or size. Please upload an image under 5MB."
-        );
+  const handleBrngyChange = (e) => {
+    const {value} = e.target;
+    setSystemState({
+      ...systemState,
+      location: value
+    })
+  }
+
+  // Handle image change
+  const handleImageChange = (e, type) => {
+    const file = e.target.files[0];
+    if (
+      file &&
+      file.type.startsWith("image/") &&
+      file.size <= 5 * 1024 * 1024
+    ) {
+      if (type === "logo") {
+        setSystemState((prevState) => ({
+          ...prevState,
+          logoImageFile: file,
+          previewImage: URL.createObjectURL(file),
+        }));
+      } else if (type === "profile") {
+        setAdminData({
+          ...adminData,
+          imageFile: file,
+          prevImage: URL.createObjectURL(file),
+        });
       }
-    };
-  
+    } else {
+      toast.error(
+        "Invalid file type or size. Please upload an image under 5MB."
+      );
+    }
+  };
 
   const LabelStyle = ({ label }) => {
     return (
@@ -103,22 +102,17 @@ const SystemSettings = ({ setLoading, openModal}) => {
       </p>
       <div className="space-y-3 py-6 px-0 lg:px-8">
         <div className="flex flex-row items-center">
-          <LabelStyle label={"Title"} />
-          <div className="flex-1 basis-1/2">
-            <input
-              type="text"
-              value={systemState?.title}
-              onChange={handleTitleChange}
-              maxLength={10}
-              className="rounded-lg shadow-sm border-2 border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm"
-            />
-          </div>
-        </div>
-        <div className="flex flex-row items-center">
           <LabelStyle label={"Barangay"} />
           <div className="flex-1 basis-1/2">
-            <select className="rounded-lg shadow-sm border-2 cursor-pointer border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm">
-              <option>Bagtas</option>
+            <select 
+            value={systemState.location}
+            onChange={(e) => handleBrngyChange(e)}
+            className="rounded-lg shadow-sm border-2 cursor-pointer border-gray-200 text-gray-800 dark:text-gray-200 dark:bg-gray-700 text-sm">
+              {barangayData.map((b, index) => (
+                <option key={index} value={b}>
+                  {b}
+                </option>
+              ))}
             </select>
           </div>
         </div>
