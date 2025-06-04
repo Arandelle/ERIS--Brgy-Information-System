@@ -4,7 +4,7 @@ import useSystemState from "./useSystemState";
 import handleEditData from "../../hooks/handleEditData";
 import { barangayData } from "../../data/BarangayData";
 
-const SystemSettings = ({ setLoading, openModal }) => {
+const SystemSettings = ({ setLoading }) => {
   const { systemState, setSystemState, loading } = useSystemState();
 
   // Update the system data
@@ -13,12 +13,8 @@ const SystemSettings = ({ setLoading, openModal }) => {
 
     // Upload the image to the storage
     try {
-      let imageUrl = systemState.originalImageUrl; // retain the existing image url
-
       const updatedData = {
         location: systemState.location,
-        file: systemState.logoImageFile,
-        fileType: "image",
       };
       await handleEditData("details", updatedData, "systemData");
       console.log("Data updated in database: ", updatedData);
@@ -26,8 +22,6 @@ const SystemSettings = ({ setLoading, openModal }) => {
       setSystemState((prevState) => ({
         ...prevState,
         location: systemState.location,
-        originalImageUrl: imageUrl,
-        previewImage: imageUrl,
         isModified: false,
       }));
       setLoading(false);
@@ -119,32 +113,6 @@ const SystemSettings = ({ setLoading, openModal }) => {
         </div>
       </div>
 
-      {/**Logo */}
-      <section className="flex flex-row items-center">
-        <div className="flex-1 basis-1/2">
-          <img
-            src={systemState.previewImage || systemState.originalImageUrl}
-            alt="System Logo"
-            className="w-24 lg:w-40 rounded-full cursor-pointer"
-            loading="lazy"
-            onClick={() => openModal(systemState.previewImage)}
-          />
-        </div>
-        <div className="flex-1 basis-1/2">
-          <label
-            htmlFor="file-upload"
-            className=" bg-gray-100 dark:text-gray-200 dark:bg-gray-700 font-medium text-sm whitespace-nowrap p-2 border rounded-lg cursor-pointer"
-          >
-            Upload Logo
-            <input
-              id="file-upload"
-              type="file"
-              className="hidden"
-              onChange={(e) => handleImageChange(e, "logo")}
-            />
-          </label>
-        </div>
-      </section>
       {/**Save Button */}
       <div className="py-4 place-self-end">
         <button

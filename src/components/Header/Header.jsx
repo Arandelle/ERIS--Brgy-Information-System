@@ -1,97 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Notification from "../../screens/Notification";
 import CustomTheme from "../../hooks/useTheme";
 import Profile from "./ProfileMenu";
 import SearchInput from "./SearchInput";
 import { Tooltip } from "@mui/material";
-import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import icons from "../../assets/icons/Icons";
 import { useNavigate } from "react-router-dom";
 import {ChatButton} from "./ChatButton";
+import ErisLogo from "../../assets/images/erisLogo.png"
 
 const Header = ({ toggleSideBar, isOpen }) => {
   const navigate = useNavigate();
-  const { systemData } = useFetchSystemData();
-
-  const [system, setSystem] = useState(() => {
-    const stored = localStorage.getItem("system");
-    return stored ? JSON.parse(stored) : {};
-  });
-
   const [theme, toggleTheme] = CustomTheme();
-  const [isMdScreen, setIsMdScreen] = useState(window.innerWidth >= 768);
-
-  const handleResize = () => {
-    setIsMdScreen(window.innerWidth >= 768);
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  // store the system data to localstorage to cache the data
-  useEffect(() => {
-    // First, try to load from localStorage on component mount
-    const cachedSystem = localStorage.getItem("system");
-
-    if (cachedSystem) {
-      const { logo, title } = JSON.parse(cachedSystem);
-
-      // Update document title from cache
-      if (title) {
-        document.title = title;
-      }
-
-      // Update favicon from cache
-      if (logo) {
-        const favicon = document.querySelector("link[rel~='icon']");
-        if (favicon) {
-          favicon.href = logo;
-        } else {
-          const newFavicon = document.createElement("link");
-          newFavicon.rel = "icon";
-          newFavicon.href = logo;
-          document.head.appendChild(newFavicon);
-        }
-      }
-
-      // Update your state if needed
-      setSystem({ logo, title });
-    }
-  }, []); // Empty dependency array to run only on mount
-
-  // Then have your existing effect to handle updates from systemData
-  useEffect(() => {
-    if (systemData) {
-      const { fileUrl, title } = systemData;
-
-      // Update the document title
-      if (title) {
-        document.title = title;
-      }
-
-      // Update the favicon dynamically
-      if (fileUrl) {
-        const favicon = document.querySelector("link[rel~='icon']");
-        if (favicon) {
-          favicon.href = fileUrl;
-        } else {
-          const newFavicon = document.createElement("link");
-          newFavicon.rel = "icon";
-          newFavicon.href = fileUrl;
-          document.head.appendChild(newFavicon);
-        }
-      }
-
-      // Cache the updated system data in localStorage
-      const updatedSystem = { logo: fileUrl, title };
-      setSystem(updatedSystem);
-      localStorage.setItem("system", JSON.stringify(updatedSystem));
-    }
-  }, [systemData]);
 
   return (
     <div className="sticky top-0 z-50 px-4 lg:px-6 w-full py-2.5 border-b border-t border-gray-300 dark:border-gray-600 dark:bg-gray-800 bg-white">
@@ -130,17 +50,13 @@ const Header = ({ toggleSideBar, isOpen }) => {
             onClick={() => navigate("/dashboard")}
             className="flex mr-4 cursor-pointer"
           >
-            {system ? (
               <img
-                src={system.logo}
+                src={ErisLogo}
                 className="mr-3 h-10 lg:h-12 p-0 hidden md:block"
-                alt="Your Logo"
+                alt="Eris Logo"
               />
-            ) : (
-              <div className="w-10 h-10 lg:h-12 bg-gray-300 animate-pulse rounded"></div>
-            )}
             <span className="self-center text-md lg:text-lg font-semibold text-gray-800 dark:text-gray-300">
-              {system?.title}
+              ERIS
             </span>
           </a>
         </div>

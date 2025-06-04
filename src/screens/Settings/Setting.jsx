@@ -117,7 +117,6 @@ const Setting = () => {
             <SystemSettings
               loading={loading}
               setLoading={setLoading}
-              openModal={openModal}
             />
 
             <section className="border-b py-2 space-y-1">

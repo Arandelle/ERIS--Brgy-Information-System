@@ -70,7 +70,6 @@ const handleEditData = async (id,data, type) => {
           },
           systemData: {
             ...dataWithDateAndTimestamp,
-            fileUrl: formattedFileUrl
           },
           announcement: {
             ...dataWithDateAndTimestamp,

@@ -8,7 +8,6 @@ const useSystemState = () => {
     originalImageUrl: "",
     location: "",
     newLocation: "",
-    logoImageFile: null,
     isOtpEnabled: true,
   });
 
@@ -19,8 +18,6 @@ const useSystemState = () => {
         ...prevState,
         location: systemData.location || "",
         newLocation: systemData.location,
-        originalImageUrl: systemData.fileUrl,
-        previewImage: systemData.fileUrl,
         isOtpEnabled: systemData.isOtpEnabled,
       }));
     }
@@ -29,10 +26,9 @@ const useSystemState = () => {
   // Derived value: check if system state is modified
   const isModified = useMemo(() => {
     return (
-      systemState.location !== systemState.newLocation ||
-      !!systemState.logoImageFile
+      systemState.location !== systemState.newLocation
     );
-  }, [systemState.location, systemState.newLocation, systemState.logoImageFile]);
+  }, [systemState.location, systemState.newLocation]);
 
   return { 
     systemState: { ...systemState, isModified }, 
