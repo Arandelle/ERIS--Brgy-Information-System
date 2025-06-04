@@ -7,11 +7,11 @@ import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import Modal from "../../components/ReusableComponents/Modal";
 import { useEffect, useState } from "react";
 
-const AnnouncementModal = ({
+const AwarenessModal = ({
   handleModal,
-  handleEditAnnouncement,
+  handleEditAwareness,
   handleImageChange,
-  handleAddAnnouncement,
+  handleAddAwareness,
   selectedId,
   postDetails,
   setPostDetails,
@@ -127,8 +127,8 @@ const AnnouncementModal = ({
                 }`}
                 onClick={
                   isEdit
-                    ? () => handleEditAnnouncement(selectedId)
-                    : handleAddAnnouncement
+                    ? () => handleEditAwareness(selectedId)
+                    : handleAddAwareness
                 }
                 disabled={!isComplete}
               >
@@ -150,4 +150,4 @@ const AnnouncementModal = ({
   );
 };
 
-export default AnnouncementModal;
+export default AwarenessModal;

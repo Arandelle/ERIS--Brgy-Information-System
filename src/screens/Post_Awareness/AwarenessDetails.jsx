@@ -8,16 +8,16 @@ import MediaModal from "../MediaModal";
 import { formatDateWithTime } from "../../helper/FormatDate";
 import useViewMedia from "../../hooks/useViewMedia";
 
-const DetailsAnnouncement = ({
+const AwarenessDetails = ({
   closeButton,
   selectedId,
   handleEditClick,
   handleDeleteClick,
 }) => {
   const { isModalOpen, currentMedia,mediaType, openModal, closeModal } = useViewMedia();
-  const { data: activity } = useFetchData("announcement");
-  const announcementDetails = activity.find(
-    (announcement) => announcement.id === selectedId
+  const { data: activity } = useFetchData("awareness");
+  const awarenessDetails = activity.find(
+    (awareness) => awareness.id === selectedId
   );
 
   const DetailRow = ({ label, value, isLink, isImage }) => {
@@ -40,9 +40,9 @@ const DetailsAnnouncement = ({
       ) : isImage ? (
         <p
           className="cursor-pointer bg-gray-100 p-2 rounded-md shadow-md dark:text-gray-800"
-          onClick={() => openModal(announcementDetails?.fileUrl, announcementDetails?.fileType)}
+          onClick={() => openModal(awarenessDetails?.fileUrl, awarenessDetails?.fileType)}
         >
-          {`${announcementDetails?.title}`}
+          {`${awarenessDetails?.title}`}
         </p>
       ) : (
         <>
@@ -69,23 +69,23 @@ const DetailsAnnouncement = ({
     <>
       <Modal closeButton={closeButton} title={"Emergency Awareness Details"}>
         <DetailRow
-          label={announcementDetails?.fileType === "image" ? "Image" : "Video"}
-          value={announcementDetails?.description}
+          label={awarenessDetails?.fileType === "image" ? "Image" : "Video"}
+          value={awarenessDetails?.description}
           isImage
         />
         <DetailRow
           label={"Description"}
-          value={announcementDetails?.description}
+          value={awarenessDetails?.description}
         />
         <DetailRow
           label={"Date"}
-          value={formatDateWithTime(announcementDetails?.date)}
+          value={formatDateWithTime(awarenessDetails?.date)}
         />
-        <DetailRow label={announcementDetails?.links ? "Link: " : "No available link"} value={announcementDetails?.links} isLink />
+        <DetailRow label={awarenessDetails?.links ? "Link: " : "No available link"} value={awarenessDetails?.links} isLink />
   
         <DetailRow
           label={"Last Edit"}
-          value={getTimeDifference(announcementDetails?.timestamp)}
+          value={getTimeDifference(awarenessDetails?.timestamp)}
         />
         <div className="space-x-4">
           <ButtonStyle
@@ -94,7 +94,7 @@ const DetailsAnnouncement = ({
             color={"green"}
             fontSize={"small"}
             onClick={() => {
-              handleEditClick(announcementDetails);
+              handleEditClick(awarenessDetails);
             }}
           />
           <ButtonStyle
@@ -103,7 +103,7 @@ const DetailsAnnouncement = ({
             label={"Delete Post"}
             color={"red"}
             onClick={() => {
-              handleDeleteClick(announcementDetails.id);
+              handleDeleteClick(awarenessDetails.id);
             }}
           />
         </div>
@@ -119,4 +119,4 @@ const DetailsAnnouncement = ({
   );
 };
 
-export default DetailsAnnouncement;
+export default AwarenessDetails;

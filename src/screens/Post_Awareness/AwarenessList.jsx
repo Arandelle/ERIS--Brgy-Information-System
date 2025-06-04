@@ -13,9 +13,9 @@ import { useFetchData } from "../../hooks/useFetchData";
 import handleAddData from "../../hooks/handleAddData";
 import handleDeleteData from "../../hooks/handleDeleteData";
 import handleEditData from "../../hooks/handleEditData";
-import AnnouncementModal from "./AnnouncementModal";
+import AwarenessModal from "./AwarenessModal";
 import QuestionModal from "../../components/ReusableComponents/AskCard";
-import DetailsAnnouncement from "./DetailsAnnouncement";
+import AwarenessDetails from "./AwarenessDetails";
 import usePagination from "../../hooks/usePagination";
 import useFilteredData from "../../hooks/useFilteredData";
 import MediaModal from "../MediaModal";
@@ -26,7 +26,7 @@ import logAuditTrail from "../../hooks/useAuditTrail";
 import { generateUniqueBarangayID } from "../../helper/generateID";
 
 const Activities = () => {
-  const { data: activity, setData: setActivity } = useFetchData("announcement");
+  const { data: activity, setData: setActivity } = useFetchData("awareness");
   const { searchParams, setSearchParams } = useSearchParam();
   const admin = auth.currentUser;
   const { isModalOpen, currentMedia, mediaType, openModal, closeModal } =
@@ -86,7 +86,7 @@ const Activities = () => {
     setPrevImage("");
     setIsEdit(false);
     setSelectedId("");
-    setSearchParams(!modal ? "newAnnouncement" : {});
+    setSearchParams(!modal ? "new_awareness" : {});
   };
 
   const handleImageChange = (e) => {
@@ -121,7 +121,7 @@ const Activities = () => {
   setPrevImage(URL.createObjectURL(file));
 };
 
-  const handleAddAnnouncement = async () => {
+  const handleAddAwareness = async () => {
     setLoading(true);
     try {
       const customId = await generateUniqueBarangayID("awareness");
@@ -131,7 +131,7 @@ const Activities = () => {
         customId,
       };
 
-      const newDocId = await handleAddData(postData, "announcement"); // get the new Id
+      const newDocId = await handleAddData(postData, "awareness"); // get the new Id
 
       if (newDocId) {
         await logAuditTrail("Post awareness", newDocId);
@@ -168,14 +168,14 @@ const Activities = () => {
     setShowDetails(false);
   };
 
-  const handleEditAnnouncement = async (id) => {
+  const handleEditAwareness = async (id) => {
     setLoading(true);
     try {
       const postData = {
         ...postDetails,
         userId: admin.uid,
       };
-      await handleEditData(id, postData, "announcement");
+      await handleEditData(id, postData, "awareness");
       await logAuditTrail("Edit a posted awareness", id);
       setPostDetails({});
       setModal(false);
@@ -202,7 +202,7 @@ const Activities = () => {
     );
 
     try {
-      await handleDeleteData(selectedId, "announcement");
+      await handleDeleteData(selectedId, "awareness");
       await logAuditTrail("Deleted a posted awareness", selectedId);
     } catch (error) {
       // If deletion fails, restore the item to the list
@@ -333,7 +333,7 @@ const Activities = () => {
             headers={headerData}
             data={currentItems}
             renderRow={renderRow}
-            emptyMessage="No announcement found"
+            emptyMessage="No awareness found"
           />
           <Pagination
             currentPage={currentPage}
@@ -344,11 +344,11 @@ const Activities = () => {
             data={filteredData}
           />
           {modal && (
-            <AnnouncementModal
+            <AwarenessModal
               handleModal={handleModal}
-              handleEditAnnouncement={handleEditAnnouncement}
+              handleEditAwareness={handleEditAwareness}
               handleImageChange={handleImageChange}
-              handleAddAnnouncement={handleAddAnnouncement}
+              handleAddAwareness={handleAddAwareness}
               {...{
                 selectedId,
                 postDetails,
@@ -387,7 +387,7 @@ const Activities = () => {
             />
           )}
           {showDetails && (
-            <DetailsAnnouncement
+            <AwarenessDetails
               closeButton={() => {
                 setShowDetails(!showDetails), setSearchParams({});
               }}

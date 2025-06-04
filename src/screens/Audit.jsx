@@ -16,7 +16,7 @@ const Audit = () => {
   const { data: users = [] } = useFetchData("users");
   const { data: responders = [] } = useFetchData("responders");
   const { data: admins = [] } = useFetchData("admins");
-  const { data: announcement = [] } = useFetchData("announcement");
+  const { data: awareness = [] } = useFetchData("awareness");
   const { data: hotline = [] } = useFetchData("hotlines");
   const { data: clearance = [] } = useFetchData("requestClearance");
   const { data: template = [] } = useFetchData("templateContent");
@@ -65,8 +65,8 @@ const Audit = () => {
         users.find((user) => user?.id === log?.targetId) ||
         responders.find((responder) => responder?.id === log?.targetId) ||
         admins.find((user) => user?.id === log?.targetId) ||
-        announcement.find(
-          (announcement) => announcement?.id === log?.targetId
+        awareness.find(
+          (awareness) => awareness?.id === log?.targetId
         ) ||
         hotline.find((hotline) => hotline?.id === log?.targetId) ||
         clearance.find((clearance) => clearance?.id === log?.targetId) ||
@@ -92,7 +92,7 @@ const Audit = () => {
     users,
     responders,
     admins,
-    announcement,
+    awareness,
     hotline,
     clearance,
     template,

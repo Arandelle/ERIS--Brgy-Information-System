@@ -115,7 +115,7 @@ export const useSidebarData = [
         />
       </svg>
     ),
-    link: "/announcement",
+    link: "/post-awareness",
   },
   {
     title: "Hotlines",

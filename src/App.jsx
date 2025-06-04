@@ -11,7 +11,7 @@ import {
 import Map from "./screens/Maps/Map";
 import Login from "./screens/LoginScreen/Login";
 import Records from "./screens/EmergencyRecord/Records";
-import Announcement from "./screens/Announcement/AnnouncementList";
+import PostAwareness from "./screens/Post_Awareness/AwarenessList";
 import Setting from "./screens/Settings/Setting";
 import { Toaster } from "sonner";
 import { onAuthStateChanged } from "firebase/auth";
@@ -199,8 +199,8 @@ const App = () => {
               element={user && isAdmin ? <Map /> : <Navigate to="/" />}
             />
             <Route
-              path="/announcement"
-              element={user && isAdmin ? <Announcement /> : <Navigate to="/" />}
+              path="/post-awareness"
+              element={user && isAdmin ? <PostAwareness /> : <Navigate to="/" />}
             />
             <Route
               path="/hotlines"

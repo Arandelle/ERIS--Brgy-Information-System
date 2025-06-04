@@ -35,7 +35,7 @@ const handleAddData = async (data, type) => {
   };
 
   const dataBasedOnType = {
-    announcement: {
+    awareness: {
       ...dataWithDateAndTimestamp,
       isEdited: false,
       fileUrl,

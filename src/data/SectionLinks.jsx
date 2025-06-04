@@ -24,8 +24,8 @@ export const SectionLinks = [
   //   link: "/calendar",
   // },
   {
-    title: "Safety and Awareness",
-    link: "/announcement",
+    title: "Post awareness",
+    link: "/post-awareness",
   },
   {
     title: "Hotline",
@@ -52,6 +52,14 @@ export const SectionLinks = [
     link: "/audit-trails",
   },
   {
+    title: "Incident Report",
+    link: "/incident-report",
+  },
+  {
+    title: "Messages",
+    link: "/chats",
+  },
+  {
     title: "Account Settings",
     link: "/account-settings",
   },
@@ -62,5 +70,9 @@ export const SectionLinks = [
   {
     title: "Terms of service",
     link: "/terms-of-service",
+  },
+  {
+    title: "Deletion an account",
+    link: "/deletion-account",
   },
 ];

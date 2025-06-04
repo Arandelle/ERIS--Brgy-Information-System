@@ -12,8 +12,8 @@ const handleEditData = async (id,data, type) => {
 
       if (snapshot.exists()) {
         const existingData = snapshot.val();
-        let fileUrl = existingData.fileUrl; // retain the existing image url
-        let fileType = existingData.fileType 
+        let fileUrl = existingData.fileUrl || ""; // retain the existing image url
+        let fileType = existingData.fileType || null
 
         //check if new image is selected
         if (data?.file) {
@@ -71,7 +71,7 @@ const handleEditData = async (id,data, type) => {
           systemData: {
             ...dataWithDateAndTimestamp,
           },
-          announcement: {
+          awareness: {
             ...dataWithDateAndTimestamp,
             fileUrl: formattedFileUrl,
             fileType,
