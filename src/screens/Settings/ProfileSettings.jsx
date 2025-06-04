@@ -9,10 +9,10 @@ const ProfileSettings = ({currentAdminDetails,openModal, handleEditProfile, user
     <div className="flex flex-col lg:flex-row space-y-4 items-start lg:items-center lg:justify-between w-3/4">
       <div className="flex-1 basis-1/2 flex flex-row justify-start items-center space-x-4">
         <img
-          src={currentAdminDetails?.fileUrl}
+          src={currentAdminDetails?.fileUrl || currentAdminDetails?.img}
           className="w-16 h-16 lg:w-28 lg:h-28 rounded-full cursor-pointer"
           loading="lazy"
-          onClick={() => openModal(currentAdminDetails.fileUrl)}
+          onClick={() => openModal(currentAdminDetails.fileUrl || currentAdminDetails?.img)}
         />
         <div className="flex flex-col flex-grow">
           <p className="font-medium text-sm lg:text-lg dark:text-gray-200">

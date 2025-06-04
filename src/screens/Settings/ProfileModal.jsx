@@ -50,7 +50,7 @@ const ProfileModal = ({
     if (currentAdminDetails) {
       setAdminData({
         ...adminData,
-        fileUrl: currentAdminDetails.fileUrl,
+        fileUrl: currentAdminDetails.fileUrl || currentAdminDetails.img,
         fullname: currentAdminDetails.fullname,
       });
     }
@@ -59,7 +59,7 @@ const ProfileModal = ({
   const hanldeUpdateProfile = async (id) => {
     setLoading(true);
     const updatedData = {
-      fileUrl: adminData.fileUrl || "", // get the image url from state
+      fileUrl: adminData.fileUrl || adminData.img || "", // get the image url from state
       file: adminData.imageFile || null, // get the image file from state
       fullname: adminData.fullname, // get the fullname from state
       fileType: "image"
@@ -87,7 +87,7 @@ const ProfileModal = ({
               imageArea={
                 <div className="flex relative shrink-0">
                   <img
-                    src={adminData.prevImage || currentAdminDetails.fileUrl}
+                    src={adminData.prevImage || currentAdminDetails.fileUrl || currentAdminDetails.img}
                     className="h-32 w-32 rounded-full self-center"
                   />
                   <label
