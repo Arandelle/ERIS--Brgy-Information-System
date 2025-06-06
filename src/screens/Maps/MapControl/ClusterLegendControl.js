@@ -20,7 +20,8 @@ export const ClusterLegendControl = ({emergencyTypeCount,selectedYear}) => {
 
       div.innerHTML = `<div class="leaflet-bar bg-white p-2 rounded-md shadow-md" style="min-width: 150px;">
       <div class="mb-2 p-1 text-center font-semibold">
-        Legend
+       Emergency Type Indicator
+      <p class="font-normal">(Mixed colors indicate multiple types)</p>
       </div>
       ${colors
         .map(
@@ -29,7 +30,7 @@ export const ClusterLegendControl = ({emergencyTypeCount,selectedYear}) => {
          <div class="w-5 h-5 p-2 mr-2 border border-[rgba(0,0,0,0.3)] rounded-md" style="background-color: ${color.color}"
           "></div>
         ${color.label}
-       ( ${color.count})
+       ( ${color.count} count )
         </div>
       `
         )

@@ -135,7 +135,7 @@ export const DisplayLayer = ({
           crime: "#000000",
           "natural disaster": "#8e44ad",
           "public disturbance": "#f1c40f",
-          Unknown: "#6C757D", // Changed from "red" to proper hex
+          other: "#6C757D", // Changed from "red" to proper hex
         };
 
         // Fixed priority order
@@ -145,7 +145,7 @@ export const DisplayLayer = ({
           "crime",
           "natural disaster",
           "public disturbance",
-          "Unknown",
+          "other",
         ];
 
         // check if cluster had mixed emergency type
@@ -194,7 +194,7 @@ export const DisplayLayer = ({
       accident: "#f39c12",
       "natural disaster": "#8e44ad",
       "public disturbance": "#f1c40f",
-      Other: "#3498db",
+      other: "#3498db",
     };
 
     // Create a separate layer for normal map markers
@@ -202,7 +202,7 @@ export const DisplayLayer = ({
 
     // Add markers to the respective layers
     emergencyData.pointsData.forEach((point) => {
-      const emergencyType = point.details.emergencyType || "Other";
+      const emergencyType = point.details.emergencyType || "other";
       const emergencyColor = emergencyTypeColors[emergencyType] || "#3388ff";
       const status = point.details.status;
       const markerIcon = status === "pending" ? redIcon : greenIcon;
