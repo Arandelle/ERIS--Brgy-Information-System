@@ -92,6 +92,9 @@ const handleEditData = async (id,data, type) => {
           requestClearance: {
             ...dataWithDateAndTimestamp,
           },
+          barangays : {
+            ...dataWithDateAndTimestamp
+          }
         };
 
         await update(dataRef, dataBasedOnType[type]);

@@ -3,9 +3,11 @@ import HeaderAndSideBar from "../../components/ReusableComponents/HeaderSidebar"
 import useSystemState from "./useSystemState";
 import handleEditData from "../../hooks/handleEditData";
 import { barangayData } from "../../data/BarangayData";
+import { auth } from "../../services/firebaseConfig";
 
 const SystemSettings = ({ setLoading }) => {
   const { systemState, setSystemState, loading } = useSystemState();
+  const currentUser = auth.currentUser;
 
   // Update the system data
   const handleUpdateData = async () => {
@@ -17,6 +19,7 @@ const SystemSettings = ({ setLoading }) => {
         location: systemState.location,
       };
       await handleEditData("details", updatedData, "systemData");
+      await handleEditData(currentUser.uid, {barangay: systemState.location}, "admins");
       console.log("Data updated in database: ", updatedData);
 
       setSystemState((prevState) => ({
