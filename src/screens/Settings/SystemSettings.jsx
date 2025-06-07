@@ -4,36 +4,57 @@ import useSystemState from "./useSystemState";
 import handleEditData from "../../hooks/handleEditData";
 import { barangayData } from "../../data/BarangayData";
 import { auth } from "../../services/firebaseConfig";
+import { get, child, ref, remove, set } from "firebase/database";
+import { database } from "../../services/firebaseConfig";
+import { toast } from "sonner";
 
 const SystemSettings = ({ setLoading }) => {
   const { systemState, setSystemState, loading } = useSystemState();
   const currentUser = auth.currentUser;
 
-  // Update the system data
-  const handleUpdateData = async () => {
-    setLoading(true);
+ const handleUpdateData = async () => {
+  setLoading(true);
 
-    // Upload the image to the storage
-    try {
-      const updatedData = {
-        location: systemState.location,
-      };
-      await handleEditData("details", updatedData, "systemData");
-      await handleEditData(currentUser.uid, {barangay: systemState.location}, "admins");
-      console.log("Data updated in database: ", updatedData);
+  try {
+    const updatedData = {
+      location: systemState.location,
+    };
 
-      setSystemState((prevState) => ({
-        ...prevState,
-        location: systemState.location,
-        isModified: false,
-      }));
-      setLoading(false);
-    } catch (error) {
-      toast.error(`Error: ${error}`);
-      console.error("Error", error);
-      setLoading(false);
+    // 1. Get old barangay of the admin
+    const oldBarangaySnapshot = await get(child(ref(database), `admins/${currentUser.uid}/barangay`));
+    const oldBarangay = oldBarangaySnapshot.exists() ? oldBarangaySnapshot.val() : null;
+
+    // 2. Update admin profile with new barangay
+    await handleEditData(currentUser.uid, { barangay: systemState.location }, "admins");
+
+    // 3. Remove from old barangay if different
+    if (oldBarangay && oldBarangay !== systemState.location) {
+      await remove(ref(database, `Barangay/${oldBarangay}/admins/${currentUser.uid}`));
     }
-  };
+
+    // 4. Add to new barangay admins
+    const adminDataSnapshot = await get(ref(database, `admins/${currentUser.uid}`));
+    const adminData = adminDataSnapshot.val();
+    await set(ref(database, `Barangay/${systemState.location}/admins/${currentUser.uid}`), adminData);
+
+    // 5. Optionally update system-wide details
+    await handleEditData("details", updatedData, "systemData");
+
+    // 6. Update local state
+    setSystemState((prevState) => ({
+      ...prevState,
+      location: systemState.location,
+      isModified: false,
+    }));
+
+    setLoading(false);
+    toast.success("Barangay updated successfully!");
+  } catch (error) {
+    console.error("Error updating barangay:", error);
+    toast.error(`Error: ${error.message}`);
+    setLoading(false);
+  }
+};
 
   const handleBrngyChange = (e) => {
     const { value } = e.target;
