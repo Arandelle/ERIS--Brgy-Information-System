@@ -15,10 +15,12 @@ function Sidebar({ isOpen, toggleSidebar }) {
   // Fetch data for different sections
   const {data: incidentReport} = useFetchData("reportedData");
   const {data: certificationData} = useFetchData("requestClearance"); // Add your certification data hook
+  const {data: emergencyData} = useFetchData("emergencyRequest"); // Add your certification data hook
   // Add more data hooks as needed
 
   // Function to calculate badge counts for different sections
   const calculateBadgeCounts = () => {
+    //create container to store those lists
     const counts = {};
     
     // Calculate incident report badge count
@@ -34,14 +36,10 @@ function Sidebar({ isOpen, toggleSidebar }) {
         (cert) => cert.status === "pending" || cert.expiryDate < new Date()
       ).length;
     }
-    
-    // Add more badge calculations here
-    // Example for Audit Trails:
-    // if (auditData && auditData.length > 0) {
-    //   counts["Audit Trails"] = auditData.filter(
-    //     (audit) => audit.requiresAction === true
-    //   ).length;
-    // }
+
+    if(emergencyData && emergencyData.length > 0){
+      counts["Emergency List"] = emergencyData.filter((emergency) => emergency.status === "pending").length;
+    }
     
     return counts;
   };
