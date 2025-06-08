@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { ref, onValue, push, get, set } from "firebase/database";
 import { database, auth } from "../services/firebaseConfig";
 import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
-import { Send, Search, MoreVertical, Phone, Video, Smile } from "lucide-react";
+import { Send, Search, ChevronLeft } from "lucide-react";
 
 const TestUserChatSimulator = () => {
   const [testText, setTestText] = useState("");
@@ -262,7 +262,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
   };
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+    <div className={`${selectedUser ? "hidden lg:flex" : "flex"} w-full lg:w-80 bg-white border-r border-gray-200 flex flex-col`}>
       <div className="p-4 border-b border-gray-200">
         <h2 className="font-bold text-xl text-gray-800 mb-4">Messages</h2>
         <div className="relative">
@@ -361,7 +361,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
   );
 };
 
-const ChatWindow = ({ selectedUser }) => {
+const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
@@ -444,7 +444,10 @@ const ChatWindow = ({ selectedUser }) => {
       {/* Chat Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
         <div className="flex items-center gap-3">
-          <div className="relative">
+          <div className="relative flex items-center gap-1">
+           <button onClick={() => setSelectedUser(null)} className="flex lg:hidden"> 
+           <ChevronLeft size={24} />
+           </button>
             {!selectedUser.avatar ? (
               <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-medium">
                 {getAvatarInitials(selectedUser.name)}
@@ -535,14 +538,14 @@ const ChatSystem = () => {
     <HeaderAndSideBar
       content={
         <div className="flex flex-col h-screen bg-gray-100">
-          <div className="flex flex-1 min-h-0">
+          <div className={`flex flex-1 min-h-0`}>
             <ChatList onSelect={setSelectedUser} selectedUser={selectedUser} />
             {selectedUser ? (
-              <div className="flex-1 flex flex-col min-w-0">
-                <ChatWindow selectedUser={selectedUser} />
+              <div className={`flex-1 flex-col min-w-0 ${selectedUser ? "flex" : "hidden"}`}>
+                <ChatWindow selectedUser={selectedUser} setSelectedUser={setSelectedUser}/>
               </div>
             ) : (
-              <div className="flex-1 flex items-center justify-center bg-white">
+              <div className={`flex-1 hidden lg:flex items-center justify-center bg-white`}>
                 <div className="text-center">
                   <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Send size={32} className="text-gray-400" />
