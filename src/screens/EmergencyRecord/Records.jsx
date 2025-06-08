@@ -18,6 +18,7 @@ import ButtonStyle from "../../components/ReusableComponents/Button";
 import ViewModal from "./ViewModal";
 import AddRecordModal from "./AddRecordModal";
 import FilterModal from "./FilterModal"; // Import the new FilterModal
+import useDebounce from "../../hooks/useDebounce";
 
 const Records = () => {
   const { setSearchParams } = useSearchParam();
@@ -69,8 +70,11 @@ const Records = () => {
     "location.geoCodeLocation",
   ];
 
+
+  const debounceQuery = useDebounce(searchQuery, 500); // delay for search output
+
   // First apply search filter
-  const searchFilteredData = useFilteredData(updatedData, searchQuery, searchFields);
+  const searchFilteredData = useFilteredData(updatedData, debounceQuery, searchFields);
 
   // Then apply status filter
   const filteredData = statusFilters.length > 0 

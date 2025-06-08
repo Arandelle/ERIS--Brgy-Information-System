@@ -22,6 +22,7 @@ import { capitalizeFirstLetter } from "../../helper/CapitalizeFirstLetter";
 import useSendNotification from "../../hooks/useSendNotification";
 import useSearchParam from "../../hooks/useSearchParam";
 import logAuditTrail from "../../hooks/useAuditTrail";
+import useDebounce from "../../hooks/useDebounce";
 
 const Certification = () => {
   const user = auth.currentUser;
@@ -41,6 +42,8 @@ const Certification = () => {
   const [viewModal, setViewModal] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [userData, setUserData] = useState(null);
+
+  const debounceQuery = useDebounce(searchQuery, 500); // delay for searach output
 
   useEffect(() => {
     console.table(userData  )
@@ -80,7 +83,7 @@ const Certification = () => {
     "Action",
   ];
 
-  const filteredData = useFilteredData(clearance, searchQuery, searchFields);
+  const filteredData = useFilteredData(clearance, debounceQuery, searchFields);
   const {
     currentPage,
     setCurrentPage,

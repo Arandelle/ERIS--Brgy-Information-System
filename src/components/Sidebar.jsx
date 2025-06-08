@@ -37,8 +37,9 @@ function Sidebar({ isOpen, toggleSidebar }) {
       ).length;
     }
 
-    if(emergencyData && emergencyData.length > 0){
+    if(emergencyData && emergencyData.length > 0) {
       counts["Emergency List"] = emergencyData.filter((emergency) => emergency.status === "pending").length;
+      counts["Map"] = emergencyData.filter((emergency) => emergency.status === "pending").length;
     }
     
     return counts;

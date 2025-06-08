@@ -20,6 +20,7 @@ import handleEditData from "../../hooks/handleEditData";
 import AskCard from "../../components/ReusableComponents/AskCard";
 import logAuditTrail from "../../hooks/useAuditTrail";
 import { auth } from "../../services/firebaseConfig";
+import useDebounce from "../../hooks/useDebounce";
 
 const UserList = ({ data }) => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -34,6 +35,8 @@ const UserList = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const currentUserId = auth.currentUser.uid;
 
+  const debounceQuery = useDebounce(searchQuery, 500); // delay for search output
+
   const searchField = [
     "fullname",
     "mobileNum",
@@ -44,7 +47,7 @@ const UserList = ({ data }) => {
     "id",
   ];
 
-  const filteredData = useFilteredData(userData, searchQuery, searchField);
+  const filteredData = useFilteredData(userData, debounceQuery, searchField);
 
   const {
     currentPage,

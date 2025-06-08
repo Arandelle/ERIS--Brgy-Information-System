@@ -18,6 +18,7 @@ import handleEditData from "../../hooks/handleEditData";
 import useSearchParam from "../../hooks/useSearchParam";
 import logAuditTrail from "../../hooks/useAuditTrail";
 import { generateUniqueBarangayID } from "../../helper/generateID";
+import useDebounce from "../../hooks/useDebounce";
 
 const Hotlines = () => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -39,6 +40,8 @@ const Hotlines = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const debounceQuery = useDebounce(searchQuery, 500); // delay for search output
+
   const searchField = [
     "category",
     "organization",
@@ -57,7 +60,7 @@ const Hotlines = () => {
     "Action",
   ];
 
-  const filteredData = useFilteredData(hotlines, searchQuery, searchField);
+  const filteredData = useFilteredData(hotlines, debounceQuery, searchField);
 
   const {
     currentPage,

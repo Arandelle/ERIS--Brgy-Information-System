@@ -13,6 +13,7 @@ import { ref, update } from "firebase/database";
 import { database } from "../services/firebaseConfig";
 import { toast } from "sonner";
 import useSendNotification from "../hooks/useSendNotification";
+import useDebounce from "../hooks/useDebounce";
 
 const IncidentReport = () => {
   const { data: reportedData = [] } = useFetchData("reportedData");
@@ -70,7 +71,8 @@ const IncidentReport = () => {
     "incidentID"
   ];
 
-  const filteredData = useFilteredData(enrichedData, searchQuery, searchField);
+  const debounceQuery = useDebounce(searchQuery, 500);
+  const filteredData = useFilteredData(enrichedData, debounceQuery, searchField);
   const {
     currentPage,
     setCurrentPage,

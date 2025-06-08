@@ -10,6 +10,7 @@ import usePagination from "../hooks/usePagination";
 import { formatDateWithTime } from "../helper/FormatDate";
 import SelectStyle from "../components/ReusableComponents/SelectStyle";
 import useRemoveOldData from "../hooks/useRemoveOldData";
+import useDebounce from "../hooks/useDebounce";
 
 const Audit = () => {
   const { data: userlogs } = useFetchData("usersLog");
@@ -23,6 +24,8 @@ const Audit = () => {
   const { data: emergency = [] } = useFetchData("emergencyRequest");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterData, setFilterData] = useState("");
+
+  const debounceQuery = useDebounce(searchQuery, 5000); // use the debounce hook to have delay on output for searching
 
   const HeaderData = [
     "Executor Id",
@@ -103,7 +106,7 @@ const Audit = () => {
   // If filterData is "All" or empty, include all logs; otherwise, match specific action
   const filteredData = useFilteredData(
     updatedData,
-    searchQuery,
+    debounceQuery,
     searchFields
   ).filter(
     (log) => !filterData || filterData === "All" || log.action === filterData

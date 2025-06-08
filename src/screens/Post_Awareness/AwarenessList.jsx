@@ -24,6 +24,7 @@ import useSearchParam from "../../hooks/useSearchParam";
 import useViewMedia from "../../hooks/useViewMedia";
 import logAuditTrail from "../../hooks/useAuditTrail";
 import { generateUniqueBarangayID } from "../../helper/generateID";
+import useDebounce from "../../hooks/useDebounce";
 
 const Activities = () => {
   const { data: activity, setData: setActivity } = useFetchData("awareness");
@@ -48,9 +49,10 @@ const Activities = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const debounceQuery = useDebounce(searchQuery, 500); // delay for search output
   const searchField = ["title", "description", "links"];
 
-  const filteredData = useFilteredData(activity, searchQuery, searchField);
+  const filteredData = useFilteredData(activity, debounceQuery, searchField);
 
   const {
     currentPage,
