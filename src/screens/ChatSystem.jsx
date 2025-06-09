@@ -94,10 +94,8 @@ const MessageBubble = ({ text, isOwn, timestamp }) => {
 const ChatList = ({ onSelect, selectedUser }) => {
   const [search, setSearch] = useState("");
   const [conversationUsers, setConversationUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
   const [unreadCounts, setUnreadCounts] = useState({});
   const [lastReadTimestamps, setLastReadTimestamps] = useState({});
-
   const [searchResults, setSearchResults] = useState([]);
 
   const currentUser = auth.currentUser;
@@ -115,10 +113,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
     if (usersSnap.exists()) {
       const usersData = usersSnap.val();
       for (const uid in usersData) {
-        if (
-          uid !== currentUser.uid &&
-          !conversationUsers.some((u) => u.uid === uid)
-        ) {
+        if (uid !== currentUser.uid) {
           const name = usersData[uid].fullname || usersData[uid].customId || "";
           if (name.toLowerCase().includes(query.toLowerCase())) {
             allResults.push({
@@ -128,6 +123,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
               customId: usersData[uid].customId || "No id found",
               status: "offline",
               lastMessage: null,
+              hasConversation: conversationUsers.some((u) => u.uid === uid),
             });
           }
         }
@@ -139,22 +135,24 @@ const ChatList = ({ onSelect, selectedUser }) => {
     if (respondersSnap.exists()) {
       const respondersData = respondersSnap.val();
       for (const uid in respondersData) {
-        if (
-          uid !== currentUser.uid &&
-          !conversationUsers.some((u) => u.uid === uid)
-        ) {
+        if (uid !== currentUser.uid) {
           const name =
             respondersData[uid].fullname || respondersData[uid].customId || "";
           if (name.toLowerCase().includes(query.toLowerCase())) {
-            allResults.push({
-              uid,
-              name,
-              avatar:
-                respondersData[uid].img || respondersData[uid].fileUrl || null,
-              customId: respondersData[uid].customId || "No id found",
-              status: "offline",
-              lastMessage: null,
-            });
+            // Check if this user is already in results (from users collection)
+            const existingUser = allResults.find((user) => user.uid === uid);
+            if (!existingUser) {
+              allResults.push({
+                uid,
+                name,
+                avatar:
+                  respondersData[uid].img || respondersData[uid].fileUrl || null,
+                customId: respondersData[uid].customId || "No id found",
+                status: "offline",
+                lastMessage: null,
+                hasConversation: conversationUsers.some((u) => u.uid === uid),
+              });
+            }
           }
         }
       }
@@ -251,7 +249,6 @@ const ChatList = ({ onSelect, selectedUser }) => {
     const unsubscribeChats = onValue(userChatsRef, async (snapshot) => {
       if (!snapshot.exists()) {
         setConversationUsers([]);
-        setFilteredUsers([]);
         setUnreadCounts({});
         return;
       }
@@ -303,13 +300,8 @@ const ChatList = ({ onSelect, selectedUser }) => {
     };
   }, [currentUser, lastReadTimestamps]);
 
-  //
+  // Update search results when search changes or conversationUsers change
   useEffect(() => {
-    const result = conversationUsers.filter((user) =>
-      user.name.toLowerCase().includes(search.toLowerCase())
-    );
-    setFilteredUsers(result);
-
     fetchAllUsersMatchingSearch(search);
   }, [search, conversationUsers]);
 
@@ -356,6 +348,23 @@ const ChatList = ({ onSelect, selectedUser }) => {
     }
   };
 
+  // Filter conversation users based on search
+  const getFilteredConversationUsers = () => {
+    if (!search.trim()) return conversationUsers;
+    return conversationUsers.filter((user) =>
+      user.name.toLowerCase().includes(search.toLowerCase())
+    );
+  };
+
+  // Get users without conversations from search results
+  const getUsersWithoutConversations = () => {
+    if (!search.trim()) return [];
+    return searchResults.filter((user) => !user.hasConversation);
+  };
+
+  const filteredConversationUsers = getFilteredConversationUsers();
+  const usersWithoutConversations = getUsersWithoutConversations();
+
   return (
     <div
       className={`${
@@ -380,7 +389,8 @@ const ChatList = ({ onSelect, selectedUser }) => {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {filteredUsers.length === 0 && !search ? (
+        {/* Show message when no conversations exist and no search */}
+        {conversationUsers.length === 0 && !search ? (
           <div className="flex flex-col items-center justify-center h-full py-12 text-gray-500">
             <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
               <Send size={32} className="text-gray-400" />
@@ -392,131 +402,145 @@ const ChatList = ({ onSelect, selectedUser }) => {
             </p>
           </div>
         ) : (
-          filteredUsers.map((user) => {
-            const unreadCount = unreadCounts[user.uid] || 0;
-            const hasUnread = unreadCount > 0;
+          <>
+            {/* Conversation Users Section */}
+            {filteredConversationUsers.length > 0 && (
+              <div>
+                {search && (
+                  <h4 className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50">
+                    Conversations
+                  </h4>
+                )}
+                {filteredConversationUsers.map((user) => {
+                  const unreadCount = unreadCounts[user.uid] || 0;
+                  const hasUnread = unreadCount > 0;
 
-            return (
-              <div
-                key={user.uid}
-                className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100 ${
-                  selectedUser?.uid === user.uid
-                    ? "bg-blue-50 border-l-4 border-l-blue-500"
-                    : ""
-                } ${hasUnread ? "bg-blue-25" : ""}`}
-                onClick={() => handleUserSelect(user)}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    {!user.avatar ? (
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-medium">
-                        {getAvatarInitials(user.name)}
-                      </div>
-                    ) : (
-                      <img
-                        src={user.avatar}
-                        alt={user.name}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                    )}
-                    {/* Online indicator */}
-                    {user.status === "online" && (
-                      <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <h3
-                        className={`font-medium truncate ${
-                          hasUnread ? "text-gray-900" : "text-gray-700"
-                        }`}
-                      >
-                        {user.name}
-                      </h3>
-                      <div className="flex items-center gap-2">
-                        {user.lastMessage && (
-                          <span className="text-xs text-gray-500">
-                            {formatLastMessageTime(user.lastMessage.timestamp)}
-                          </span>
-                        )}
-                        {hasUnread && (
-                          <div className="bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center min-w-[1.25rem]">
-                            {unreadCount > 99 ? "99+" : unreadCount}
+                  return (
+                    <div
+                      key={user.uid}
+                      className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100 ${
+                        selectedUser?.uid === user.uid
+                          ? "bg-blue-50 border-l-4 border-l-blue-500"
+                          : ""
+                      } ${hasUnread ? "bg-blue-25" : ""}`}
+                      onClick={() => handleUserSelect(user)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          {!user.avatar ? (
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-medium">
+                              {getAvatarInitials(user.name)}
+                            </div>
+                          ) : (
+                            <img
+                              src={user.avatar}
+                              alt={user.name}
+                              className="w-10 h-10 rounded-full object-cover"
+                            />
+                          )}
+                          {user.status === "online" && (
+                            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <h3
+                              className={`font-medium truncate ${
+                                hasUnread ? "text-gray-900" : "text-gray-700"
+                              }`}
+                            >
+                              {user.name}
+                            </h3>
+                            <div className="flex items-center gap-2">
+                              {user.lastMessage && (
+                                <span className="text-xs text-gray-500">
+                                  {formatLastMessageTime(user.lastMessage.timestamp)}
+                                </span>
+                              )}
+                              {hasUnread && (
+                                <div className="bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center min-w-[1.25rem]">
+                                  {unreadCount > 99 ? "99+" : unreadCount}
+                                </div>
+                              )}
+                            </div>
                           </div>
+                          <div className="flex items-center justify-between">
+                            <p
+                              className={`text-sm truncate ${
+                                hasUnread
+                                  ? "text-gray-900 font-medium"
+                                  : "text-gray-500"
+                              }`}
+                            >
+                              {user.lastMessage
+                                ? user.lastMessage.text.length > 30
+                                  ? `${user.lastMessage.text.substring(0, 30)}...`
+                                  : user.lastMessage.text
+                                : "No messages yet"}
+                            </p>
+                            {hasUnread && (
+                              <div className="w-2 h-2 bg-blue-500 rounded-full ml-2 flex-shrink-0"></div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Users Without Conversations Section */}
+            {search && usersWithoutConversations.length > 0 && (
+              <div className={filteredConversationUsers.length > 0 ? "border-t border-gray-200" : ""}>
+                <h4 className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50">
+                  Other Users
+                </h4>
+                {usersWithoutConversations.map((user) => (
+                  <div
+                    key={user.uid}
+                    className="p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100"
+                    onClick={() => handleUserSelect(user)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        {!user.avatar ? (
+                          <div className="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center text-white font-medium">
+                            {getAvatarInitials(user.name)}
+                          </div>
+                        ) : (
+                          <img
+                            src={user.avatar}
+                            alt={user.name}
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
                         )}
                       </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <p
-                        className={`text-sm truncate ${
-                          hasUnread
-                            ? "text-gray-900 font-medium"
-                            : "text-gray-500"
-                        }`}
-                      >
-                        {user.lastMessage
-                          ? user.lastMessage.text.length > 30
-                            ? `${user.lastMessage.text.substring(0, 30)}...`
-                            : user.lastMessage.text
-                          : "No messages yet"}
-                      </p>
-                      {hasUnread && (
-                        <div className="w-2 h-2 bg-blue-500 rounded-full ml-2 flex-shrink-0"></div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })
-        )}
-
-        {search && searchResults.length > 0 ? (
-          <div className="mt-4 border-t border-gray-200 pt-2">
-            <h4 className="px-4 text-sm text-gray-500 mb-2">Other Users</h4>
-            {searchResults.map((user) => (
-              <div
-                key={user.uid}
-                className="p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100"
-                onClick={() => handleUserSelect(user)}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    {!user.avatar ? (
-                      <div className="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center text-white font-medium">
-                        {getAvatarInitials(user.name)}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium truncate text-gray-700">
+                          {user.name}
+                        </h3>
+                        <p className="text-sm text-gray-400">No messages yet</p>
                       </div>
-                    ) : (
-                      <img
-                        src={user.avatar}
-                        alt={user.name}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                    )}
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium truncate text-gray-700">
-                      {user.name}
-                    </h3>
-                    <p className="text-sm text-gray-400">No messages yet</p>
-                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* No Results Message */}
+            {search && filteredConversationUsers.length === 0 && usersWithoutConversations.length === 0 && (
+              <div className="flex flex-col items-center justify-center h-full py-12 text-gray-500">
+                <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                  <Search size={32} className="text-gray-400" />
                 </div>
+                <h3 className="font-medium text-gray-900 mb-1">No Users Found</h3>
+                <p className="text-sm text-gray-500 text-center px-4">
+                  No users match your search "{search}"
+                </p>
               </div>
-            ))}
-          </div>
-        ) : (
-          search &&
-          searchResults.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-full py-12 text-gray-500">
-              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-                <Send size={32} className="text-gray-400" />
-              </div>
-              <h3 className="font-medium text-gray-900 mb-1">No Users found</h3>
-              <p className="text-sm text-gray-500 text-center px-4">
-                Please try another name
-              </p>
-            </div>
-          )
+            )}
+          </>
         )}
       </div>
     </div>
