@@ -19,6 +19,15 @@ export const formatDateWithTime = (date) => {
   });
 };
 
+ export const formatDateWithTimeAndWeek = (ts) =>
+  new Date(ts).toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
 
 export const formatTime = (date) =>{
   return new Date(date).toLocaleTimeString([], {

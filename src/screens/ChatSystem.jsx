@@ -3,6 +3,8 @@ import { ref, onValue, push, get, set } from "firebase/database";
 import { database, auth } from "../services/firebaseConfig";
 import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import { Send, Search, ChevronLeft } from "lucide-react";
+import { formatDate, formatDateWithTimeAndWeek, formatTime } from "../helper/FormatDate";
+import { getTimeDifference } from "../helper/TimeDiff";
 
 const TestUserChatSimulator = () => {
   const [testText, setTestText] = useState("");
@@ -57,37 +59,44 @@ const TestUserChatSimulator = () => {
   );
 };
 
-const MessageBubble = ({ text, isOwn, timestamp }) => {
-  const formatTime = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
+const MessageBubble = ({ text, isOwn, timestamp, prevTimestamp }) => {
 
+  const showOverallTimeStamp = !prevTimestamp || timestamp - prevTimestamp > 60 * 1000 * 30; //if  greater than 30 minutes or no prevTimestamp
+  const showSpecificTimestamp = !prevTimestamp || timestamp - prevTimestamp > 60 * 1000 *  5 // 5 minutes
   return (
-    <div
-      className={`flex ${isOwn ? "justify-end" : "justify-start"} mb-4 px-4`}
-    >
+   <>
+      {showOverallTimeStamp && (
+        <div className="flex items-center justify-center mb-2">
+       <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+       {formatDateWithTimeAndWeek(timestamp)}
+       </span>
+        </div>
+      )}
       <div
-        className={`flex flex-col max-w-xs lg:max-w-lg text-wrap ${
-          isOwn ? "items-end" : "items-start"
-        }`}
+        className={`flex ${isOwn ? "justify-end" : "justify-start"} mb-2 px-4`}
       >
         <div
-          className={`px-4 py-2 rounded-2xl relative ${
-            isOwn
-              ? "bg-blue-500 text-white rounded-br-md"
-              : "bg-gray-100 text-gray-800 rounded-bl-md"
-          } shadow-sm`}
+          className={`flex flex-col max-w-xs lg:max-w-lg text-wrap ${
+            isOwn ? "items-end" : "items-start"
+          }`}
         >
-          <p className="text-sm leading-relaxed break-words overflow-hidden max-w-lg">
-            {text}
-          </p>
+          <div
+            className={`px-4 py-2 rounded-2xl relative ${
+              isOwn
+                ? "bg-blue-500 text-white rounded-br-sm"
+                : "bg-gray-100 text-gray-800 rounded-bl-md"
+            } shadow-sm`}
+          >
+            <p className="text-sm leading-relaxed break-words overflow-hidden max-w-lg">
+              {text}
+            </p>
+          </div>
+          <span className="text-xs text-gray-500 mt-1 px-2">
+            {showSpecificTimestamp && formatTime(timestamp)}
+          </span>
         </div>
-        <span className="text-xs text-gray-500 mt-1 px-2">
-          {formatTime(timestamp)}
-        </span>
       </div>
-    </div>
+   </>
   );
 };
 
@@ -321,17 +330,9 @@ const ChatList = ({ onSelect, selectedUser }) => {
     const diffInHours = (now - messageDate) / (1000 * 60 * 60);
 
     if (diffInHours < 24) {
-      return messageDate.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } else if (diffInHours < 168) {
-      return messageDate.toLocaleDateString([], { weekday: "short" });
-    } else {
-      return messageDate.toLocaleDateString([], {
-        month: "short",
-        day: "numeric",
-      });
+    return   formatTime(timestamp)
+    }  else {
+     return formatDate(timestamp)
     }
   };
 
@@ -454,7 +455,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
                             <div className="flex items-center gap-2">
                               {user.lastMessage && (
                                 <span className="text-xs text-gray-500">
-                                  {formatLastMessageTime(user.lastMessage.timestamp)}
+                                  {getTimeDifference(user.lastMessage.timestamp)}
                                 </span>
                               )}
                               {hasUnread && (
@@ -685,12 +686,13 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
               <p className="text-sm text-gray-500">Start your conversation</p>
             </div>
           ) : (
-            messages.map((msg, idx) => (
+            messages.map((msg, index) => (
               <MessageBubble
-                key={idx}
+                key={index}
                 text={msg.text}
                 isOwn={msg.sender === user?.uid}
                 timestamp={msg.timestamp}
+                prevTimestamp={index > 0 ? messages[index -1].timestamp : null}
               />
             ))
           )}
