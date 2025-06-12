@@ -67,7 +67,7 @@ const MessageBubble = ({ text, isOwn, timestamp, prevTimestamp }) => {
    <>
       {showOverallTimeStamp && (
         <div className="flex items-center justify-center mb-2">
-       <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+       <span className="text-xs text-gray-500 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 px-3 py-1 rounded-full">
        {formatDateWithTimeAndWeek(timestamp)}
        </span>
         </div>
@@ -83,8 +83,8 @@ const MessageBubble = ({ text, isOwn, timestamp, prevTimestamp }) => {
           <div
             className={`px-4 py-2 rounded-2xl relative ${
               isOwn
-                ? "bg-blue-500 text-white rounded-br-sm"
-                : "bg-gray-100 text-gray-800 rounded-bl-md"
+                ? "bg-blue-500 dark:bg-blue-600 text-white dark:text-gray-100 rounded-br-sm"
+                : "bg-gray-100 dark:bg-gray-200 text-gray-800 rounded-bl-md"
             } shadow-sm`}
           >
             <p className="text-sm leading-relaxed break-words overflow-hidden max-w-lg">
@@ -370,10 +370,10 @@ const ChatList = ({ onSelect, selectedUser }) => {
     <div
       className={`${
         selectedUser ? "hidden lg:flex" : "flex"
-      } w-full lg:w-80 bg-white border-r border-gray-200 flex flex-col`}
+      } w-full lg:w-80 bg-white dark:bg-gray-800 border-r border-gray-200 flex flex-col`}
     >
       <div className="p-4 border-b border-gray-200">
-        <h2 className="font-bold text-xl text-gray-800 mb-4">Messages</h2>
+        <h2 className="font-bold text-xl text-gray-800 dark:text-gray-400 mb-4">Messages</h2>
         <div className="relative">
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -382,7 +382,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
           <input
             type="text"
             placeholder="Search conversations..."
-            className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-full focus:ring-2 focus:ring-blue-300 focus:border-transparent outline-none"
+            className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-800 dark:text-gray-400 border border-gray-200 rounded-full focus:ring-2 focus:ring-blue-300 focus:border-transparent outline-none"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -396,8 +396,8 @@ const ChatList = ({ onSelect, selectedUser }) => {
             <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
               <Send size={32} className="text-gray-400" />
             </div>
-            <h3 className="font-medium text-gray-900 mb-1">No Conversations</h3>
-            <p className="text-sm text-gray-500 text-center px-4">
+            <h3 className="font-medium text-gray-900 dark:text-gray-400 mb-1">No Conversations</h3>
+            <p className="text-sm text-gray-500 dark:texy-gray-300 text-center px-4">
               You don't have any conversations yet. Start chatting to see them
               here.
             </p>
@@ -408,7 +408,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
             {filteredConversationUsers.length > 0 && (
               <div>
                 {search && (
-                  <h4 className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50">
+                  <h4 className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900">
                     Conversations
                   </h4>
                 )}
@@ -419,11 +419,11 @@ const ChatList = ({ onSelect, selectedUser }) => {
                   return (
                     <div
                       key={user.uid}
-                      className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100 ${
+                      className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100 ${
                         selectedUser?.uid === user.uid
-                          ? "bg-blue-50 border-l-4 border-l-blue-500"
+                          ? "bg-blue-50 dark:bg-gray-900 border-l-4 border-l-blue-500 dark:border-l-blue-400"
                           : ""
-                      } ${hasUnread ? "bg-blue-25" : ""}`}
+                      } ${hasUnread ? "bg-blue-25 dark:bg-blue-50" : ""}`}
                       onClick={() => handleUserSelect(user)}
                     >
                       <div className="flex items-center gap-3">
@@ -447,7 +447,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
                           <div className="flex items-center justify-between">
                             <h3
                               className={`font-medium truncate ${
-                                hasUnread ? "text-gray-900" : "text-gray-700"
+                                hasUnread ? "text-gray-900 dark:text-gray-500" : "text-gray-700 dark:text-gray-400"
                               }`}
                             >
                               {user.name}
@@ -469,8 +469,8 @@ const ChatList = ({ onSelect, selectedUser }) => {
                             <p
                               className={`text-sm truncate ${
                                 hasUnread
-                                  ? "text-gray-900 font-medium"
-                                  : "text-gray-500"
+                                  ? "text-gray-900 dark:text-gray-700 font-medium"
+                                  : "text-gray-500 dark:text-gray-300"
                               }`}
                             >
                               {user.lastMessage
@@ -494,19 +494,19 @@ const ChatList = ({ onSelect, selectedUser }) => {
             {/* Users Without Conversations Section */}
             {search && usersWithoutConversations.length > 0 && (
               <div className={filteredConversationUsers.length > 0 ? "border-t border-gray-200" : ""}>
-                <h4 className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50">
+                <h4 className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50 dark:bg-gray-900 dark:text-gray-400">
                   Other Users
                 </h4>
                 {usersWithoutConversations.map((user) => (
                   <div
                     key={user.uid}
-                    className="p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100"
+                    className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150 border-b border-gray-100"
                     onClick={() => handleUserSelect(user)}
                   >
                     <div className="flex items-center gap-3">
                       <div className="relative">
                         {!user.avatar ? (
-                          <div className="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center text-white font-medium">
+                          <div className="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center text-white dark:text-gray-400 font-medium">
                             {getAvatarInitials(user.name)}
                           </div>
                         ) : (
@@ -518,10 +518,10 @@ const ChatList = ({ onSelect, selectedUser }) => {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium truncate text-gray-700">
+                        <h3 className="font-medium truncate text-gray-700 dark:text-gray-500">
                           {user.name}
                         </h3>
-                        <p className="text-sm text-gray-400">No messages yet</p>
+                        <p className="text-sm text-gray-400 dark:text-gray-300">No messages yet</p>
                       </div>
                     </div>
                   </div>
@@ -532,11 +532,11 @@ const ChatList = ({ onSelect, selectedUser }) => {
             {/* No Results Message */}
             {search && filteredConversationUsers.length === 0 && usersWithoutConversations.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full py-12 text-gray-500">
-                <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-                  <Search size={32} className="text-gray-400" />
+                <div className="w-16 h-16 bg-gray-200 dark:bg-gray-300 rounded-full flex items-center justify-center mb-4">
+                  <Search size={32} className="text-gray-400 dark:text-gray-500" />
                 </div>
-                <h3 className="font-medium text-gray-900 mb-1">No Users Found</h3>
-                <p className="text-sm text-gray-500 text-center px-4">
+                <h3 className="font-medium text-gray-900 dark:text-gray-400 mb-1">No Users Found</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-300 text-center px-4">
                   No users match your search "{search}"
                 </p>
               </div>
@@ -637,7 +637,7 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Chat Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white dark:bg-gray-800">
         <div className="flex items-center gap-3">
           <div className="relative flex items-center gap-1">
             <button
@@ -662,8 +662,8 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
             )}
           </div>
           <div className="flex flex-col">
-            <h3 className="font-semibold text-gray-900">{selectedUser.name}</h3>
-            <h3 className="font-semibold text-gray-500 text-xs">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-500">{selectedUser.name}</h3>
+            <h3 className="font-semibold text-gray-500 dark:text-gray-400 text-xs">
               {selectedUser.customId}
             </h3>
           </div>
@@ -671,19 +671,19 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto bg-gray-50">
+      <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
         <div className="py-4">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full py-12 text-gray-500">
-              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-gray-200 dark:bg-gray-500 rounded-full flex items-center justify-center mb-4">
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
                   {getAvatarInitials(selectedUser.name)}
                 </div>
               </div>
-              <h3 className="font-medium text-gray-900 mb-1">
+              <h3 className="font-medium text-gray-900 dark:text-gray-400 mb-1">
                 {selectedUser.name}
               </h3>
-              <p className="text-sm text-gray-500">Start your conversation</p>
+              <p className="text-sm text-gray-500 dark:text-gray-500">Start your conversation</p>
             </div>
           ) : (
             messages.map((msg, index) => (
@@ -701,11 +701,11 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       </div>
 
       {/* Message Input */}
-      <div className="px-4 py-4 bg-white border-t border-gray-200">
-        <div className="flex items-end gap-3">
+      <div className="px-4 py-4 bg-white dark:bg-gray-800 border-t border-gray-200">
+        <div className="flex items-center justify-end gap-3">
           <div className="flex-1 relative">
             <textarea
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl resize-none focus:ring-2 focus:ring-blue-300 focus:border-transparent outline-none"
+              className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-600 dark:text-gray-200 border border-gray-200 rounded-2xl resize-none focus:ring-2 focus:ring-blue-300 focus:border-transparent outline-none"
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -722,8 +722,8 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
             disabled={!text.trim()}
             className={`p-3 rounded-full transition-all duration-200 mb-1 ${
               text.trim()
-                ? "bg-blue-500 hover:bg-blue-600 text-white shadow-lg"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                ? "bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-lg"
+                : "bg-gray-200 dark:bg-gray-400 text-gray-400 dark:text-gray-600 cursor-not-allowed"
             }`}
           >
             <Send size={18} />
