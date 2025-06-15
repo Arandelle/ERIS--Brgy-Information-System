@@ -141,13 +141,13 @@ const UsersInsights = ({ filteredData, generateData }) => {
   // Generates meaningful explanatory text based on the insights
   const generateMeaning = () => {
     if (!filteredData || filteredData.length === 0) {
-      return "No data available for the selected filters. Try adjusting your date range.";
+      return <p className='dark:text-gray-400'>No data available for the selected filters. Try adjusting your date range.</p>;
     }
 
     const userRateDisplay = getTimeUnitDisplay();
 
     return (
-      <div className="text-sm space-y-2">
+      <div className="text-sm space-y-2 dark:text-gray-400">
         <p className="font-medium">This report shows:</p>
         <p>
           <span className="font-medium">Total Users:</span> {insights.totalUsers}

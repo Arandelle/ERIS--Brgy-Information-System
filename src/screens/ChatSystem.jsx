@@ -756,16 +756,16 @@ const ChatSystem = () => {
               </div>
             ) : (
               <div
-                className={`flex-1 hidden lg:flex items-center justify-center bg-white`}
+                className={`flex-1 hidden lg:flex items-center justify-center bg-white dark:bg-gray-800`}
               >
                 <div className="text-center">
-                  <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Send size={32} className="text-gray-400" />
+                  <div className="w-24 h-24 bg-gray-100 dark:bg-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Send size={32} className="text-gray-400 dark:text-gray-200" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-400 mb-2">
                     Your Messages
                   </h3>
-                  <p className="text-gray-500 max-w-sm">
+                  <p className="text-gray-500 dark:text-gray-300 max-w-sm">
                     Select a conversation from the sidebar to start chatting
                     with your contacts.
                   </p>

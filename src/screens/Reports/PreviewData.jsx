@@ -22,10 +22,10 @@ export const EmergencyTable = ({ data, dataType }) => {
 
   const ThStyle = ({ labels }) => {
     return (
-      <tr className="bg-gray-100">
+      <tr className="bg-gray-100 dark:bg-gray-500">
         {labels.length > 0 &&
           labels.map((label) => (
-            <th key={label} className="py-2 px-4 border-b text-left">
+            <th key={label} className="py-2 px-4 border-b text-left dark:text-gray-100">
               {label}
             </th>
           ))}
@@ -49,7 +49,7 @@ export const EmergencyTable = ({ data, dataType }) => {
   }
 
   return (
-    <table className="min-w-full bg-white border border-gray-200">
+    <table className="min-w-full bg-white dark:bg-gray-600 border border-gray-200">
       <thead>
         {emergencySummary ? (
           <ThStyle
@@ -89,7 +89,7 @@ export const EmergencyTable = ({ data, dataType }) => {
             mobileNum,
           } = data;
           return emergencySummary ? (
-            <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
+            <tr key={index} className={index % 2 === 0 ? "bg-gray-50 dark:bg-gray-400" : ""}>
               <TdStyle
                 items={[
                   emergencyId,

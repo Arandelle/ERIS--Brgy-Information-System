@@ -142,7 +142,7 @@ const ReportInsights = ({ filteredData, generateData }) => {
     }
 
     return (
-      <div className="text-sm space-y-2 text-gray-600">
+      <div className="text-sm space-y-2 text-gray-600 dark:text-gray-400">
         <p className="font-medium">This report shows:</p>
         <p>
           <span className="font-medium">

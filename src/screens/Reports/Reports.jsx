@@ -12,9 +12,9 @@ import ExportPDF from "./ExportPDF";
 
 const Label = ({ label, isMainLabel }) => {
   return isMainLabel ? (
-    <p className="font-semibold text-gray-700">{label}</p>
+    <p className="font-semibold text-gray-700 dark:text-gray-200">{label}</p>
   ) : (
-    <p className="text-gray-500 text-base">{label}</p>
+    <p className="text-gray-500 dark:text-gray-300 text-base">{label}</p>
   );
 };
 
@@ -163,8 +163,8 @@ const Reports = () => {
   return (
     <HeaderAndSideBar
       content={
-        <div className="bg-white p-6 rounded-lg shadow-lg h-full">
-          <h1 className="text-2xl font-bold text-blue-800 mb-6">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg h-full">
+          <h1 className="text-2xl font-bold text-blue-800 dark:text-blue-400 mb-6">
             Generate Reports
           </h1>
           <div className="flex flex-col lg:flex-row space-x-0 md:space-x-5 space-y-5 md:space-y-0">
@@ -202,7 +202,7 @@ const Reports = () => {
                         }))
                       }
                     />
-                    <p>to</p>
+                    <p className="dark:text-gray-400">to</p>
                     <InputField
                       type="text"
                       onFocus={(e) => (e.target.type = "date")}
@@ -300,13 +300,13 @@ const Reports = () => {
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                       No data to preview. Adjust filters to see data.
                     </div>
                   )}
                 </div>
                 <div className="flex flex-row space-x-4 p-4">
-                  <div className="space-x-2">
+                  <div className="space-x-2 dark:text-gray-400">
                     <input
                       type="checkbox"
                       id="includeTable"
@@ -319,7 +319,7 @@ const Reports = () => {
                     />
                     <label htmlFor="includeTable">Include Table</label>
                   </div>
-                  <div className="space-x-2">
+                  <div className="space-x-2 dark:text-gray-400">
                     <input
                       type="checkbox"
                       id="includeChart"
@@ -333,7 +333,7 @@ const Reports = () => {
                     <label htmlFor="includeChart">Include Chart</label>
                   </div>
                   {generateData.format === "Excel" && (
-                    <span className="text-gray-500 text-sm ml-2">
+                    <span className="text-red-500 dark:text-red-600 text-sm ml-2">
                       Chart not available in Excel format
                     </span>
                   )}
