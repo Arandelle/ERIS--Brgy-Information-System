@@ -5,8 +5,11 @@ import { formatDate } from "../helper/FormatDate";
 import Spinner from "../components/ReusableComponents/Spinner";
 import AskCard from "../components/ReusableComponents/AskCard";
 import logAuditTrail from "../hooks/useAuditTrail";
+import icons from "../assets/icons/Icons";
+import { useNavigate } from "react-router-dom";
 
 export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "privacy-policy" }) {
+  const navigation = useNavigate();
   const [expanded, setExpanded] = useState({});
   const [sections, setSections] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -256,34 +259,43 @@ export default function TermsAndPrivacy({ isAdmin = false, TermsOrPrivacy = "pri
         <div className="bg-white shadow rounded-lg overflow-hidden">
           {/* Header */}
           <div className="bg-blue-600 px-6 py-8">
-            {isAdmin && (
-              <div className="flex justify-end mb-4">
-                {isEditing ? (
-                  <div className="space-x-2">
+
+          <div className="flex flex-row justify-between items-center">
+          <button className="text-white" onClick={() => navigation("/")}>
+            <icons.arrowLeft fontSize="large"/>
+          </button>
+
+              {isAdmin && (
+                <div className="flex justify-end mb-4">
+                  {isEditing ? (
+                    <div className="space-x-2">
+                      <button
+                        onClick={handleSave}
+                        disabled={isSaving}
+                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded"
+                      >
+                        {isSaving ? "Saving..." : "Save Changes"}
+                      </button>
+                      <button
+                        onClick={handleCancel}
+                        className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
                     <button
-                      onClick={handleSave}
-                      disabled={isSaving}
-                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded"
+                      onClick={() => setIsEditing(true)}
+                      className="bg-white text-blue-600 px-4 py-1 rounded hover:bg-gray-100"
                     >
-                      {isSaving ? "Saving..." : "Save Changes"}
+                      Edit {TermsOrPrivacy === "privacy-policy" ? "Privacy Policy" : "Terms of Service"}
                     </button>
-                    <button
-                      onClick={handleCancel}
-                      className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="bg-white text-blue-600 px-4 py-1 rounded hover:bg-gray-100"
-                  >
-                    Edit {TermsOrPrivacy === "privacy-policy" ? "Privacy Policy" : "Terms of Service"}
-                  </button>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              )}
+          </div>
+         
+            
             <h1 className="text-2xl font-bold text-white text-center">
               ERIS: Emergency Response and Information System
             </h1>

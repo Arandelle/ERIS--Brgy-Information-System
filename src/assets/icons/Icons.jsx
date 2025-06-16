@@ -1,4 +1,5 @@
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import FilterAltIcon from "@mui/icons-material/FilterAltOutlined";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
@@ -45,6 +46,7 @@ const icons = {
     lockOpen: LockOpenIcon,
     login: LoginIcon,
     arrowRight: ArrowRightIcon,
+    arrowLeft: ArrowCircleLeftIcon,
     arrowDropDown: ArrowDropDown,
     filter: FilterAltIcon,
     filterOff: FilterAltOffIcon,
