@@ -15,7 +15,6 @@ import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import { InputStyle } from "../../components/ReusableComponents/InputStyle";
 import Spinner from "../../components/ReusableComponents/Spinner";
 import ForgetPassword from "./ForgetPassword";
-import OtpForm from "./OtpForm";
 import handleErrorMessage from "../../helper/handleErrorMessage";
 import logAuditTrail from "../../hooks/useAuditTrail";
 
@@ -114,8 +113,7 @@ export default function Login() {
       if (systemData?.isOtpEnabled) {
         // Generate OTP and send it to the user's email
         await signOut(auth); // sign out the user before sending the otp
-        await logAuditTrail("Logout", null, savedId);
-        navigate("/admin");
+        await logAuditTrail("Logout", null, user.uid);
         const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
         const templateParams = {
           to_email: email,
@@ -130,10 +128,15 @@ export default function Login() {
         );
         toast.success("OTP sent successfully");
 
-        // Save the generated OTP for verification
-        setGeneratedOtp(otpCode.toString());
-        setOtpSent(true);
-        setEmailToMask(maskedEmail(email));
+        // store otp data in session storage and navigate to OTP page
+        sessionStorage.setItem('otpData', JSON.stringify({
+          email: email,
+          password: password,
+          otp: otpCode.toString(),
+          emailToMask: maskedEmail(email)
+        }));
+
+        navigate("/verify-otp");
       } else {
         // if isOtpEnable is false if will proceed here
         toast.success("Login successful");
@@ -222,7 +225,6 @@ export default function Login() {
             backgroundImage: `url(${systemData?.imageUrl})`,
           }}
         ></div>
-        {!otpSent && (
           <div className={`w-full max-w-md`}>
             <form
               action=""
@@ -283,16 +285,6 @@ export default function Login() {
               </div>
             </form>
           </div>
-        )}
-        {/*Input for verfication  */}
-        {otpSent && (
-          <OtpForm
-            handleVerify={handleVerify}
-            emailToMask={emailToMask}
-            setOtpInput={setOtpInput}
-            otpInput={otpInput}
-          />
-        )}
       </main>
       {forgotPass && (
         <Modal

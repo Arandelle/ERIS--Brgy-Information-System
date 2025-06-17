@@ -31,7 +31,8 @@ import DeleteAccount from "./screens/DeleteAccount";
 import NotFound from "./screens/NotFound";
 import TermsAndPrivacy from "./screens/Terms_And_Policy";
 import IncidentReport from "./screens/IncidentReport";
-import ChatSystem from "./screens/ChatSystem";
+import ChatSystem from "./screens/ChatSystem"
+import OtpForm from "./screens/LoginScreen/OtpForm";
 
 const App = () => {
   const sound = new Audio(soundFile);
@@ -131,6 +132,9 @@ const App = () => {
                 )
               }
             />
+            {/*Route for the otp form **/}
+            <Route path="/verify-otp" element={
+              isErisDomain ? (<OtpForm />) : (<NotFound />)} />
             <Route
               path="/privacy-policy"
               element={
