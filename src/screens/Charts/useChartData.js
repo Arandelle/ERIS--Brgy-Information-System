@@ -15,7 +15,9 @@ const useChartData = (
 
     // Extract unique years from requests
     const years = [
-      ...new Set(data.map((req) => new Date(req.timestamp).getFullYear())),
+      ...new Set(data.map((req) => new Date(req.timestamp).getFullYear())
+      .filter((year) => !isNaN(year)) // remove NaN
+    ),
     ].sort((a, b) => b - a);
 
     setAvailableYears(years);
