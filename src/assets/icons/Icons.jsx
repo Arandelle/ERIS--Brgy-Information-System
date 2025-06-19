@@ -38,6 +38,7 @@ import Face5Icon from '@mui/icons-material/Face5';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import MessageIcon from '@mui/icons-material/Message';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const icons = {
     email: EmailIcon,
@@ -79,7 +80,8 @@ const icons = {
     face: Face5Icon,
     report: ReportProblemIcon,
     message: MessageIcon,
-    medical: MedicalServicesIcon
+    medical: MedicalServicesIcon,
+    arrowDown: KeyboardArrowDownIcon
 }
 
 export default icons;

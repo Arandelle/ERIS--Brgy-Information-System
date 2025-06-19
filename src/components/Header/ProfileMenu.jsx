@@ -6,6 +6,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../services/firebaseConfig";
 import { useFetchData } from "../../hooks/useFetchData";
 import logAuditTrail from "../../hooks/useAuditTrail";
+import icons from "../../assets/icons/Icons";
 
 const Profile = () => {
   const user = auth.currentUser;
@@ -53,7 +54,7 @@ const Profile = () => {
       <button
         type="button"
         onClick={toggleDropdown}
-        className="flex mx-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+        className="relative flex mx-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
       >
         <span className="sr-only">Open user menu</span>
         <Tooltip
@@ -70,6 +71,7 @@ const Profile = () => {
             alt="user photo"
           />
         </Tooltip>
+        <icons.arrowDown fontSize="extra-small" className="absolute bottom-0 -right-1 text-gray-800 font-bold bg-gray-200 rounded-full border-2 border-white"/>
       </button>
       {isOpen && (
         <div
