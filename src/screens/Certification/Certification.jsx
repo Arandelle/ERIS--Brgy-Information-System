@@ -23,6 +23,7 @@ import useSendNotification from "../../hooks/useSendNotification";
 import useSearchParam from "../../hooks/useSearchParam";
 import logAuditTrail from "../../hooks/useAuditTrail";
 import useDebounce from "../../hooks/useDebounce";
+import RenderDebounceLoading from "../../components/ReusableComponents/RenderDebounceLoading";
 
 const Certification = () => {
   const user = auth.currentUser;
@@ -43,7 +44,7 @@ const Certification = () => {
   const [selectedId, setSelectedId] = useState("");
   const [userData, setUserData] = useState(null);
 
-  const debounceQuery = useDebounce(searchQuery, 500); // delay for searach output
+  const {debounceValue, debounceLoading} = useDebounce(searchQuery, 500); // delay for search output
 
   useEffect(() => {
     console.table(userData  )
@@ -83,7 +84,7 @@ const Certification = () => {
     "Action",
   ];
 
-  const filteredData = useFilteredData(clearance, debounceQuery, searchFields);
+  const filteredData = useFilteredData(clearance, debounceValue, searchFields);
   const {
     currentPage,
     setCurrentPage,
@@ -405,8 +406,16 @@ const Certification = () => {
               onConfirm={() => handleIfDoneOrDelete(showUpdateStatus.status)}
             />
           )}
-
-          <Table headers={Headers} data={sortedData} renderRow={renderRow} />
+           {debounceLoading ? (
+            <RenderDebounceLoading />
+          ) : (
+            <Table
+            headers={Headers}
+            data={sortedData}
+            renderRow={renderRow}
+            emptyMessage={`No certification found`}
+          />
+          )}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

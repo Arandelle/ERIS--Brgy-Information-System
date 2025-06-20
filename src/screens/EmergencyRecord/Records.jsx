@@ -19,6 +19,7 @@ import ViewModal from "./ViewModal";
 import AddRecordModal from "./AddRecordModal";
 import FilterModal from "./FilterModal"; // Import the new FilterModal
 import useDebounce from "../../hooks/useDebounce";
+import RenderDebounceLoading from "../../components/ReusableComponents/RenderDebounceLoading";
 
 const Records = () => {
   const { setSearchParams } = useSearchParam();
@@ -71,10 +72,10 @@ const Records = () => {
   ];
 
 
-  const debounceQuery = useDebounce(searchQuery, 500); // delay for search output
+  const {debounceValue, debounceLoading} = useDebounce(searchQuery, 500); // delay for search output
 
   // First apply search filter
-  const searchFilteredData = useFilteredData(updatedData, debounceQuery, searchFields);
+  const searchFilteredData = useFilteredData(updatedData, debounceValue, searchFields);
 
   // Then apply status filter
   const filteredData = statusFilters.length > 0 
@@ -258,13 +259,16 @@ const Records = () => {
               </div>
             </div>
           )}
-
-          <Table
+           {debounceLoading ? (
+            <RenderDebounceLoading />
+          ) : (
+            <Table
             headers={HeaderData}
             data={currentItems}
             renderRow={renderRow}
-            emptyMessage={"No records found"}
+            emptyMessage={`No records found`}
           />
+          )}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

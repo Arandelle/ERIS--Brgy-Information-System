@@ -21,6 +21,7 @@ import AskCard from "../../components/ReusableComponents/AskCard";
 import logAuditTrail from "../../hooks/useAuditTrail";
 import { auth } from "../../services/firebaseConfig";
 import useDebounce from "../../hooks/useDebounce";
+import RenderDebounceLoading from "../../components/ReusableComponents/RenderDebounceLoading.jsx";
 
 const UserList = ({ data }) => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -35,7 +36,7 @@ const UserList = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const currentUserId = auth.currentUser.uid;
 
-  const debounceQuery = useDebounce(searchQuery, 500); // delay for search output
+  const {debounceValue, debounceLoading} = useDebounce(searchQuery, 500); // delay for search output
 
   const searchField = [
     "fullname",
@@ -47,7 +48,7 @@ const UserList = ({ data }) => {
     "id",
   ];
 
-  const filteredData = useFilteredData(userData, debounceQuery, searchField);
+  const filteredData = useFilteredData(userData, debounceValue, searchField);
 
   const {
     currentPage,
@@ -132,69 +133,68 @@ const UserList = ({ data }) => {
     }
 
     return (
-      <>
-        <td className="w-4 p-2 sm:p-4">
-          <div className="flex items-center justify-between space-y-0">
-            <input
-              id="checkbox-table-search-1"
-              type="checkbox"
-              className="w-4 h-4 cursor-pointer text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+       <>
+           <td className="w-4 p-2 sm:p-4">
+            <div className="flex items-center justify-between space-y-0">
+              <input
+                id="checkbox-table-search-1"
+                type="checkbox"
+                className="w-4 h-4 cursor-pointer text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+            </div>
+          </td>
+          <th className="flex items-center px-2 py-2 sm:px-4 sm:py-4 text-gray-900 whitespace-nowrap dark:text-white">
+          {!isAnonymized ? (
+            <img
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full cursor-pointer"
+              src={user.fileUrl || user?.img}
+              alt="anonymous"
+              onClick={() => openModal(user.fileUrl || user.img)}
             />
-          </div>
-        </td>
-        <th className="flex items-center px-2 py-2 sm:px-4 sm:py-4 text-gray-900 whitespace-nowrap dark:text-white">
-        {!isAnonymized ? (
-          <img
-            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full cursor-pointer"
-            src={user.fileUrl || user?.img}
-            alt="anonymous"
-            onClick={() => openModal(user.fileUrl || user.img)}
-          />
-        ) : (
-          <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-100">
-            <FallbackImage className="text-dark"/>
-          </div>
-        )}
-          
-          <div className="ps-2 sm:ps-3 relative">
-            <p>{displayValue(user.fullname, isAnonymized)}</p>
-            <p className="font-normal text-gray-500 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[200px]">
-              {user.email}
-            </p>
-          </div>
-        </th>
-        <TableData data={user.customId} />
-        <TableData data={displayValue(user.gender, isAnonymized)} />
-        <TableData data={displayValue(user.mobileNum, isAnonymized)} />
-        <TableData data={formatDate(user.createdAt)} />
-        <td className="flex-1">
-          <div className="flex items-center justify-center space-x-2">
-            <IconButton
-              icon={icons.view}
-              color={"blue"}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleViewUser(user);
-              }}
-              tooltip={"Show more details"}
-              fontSize={"small"}
-            />
-            <IconButton 
-              icon={isLocked ? icons.lock : icons.lockOpen}
-              color={isLocked ? "gray" : "green"}
-              tooltip={`${isLocked ? "Unlock" : "Lock"} ${data}`}
-              fontSize={"small"}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleLockUserClick(user);
-              }}
-            />
-          </div>
-        </td>
-      </>
+          ) : (
+            <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-100">
+              <FallbackImage className="text-dark"/>
+            </div>
+          )}
+            
+            <div className="ps-2 sm:ps-3 relative">
+              <p>{displayValue(user.fullname, isAnonymized)}</p>
+              <p className="font-normal text-gray-500 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[200px]">
+                {user.email}
+              </p>
+            </div>
+          </th>
+          <TableData data={user.customId} />
+          <TableData data={displayValue(user.gender, isAnonymized)} />
+          <TableData data={displayValue(user.mobileNum, isAnonymized)} />
+          <TableData data={formatDate(user.createdAt)} />
+          <td className="flex-1">
+            <div className="flex items-center justify-center space-x-2">
+              <IconButton
+                icon={icons.view}
+                color={"blue"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleViewUser(user);
+                }}
+                tooltip={"Show more details"}
+                fontSize={"small"}
+              />
+              <IconButton 
+                icon={isLocked ? icons.lock : icons.lockOpen}
+                color={isLocked ? "gray" : "green"}
+                tooltip={`${isLocked ? "Unlock" : "Lock"} ${data}`}
+                fontSize={"small"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleLockUserClick(user);
+                }}
+              />
+            </div>
+          </td>
+       </>
     );
-  };
-  
+  };  
 
   return (
     <HeaderAndSideBar
@@ -235,12 +235,17 @@ const UserList = ({ data }) => {
               onConfirm={() => handleConfirmLockUser(userToLock.id, userToLock.isLocked)}
             />
           )}
-          <Table
+          {debounceLoading ? (
+            <RenderDebounceLoading />
+          ) : (
+            <Table
             headers={HeaderData}
             data={currentItems}
             renderRow={renderRow}
             emptyMessage={`No ${data} found`}
           />
+          )}
+          
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

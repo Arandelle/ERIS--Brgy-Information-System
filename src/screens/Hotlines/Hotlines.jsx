@@ -19,6 +19,7 @@ import useSearchParam from "../../hooks/useSearchParam";
 import logAuditTrail from "../../hooks/useAuditTrail";
 import { generateUniqueBarangayID } from "../../helper/generateID";
 import useDebounce from "../../hooks/useDebounce";
+import RenderDebounceLoading from "../../components/ReusableComponents/RenderDebounceLoading";
 
 const Hotlines = () => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -40,7 +41,7 @@ const Hotlines = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const debounceQuery = useDebounce(searchQuery, 500); // delay for search output
+  const {debounceValue, debounceLoading} = useDebounce(searchQuery, 500); // delay for search output
 
   const searchField = [
     "category",
@@ -60,7 +61,7 @@ const Hotlines = () => {
     "Action",
   ];
 
-  const filteredData = useFilteredData(hotlines, debounceQuery, searchField);
+  const filteredData = useFilteredData(hotlines, debounceValue, searchField);
 
   const {
     currentPage,
@@ -286,12 +287,17 @@ const Hotlines = () => {
             />
           )}
 
-          <Table
+           {debounceLoading ? (
+            <RenderDebounceLoading />
+          ) : (
+            <Table
             headers={HotlineHeaders}
             data={currentItems}
             renderRow={renderRow}
-            emptyMessage="No hotlines contact found"
+           emptyMessage="No hotlines contact found"
           />
+          )}
+          
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

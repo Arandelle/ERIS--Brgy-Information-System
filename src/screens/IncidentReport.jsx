@@ -14,6 +14,7 @@ import { database } from "../services/firebaseConfig";
 import { toast } from "sonner";
 import useSendNotification from "../hooks/useSendNotification";
 import useDebounce from "../hooks/useDebounce";
+import RenderDebounceLoading from "../components/ReusableComponents/RenderDebounceLoading";
 
 const IncidentReport = () => {
   const { data: reportedData = [] } = useFetchData("reportedData");
@@ -71,8 +72,8 @@ const IncidentReport = () => {
     "incidentID"
   ];
 
-  const debounceQuery = useDebounce(searchQuery, 500);
-  const filteredData = useFilteredData(enrichedData, debounceQuery, searchField);
+  const {debounceValue, debounceLoading} = useDebounce(searchQuery, 500); // delay for search output
+  const filteredData = useFilteredData(enrichedData, debounceValue, searchField);
   const {
     currentPage,
     setCurrentPage,
@@ -223,12 +224,17 @@ const IncidentReport = () => {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
-          <Table
+
+           {debounceLoading ? (
+            <RenderDebounceLoading />
+          ) : (
+            <Table
             headers={headerData}
             data={currentItems}
             renderRow={renderRow}
-            emptyMessage="No incident reports yet"
+            emptyMessage={`No incident reports found`}
           />
+          )}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

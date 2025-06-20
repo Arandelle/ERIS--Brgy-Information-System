@@ -11,6 +11,7 @@ import { formatDateWithTime } from "../helper/FormatDate";
 import SelectStyle from "../components/ReusableComponents/SelectStyle";
 import useRemoveOldData from "../hooks/useRemoveOldData";
 import useDebounce from "../hooks/useDebounce";
+import RenderDebounceLoading from "../components/ReusableComponents/RenderDebounceLoading";
 
 const Audit = () => {
   const { data: userlogs } = useFetchData("usersLog");
@@ -25,7 +26,7 @@ const Audit = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterData, setFilterData] = useState("");
 
-  const debounceQuery = useDebounce(searchQuery, 5000); // use the debounce hook to have delay on output for searching
+ const {debounceValue, debounceLoading} = useDebounce(searchQuery, 500); // delay for search output
 
   const HeaderData = [
     "Executor Id",
@@ -106,7 +107,7 @@ const Audit = () => {
   // If filterData is "All" or empty, include all logs; otherwise, match specific action
   const filteredData = useFilteredData(
     updatedData,
-    debounceQuery,
+    debounceValue,
     searchFields
   ).filter(
     (log) => !filterData || filterData === "All" || log.action === filterData
@@ -158,12 +159,17 @@ const Audit = () => {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
-          <Table
+
+           {debounceLoading ? (
+            <RenderDebounceLoading />
+          ) : (
+            <Table
             headers={HeaderData}
             data={currentItems}
             renderRow={renderRow}
-            emptyMessage="No user logs found"
+            emptyMessage={`No user logs found`}
           />
+          )}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

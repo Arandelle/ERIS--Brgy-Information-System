@@ -25,6 +25,7 @@ import useViewMedia from "../../hooks/useViewMedia";
 import logAuditTrail from "../../hooks/useAuditTrail";
 import { generateUniqueBarangayID } from "../../helper/generateID";
 import useDebounce from "../../hooks/useDebounce";
+import RenderDebounceLoading from "../../components/ReusableComponents/RenderDebounceLoading";
 
 const Activities = () => {
   const { data: activity, setData: setActivity } = useFetchData("awareness");
@@ -49,10 +50,10 @@ const Activities = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const debounceQuery = useDebounce(searchQuery, 500); // delay for search output
+  const {debounceValue, debounceLoading} = useDebounce(searchQuery, 500); // delay for search output
   const searchField = ["title", "description", "links"];
 
-  const filteredData = useFilteredData(activity, debounceQuery, searchField);
+  const filteredData = useFilteredData(activity, debounceValue, searchField);
 
   const {
     currentPage,
@@ -331,12 +332,17 @@ const Activities = () => {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
-          <Table
+          {/** show the loading when searching */}
+           {debounceLoading ? (
+            <RenderDebounceLoading />
+          ) : (
+            <Table
             headers={headerData}
             data={currentItems}
             renderRow={renderRow}
-            emptyMessage="No awareness found"
+            emptyMessage={`No post awareness found`}
           />
+          )}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
