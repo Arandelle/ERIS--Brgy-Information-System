@@ -5,6 +5,7 @@ import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import { Send, Search, ChevronLeft } from "lucide-react";
 import { formatDate, formatDateWithTimeAndWeek, formatTime } from "../helper/FormatDate";
 import { getTimeDifference } from "../helper/TimeDiff";
+import { useLocation } from "react-router-dom";
 
 const TestUserChatSimulator = () => {
   const [testText, setTestText] = useState("");
@@ -591,7 +592,7 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   useEffect(() => {
     if (!user || !selectedUser) return;
 
-    const chatRef = ref(database, `chats/${user.uid}/${selectedUser.uid}`);
+    const chatRef = ref(database, `chats/${user.uid}/${selectedUser?.uid}`);
     return onValue(chatRef, (snapshot) => {
       const data = snapshot.val() || {};
       const sorted = Object.values(data).sort(
@@ -736,6 +737,15 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
 
 const ChatSystem = () => {
   const [selectedUser, setSelectedUser] = useState(null);
+  const location = useLocation();
+
+  const {targetUser} = location.state || {};
+
+  useEffect(() => {
+    if(targetUser) {
+      setSelectedUser(targetUser);
+    }
+  }, [targetUser]);
 
   return (
     <HeaderAndSideBar

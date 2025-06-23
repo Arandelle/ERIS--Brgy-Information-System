@@ -22,6 +22,7 @@ import logAuditTrail from "../../hooks/useAuditTrail";
 import { auth } from "../../services/firebaseConfig";
 import useDebounce from "../../hooks/useDebounce";
 import RenderDebounceLoading from "../../components/ReusableComponents/RenderDebounceLoading.jsx";
+import { useNavigate } from "react-router-dom";
 
 const UserList = ({ data }) => {
   const { searchParams, setSearchParams } = useSearchParam();
@@ -123,7 +124,7 @@ const UserList = ({ data }) => {
   };
 
   const renderRow = (user) => {
-
+    const navigate = useNavigate();
     const isLocked = user.isLocked;
     const isAnonymized = user.anonymized;
     const FallbackImage = icons.anonymous;
@@ -131,6 +132,19 @@ const UserList = ({ data }) => {
     const displayValue = (value, isAnonymized = false) => {
       return value && !isAnonymized ? value : isAnonymized ? "Anonymized" : "----"
     }
+
+    const handleMessageUser = (user) => {
+      navigate(`/chats`, {
+        state: {
+          targetUser: {
+            uid: user.uid,
+            name: user.fullname || user.customId || "Anonymous",
+            avatar: user.fileUrl || user.img || icons.anonymous,
+            customId: user.customId || "Anonymous",
+          }
+        }
+      });
+    };
 
     return (
        <>
@@ -170,6 +184,15 @@ const UserList = ({ data }) => {
           <TableData data={formatDate(user.createdAt)} />
           <td className="flex-1">
             <div className="flex items-center justify-center space-x-2">
+              <IconButton 
+                icon={icons.message}
+                color={"red"}
+                onClick={() => {
+                  handleMessageUser(user);
+                }}
+                tooltip={"Send message"}
+                fontSize={"small"}
+              />
               <IconButton
                 icon={icons.view}
                 color={"blue"}
