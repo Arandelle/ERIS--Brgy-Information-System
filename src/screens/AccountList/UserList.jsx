@@ -137,7 +137,7 @@ const UserList = ({ data }) => {
       navigate(`/chats`, {
         state: {
           targetUser: {
-            uid: user.uid,
+            uid: user.uid || user.id,
             name: user.fullname || user.customId || "Anonymous",
             avatar: user.fileUrl || user.img || icons.anonymous,
             customId: user.customId || "Anonymous",

@@ -571,7 +571,7 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
     const markAsRead = async () => {
       const lastReadRef = ref(
         database,
-        `lastRead/${user.uid}/${selectedUser.uid}`
+        `lastRead/${user.uid}/${selectedUser.uid || selectedUser.id}`
       );
       await set(lastReadRef, Date.now());
     };
@@ -592,7 +592,7 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   useEffect(() => {
     if (!user || !selectedUser) return;
 
-    const chatRef = ref(database, `chats/${user.uid}/${selectedUser?.uid}`);
+    const chatRef = ref(database, `chats/${user.uid}/${selectedUser?.uid || selectedUser?.id}`);
     return onValue(chatRef, (snapshot) => {
       const data = snapshot.val() || {};
       const sorted = Object.values(data).sort(
@@ -611,8 +611,8 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       timestamp: Date.now(),
     };
 
-    const userRef = ref(database, `chats/${user.uid}/${selectedUser.uid}`);
-    const mirroredRef = ref(database, `chats/${selectedUser.uid}/${user.uid}`);
+    const userRef = ref(database, `chats/${user.uid}/${selectedUser.uid || selectedUser.id}`);
+    const mirroredRef = ref(database, `chats/${selectedUser.uid || selectedUser.id}/${user.uid}`);
 
     await push(userRef, message);
     await push(mirroredRef, message);
@@ -746,6 +746,8 @@ const ChatSystem = () => {
       setSelectedUser(targetUser);
     }
   }, [targetUser]);
+
+  console.log("Selected User:", selectedUser);
 
   return (
     <HeaderAndSideBar
