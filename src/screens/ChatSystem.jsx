@@ -168,6 +168,35 @@ const ChatList = ({ onSelect, selectedUser }) => {
       }
     }
 
+    // search admins
+    const adminSnap = await get(ref(database, "admins"));
+    if (adminSnap.exists()) {
+      const adminsData = adminSnap.val();
+      for (const uid in adminsData) {
+        if (uid !== currentUser.uid) {
+          const name =
+            adminsData[uid].fullname || adminsData[uid].customId || "";
+          if (name.toLowerCase().includes(query.toLowerCase())) {
+            // Check if this user is already in results (from users collection)
+            const existingUser = allResults.find((user) => user.uid === uid);
+            if (!existingUser) {
+              allResults.push({
+                uid,
+                name,
+                avatar:
+                  adminsData[uid].img || adminsData[uid].fileUrl || null,
+                customId: adminsData[uid].customId || "No id found",
+                status: "offline",
+                lastMessage: null,
+                hasConversation: conversationUsers.some((u) => u.uid === uid),
+              });
+            }
+          }
+        }
+      }
+    }
+
+
     setSearchResults(allResults);
   };
 
@@ -195,8 +224,14 @@ const ChatList = ({ onSelect, selectedUser }) => {
         userSnapshot = await get(ref(database, `responders/${userId}`));
         if (userSnapshot.exists()) {
           userData = userSnapshot.val();
+        } else{
+          // Try admins collection
+          userSnapshot = await get(ref(database, `admins/${userId}`));  
+          if (userSnapshot.exists()) {
+            userData = userSnapshot.val();
+          }
         }
-      }
+      } 
 
       if (userData) {
         return {
