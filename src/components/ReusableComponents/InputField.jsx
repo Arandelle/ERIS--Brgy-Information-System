@@ -1,3 +1,5 @@
+
+
 export const InputField = ({
   type = "text",
   placeholder,
@@ -6,7 +8,8 @@ export const InputField = ({
   onFocus,
   onBlur,
   className,
-  required
+  required,
+  autoFocus = false,
 }) => {
   return (
     <input
@@ -18,6 +21,7 @@ export const InputField = ({
       onFocus={onFocus}
       onBlur={onBlur}
       required={required}
+      autoFocus={autoFocus}
     />
   );
 };

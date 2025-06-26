@@ -59,7 +59,8 @@ const Setting = () => {
     }
   };
 
-  const handleOtpEnableConfirm = async () => {
+  const handleOtpEnableConfirm = async (e) => {
+    e.preventDefault();
     try {
       if (!password) {
         toast.warning("Password is required before proceeding");
@@ -180,7 +181,7 @@ const Setting = () => {
               title="Enter your password"
               closeButton={() => setShowPasswordModal(false)}
               children={
-                <div className="max-w-2xl space-y-6">
+                <form className="max-w-2xl space-y-6" onSubmit={handleOtpEnableConfirm}>
                   <p className="text-sm text-gray-600 dark:text-gray-300 italic">
                     For security purposes, please enter your password to save
                     the changes
@@ -195,17 +196,17 @@ const Setting = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required={true}
+                        autoFocus={true}
                       />
                     </div>
                     <button
                       type="submit"
                       className="bg-blue-500 py-2 rounded-md text-white font-bold text-sm w-full"
-                      onClick={handleOtpEnableConfirm}
                     >
                       Save Changes
                     </button>
                   </div>
-                </div>
+                </form>
               }
             />
           )}
