@@ -55,6 +55,7 @@ const ChangePassModal = ({handlePasswordModal}) => {
             placeholder={"Enter old password"}
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
+            autoFocus={true}
           />
           <InputField
             type="password"
