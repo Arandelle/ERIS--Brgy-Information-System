@@ -364,18 +364,6 @@ const ChatList = ({ onSelect, selectedUser }) => {
       .slice(0, 2);
   };
 
-  const formatLastMessageTime = (timestamp) => {
-    if (!timestamp) return "";
-    const now = new Date();
-    const messageDate = new Date(timestamp);
-    const diffInHours = (now - messageDate) / (1000 * 60 * 60);
-
-    if (diffInHours < 24) {
-      return formatTime(timestamp);
-    } else {
-      return formatDate(timestamp);
-    }
-  };
 
   const handleUserSelect = async (user) => {
     onSelect(user);
@@ -754,7 +742,17 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
           </div>
           <div className="flex flex-col">
             <h3 className="font-semibold text-gray-900 dark:text-gray-500">
-              {selectedUser.name}
+              {/** if selected user is the current user add (You) */}
+              {selectedUser.uid === user.uid ? (
+                <>
+                  {selectedUser.name}{" "}
+                  <span className="text-blue-500 font-semibold text-xs">
+                    (You)
+                  </span>
+                </>
+              ) : (
+                selectedUser.name
+              )}
             </h3>
             <h3 className="font-semibold text-gray-500 dark:text-gray-400 text-xs">
               {selectedUser.customId}
