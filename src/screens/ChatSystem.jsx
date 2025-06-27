@@ -3,7 +3,11 @@ import { ref, onValue, push, get, set } from "firebase/database";
 import { database, auth } from "../services/firebaseConfig";
 import HeaderAndSideBar from "../components/ReusableComponents/HeaderSidebar";
 import { Send, Search, ChevronLeft } from "lucide-react";
-import { formatDate, formatDateWithTimeAndWeek, formatTime } from "../helper/FormatDate";
+import {
+  formatDate,
+  formatDateWithTimeAndWeek,
+  formatTime,
+} from "../helper/FormatDate";
 import { getTimeDifference } from "../helper/TimeDiff";
 import { useLocation } from "react-router-dom";
 
@@ -61,16 +65,17 @@ const TestUserChatSimulator = () => {
 };
 
 const MessageBubble = ({ text, isOwn, timestamp, prevTimestamp }) => {
-
-  const showOverallTimeStamp = !prevTimestamp || timestamp - prevTimestamp > 60 * 1000 * 30; //if  greater than 30 minutes or no prevTimestamp
-  const showSpecificTimestamp = !prevTimestamp || timestamp - prevTimestamp > 60 * 1000 *  5 // 5 minutes
+  const showOverallTimeStamp =
+    !prevTimestamp || timestamp - prevTimestamp > 60 * 1000 * 30; //if  greater than 30 minutes or no prevTimestamp
+  const showSpecificTimestamp =
+    !prevTimestamp || timestamp - prevTimestamp > 60 * 1000 * 5; // 5 minutes
   return (
-   <>
+    <>
       {showOverallTimeStamp && (
         <div className="flex items-center justify-center mb-2">
-       <span className="text-xs text-gray-500 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 px-3 py-1 rounded-full">
-       {formatDateWithTimeAndWeek(timestamp)}
-       </span>
+          <span className="text-xs text-gray-500 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 px-3 py-1 rounded-full">
+            {formatDateWithTimeAndWeek(timestamp)}
+          </span>
         </div>
       )}
       <div
@@ -97,7 +102,7 @@ const MessageBubble = ({ text, isOwn, timestamp, prevTimestamp }) => {
           </span>
         </div>
       </div>
-   </>
+    </>
   );
 };
 
@@ -156,7 +161,9 @@ const ChatList = ({ onSelect, selectedUser }) => {
                 uid,
                 name,
                 avatar:
-                  respondersData[uid].img || respondersData[uid].fileUrl || null,
+                  respondersData[uid].img ||
+                  respondersData[uid].fileUrl ||
+                  null,
                 customId: respondersData[uid].customId || "No id found",
                 status: "offline",
                 lastMessage: null,
@@ -183,8 +190,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
               allResults.push({
                 uid,
                 name,
-                avatar:
-                  adminsData[uid].img || adminsData[uid].fileUrl || null,
+                avatar: adminsData[uid].img || adminsData[uid].fileUrl || null,
                 customId: adminsData[uid].customId || "No id found",
                 status: "offline",
                 lastMessage: null,
@@ -195,7 +201,6 @@ const ChatList = ({ onSelect, selectedUser }) => {
         }
       }
     }
-
 
     setSearchResults(allResults);
   };
@@ -224,14 +229,14 @@ const ChatList = ({ onSelect, selectedUser }) => {
         userSnapshot = await get(ref(database, `responders/${userId}`));
         if (userSnapshot.exists()) {
           userData = userSnapshot.val();
-        } else{
+        } else {
           // Try admins collection
-          userSnapshot = await get(ref(database, `admins/${userId}`));  
+          userSnapshot = await get(ref(database, `admins/${userId}`));
           if (userSnapshot.exists()) {
             userData = userSnapshot.val();
           }
         }
-      } 
+      }
 
       if (userData) {
         return {
@@ -366,9 +371,9 @@ const ChatList = ({ onSelect, selectedUser }) => {
     const diffInHours = (now - messageDate) / (1000 * 60 * 60);
 
     if (diffInHours < 24) {
-    return   formatTime(timestamp)
-    }  else {
-     return formatDate(timestamp)
+      return formatTime(timestamp);
+    } else {
+      return formatDate(timestamp);
     }
   };
 
@@ -409,7 +414,9 @@ const ChatList = ({ onSelect, selectedUser }) => {
       } w-full lg:w-80 bg-white dark:bg-gray-800 border-r border-gray-200 flex flex-col`}
     >
       <div className="p-4 border-b border-gray-200">
-        <h2 className="font-bold text-xl text-gray-800 dark:text-gray-400 mb-4">Messages</h2>
+        <h2 className="font-bold text-xl text-gray-800 dark:text-gray-400 mb-4">
+          Messages
+        </h2>
         <div className="relative">
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -432,7 +439,9 @@ const ChatList = ({ onSelect, selectedUser }) => {
             <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
               <Send size={32} className="text-gray-400" />
             </div>
-            <h3 className="font-medium text-gray-900 dark:text-gray-400 mb-1">No Conversations</h3>
+            <h3 className="font-medium text-gray-900 dark:text-gray-400 mb-1">
+              No Conversations
+            </h3>
             <p className="text-sm text-gray-500 dark:texy-gray-300 text-center px-4">
               You don't have any conversations yet. Start chatting to see them
               here.
@@ -483,15 +492,29 @@ const ChatList = ({ onSelect, selectedUser }) => {
                           <div className="flex items-center justify-between">
                             <h3
                               className={`font-medium truncate ${
-                                hasUnread ? "text-gray-900 dark:text-gray-500" : "text-gray-700 dark:text-gray-400"
+                                hasUnread
+                                  ? "text-gray-900 dark:text-gray-500"
+                                  : "text-gray-700 dark:text-gray-400"
                               }`}
                             >
-                              {user.name}
+                              {user.uid === currentUser.uid ? (
+                                <>
+                                  {user.name}{" "}
+                                  <span className="text-blue-500 font-semibold text-xs">
+                                    (You)
+                                  </span>
+                                </>
+                              ) : (
+                                user.name
+                              )}
                             </h3>
+
                             <div className="flex items-center gap-2">
                               {user.lastMessage && (
                                 <span className="text-xs text-gray-500">
-                                  {getTimeDifference(user.lastMessage.timestamp)}
+                                  {getTimeDifference(
+                                    user.lastMessage.timestamp
+                                  )}
                                 </span>
                               )}
                               {hasUnread && (
@@ -511,7 +534,10 @@ const ChatList = ({ onSelect, selectedUser }) => {
                             >
                               {user.lastMessage
                                 ? user.lastMessage.text.length > 30
-                                  ? `${user.lastMessage.text.substring(0, 30)}...`
+                                  ? `${user.lastMessage.text.substring(
+                                      0,
+                                      30
+                                    )}...`
                                   : user.lastMessage.text
                                 : "No messages yet"}
                             </p>
@@ -529,7 +555,13 @@ const ChatList = ({ onSelect, selectedUser }) => {
 
             {/* Users Without Conversations Section */}
             {search && usersWithoutConversations.length > 0 && (
-              <div className={filteredConversationUsers.length > 0 ? "border-t border-gray-200" : ""}>
+              <div
+                className={
+                  filteredConversationUsers.length > 0
+                    ? "border-t border-gray-200"
+                    : ""
+                }
+              >
                 <h4 className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50 dark:bg-gray-900 dark:text-gray-400">
                   Other Users
                 </h4>
@@ -557,7 +589,9 @@ const ChatList = ({ onSelect, selectedUser }) => {
                         <h3 className="font-medium truncate text-gray-700 dark:text-gray-500">
                           {user.name}
                         </h3>
-                        <p className="text-sm text-gray-400 dark:text-gray-300">No messages yet</p>
+                        <p className="text-sm text-gray-400 dark:text-gray-300">
+                          No messages yet
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -566,17 +600,24 @@ const ChatList = ({ onSelect, selectedUser }) => {
             )}
 
             {/* No Results Message */}
-            {search && filteredConversationUsers.length === 0 && usersWithoutConversations.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full py-12 text-gray-500">
-                <div className="w-16 h-16 bg-gray-200 dark:bg-gray-300 rounded-full flex items-center justify-center mb-4">
-                  <Search size={32} className="text-gray-400 dark:text-gray-500" />
+            {search &&
+              filteredConversationUsers.length === 0 &&
+              usersWithoutConversations.length === 0 && (
+                <div className="flex flex-col items-center justify-center h-full py-12 text-gray-500">
+                  <div className="w-16 h-16 bg-gray-200 dark:bg-gray-300 rounded-full flex items-center justify-center mb-4">
+                    <Search
+                      size={32}
+                      className="text-gray-400 dark:text-gray-500"
+                    />
+                  </div>
+                  <h3 className="font-medium text-gray-900 dark:text-gray-400 mb-1">
+                    No Users Found
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-300 text-center px-4">
+                    No users match your search "{search}"
+                  </p>
                 </div>
-                <h3 className="font-medium text-gray-900 dark:text-gray-400 mb-1">No Users Found</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-300 text-center px-4">
-                  No users match your search "{search}"
-                </p>
-              </div>
-            )}
+              )}
           </>
         )}
       </div>
@@ -627,7 +668,10 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   useEffect(() => {
     if (!user || !selectedUser) return;
 
-    const chatRef = ref(database, `chats/${user.uid}/${selectedUser?.uid || selectedUser?.id}`);
+    const chatRef = ref(
+      database,
+      `chats/${user.uid}/${selectedUser?.uid || selectedUser?.id}`
+    );
     return onValue(chatRef, (snapshot) => {
       const data = snapshot.val() || {};
       const sorted = Object.values(data).sort(
@@ -646,11 +690,22 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       timestamp: Date.now(),
     };
 
-    const userRef = ref(database, `chats/${user.uid}/${selectedUser.uid || selectedUser.id}`);
-    const mirroredRef = ref(database, `chats/${selectedUser.uid || selectedUser.id}/${user.uid}`);
+    const userRef = ref(
+      database,
+      `chats/${user.uid}/${selectedUser.uid || selectedUser.id}`
+    );
+    const mirroredRef = ref(
+      database,
+      `chats/${selectedUser.uid || selectedUser.id}/${user.uid}`
+    );
 
     await push(userRef, message);
-    await push(mirroredRef, message);
+
+    // Mirror the message in the other user's chat
+    // if the selected user is not the current user, mirror the message
+    if (selectedUser.uid !== user.uid) {
+      await push(mirroredRef, message);
+    }
     setText("");
   };
 
@@ -698,7 +753,9 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
             )}
           </div>
           <div className="flex flex-col">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-500">{selectedUser.name}</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-500">
+              {selectedUser.name}
+            </h3>
             <h3 className="font-semibold text-gray-500 dark:text-gray-400 text-xs">
               {selectedUser.customId}
             </h3>
@@ -719,7 +776,9 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
               <h3 className="font-medium text-gray-900 dark:text-gray-400 mb-1">
                 {selectedUser.name}
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-500">Start your conversation</p>
+              <p className="text-sm text-gray-500 dark:text-gray-500">
+                Start your conversation
+              </p>
             </div>
           ) : (
             messages.map((msg, index) => (
@@ -728,7 +787,7 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
                 text={msg.text}
                 isOwn={msg.sender === user?.uid}
                 timestamp={msg.timestamp}
-                prevTimestamp={index > 0 ? messages[index -1].timestamp : null}
+                prevTimestamp={index > 0 ? messages[index - 1].timestamp : null}
               />
             ))
           )}
@@ -774,10 +833,10 @@ const ChatSystem = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const location = useLocation();
 
-  const {targetUser} = location.state || {};
+  const { targetUser } = location.state || {};
 
   useEffect(() => {
-    if(targetUser) {
+    if (targetUser) {
       setSelectedUser(targetUser);
     }
   }, [targetUser]);
@@ -807,7 +866,10 @@ const ChatSystem = () => {
               >
                 <div className="text-center">
                   <div className="w-24 h-24 bg-gray-100 dark:bg-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Send size={32} className="text-gray-400 dark:text-gray-200" />
+                    <Send
+                      size={32}
+                      className="text-gray-400 dark:text-gray-200"
+                    />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-400 mb-2">
                     Your Messages
