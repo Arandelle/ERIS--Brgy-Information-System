@@ -829,6 +829,7 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
                 minHeight: "44px",
                 height: "auto",
               }}
+              autoFocus="true"
             />
           </div>
           <button
