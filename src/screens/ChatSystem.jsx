@@ -616,17 +616,30 @@ const ChatList = ({ onSelect, selectedUser }) => {
 const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
-  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const user = auth.currentUser;
   const lastMessageRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Method 1: Scroll the container to bottom
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+    
+    // Method 2: Scroll to last message (as backup)
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    // Add a small delay to ensure DOM is updated
+    const timer = setTimeout(() => {
+      scrollToBottom();
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [messages, selectedUser]);
 
   // Mark messages as read when viewing conversation
   useEffect(() => {
@@ -695,6 +708,11 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       await push(mirroredRef, message);
     }
     setText("");
+    
+    // Scroll to bottom after sending message
+    setTimeout(() => {
+      scrollToBottom();
+    }, 100);
   };
 
   const handleKeyPress = (e) => {
@@ -716,7 +734,7 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Chat Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white dark:bg-gray-800">
+      <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white dark:bg-gray-800">
         <div className="flex items-center gap-3">
           <div className="relative flex items-center gap-1">
             <button
@@ -762,7 +780,10 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+      <div 
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900"
+      >
         <div className="py-4">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full py-12 text-gray-500">
@@ -786,10 +807,10 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
                 isOwn={msg.sender === user?.uid}
                 timestamp={msg.timestamp}
                 prevTimestamp={index > 0 ? messages[index - 1].timestamp : null}
+                ref={index === messages.length - 1 ? lastMessageRef : null}
               />
             ))
           )}
-          <div ref={messagesEndRef} />
         </div>
       </div>
 
@@ -826,7 +847,6 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
     </div>
   );
 };
-
 const ChatSystem = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const location = useLocation();
@@ -845,7 +865,7 @@ const ChatSystem = () => {
   return (
     <HeaderAndSideBar
       content={
-        <div className="flex flex-col h-screen bg-gray-100">
+        <div className="flex flex-col h-[calc(100vh-64px)] bg-gray-100">
           <div className={`flex flex-1 min-h-0`}>
             <ChatList onSelect={setSelectedUser} selectedUser={selectedUser} />
             {selectedUser ? (

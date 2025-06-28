@@ -36,9 +36,10 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import Face5Icon from '@mui/icons-material/Face5';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
-import MessageIcon from '@mui/icons-material/Message';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
+import {MessageCircleMore} from "lucide-react"
 
 const icons = {
     email: EmailIcon,
@@ -79,7 +80,7 @@ const icons = {
     anonymous: PersonSearchIcon,
     face: Face5Icon,
     report: ReportProblemIcon,
-    message: MessageIcon,
+    message: MessageCircleMore,
     medical: MedicalServicesIcon,
     arrowDown: KeyboardArrowDownIcon
 }

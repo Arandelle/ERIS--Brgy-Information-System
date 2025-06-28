@@ -17,6 +17,7 @@ import useSystemState from "./useSystemState";
 import ProfileSettings from "./ProfileSettings";
 import { useFetchSystemData } from "../../hooks/useFetchSystemData";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/ReusableComponents/Spinner";
 
 const Setting = () => {
   const navigate = useNavigate();
@@ -61,6 +62,7 @@ const Setting = () => {
 
   const handleOtpEnableConfirm = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (!password) {
         toast.warning("Password is required before proceeding");
@@ -87,7 +89,7 @@ const Setting = () => {
       <HeaderAndSideBar
         content={
           <div className="flex items-center text-gray-500 justify-center h-svh">
-            Loading please wait...
+           <Spinner loading={loading} />
           </div>
         }
       />
