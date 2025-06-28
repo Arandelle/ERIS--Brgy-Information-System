@@ -830,7 +830,8 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
 const ChatSystem = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const location = useLocation();
-
+ 
+  // Get targetUser from location state if available
   const { targetUser } = location.state || {};
 
   useEffect(() => {

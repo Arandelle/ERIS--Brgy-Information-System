@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import OTP from "../../assets/images/otp.svg";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -12,30 +12,17 @@ import { InputStyle } from "../../components/ReusableComponents/InputStyle";
 
 const OtpForm = () => {
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Extract email, password, otp, and emailToMask from location state
+  // This is set when the user logs in and OTP is required
+  const {email, password, otp, emailToMask} = location.state || {};
+
   const [otpInput, setOtpInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [otpData, setOtpData] = useState(null);
   const [attempts, setAttempts] = useState(0);
   const maxAttempts = 3;
-
-   useEffect(() => {
-    // Check if OTP data exists in sessionStorage
-    const storedOtpData = sessionStorage.getItem('otpData');
-    if (storedOtpData) {
-      try {
-        setOtpData(JSON.parse(storedOtpData));
-      } catch (error) {
-        console.error("Error parsing OTP data:", error);
-        toast.error("Invalid OTP session. Please login again.");
-        navigate('/');
-      }
-    } else {
-      // If no OTP data, redirect to login
-      toast.error("No OTP session found. Please login again.");
-      navigate('/');
-    }
-  }, [navigate]);
 
    // verify the otp sent to the email
   const handleVerify = async (event) => {
@@ -51,20 +38,20 @@ const OtpForm = () => {
       return;
     }
 
-    if (!otpData) {
-      toast.error("OTP session expired. Please login again.");
+    if (!location.state) {
+      toast.error("No OTP data found. Please login again.");
       navigate('/');
       return;
     }
 
-    if (otpInput === otpData.otp) {
+    if (otpInput === otp) {
       setLoading(true);
       try {
         // OTP verified, proceed with Firebase login
         const userCredentials = await signInWithEmailAndPassword(
           auth,
-          otpData.email,
-          otpData.password
+          email,
+          password
         );
         const user = userCredentials.user;
 
@@ -73,8 +60,6 @@ const OtpForm = () => {
         const adminSnapshot = await get(adminRef);
         
         if (adminSnapshot.exists()) {
-          // Clear OTP data from sessionStorage
-          sessionStorage.removeItem('otpData');
           
           toast.success("Login successful");
           navigate("/dashboard");
@@ -82,14 +67,10 @@ const OtpForm = () => {
         } else {
           toast.error("You do not have admin privileges");
           await auth.signOut();
-          // Clear OTP data and redirect to login
-          sessionStorage.removeItem('otpData');
           navigate('/');
         }
       } catch (error) {
         toast.error("Login failed: " + error.message);
-        // Clear OTP data on error
-        sessionStorage.removeItem('otpData');
         navigate('/');
       } finally {
         setLoading(false);
@@ -100,7 +81,6 @@ const OtpForm = () => {
       
       if (newAttempts >= maxAttempts) {
         toast.error("Too many incorrect attempts. Please login again.");
-        sessionStorage.removeItem('otpData');
         navigate('/');
       } else {
         toast.error(`Incorrect OTP. ${maxAttempts - newAttempts} attempts remaining.`);
@@ -110,7 +90,6 @@ const OtpForm = () => {
   };
 
   const handleBackToLogin = () => {
-    sessionStorage.removeItem('otpData');
     navigate('/');
   };
 
@@ -127,7 +106,7 @@ const OtpForm = () => {
     );
   }
 
-  if (!otpData) {
+  if (!location.state) {
     return null; // Will redirect in useEffect
   }
 
@@ -141,7 +120,7 @@ const OtpForm = () => {
             </h1>
             <p className="text-center text-sm dark:text-gray-400">
               We've sent a 6-digit code to{" "}
-              <span className="font-semibold">{otpData.emailToMask}</span>
+              <span className="font-semibold">{emailToMask}</span>
             </p>
             {attempts > 0 && (
               <p className="text-center text-xs text-yellow-600 dark:text-yellow-400">

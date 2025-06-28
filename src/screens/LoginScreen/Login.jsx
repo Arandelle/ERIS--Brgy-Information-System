@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import emailjs from "emailjs-com";
@@ -7,7 +7,7 @@ import {
   sendPasswordResetEmail,
   signOut,
 } from "firebase/auth";
-import { get, ref } from "firebase/database";
+import { get, ref, set } from "firebase/database";
 import { auth, database } from "../../services/firebaseConfig";
 import Modal from "../../components/ReusableComponents/Modal";
 import icons from "../../assets/icons/Icons";
@@ -27,10 +27,6 @@ export default function Login() {
   const [emailError, setEmailError] = useState("");
   const [password, setPass] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const [otpInput, setOtpInput] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [generatedOtp, setGeneratedOtp] = useState("");
   const [forgotPass, setForgotPass] = useState(false);
   const [resetPassSent, setResetPassSent] = useState(false);
 
@@ -69,6 +65,14 @@ export default function Login() {
     setEmail(""); // reset the email input
     setForgotPass(false);
   };
+
+  // Check if OTP is being sent when the component mounts
+  useEffect(() => {
+    const isSendingOTP = sessionStorage.getItem('otpSending');
+    if(isSendingOTP){
+      setLoading(true);
+    }
+  }, []);
 
   const handleSubmitWithOtp = async (event) => {
     event.preventDefault();
@@ -113,7 +117,8 @@ export default function Login() {
       if (systemData?.isOtpEnabled) {
         // Generate OTP and send it to the user's email
         await signOut(auth); // sign out the user before sending the otp
-        await logAuditTrail("Logout", null, user.uid);
+        toast("Sending OTP to your email...");
+        sessionStorage.setItem('otpSending', 'true'); // Set a flag to indicate OTP is being sent
         const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
         const templateParams = {
           to_email: email,
@@ -128,15 +133,18 @@ export default function Login() {
         );
         toast.success("OTP sent successfully");
 
-        // store otp data in session storage and navigate to OTP page
-        sessionStorage.setItem('otpData', JSON.stringify({
-          email: email,
-          password: password,
-          otp: otpCode.toString(),
-          emailToMask: maskedEmail(email)
-        }));
+        // Store the OTP and email in state for verification
+        navigate("/verify-otp", {
+          state:{
+            email: email,
+            password: password,
+            otp: otpCode.toString(),
+            emailToMask: maskedEmail(email),
+          }
+        });
 
-        navigate("/verify-otp");
+        sessionStorage.removeItem('otpSending'); // Clear the OTP sending flag
+        
       } else {
         // if isOtpEnable is false if will proceed here
         toast.success("Login successful");
@@ -144,54 +152,12 @@ export default function Login() {
         setLoading(false);
         await logAuditTrail("Logged in");
       }
-      setLoading(false);
+
     } catch (error) {
       handleErrorMessage(error);
       setLoading(false);
       setEmailToMask("");
       setResetPassSent(false);
-    }
-  };
-
-  // verify the otp sent to the email
-  const handleVerify = async (event) => {
-    event.preventDefault();
-    if (otpInput === "") {
-      toast.error("Please enter the OTP");
-      return;
-    }
-
-    if (otpInput === generatedOtp) {
-      setLoading(true);
-      try {
-        // OTP verified, proceed with Firebase login
-        const userCredentials = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        const user = userCredentials.user;
-
-        // Check if the user has admin privileges
-        const adminRef = ref(database, `admins/${user?.uid}`);
-        const adminSnapshot = await get(adminRef);
-        if (adminSnapshot.exists()) {
-          toast.success("Login successful");
-          navigate("/dashboard");
-          setLoading(false);
-          await logAuditTrail("Logged in");
-        } else {
-          toast.error("You do not have admin privileges");
-          await auth.signOut();
-          setLoading(false);
-        }
-      } catch (error) {
-        toast.error("Login failed: " + error.message);
-        setLoading(false);
-      }
-    } else {
-      toast.error("Incorrect OTP, please try again");
-      setLoading(false);
     }
   };
 
