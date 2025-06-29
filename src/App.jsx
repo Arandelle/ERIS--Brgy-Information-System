@@ -31,7 +31,7 @@ import DeleteAccount from "./screens/DeleteAccount";
 import NotFound from "./screens/NotFound";
 import TermsAndPrivacy from "./screens/Terms_And_Policy";
 import IncidentReport from "./screens/IncidentReport";
-import ChatSystem from "./screens/ChatSystem"
+import ChatSystem from "./screens/ChatSystem/ChatSystem"
 import OtpForm from "./screens/LoginScreen/OtpForm";
 
 const App = () => {
