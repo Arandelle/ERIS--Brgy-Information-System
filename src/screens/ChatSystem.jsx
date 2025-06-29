@@ -522,14 +522,16 @@ const ChatList = ({ onSelect, selectedUser }) => {
                                   : "text-gray-500 dark:text-gray-300"
                               }`}
                             >
-                              {user.lastMessage
-                                ? user.lastMessage.text.length > 30
-                                  ? `${user.lastMessage.text.substring(
-                                      0,
-                                      30
-                                    )}...`
-                                  : user.lastMessage.sender === currentUser.uid ?(<span className="text-xs">You: {user.lastMessage.text}</span>) : (<span className="text-xs">{user.lastMessage.text}</span>)
-                                : "No messages yet"}
+                              {user.lastMessage ? (
+                                <span className="text-xs">
+                                  {user.lastMessage.sender === currentUser.uid && "You:"}
+                                  {user.lastMessage.text.length > 30 ? `${user.lastMessage.text.substring(0,30)}...`
+                                    : user.lastMessage.text
+                                    }
+                                </span>
+                              ) : (
+                                <span className="text-xs">No Messages Yet</span>
+                              )}
                             </p>
                             {hasUnread && (
                               <div className="w-2 h-2 bg-blue-500 rounded-full ml-2 flex-shrink-0"></div>
