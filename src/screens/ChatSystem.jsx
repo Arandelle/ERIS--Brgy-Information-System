@@ -405,6 +405,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
         <h2 className="font-bold text-xl text-gray-800 dark:text-gray-400 mb-4">
           Messages
         </h2>
+        {/** Search bar */}
         <div className="relative">
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -526,7 +527,7 @@ const ChatList = ({ onSelect, selectedUser }) => {
                                       0,
                                       30
                                     )}...`
-                                  : user.lastMessage.text
+                                  : user.lastMessage.sender === currentUser.uid ?(<span className="text-xs">You: {user.lastMessage.text}</span>) : (<span className="text-xs">{user.lastMessage.text}</span>)
                                 : "No messages yet"}
                             </p>
                             {hasUnread && (
