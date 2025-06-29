@@ -809,36 +809,40 @@ const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   }, [allMessages, user]);
 
   const handleSend = async () => {
-    if (!text.trim() || !user) return;
+  if (!text.trim() || !user) return;
 
-    const message = {
-      sender: user.uid,
-      text: text.trim(),
-      timestamp: Date.now(),
-    };
-
-    const userRef = ref(
-      database,
-      `chats/${user.uid}/${selectedUser.uid || selectedUser.id}`
-    );
-    const mirroredRef = ref(
-      database,
-      `chats/${selectedUser.uid || selectedUser.id}/${user.uid}`
-    );
-
-    await push(userRef, message);
-
-    if (selectedUser.uid !== user.uid) {
-      await push(mirroredRef, message);
-    }
-    
-    setText("");
-    
-    // Always scroll to bottom when user sends a message
-    setTimeout(() => {
-      scrollToBottom();
-    }, 100);
+  // Generate a single message ID that will be used for both users
+  const messageId = push(ref(database, 'temp')).key; // Generate unique ID
+  
+  const message = {
+    sender: user.uid,
+    text: text.trim(),
+    timestamp: Date.now(),
   };
+
+  const userRef = ref(
+    database,
+    `chats/${user.uid}/${selectedUser.uid || selectedUser.id}/${messageId}`
+  );
+  const mirroredRef = ref(
+    database,
+    `chats/${selectedUser.uid || selectedUser.id}/${user.uid}/${messageId}`
+  );
+
+  // Use set() instead of push() with the same messageId
+  await set(userRef, message);
+
+  if (selectedUser.uid !== user.uid) {
+    await set(mirroredRef, message);
+  }
+  
+  setText("");
+  
+  // Always scroll to bottom when user sends a message
+  setTimeout(() => {
+    scrollToBottom();
+  }, 100);
+};
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
