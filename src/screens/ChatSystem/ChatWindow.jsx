@@ -16,6 +16,8 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   const isScrollingToLoad = useRef(false);
   const previousScrollHeight = useRef(0);
 
+   const [openMenuId, setOpenMenuId] = useState(null); // ID of the message bubble menu
+
   const MESSAGES_PER_PAGE = 20; // Adjust this number as needed
   const SCROLL_THRESHOLD = 100; // Pixels from top to trigger load
 
@@ -345,10 +347,12 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
                 key={`${msg.timestamp}-${msg.sender}-${index}`}
                 text={msg.text}
                 isOwn={msg.sender === user?.uid}
-                timestamp={msg.timestamp}
-                messageId={msg.id}
-                prevTimestamp={index > 0 ? messages[index - 1].timestamp : null}
-                ref={index === messages.length - 1 ? lastMessageRef : null}
+                timestamp={msg.timestamp} 
+                messageId={msg.id} // Unique message ID
+                prevTimestamp={index > 0 ? messages[index - 1].timestamp : null} // Previous message timestamp for formatting
+                ref={index === messages.length - 1 ? lastMessageRef : null} // Reference for last message to scroll into view
+                openMenuId={openMenuId} // ID of the message bubble menu
+                setOpenMenuId={setOpenMenuId} // Function to set the open menu ID
               />
             ))
           )}
