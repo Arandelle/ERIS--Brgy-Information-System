@@ -1,34 +1,44 @@
 import { formatDateWithTimeAndWeek, formatTime } from "../../helper/FormatDate";
 import { EllipsisVertical } from "lucide-react";
-import handleEditData from "../../hooks/handleEditData";
 
 export const MessageBubble = ({
-  text,
+  message,
   isOwn,
-  timestamp,
-  messageId,
   prevTimestamp,
   openMenuId,
   setOpenMenuId,
   handleDeleteMsg,
 }) => {
   const showOverallTimeStamp =
-    !prevTimestamp || timestamp - prevTimestamp > 60 * 1000 * 30; //if  greater than 30 minutes or no prevTimestamp
+    !prevTimestamp || message.timestamp - prevTimestamp > 60 * 1000 * 30; //if  greater than 30 minutes or no prevTimestamp
   const showSpecificTimestamp =
-    !prevTimestamp || timestamp - prevTimestamp > 60 * 1000 * 5; // 5 minutes
+    !prevTimestamp || message.timestamp - prevTimestamp > 60 * 1000 * 5; // 5 minutes
 
-  const isOpenMenu = openMenuId === messageId; // flag to check if the menu is open for this message
+  const isOpenMenu = openMenuId === message.id; // flag to check if the menu is open for this message
   const handleMenuToggle = () => {
     if (isOpenMenu) {
       setOpenMenuId(null); // close the menu if it's already open
     } else {
-      setOpenMenuId(messageId); // open the menu for this message
+      setOpenMenuId(message.id); // open the menu for this message
     }
   };
-  
+
+  // Function to render the message text
+    const renderMessage = (message) => {
+      if (message.isDeleted) {
+        return (
+          <div className="">
+
+            <em>{message.text}</em> {/* "unsent a message" */}
+          </div>
+        );
+      }
+      return <div>{message.text}</div>;
+    };
+      
   const confirmDelete = () => {
     if (window.confirm("Are you sure you want to delete this message?")) {
-      handleDeleteMsg(messageId);
+      handleDeleteMsg(message.id, message.isDeleted);
       setOpenMenuId(null); // close the menu after deletion
     }
   }
@@ -38,7 +48,7 @@ export const MessageBubble = ({
       {showOverallTimeStamp && (
         <div className="flex items-center justify-center mb-2">
           <span className="text-xs text-gray-500 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 px-3 py-1 rounded-full">
-            {formatDateWithTimeAndWeek(timestamp)}
+            {formatDateWithTimeAndWeek(message.timestamp)}
           </span>
         </div>
       )}
@@ -56,7 +66,7 @@ export const MessageBubble = ({
             } space-x-3`}
           >
             <div className="relative">
-              <button onClick={() => handleMenuToggle(messageId)}>
+              <button onClick={() => handleMenuToggle(message.id)}>
                 <EllipsisVertical
                   size={16}
                   className={`text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200 ${
@@ -72,7 +82,7 @@ export const MessageBubble = ({
                 >
                   <ul className="py-1">
                     <li
-                      onClick={() => console.log("Edit", messageId)}
+                      onClick={() => console.log("Edit", message.id)}
                       className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                     >
                       Edit
@@ -81,8 +91,9 @@ export const MessageBubble = ({
                       onClick={confirmDelete}
                       className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-700 cursor-pointer"
                     >
-                      Delete
+                      {message.isDeleted ? "Delete" : "Unsend"}
                     </li>
+                    
                   </ul>
                 </div>
               )}
@@ -95,12 +106,12 @@ export const MessageBubble = ({
               } shadow-sm`}
             >
               <p className="text-sm leading-relaxed break-words overflow-hidden max-w-lg">
-                {text}
+                {renderMessage(message)}
               </p>
             </div>
           </div>
           <span className="text-xs text-gray-500 mt-1 px-2">
-            {showSpecificTimestamp && formatTime(timestamp)}
+            {showSpecificTimestamp && formatTime(message.timestamp)}
           </span>
         </div>
       </div>

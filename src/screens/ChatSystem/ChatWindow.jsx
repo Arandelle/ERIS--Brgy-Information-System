@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {ref, onValue, push, set, update} from "firebase/database";
+import {ref, onValue, push, set, update, remove} from "firebase/database";
 import { database, auth } from "../../services/firebaseConfig";
 import { Send, ChevronLeft } from "lucide-react";
 import { MessageBubble } from "./MessageBubble";
@@ -251,19 +251,62 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       .toUpperCase()
       .slice(0, 2);
   };
+// Function to handle message deletion
+const handleDeleteMsg = async (messageId, isDeleted) => {
+  try {
+    // Validate required data
+    if (!user?.uid || !selectedUser?.uid && !selectedUser?.id) {
+      toast.error("Unable to delete message - missing user information");
+      return;
+    }
 
-    const handleDeleteMsg = async (messageId) => {
-      const currentUserMsgRef  = ref(database, `chats/${user.uid}/${selectedUser.uid || selectedUser.id}/${messageId}`);
-      const selectedUserMsgRef = ref(database, `chats/${selectedUser.uid || selectedUser.id}/${user.uid}/${messageId}`);
-      await update(currentUserMsgRef, {
+    if (!messageId) {
+      toast.error("Unable to delete message - invalid message ID");
+      return;
+    }
+
+    const selectedUserId = selectedUser.uid || selectedUser.id;
+    
+    // If message is already deleted/unsent, only remove from current user's view
+    if (isDeleted) {
+      const currentUserMsgRef = ref(database, `chats/${user.uid}/${selectedUserId}/${messageId}`);
+      
+      // Remove the message completely from current user's chat
+      await remove(currentUserMsgRef);
+      
+      toast.success("Message removed from your chat");
+      setOpenMenuId(null);
+      return;
+    }
+
+    // If message is not deleted yet, unsend it for both users
+    const currentUserMsgRef = ref(database, `chats/${user.uid}/${selectedUserId}/${messageId}`);
+    const selectedUserMsgRef = ref(database, `chats/${selectedUserId}/${user.uid}/${messageId}`);
+    
+    // Update both references simultaneously
+    await Promise.all([
+      update(currentUserMsgRef, {
         text: "unsent a message",
-      });
-      await update(selectedUserMsgRef, {
+        isDeleted: true,
+        deletedAt: Date.now(),
+        deletedBy: user.uid
+      }),
+      update(selectedUserMsgRef, {
         text: "unsent a message",
-      });
-      toast.success("Message deleted successfully");
-      setOpenMenuId(null); // Close the menu after deletion
+        isDeleted: true,
+        deletedAt: Date.now(),
+        deletedBy: user.uid
+      })
+    ]);
+
+    toast.success("Message deleted successfully");
+    setOpenMenuId(null); // Close the menu after deletion
+    
+  } catch (error) {
+    console.error("Error deleting message:", error);
+    toast.error("Failed to delete message. Please try again.");
   }
+};
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -360,10 +403,8 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
             messages.map((msg, index) => (
               <MessageBubble
                 key={`${msg.timestamp}-${msg.sender}-${index}`}
-                text={msg.text}
+                message={msg}
                 isOwn={msg.sender === user?.uid}
-                timestamp={msg.timestamp} 
-                messageId={msg.id} // Unique message ID
                 prevTimestamp={index > 0 ? messages[index - 1].timestamp : null} // Previous message timestamp for formatting
                 ref={index === messages.length - 1 ? lastMessageRef : null} // Reference for last message to scroll into view
                 openMenuId={openMenuId} // ID of the message bubble menu
