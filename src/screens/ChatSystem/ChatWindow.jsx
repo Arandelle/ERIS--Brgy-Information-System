@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import {ref, onValue, push, set} from "firebase/database";
+import {ref, onValue, push, set, update} from "firebase/database";
 import { database, auth } from "../../services/firebaseConfig";
 import { Send, ChevronLeft } from "lucide-react";
 import { MessageBubble } from "./MessageBubble";
+import handleEditData from "../../hooks/handleEditData";
+import { toast } from "sonner";
 
 export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   const [messages, setMessages] = useState([]);
@@ -250,6 +252,19 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       .slice(0, 2);
   };
 
+    const handleDeleteMsg = async (messageId) => {
+      const currentUserMsgRef  = ref(database, `chats/${user.uid}/${selectedUser.uid || selectedUser.id}/${messageId}`);
+      const selectedUserMsgRef = ref(database, `chats/${selectedUser.uid || selectedUser.id}/${user.uid}/${messageId}`);
+      await update(currentUserMsgRef, {
+        text: "unsent a message",
+      });
+      await update(selectedUserMsgRef, {
+        text: "unsent a message",
+      });
+      toast.success("Message deleted successfully");
+      setOpenMenuId(null); // Close the menu after deletion
+  }
+
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Chat Header */}
@@ -353,6 +368,7 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
                 ref={index === messages.length - 1 ? lastMessageRef : null} // Reference for last message to scroll into view
                 openMenuId={openMenuId} // ID of the message bubble menu
                 setOpenMenuId={setOpenMenuId} // Function to set the open menu ID
+                handleDeleteMsg={handleDeleteMsg} // Function to handle message deletion
               />
             ))
           )}

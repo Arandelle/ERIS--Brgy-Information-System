@@ -1,5 +1,6 @@
 import { formatDateWithTimeAndWeek, formatTime } from "../../helper/FormatDate";
 import { EllipsisVertical } from "lucide-react";
+import handleEditData from "../../hooks/handleEditData";
 
 export const MessageBubble = ({
   text,
@@ -9,6 +10,7 @@ export const MessageBubble = ({
   prevTimestamp,
   openMenuId,
   setOpenMenuId,
+  handleDeleteMsg,
 }) => {
   const showOverallTimeStamp =
     !prevTimestamp || timestamp - prevTimestamp > 60 * 1000 * 30; //if  greater than 30 minutes or no prevTimestamp
@@ -24,6 +26,12 @@ export const MessageBubble = ({
     }
   };
   
+  const confirmDelete = () => {
+    if (window.confirm("Are you sure you want to delete this message?")) {
+      handleDeleteMsg(messageId);
+      setOpenMenuId(null); // close the menu after deletion
+    }
+  }
 
   return (
     <>
@@ -70,7 +78,7 @@ export const MessageBubble = ({
                       Edit
                     </li>
                     <li
-                      onClick={() => console.log("Delete", messageId)}
+                      onClick={confirmDelete}
                       className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-700 cursor-pointer"
                     >
                       Delete
