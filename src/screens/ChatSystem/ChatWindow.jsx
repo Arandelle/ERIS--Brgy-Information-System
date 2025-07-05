@@ -252,7 +252,7 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       .slice(0, 2);
   };
 // Function to handle message deletion
-const handleDeleteMsg = async (messageId, isDeleted) => {
+const handleDeleteMsg = async (messageId, isDirectDelete) => {
   try {
     // Validate required data
     if (!user?.uid || !selectedUser?.uid && !selectedUser?.id) {
@@ -268,7 +268,7 @@ const handleDeleteMsg = async (messageId, isDeleted) => {
     const selectedUserId = selectedUser.uid || selectedUser.id;
     
     // If message is already deleted/unsent, only remove from current user's view
-    if (isDeleted) {
+    if (isDirectDelete) {
       const currentUserMsgRef = ref(database, `chats/${user.uid}/${selectedUserId}/${messageId}`);
       
       // Remove the message completely from current user's chat

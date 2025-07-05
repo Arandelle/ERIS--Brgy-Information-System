@@ -24,24 +24,23 @@ export const MessageBubble = ({
   };
 
   // Function to render the message text
-    const renderMessage = (message) => {
-      if (message.isDeleted) {
-        return (
-          <div className="">
+  const renderMessage = (message) => {
+    if (message.isDeleted) {
+      return (
+        <div className="">
+          <em>{message.text}</em> {/* "unsent a message" */}
+        </div>
+      );
+    }
+    return <div>{message.text}</div>;
+  };
 
-            <em>{message.text}</em> {/* "unsent a message" */}
-          </div>
-        );
-      }
-      return <div>{message.text}</div>;
-    };
-      
-  const confirmDelete = () => {
+  const confirmDelete = (isDirectDelete = false) => {
     if (window.confirm("Are you sure you want to delete this message?")) {
-      handleDeleteMsg(message.id, message.isDeleted);
+      handleDeleteMsg(message.id, isDirectDelete);
       setOpenMenuId(null); // close the menu after deletion
     }
-  }
+  };
 
   return (
     <>
@@ -87,13 +86,20 @@ export const MessageBubble = ({
                     >
                       Edit
                     </li>
+                    {!message.isDeleted && (
+                      <li
+                        onClick={() => confirmDelete(false)}
+                        className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                      >
+                        Unsend
+                      </li>
+                    )}
                     <li
-                      onClick={confirmDelete}
+                      onClick={() => confirmDelete(true)}
                       className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-700 cursor-pointer"
                     >
-                      {message.isDeleted ? "Delete" : "Unsend"}
+                     Delete for you
                     </li>
-                    
                   </ul>
                 </div>
               )}
