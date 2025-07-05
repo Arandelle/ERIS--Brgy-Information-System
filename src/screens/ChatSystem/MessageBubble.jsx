@@ -8,6 +8,7 @@ export const MessageBubble = ({
   openMenuId,
   setOpenMenuId,
   handleDeleteMsg,
+  isLastMessage
 }) => {
   const showOverallTimeStamp =
     !prevTimestamp || message.timestamp - prevTimestamp > 60 * 1000 * 30; //if  greater than 30 minutes or no prevTimestamp
@@ -65,7 +66,9 @@ export const MessageBubble = ({
             } space-x-3`}
           >
             <div className="relative">
-              <button onClick={() => handleMenuToggle(message.id)}>
+              <button onClick={() => handleMenuToggle(message.id)}
+              onBlur={() => setOpenMenuId(null)}
+              >
                 <EllipsisVertical
                   size={16}
                   className={`text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200 ${
@@ -75,9 +78,9 @@ export const MessageBubble = ({
               </button>
               {isOpenMenu && (
                 <div
-                  className={`absolute ${
-                    isOwn ? "right-0" : "left-0"
-                  } mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10`}
+                  className={`absolute ${isLastMessage ? "bottom-0" : "top-0"} ${
+                    isOwn ? "right-4" : "left-4"
+                  } w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10`}
                 >
                   <ul className="py-1">
                     <li

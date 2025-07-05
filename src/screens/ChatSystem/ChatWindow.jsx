@@ -408,6 +408,7 @@ const handleDeleteMsg = async (messageId, isDirectDelete) => {
                 prevTimestamp={index > 0 ? messages[index - 1].timestamp : null} // Previous message timestamp for formatting
                 ref={index === messages.length - 1 ? lastMessageRef : null} // Reference for last message to scroll into view
                 openMenuId={openMenuId} // ID of the message bubble menu
+                isLastMessage={index === messages.length - 1} // check if this is the last message
                 setOpenMenuId={setOpenMenuId} // Function to set the open menu ID
                 handleDeleteMsg={handleDeleteMsg} // Function to handle message deletion
               />
