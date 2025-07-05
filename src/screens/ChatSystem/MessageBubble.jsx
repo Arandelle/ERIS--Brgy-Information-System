@@ -1,5 +1,6 @@
+import { useRef, useState} from "react";
 import { formatDateWithTimeAndWeek, formatTime } from "../../helper/FormatDate";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, CircleX } from "lucide-react";
 
 export const MessageBubble = ({
   message,
@@ -8,18 +9,36 @@ export const MessageBubble = ({
   openMenuId,
   setOpenMenuId,
   handleDeleteMsg,
-  isLastMessage
+  setText,
 }) => {
   const showOverallTimeStamp =
     !prevTimestamp || message.timestamp - prevTimestamp > 60 * 1000 * 30; //if  greater than 30 minutes or no prevTimestamp
   const showSpecificTimestamp =
     !prevTimestamp || message.timestamp - prevTimestamp > 60 * 1000 * 5; // 5 minutes
 
+  const buttonRef = useRef(null); // reference for the button to control menu position
+  const [showMenuBelow, setShowMenuBelow] = useState(false); // state to control menu position
+
   const isOpenMenu = openMenuId === message.id; // flag to check if the menu is open for this message
+
   const handleMenuToggle = () => {
     if (isOpenMenu) {
       setOpenMenuId(null); // close the menu if it's already open
     } else {
+
+      if(buttonRef.current){
+        const buttonRect = buttonRef.current.getBoundingClientRect(); // get the button's position
+        const windowHeight = window.innerHeight;
+
+        if(buttonRect.top < 150){
+          setShowMenuBelow(true); // show menu below if button is near the top
+        } else if(windowHeight - buttonRect.bottom < 150){
+          setShowMenuBelow(false); // show menu above if button is near the bottom
+        } else{
+          setShowMenuBelow(true); // default to showing menu below
+        }
+      }
+
       setOpenMenuId(message.id); // open the menu for this message
     }
   };
@@ -66,9 +85,9 @@ export const MessageBubble = ({
             } space-x-3`}
           >
             <div className="relative">
-              <button onClick={() => handleMenuToggle(message.id)}
-              onBlur={() => setOpenMenuId(null)}
-              >
+              <button 
+              ref={buttonRef}
+              onClick={() => handleMenuToggle(message.id)}>
                 <EllipsisVertical
                   size={16}
                   className={`text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200 ${
@@ -78,13 +97,24 @@ export const MessageBubble = ({
               </button>
               {isOpenMenu && (
                 <div
-                  className={`absolute ${isLastMessage ? "bottom-0" : "top-0"} ${
+                  className={`absolute ${
+                    showMenuBelow ? "top-full mt-2" : "bottom-full mb-2"
+                  } ${
                     isOwn ? "right-4" : "left-4"
                   } w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10`}
                 >
+                  {/**Close button */}
+                  <button
+                    onClick={() => setOpenMenuId(null)}
+                    className={`absolute ${
+                      isOwn ? "-top-2 -right-2" : "-top-2 -left-2"
+                    } text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200`}
+                  >
+                    <CircleX size={16} />
+                  </button>
                   <ul className="py-1">
                     <li
-                      onClick={() => console.log("Edit", message.id)}
+                      onClick={() => setText(message.text)}
                       className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                     >
                       Edit
@@ -101,7 +131,7 @@ export const MessageBubble = ({
                       onClick={() => confirmDelete(true)}
                       className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-700 cursor-pointer"
                     >
-                     Delete for you
+                      Delete for you
                     </li>
                   </ul>
                 </div>
