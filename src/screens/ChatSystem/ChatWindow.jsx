@@ -1,27 +1,39 @@
 import React, { useState, useEffect, useRef } from "react";
 import {ref, onValue, push, set, update, remove} from "firebase/database";
 import { database, auth } from "../../services/firebaseConfig";
-import { Send, ChevronLeft } from "lucide-react";
+import { Send, ChevronLeft, X, Check } from "lucide-react";
 import { MessageBubble } from "./MessageBubble";
 import handleEditData from "../../hooks/handleEditData";
 import { toast } from "sonner";
 
 export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   const [messages, setMessages] = useState([]);
-  const [allMessages, setAllMessages] = useState([]); // Store all messages
+  const [allMessages, setAllMessages] = useState([]);
   const [text, setText] = useState("");
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [isEditing, setIsEditing] = useState(null); // ID of message being edited
+  const [originalText, setOriginalText] = useState(""); // Store original text for cancel
   const messagesContainerRef = useRef(null);
   const user = auth.currentUser;
   const lastMessageRef = useRef(null);
   const isScrollingToLoad = useRef(false);
   const previousScrollHeight = useRef(0);
 
-   const [openMenuId, setOpenMenuId] = useState(null); // ID of the message bubble menu
+  const [openMenuId, setOpenMenuId] = useState(null);
 
-  const MESSAGES_PER_PAGE = 20; // Adjust this number as needed
-  const SCROLL_THRESHOLD = 100; // Pixels from top to trigger load
+  const MESSAGES_PER_PAGE = 20;
+  const SCROLL_THRESHOLD = 100;
+
+  // Store original text when editing starts
+  useEffect(() => {
+    if (isEditing && !originalText) {
+      const messageToEdit = messages.find(msg => msg.id === isEditing);
+      if (messageToEdit) {
+        setOriginalText(messageToEdit.text);
+      }
+    }
+  }, [isEditing, messages, originalText]);
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -36,10 +48,9 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   const isNearBottom = () => {
     if (!messagesContainerRef.current) return false;
     const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
-    return scrollHeight - scrollTop - clientHeight < 100; // Within 100px of bottom
+    return scrollHeight - scrollTop - clientHeight < 100;
   };
 
-  // Load more messages function
   const loadMoreMessages = () => {
     if (isLoadingMore || !hasMoreMessages) return;
 
@@ -59,7 +70,6 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       return;
     }
 
-    // Store current scroll position
     if (messagesContainerRef.current) {
       previousScrollHeight.current = messagesContainerRef.current.scrollHeight;
     }
@@ -68,7 +78,6 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       setMessages(prev => [...nextBatch, ...prev]);
       setIsLoadingMore(false);
       
-      // Maintain scroll position after loading more messages
       setTimeout(() => {
         if (messagesContainerRef.current) {
           const newScrollHeight = messagesContainerRef.current.scrollHeight;
@@ -77,22 +86,19 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
         }
         isScrollingToLoad.current = false;
       }, 50);
-    }, 500); // Small delay to show loading state
+    }, 500);
   };
 
-  // Handle scroll events
   const handleScroll = () => {
     if (!messagesContainerRef.current || isLoadingMore) return;
 
     const { scrollTop } = messagesContainerRef.current;
 
-    // Load more messages when scrolled near the top
     if (scrollTop < SCROLL_THRESHOLD && hasMoreMessages) {
       loadMoreMessages();
     }
   };
 
-  // Only scroll to bottom when first opening a chat
   useEffect(() => {
     if (selectedUser) {
       const timer = setTimeout(() => {
@@ -101,9 +107,8 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       
       return () => clearTimeout(timer);
     }
-  }, [selectedUser]); // Only depend on selectedUser, not messages
+  }, [selectedUser]);
 
-  // Mark messages as read when viewing conversation
   useEffect(() => {
     if (!selectedUser || !user) return;
 
@@ -126,7 +131,6 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
     }
   }, [selectedUser, user, messages]);
 
-  // Fetch all messages and initialize pagination
   useEffect(() => {
     if (!user || !selectedUser) return;
 
@@ -149,20 +153,16 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       
       setAllMessages(sorted);
       
-      // Initialize with the latest messages
       const latestMessages = sorted.slice(-MESSAGES_PER_PAGE);
       setMessages(latestMessages);
       
-      // Check if there are more messages to load
       setHasMoreMessages(sorted.length > MESSAGES_PER_PAGE);
       
-      // Reset loading state
       setIsLoadingMore(false);
       isScrollingToLoad.current = false;
     });
   }, [selectedUser, user]);
 
-  // Add new message handling for real-time updates
   useEffect(() => {
     if (allMessages.length === 0) return;
 
@@ -172,7 +172,6 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       msg.sender === latestMessage?.sender
     );
 
-    // If there's a new message and we're showing recent messages, add it
     if (isNewMessage && latestMessage) {
       const isShowingLatest = messages.length > 0 && 
         messages[messages.length - 1].timestamp === allMessages[allMessages.length - 2]?.timestamp;
@@ -181,7 +180,6 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
         const wasNearBottom = isNearBottom();
         
         setMessages(prev => {
-          // Check if message already exists to prevent duplicates
           const exists = prev.some(msg => 
             msg.timestamp === latestMessage.timestamp && 
             msg.sender === latestMessage.sender
@@ -190,7 +188,6 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
           return exists ? prev : [...prev, latestMessage];
         });
 
-        // Only auto-scroll if user was near bottom or if it's their own message
         if (wasNearBottom || latestMessage.sender === user?.uid) {
           setTimeout(() => {
             scrollToBottom();
@@ -201,45 +198,91 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   }, [allMessages, user]);
 
   const handleSend = async () => {
-  if (!text.trim() || !user) return;
+    if (!text.trim() || !user) return;
 
-  // Generate a single message ID that will be used for both users
-  const messageId = push(ref(database, 'temp')).key; // Generate unique ID
-  
-  const message = {
-    sender: user.uid,
-    text: text.trim(),
-    timestamp: Date.now(),
+    // If we're editing, handle the edit instead
+    if (isEditing) {
+      await handleEditMessage();
+      return;
+    }
+
+    const messageId = push(ref(database, 'temp')).key;
+    
+    const message = {
+      sender: user.uid,
+      text: text.trim(),
+      timestamp: Date.now(),
+    };
+
+    const userRef = ref(
+      database,
+      `chats/${user.uid}/${selectedUser.uid || selectedUser.id}/${messageId}`
+    );
+    const mirroredRef = ref(
+      database,
+      `chats/${selectedUser.uid || selectedUser.id}/${user.uid}/${messageId}`
+    );
+
+    await set(userRef, message);
+
+    if (selectedUser.uid !== user.uid) {
+      await set(mirroredRef, message);
+    }
+    
+    setText("");
+    
+    setTimeout(() => {
+      scrollToBottom();
+    }, 100);
   };
 
-  const userRef = ref(
-    database,
-    `chats/${user.uid}/${selectedUser.uid || selectedUser.id}/${messageId}`
-  );
-  const mirroredRef = ref(
-    database,
-    `chats/${selectedUser.uid || selectedUser.id}/${user.uid}/${messageId}`
-  );
+  const handleEditMessage = async () => {
+    if (!text.trim() || !isEditing) return;
 
-  // Use set() instead of push() with the same messageId
-  await set(userRef, message);
+    try {
+      const selectedUserId = selectedUser.uid || selectedUser.id;
+      
+      const currentUserMsgRef = ref(
+        database,
+        `chats/${user.uid}/${selectedUserId}/${isEditing}`
+      );
+      const selectedUserMsgRef = ref(
+        database,
+        `chats/${selectedUserId}/${user.uid}/${isEditing}`
+      );
 
-  if (selectedUser.uid !== user.uid) {
-    await set(mirroredRef, message);
-  }
-  
-  setText("");
-  
-  // Always scroll to bottom when user sends a message
-  setTimeout(() => {
-    scrollToBottom();
-  }, 100);
-};
+      const updateData = {
+        text: text.trim(),
+        editedAt: Date.now(),
+        isEdited: true
+      };
+
+      await Promise.all([
+        update(currentUserMsgRef, updateData),
+        update(selectedUserMsgRef, updateData)
+      ]);
+
+      toast.success("Message edited successfully");
+      handleCancelEdit();
+    } catch (error) {
+      console.error("Error editing message:", error);
+      toast.error("Failed to edit message. Please try again.");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(null);
+    setOriginalText("");
+    setText("");
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
+    }
+    if (e.key === "Escape" && isEditing) {
+      handleCancelEdit();
     }
   };
 
@@ -251,62 +294,57 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
       .toUpperCase()
       .slice(0, 2);
   };
-// Function to handle message deletion
-const handleDeleteMsg = async (messageId, isDirectDelete) => {
-  try {
-    // Validate required data
-    if (!user?.uid || !selectedUser?.uid && !selectedUser?.id) {
-      toast.error("Unable to delete message - missing user information");
-      return;
-    }
 
-    if (!messageId) {
-      toast.error("Unable to delete message - invalid message ID");
-      return;
-    }
+  const handleDeleteMsg = async (messageId, isDirectDelete) => {
+    try {
+      if (!user?.uid || !selectedUser?.uid && !selectedUser?.id) {
+        toast.error("Unable to delete message - missing user information");
+        return;
+      }
 
-    const selectedUserId = selectedUser.uid || selectedUser.id;
-    
-    // If message is already deleted/unsent, only remove from current user's view
-    if (isDirectDelete) {
+      if (!messageId) {
+        toast.error("Unable to delete message - invalid message ID");
+        return;
+      }
+
+      const selectedUserId = selectedUser.uid || selectedUser.id;
+      
+      if (isDirectDelete) {
+        const currentUserMsgRef = ref(database, `chats/${user.uid}/${selectedUserId}/${messageId}`);
+        
+        await remove(currentUserMsgRef);
+        
+        toast.success("Message removed from your chat");
+        setOpenMenuId(null);
+        return;
+      }
+
       const currentUserMsgRef = ref(database, `chats/${user.uid}/${selectedUserId}/${messageId}`);
+      const selectedUserMsgRef = ref(database, `chats/${selectedUserId}/${user.uid}/${messageId}`);
       
-      // Remove the message completely from current user's chat
-      await remove(currentUserMsgRef);
-      
-      toast.success("Message removed from your chat");
+      await Promise.all([
+        update(currentUserMsgRef, {
+          text: "unsent a message",
+          isDeleted: true,
+          deletedAt: Date.now(),
+          deletedBy: user.uid
+        }),
+        update(selectedUserMsgRef, {
+          text: "unsent a message",
+          isDeleted: true,
+          deletedAt: Date.now(),
+          deletedBy: user.uid
+        })
+      ]);
+
+      toast.success("Message deleted successfully");
       setOpenMenuId(null);
-      return;
+      
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      toast.error("Failed to delete message. Please try again.");
     }
-
-    // If message is not deleted yet, unsend it for both users
-    const currentUserMsgRef = ref(database, `chats/${user.uid}/${selectedUserId}/${messageId}`);
-    const selectedUserMsgRef = ref(database, `chats/${selectedUserId}/${user.uid}/${messageId}`);
-    
-    // Update both references simultaneously
-    await Promise.all([
-      update(currentUserMsgRef, {
-        text: "unsent a message",
-        isDeleted: true,
-        deletedAt: Date.now(),
-        deletedBy: user.uid
-      }),
-      update(selectedUserMsgRef, {
-        text: "unsent a message",
-        isDeleted: true,
-        deletedAt: Date.now(),
-        deletedBy: user.uid
-      })
-    ]);
-
-    toast.success("Message deleted successfully");
-    setOpenMenuId(null); // Close the menu after deletion
-    
-  } catch (error) {
-    console.error("Error deleting message:", error);
-    toast.error("Failed to delete message. Please try again.");
-  }
-};
+  };
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -363,7 +401,6 @@ const handleDeleteMsg = async (messageId, isDirectDelete) => {
         onScroll={handleScroll}
       >
         <div className="py-4">
-          {/* Loading indicator for more messages */}
           {isLoadingMore && (
             <div className="flex justify-center py-4">
               <div className="flex items-center gap-2 text-gray-500 text-sm">
@@ -373,7 +410,6 @@ const handleDeleteMsg = async (messageId, isDirectDelete) => {
             </div>
           )}
           
-          {/* Load more button (optional, as alternative to auto-load) */}
           {!isLoadingMore && hasMoreMessages && messages.length > 0 && (
             <div className="flex justify-center py-2">
               <button
@@ -405,17 +441,39 @@ const handleDeleteMsg = async (messageId, isDirectDelete) => {
                 key={`${msg.timestamp}-${msg.sender}-${index}`}
                 message={msg}
                 isOwn={msg.sender === user?.uid}
-                prevTimestamp={index > 0 ? messages[index - 1].timestamp : null} // Previous message timestamp for formatting
-                ref={index === messages.length - 1 ? lastMessageRef : null} // Reference for last message to scroll into view
-                openMenuId={openMenuId} // ID of the message bubble menu
-                setOpenMenuId={setOpenMenuId} // Function to set the open menu ID
-                handleDeleteMsg={handleDeleteMsg} // Function to handle message deletion
+                prevTimestamp={index > 0 ? messages[index - 1].timestamp : null}
+                ref={index === messages.length - 1 ? lastMessageRef : null}
+                openMenuId={openMenuId}
+                setOpenMenuId={setOpenMenuId}
+                handleDeleteMsg={handleDeleteMsg}
                 setText={setText}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
               />
             ))
           )}
         </div>
       </div>
+
+      {/* Edit Mode Banner */}
+      {isEditing && (
+        <div className="px-4 py-2 bg-blue-50 dark:bg-blue-900 border-t border-blue-200 dark:border-blue-800">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span className="text-sm text-blue-700 dark:text-blue-300 font-medium">
+                Editing message
+              </span>
+            </div>
+            <button
+              onClick={handleCancelEdit}
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Message Input */}
       <div className="px-4 py-4 bg-white dark:bg-gray-800 border-t border-gray-200">
@@ -426,25 +484,35 @@ const handleDeleteMsg = async (messageId, isDirectDelete) => {
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Type a message..."
+              placeholder={isEditing ? "Edit your message..." : "Type a message..."}
               rows={1}
               style={{
                 minHeight: "44px",
                 height: "auto",
               }}
-              autoFocus="true"
+              autoFocus={true}
             />
           </div>
+          
+          {isEditing && (
+            <button
+              onClick={handleCancelEdit}
+              className="p-3 rounded-full bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-600 dark:text-gray-300 transition-all duration-200 mb-1"
+            >
+              <X size={18} />
+            </button>
+          )}
+          
           <button
             onClick={handleSend}
             disabled={!text.trim()}
             className={`p-3 rounded-full transition-all duration-200 mb-1 ${
               text.trim()
-                ? "bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-lg"
+                ? `${isEditing ? 'bg-green-500 dark:bg-green-600 hover:bg-green-600 dark:hover:bg-green-700' : 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700'} text-white shadow-lg`
                 : "bg-gray-200 dark:bg-gray-400 text-gray-400 dark:text-gray-600 cursor-not-allowed"
             }`}
           >
-            <Send size={18} />
+            {isEditing ? <Check size={18} /> : <Send size={18} />}
           </button>
         </div>
       </div>

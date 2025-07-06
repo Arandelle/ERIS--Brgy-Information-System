@@ -2,6 +2,24 @@ import { useRef, useState, useEffect } from "react";
 import { formatDateWithTimeAndWeek, formatTime } from "../../helper/FormatDate";
 import { EllipsisVertical, CircleX } from "lucide-react";
 
+const renderMessage = (message) => {
+  if (message.isDeleted) {
+    return (
+      <div className="">
+        <em>{message.text}</em>
+      </div>
+    );
+  }
+  return (
+    <div>
+      {message.text}
+      {message.isEdited && (
+        <span className="text-xs text-gray-400 ml-2 italic">edited</span>
+      )}
+    </div>
+  );
+};
+
 export const MessageBubble = ({
   message,
   isOwn,
@@ -10,6 +28,8 @@ export const MessageBubble = ({
   setOpenMenuId,
   handleDeleteMsg,
   setText,
+  isEditing,
+  setIsEditing,
 }) => {
   const showOverallTimeStamp =
     !prevTimestamp || message.timestamp - prevTimestamp > 60 * 1000 * 30;
@@ -29,10 +49,10 @@ export const MessageBubble = ({
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth < 768); // md breakpoint
     };
-    
+
     checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   // Calculate menu position
@@ -42,7 +62,7 @@ export const MessageBubble = ({
     const buttonRect = buttonRef.current.getBoundingClientRect();
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
-    
+
     let showBelow = true;
     let menuLeft = 0;
     let menuTop = 0;
@@ -63,16 +83,19 @@ export const MessageBubble = ({
     if (isSmallScreen) {
       // Center the menu or position it to avoid overflow
       const menuWidth = 192; // w-48 = 12rem = 192px
-      
+
       if (windowWidth < menuWidth + 32) {
         // Very small screen - make menu full width with padding
         menuLeft = 16;
       } else {
         // Center the menu horizontally
-        menuLeft = Math.max(16, Math.min(
-          windowWidth - menuWidth - 16,
-          buttonRect.left + buttonRect.width / 2 - menuWidth / 2
-        ));
+        menuLeft = Math.max(
+          16,
+          Math.min(
+            windowWidth - menuWidth - 16,
+            buttonRect.left + buttonRect.width / 2 - menuWidth / 2
+          )
+        );
       }
     } else {
       // Desktop positioning
@@ -103,22 +126,17 @@ export const MessageBubble = ({
     }
   }, [isOpenMenu, isSmallScreen]);
 
-  const renderMessage = (message) => {
-    if (message.isDeleted) {
-      return (
-        <div className="">
-          <em>{message.text}</em>
-        </div>
-      );
-    }
-    return <div>{message.text}</div>;
-  };
-
   const confirmDelete = (isDirectDelete = false) => {
     if (window.confirm("Are you sure you want to delete this message?")) {
       handleDeleteMsg(message.id, isDirectDelete);
       setOpenMenuId(null);
     }
+  };
+
+  const handleEdit = () => {
+    setText(message.text);
+    setIsEditing(message.id);
+    setOpenMenuId(null);
   };
 
   return (
@@ -144,10 +162,7 @@ export const MessageBubble = ({
             } space-x-3`}
           >
             <div className="relative">
-              <button 
-                ref={buttonRef}
-                onClick={handleMenuToggle}
-              >
+              <button ref={buttonRef} onClick={handleMenuToggle}>
                 <EllipsisVertical
                   size={16}
                   className={`text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200 ${
@@ -155,7 +170,7 @@ export const MessageBubble = ({
                   }`}
                 />
               </button>
-              
+
               {/* Menu Portal for small screens */}
               {isOpenMenu && isSmallScreen && (
                 <div
@@ -164,8 +179,11 @@ export const MessageBubble = ({
                   style={{
                     top: `${menuPosition.top}px`,
                     left: `${menuPosition.left}px`,
-                    width: window.innerWidth < 224 ? `${window.innerWidth - 32}px` : '192px',
-                    maxWidth: 'calc(100vw - 32px)'
+                    width:
+                      window.innerWidth < 224
+                        ? `${window.innerWidth - 32}px`
+                        : "192px",
+                    maxWidth: "calc(100vw - 32px)",
                   }}
                 >
                   {/* Close button */}
@@ -176,13 +194,16 @@ export const MessageBubble = ({
                     <CircleX size={16} />
                   </button>
                   <ul className="py-1">
-                    <li
-                      onClick={() => setText(message.text)}
-                      className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                    >
-                      Edit
-                    </li>
-                    {!message.isDeleted && (
+                    {!message.isDeleted && isOwn && (
+                      <li
+                        onClick={handleEdit}
+                        className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                      >
+                        Edit
+                      </li>
+                    )}
+
+                    {!message.isDeleted && isOwn &&(
                       <li
                         onClick={() => confirmDelete(false)}
                         className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
@@ -218,13 +239,15 @@ export const MessageBubble = ({
                     <CircleX size={16} />
                   </button>
                   <ul className="py-1">
-                    <li
-                      onClick={() => setText(message.text)}
-                      className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                    >
-                      Edit
-                    </li>
-                    {!message.isDeleted && (
+                    {!message.isDeleted && isOwn &&(
+                      <li
+                        onClick={handleEdit}
+                        className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                      >
+                        Edit
+                      </li>
+                    )}
+                    {!message.isDeleted && isOwn &&(
                       <li
                         onClick={() => confirmDelete(false)}
                         className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
