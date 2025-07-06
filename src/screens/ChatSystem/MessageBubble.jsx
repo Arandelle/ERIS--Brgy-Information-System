@@ -10,14 +10,7 @@ const renderMessage = (message) => {
       </div>
     );
   }
-  return (
-    <div>
-      {message.text}
-      {message.isEdited && (
-        <span className="text-xs text-gray-400 ml-2 italic">edited</span>
-      )}
-    </div>
-  );
+  return <div>{message.text}</div>;
 };
 
 export const MessageBubble = ({
@@ -41,6 +34,8 @@ export const MessageBubble = ({
   const [showMenuBelow, setShowMenuBelow] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  const [viewEditHistory, setViewEditHistory] = useState(false);
 
   const isOpenMenu = openMenuId === message.id;
 
@@ -139,6 +134,12 @@ export const MessageBubble = ({
     setOpenMenuId(null);
   };
 
+  const FIFTEEN_MINUTES = 15 * 60 * 1000;
+
+  const expirationTime = message.timestamp + FIFTEEN_MINUTES;
+  const timeLeftMs = expirationTime - Date.now();
+  const minutesLeft = Math.ceil(timeLeftMs / (60 * 1000));
+
   const renderMenuModal = () => {
     return (
       <>
@@ -151,12 +152,15 @@ export const MessageBubble = ({
           <CircleX size={16} />
         </button>
         <ul className="py-1">
-          {!message.isDeleted && isOwn && (
+          {!message.isDeleted && isOwn && Date.now() < expirationTime && (
             <li
               onClick={handleEdit}
               className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
             >
-              Edit
+              Edit{" "}
+              <span className="text-xs text-gray-500 italic">
+                ({minutesLeft} mn/s left)
+              </span>
             </li>
           )}
           {!message.isDeleted && isOwn && (
@@ -195,6 +199,29 @@ export const MessageBubble = ({
             isOwn ? "items-end" : "items-start"
           }`}
         >
+          {message.isEdited && (
+            <button 
+            onClick={() => setViewEditHistory(!viewEditHistory)}
+            className="text-xs text-blue-600 mb-1 px-2">Edited</button>
+          )}
+
+          {message.editHistory && message.editHistory.length > 0 && viewEditHistory ? (
+            <div className="text-xs text-gray-500 mt-1">
+              Edit History:
+              <ul className="list-disc list-inside">
+                {message.editHistory.map((oldText, index) => (
+                  <li key={index}>{oldText}</li>
+                ))}
+              </ul>
+            </div>
+          ) : !message.editHistory && viewEditHistory &&(
+            <div className="text-xs text-gray-500 mt-1">
+              No history found
+            </div>
+          ) 
+          
+          }
+
           <div
             className={`flex items-center ${
               isOwn ? "flex-row" : "flex-row-reverse"

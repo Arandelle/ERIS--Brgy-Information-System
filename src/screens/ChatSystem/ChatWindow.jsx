@@ -246,38 +246,45 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
   };
 
   const handleEditMessage = async () => {
-    if (!text.trim() || !isEditing) return;
+  if (!text.trim() || !isEditing) return;
 
-    try {
-      const selectedUserId = selectedUser.uid || selectedUser.id;
+  try {
+    const selectedUserId = selectedUser.uid || selectedUser.id;
 
-      const currentUserMsgRef = ref(
-        database,
-        `chats/${user.uid}/${selectedUserId}/${isEditing}`
-      );
-      const selectedUserMsgRef = ref(
-        database,
-        `chats/${selectedUserId}/${user.uid}/${isEditing}`
-      );
+    const currentUserMsgRef = ref(
+      database,
+      `chats/${user.uid}/${selectedUserId}/${isEditing}`
+    );
+    const selectedUserMsgRef = ref(
+      database,
+      `chats/${selectedUserId}/${user.uid}/${isEditing}`
+    );
 
-      const updateData = {
-        text: text.trim(),
-        editedAt: Date.now(),
-        isEdited: true,
-      };
+    // Find the current message object
+    const messageToEdit = messages.find((msg) => msg.id === isEditing);
+    if (!messageToEdit) return;
 
-      await Promise.all([
-        update(currentUserMsgRef, updateData),
-        update(selectedUserMsgRef, updateData),
-      ]);
+    // Prepare the updated data
+    const updateData = {
+      text: text.trim(),
+      editedAt: Date.now(),
+      isEdited: true,
+      editHistory: [...(messageToEdit.editHistory || []), messageToEdit.text], // append previous text to history
+    };
 
-      toast.success("Message edited successfully");
-      handleCancelEdit();
-    } catch (error) {
-      console.error("Error editing message:", error);
-      toast.error("Failed to edit message. Please try again.");
-    }
-  };
+    await Promise.all([
+      update(currentUserMsgRef, updateData),
+      update(selectedUserMsgRef, updateData),
+    ]);
+
+    toast.success("Message edited successfully");
+    handleCancelEdit();
+  } catch (error) {
+    console.error("Error editing message:", error);
+    toast.error("Failed to edit message. Please try again.");
+  }
+};
+
 
   const handleCancelEdit = () => {
     setIsEditing(null);
