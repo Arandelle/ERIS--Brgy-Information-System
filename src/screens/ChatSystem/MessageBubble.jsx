@@ -139,6 +139,45 @@ export const MessageBubble = ({
     setOpenMenuId(null);
   };
 
+  const renderMenuModal = () => {
+    return (
+      <>
+        <button
+          onClick={() => setOpenMenuId(null)}
+          className={`absolute ${
+            isOwn ? "-top-2 -right-2" : "-top-2 -left-2"
+          } text-red-500 dark:text-red-300 hover:text-gray-700 dark:hover:text-gray-200 bg-white dark:bg-gray-800 rounded-full p-1`}
+        >
+          <CircleX size={16} />
+        </button>
+        <ul className="py-1">
+          {!message.isDeleted && isOwn && (
+            <li
+              onClick={handleEdit}
+              className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+            >
+              Edit
+            </li>
+          )}
+          {!message.isDeleted && isOwn && (
+            <li
+              onClick={() => confirmDelete(false)}
+              className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+            >
+              Unsend
+            </li>
+          )}
+          <li
+            onClick={() => confirmDelete(true)}
+            className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-700 cursor-pointer"
+          >
+            Delete for you
+          </li>
+        </ul>
+      </>
+    );
+  };
+
   return (
     <>
       {showOverallTimeStamp && (
@@ -186,38 +225,7 @@ export const MessageBubble = ({
                     maxWidth: "calc(100vw - 32px)",
                   }}
                 >
-                  {/* Close button */}
-                  <button
-                    onClick={() => setOpenMenuId(null)}
-                    className="absolute -top-2 -right-2 text-red-500 dark:text-red-300 hover:text-gray-700 dark:hover:text-gray-200 bg-white dark:bg-gray-800 rounded-full p-1"
-                  >
-                    <CircleX size={16} />
-                  </button>
-                  <ul className="py-1">
-                    {!message.isDeleted && isOwn && (
-                      <li
-                        onClick={handleEdit}
-                        className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                      >
-                        Edit
-                      </li>
-                    )}
-
-                    {!message.isDeleted && isOwn &&(
-                      <li
-                        onClick={() => confirmDelete(false)}
-                        className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                      >
-                        Unsend
-                      </li>
-                    )}
-                    <li
-                      onClick={() => confirmDelete(true)}
-                      className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-700 cursor-pointer"
-                    >
-                      Delete for you
-                    </li>
-                  </ul>
+                  {renderMenuModal()}
                 </div>
               )}
 
@@ -230,38 +238,7 @@ export const MessageBubble = ({
                     isOwn ? "right-4" : "left-4"
                   } w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10`}
                 >
-                  <button
-                    onClick={() => setOpenMenuId(null)}
-                    className={`absolute ${
-                      isOwn ? "-top-2 -right-2" : "-top-2 -left-2"
-                    } text-red-500 dark:text-red-300 hover:text-gray-700 dark:hover:text-gray-200`}
-                  >
-                    <CircleX size={16} />
-                  </button>
-                  <ul className="py-1">
-                    {!message.isDeleted && isOwn &&(
-                      <li
-                        onClick={handleEdit}
-                        className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                      >
-                        Edit
-                      </li>
-                    )}
-                    {!message.isDeleted && isOwn &&(
-                      <li
-                        onClick={() => confirmDelete(false)}
-                        className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                      >
-                        Unsend
-                      </li>
-                    )}
-                    <li
-                      onClick={() => confirmDelete(true)}
-                      className="px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-700 cursor-pointer"
-                    >
-                      Delete for you
-                    </li>
-                  </ul>
+                  {renderMenuModal()}
                 </div>
               )}
             </div>
