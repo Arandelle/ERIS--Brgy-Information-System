@@ -202,18 +202,19 @@ export const MessageBubble = ({
           {message.isEdited && (
             <button 
             onClick={() => setViewEditHistory(!viewEditHistory)}
-            className="text-xs text-blue-600 mb-1 px-2">Edited</button>
+            className="text-xs text-blue-600 mb-1 px-2">
+            {viewEditHistory ? "Hide edits" : "Edited"}
+            </button>
           )}
 
           {message.editHistory && message.editHistory.length > 0 && viewEditHistory ? (
-            <div className="text-xs text-gray-500 mt-1">
-              Edit History:
-              <ul className="list-disc list-inside">
+              <ul className="">
                 {message.editHistory.map((oldText, index) => (
-                  <li key={index}>{oldText}</li>
+                  <li key={index}
+                  className="text-xs my-1 bg-gray-300 rounded-md p-2"
+                  >{oldText}</li>
                 ))}
               </ul>
-            </div>
           ) : !message.editHistory && viewEditHistory &&(
             <div className="text-xs text-gray-500 mt-1">
               No history found
