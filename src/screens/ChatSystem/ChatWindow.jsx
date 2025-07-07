@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ref, onValue, push, set, update, remove } from "firebase/database";
+import { ref, onValue, push, set, update, remove, off } from "firebase/database";
 import { database, auth } from "../../services/firebaseConfig";
 import { Send, ChevronLeft, X, Check, Trash} from "lucide-react";
 import { MessageBubble } from "./MessageBubble";
@@ -138,35 +138,41 @@ export const ChatWindow = ({ selectedUser, setSelectedUser }) => {
     }
   }, [selectedUser, user, messages]);
 
-  useEffect(() => {
-    if (!user || !selectedUser) return;
+useEffect(() => {
+  if (!user || !selectedUser) return;
 
-    const chatRef = ref(
-      database,
-      `chats/${user.uid}/${selectedUser?.uid || selectedUser?.id}`
-    );
+  const chatRef = ref(
+    database,
+    `chats/${user.uid}/${selectedUser?.uid || selectedUser?.id}`
+  );
 
-    return onValue(chatRef, (snapshot) => {
-      const data = snapshot.val() || {};
+  const unsubscribe = onValue(chatRef, (snapshot) => {
+    const data = snapshot.val() || {};
 
-      const messagesWithIds = Object.entries(data).map(([id, message]) => ({
-        id,
-        ...message,
-      }));
+    const messagesWithIds = Object.entries(data).map(([id, message]) => ({
+      id,
+      ...message,
+    }));
 
-      const sorted = messagesWithIds.sort((a, b) => a.timestamp - b.timestamp);
+    const sorted = messagesWithIds.sort((a, b) => a.timestamp - b.timestamp);
 
-      setAllMessages(sorted);
+    setAllMessages(sorted);
 
-      const latestMessages = sorted.slice(-MESSAGES_PER_PAGE);
-      setMessages(latestMessages);
+    const latestMessages = sorted.slice(-MESSAGES_PER_PAGE);
+    setMessages(latestMessages);
 
-      setHasMoreMessages(sorted.length > MESSAGES_PER_PAGE);
+    setHasMoreMessages(sorted.length > MESSAGES_PER_PAGE);
 
-      setIsLoadingMore(false);
-      isScrollingToLoad.current = false;
-    });
-  }, [selectedUser, user]);
+    setIsLoadingMore(false);
+    isScrollingToLoad.current = false;
+  });
+
+  return () => {
+    // ✅ Detach the listener
+    off(chatRef);
+  };
+}, [selectedUser, user]);
+
 
   useEffect(() => {
     if (allMessages.length === 0) return;
