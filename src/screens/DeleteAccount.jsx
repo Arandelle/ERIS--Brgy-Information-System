@@ -6,8 +6,11 @@ import { generateUniqueBarangayID } from "../helper/generateID";
 import logAuditTrail from "../hooks/useAuditTrail";
 import { useFetchData } from "../hooks/useFetchData";
 import useSendNotification from "../hooks/useSendNotification";
+import { useNavigate } from "react-router-dom";
+import icons from "../assets/icons/Icons";
 
 export default function AccountDeletion() {
+  const navigation = useNavigate();
   const [step, setStep] = useState(1);
   const [reason, setReason] = useState("");
   const [email, setEmail] = useState("");
@@ -264,7 +267,10 @@ export default function AccountDeletion() {
       <div className="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="bg-white shadow rounded-lg overflow-hidden">
           {/* Header */}
-          <div className="bg-red-600 px-6 py-4">
+          <div className="flex items-center bg-red-600 px-6 py-4 space-x-5">
+          <button className="text-white" onClick={() => navigation("/")}>
+            <icons.arrowLeft fontSize="large"/>
+          </button>
             <h1 className="text-xl font-bold text-white">
               ERIS Account Deletion
             </h1>
